@@ -1,0 +1,6 @@
+<?php
+
+
+?>
+
+Pico CMS

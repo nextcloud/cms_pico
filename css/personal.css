@@ -1,0 +1,33 @@
+td.left {
+	padding-right: 30px;
+	font-weight: bolder;
+	text-align: right;
+	width: 400px;
+}
+
+tr.lane td {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+td.left em {
+	font-weight: normal;
+	font-size: 11px;
+}
+
+td.center {
+	text-align: middle;
+}
+
+td.right {
+	width: 200px;
+}
+
+TD.title {
+	font-size: 15px;
+	font-weight: bold;
+}
+
+INPUT.field250 {
+	width: 250px;
+}

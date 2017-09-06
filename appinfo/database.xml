@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<database xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		  xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/database.xsd">
+
+	<name>*dbname*</name>
+	<create>true</create>
+	<overwrite>false</overwrite>
+	<charset>utf8</charset>
+
+	<table>
+		<name>*dbprefix*cms_pico_websites</name>
+
+		<declaration>
+			<field>
+				<name>id</name>
+				<type>integer</type>
+				<length>4</length>
+				<unsigned>true</unsigned>
+				<notnull>true</notnull>
+				<autoincrement>true</autoincrement>
+				<primary>true</primary>
+			</field>
+
+			<field>
+				<name>user_id</name>
+				<type>text</type>
+				<length>64</length>
+				<notnull>true</notnull>
+			</field>
+
+			<field>
+				<name>site</name>
+				<type>text</type>
+				<length>255</length>
+				<notnull>true</notnull>
+			</field>
+
+			<field>
+				<name>type</name>
+				<type>integer</type>
+				<length>1</length>
+				<notnull>true</notnull>
+			</field>
+
+			<field>
+				<name>options</name>
+				<type>text</type>
+				<length>255</length>
+				<notnull>false</notnull>
+			</field>
+
+			<field>
+				<name>path</name>
+				<type>text</type>
+				<length>255</length>
+				<notnull>false</notnull>
+			</field>
+
+			<field>
+				<name>creation</name>
+				<type>timestamp</type>
+			</field>
+		</declaration>
+	</table>
+
+</database>
