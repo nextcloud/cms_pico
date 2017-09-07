@@ -15,8 +15,6 @@ class Application extends App {
 		parent::__construct(self::APP_NAME, $params);
 
 		$this->registerHooks();
-
-		$toto = new \Pico();
 	}
 
 

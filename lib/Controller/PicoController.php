@@ -2,48 +2,79 @@
 
 namespace OCA\CMSPico\Controller;
 
+use Exception;
 use OCA\CMSPico\AppInfo\Application;
+use OCA\CMSPico\Exceptions\WebsiteDoesNotExistException;
+use OCA\CMSPico\Service\MiscService;
+use OCA\CMSPico\Service\WebsitesService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IRequest;
 
 class PicoController extends Controller {
 
-	public function __construct(IRequest $request) {
+
+	/** @var IRequest */
+	private $userId;
+
+	/** @var WebsitesService */
+	private $websitesService;
+
+	/** @var MiscService */
+	private $miscService;
+
+
+	/**
+	 * PicoController constructor.
+	 *
+	 * @param IRequest $request
+	 * @param IRequest $userId
+	 * @param WebsitesService $websitesService
+	 * @param MiscService $miscService
+	 */
+	public function __construct(
+		IRequest $request, $userId, WebsitesService $websitesService, MiscService $miscService
+	) {
 		parent::__construct(Application::APP_NAME, $request);
+
+		$this->userId = $userId;
+		$this->websitesService = $websitesService;
+		$this->miscService = $miscService;
 	}
 
 
 	/**
 	 * @param string $site
-	 *
-	 * @return DataResponse
 	 *
 	 * @PublicPage
 	 * @NoCSRFRequired
 	 */
 	public function getRoot($site) {
-		\OC::$server->getLogger()
-					->log(2, '_____' . $site);
 
-		return $this->success(['value' => 42]);
+		return $this->getPage($site, '');
+//		return new TemplateResponse(Application::APP_NAME, 'navigate', $data);
 	}
 
 
 	/**
 	 * @param string $site
 	 *
-	 * @return DataResponse
 	 *
 	 * @PublicPage
 	 * @NoCSRFRequired
 	 */
 	public function getPage($site, $page) {
-		\OC::$server->getLogger()
-					->log(2, '_____' . $site . '  > ' . $page);
 
-		return $this->success(['value' => 42]);
+		try {
+			$html = $this->websitesService->getWebpageFromSite($site, $page, $this->userId);
+			return $html;
+
+		} catch (Exception $e) {
+			return $e->getMessage();
+		}
+
 	}
 
 
@@ -53,6 +84,8 @@ class PicoController extends Controller {
 	 * @return DataResponse
 	 */
 	public function fail($data) {
+		$this->miscService->log('fail: ' . json_encode($data));
+
 		return new DataResponse(
 			array_merge($data, array('status' => 0)),
 			Http::STATUS_NON_AUTHORATIVE_INFORMATION

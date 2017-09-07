@@ -3,9 +3,6 @@
 namespace OCA\CMSPico\Model;
 
 class Website implements \JsonSerializable {
-	
-	const TYPE_PUBLIC = 1;
-	const TYPE_PRIVATE = 2;
 
 	/** @var int */
 	private $id;
@@ -17,7 +14,7 @@ class Website implements \JsonSerializable {
 	private $site;
 
 	/** @var int */
-	private $type = self::TYPE_PUBLIC;
+	private $type = Webpage::TYPE_PUBLIC;
 
 	/** @var array */
 	private $options = [];
@@ -28,6 +25,8 @@ class Website implements \JsonSerializable {
 	/** @var int */
 	private $creation;
 
+	/** @var string */
+	private $viewer;
 
 	public function __construct() {
 	}
@@ -170,12 +169,26 @@ class Website implements \JsonSerializable {
 		return $this;
 	}
 
-
 	/**
 	 * @return int
 	 */
 	public function getCreation() {
 		return $this->creation;
+	}
+
+
+	/**
+	 * @param string $viewer
+	 */
+	public function setViewer($viewer) {
+		$this->viewer = $viewer;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getViewer() {
+		return $this->viewer;
 	}
 
 

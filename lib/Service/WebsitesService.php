@@ -6,16 +6,23 @@ namespace OCA\CMSPico\Service;
 use OCA\CMSPico\Db\WebsitesRequest;
 use OCA\CMSPico\Exceptions\WebsiteAlreadyExistException;
 use OCA\CMSPico\Exceptions\WebsiteDoesNotExistException;
+use OCA\CMSPico\Model\Webpage;
 use OCA\CMSPico\Model\Website;
 use OCP\IL10N;
 
 class WebsitesService {
 
+	/** @var IL10N */
+	private $l10n;
+
+	/** @var string */
+	private $userId;
+
 	/** @var WebsitesRequest */
 	private $websiteRequest;
 
-	/** @var IL10N */
-	private $l10n;
+	/** @var PicoService */
+	private $picoService;
 
 	/** @var MiscService */
 	private $miscService;
@@ -23,13 +30,20 @@ class WebsitesService {
 	/**
 	 * SimpleService constructor.
 	 *
-	 * @param WebsitesRequest $websiteRequest
 	 * @param IL10N $l10n
+	 * @param $userId
+	 * @param WebsitesRequest $websiteRequest
+	 * @param PicoService $picoService
 	 * @param MiscService $miscService
 	 */
-	function __construct(WebsitesRequest $websiteRequest, IL10N $l10n, MiscService $miscService) {
-		$this->websiteRequest = $websiteRequest;
+	function __construct(
+		IL10N $l10n, $userId, WebsitesRequest $websiteRequest, PicoService $picoService,
+		MiscService $miscService
+	) {
 		$this->l10n = $l10n;
+		$this->userId = $userId;
+		$this->websiteRequest = $websiteRequest;
+		$this->picoService = $picoService;
 		$this->miscService = $miscService;
 	}
 
@@ -46,7 +60,7 @@ class WebsitesService {
 		$website->setUserId($userId)
 				->setSite($site)
 				->setPath($path);
-$this->miscService->log('### ' . json_encode($website));
+
 		try {
 			$website = $this->websiteRequest->getWebsiteFromSite($website->getSite());
 			throw new WebsiteAlreadyExistException(
@@ -72,4 +86,45 @@ $this->miscService->log('### ' . json_encode($website));
 	}
 
 
+	/**
+	 * @param string $site
+	 * @param string $page
+	 * @param string $viewer
+	 *
+	 * @return string
+	 */
+	public function getWebpageFromSite($site, $page, $viewer) {
+
+		if (substr($page, 0, 1) !== '/') {
+			$page = '/' . $page;
+		}
+
+		if ($page === '/') {
+			$page = Webpage::DEFAULT_ROOT;
+		}
+
+		$website = $this->websiteRequest->getWebsiteFromSite($site);
+		$website->setViewer($viewer);
+
+		return $this->getWebpage($website, $page);
+	}
+
+
+	public function getWebpage(Website $website, $page) {
+
+		$webpage = new Webpage($website, $page);
+		$webpage->hasToExist();
+		$content = '>' . $webpage->getContent();
+
+		$content = $this->picoService->parseContent($content);
+//		Filesystem::init($website->getUserId(), $website->getUserId() . '/files/');
+//		$localPath = Filesystem::getLocalFile($website->getPath() . $page);
+
+
+//$content = Filesystem::getView()->file_get_contents($website->getPath() . $page));
+
+		return $content;
+//		return $website;
+
+	}
 }

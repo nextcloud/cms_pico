@@ -89,7 +89,7 @@ class WebsitesRequest extends WebsitesRequestBuilder {
 	/**
 	 * return the website corresponding to the site/url
 	 *
-	 * @param $site
+	 * @param string $site
 	 *
 	 * @return Website
 	 * @throws WebsiteDoesNotExistException
