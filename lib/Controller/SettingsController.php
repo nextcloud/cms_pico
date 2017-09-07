@@ -92,8 +92,6 @@ class SettingsController extends Controller {
 	 * @return DataResponse
 	 */
 	public function setSettingsAdmin($data) {
-		$this->miscService->log(json_encode($data));
-
 		$this->configService->setAppValue(
 			ConfigService::APP_TEST, $data[ConfigService::APP_TEST]
 		);

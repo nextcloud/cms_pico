@@ -3,6 +3,7 @@
 namespace OCA\CMSPico\Model;
 
 use OC\Files\Filesystem;
+use OCA\CMSPico\Service\MiscService;
 
 class Website implements \JsonSerializable {
 
@@ -150,6 +151,7 @@ class Website implements \JsonSerializable {
 	 * @return $this
 	 */
 	public function setPath($path) {
+		MiscService::endSlash($path);
 		$this->path = $path;
 
 		return $this;

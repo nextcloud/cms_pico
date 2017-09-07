@@ -4,8 +4,10 @@
 namespace OCA\CMSPico\Service;
 
 use DirectoryIterator;
+use OC\Files\Filesystem;
 use OCA\CMSPico\Model\TemplateFile;
 use OCA\CMSPico\Model\Website;
+use OCP\Files\Folder;
 
 class TemplatesService {
 
@@ -17,6 +19,9 @@ class TemplatesService {
 
 	/** @var array */
 	private $data = [];
+
+	/** @var Folder */
+	private $websiteFolder;
 
 	/**
 	 * TemplatesService constructor.
@@ -37,12 +42,12 @@ class TemplatesService {
 
 		$files = $this->getSourceFiles(self::TEMPLATE_DIR . $website->getTemplateSource() . '/');
 
+		$this->initWebsiteFolder($website);
 		foreach ($files as $file) {
 			$file->applyData($this->data);
-			$this->miscService->log('@@@ ' . $file->getFileName() . $file->getContent());
+			$this->generateFile($file, $website);
 		}
 	}
-
 
 
 	/**
@@ -73,6 +78,33 @@ class TemplatesService {
 		}
 
 		return $files;
+	}
+
+
+	/**
+	 * @param TemplateFile $file
+	 * @param Website $website
+	 */
+	private function generateFile(TemplateFile $file, Website $website) {
+		$this->initFolder(pathinfo($website->getPath() . $file->getFileName(), PATHINFO_DIRNAME));
+		$new = $this->websiteFolder->newFile($website->getPath() . $file->getFileName());
+		$new->putContent($file->getContent());
+	}
+
+
+	/**
+	 * @param Website $website
+	 */
+	private function initWebsiteFolder(Website $website) {
+		$this->websiteFolder = \OC::$server->getUserFolder($website->getUserId());
+		$this->initFolder($website->getPath());
+	}
+
+	private function initFolder($path) {
+
+		if (!$this->websiteFolder->nodeExists($path)) {
+			$this->websiteFolder->newFolder($path);
+		}
 	}
 
 
