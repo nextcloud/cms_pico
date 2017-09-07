@@ -14,6 +14,10 @@ class MiscService {
 		$this->logger = $logger;
 	}
 
+	/**
+	 * @param string $message
+	 * @param int $level
+	 */
 	public function log($message, $level = 2) {
 		$data = array(
 			'app'   => Application::APP_NAME,
@@ -23,5 +27,18 @@ class MiscService {
 		$this->logger->log($level, $message, $data);
 	}
 
+
+	/**
+	 * @param string $path
+	 */
+	public static function endSlash(&$path) {
+		if ($path === '') {
+			return;
+		}
+
+		if (substr($path, -1, 1) !== '/') {
+			$path .= '/';
+		}
+	}
 }
 

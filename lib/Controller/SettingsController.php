@@ -55,7 +55,6 @@ class SettingsController extends Controller {
 	 * @return DataResponse
 	 */
 	public function createPersonalWebsite($data) {
-		\OC::$server->getLogger()->log(2, '____');
 		$this->websitesService->createWebsite($this->userId, $data['website'], $data['path']);
 
 		return new DataResponse($this->getPersonalWebsites(), Http::STATUS_OK);

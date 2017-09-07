@@ -21,6 +21,9 @@ class WebsitesService {
 	/** @var WebsitesRequest */
 	private $websiteRequest;
 
+	/** @var TemplatesService */
+	private $templatesService;
+
 	/** @var PicoService */
 	private $picoService;
 
@@ -33,16 +36,18 @@ class WebsitesService {
 	 * @param IL10N $l10n
 	 * @param $userId
 	 * @param WebsitesRequest $websiteRequest
+	 * @param TemplatesService $templatesService
 	 * @param PicoService $picoService
 	 * @param MiscService $miscService
 	 */
 	function __construct(
-		IL10N $l10n, $userId, WebsitesRequest $websiteRequest, PicoService $picoService,
-		MiscService $miscService
+		IL10N $l10n, $userId, WebsitesRequest $websiteRequest, TemplatesService $templatesService,
+		PicoService $picoService, MiscService $miscService
 	) {
 		$this->l10n = $l10n;
 		$this->userId = $userId;
 		$this->websiteRequest = $websiteRequest;
+		$this->templatesService = $templatesService;
 		$this->picoService = $picoService;
 		$this->miscService = $miscService;
 	}
@@ -59,7 +64,8 @@ class WebsitesService {
 		$website = new Website();
 		$website->setUserId($userId)
 				->setSite($site)
-				->setPath($path);
+				->setPath($path)
+				->setTemplateSource(TemplatesService::TEMPLATE_DEFAULT);
 
 		try {
 			$website = $this->websiteRequest->getWebsiteFromSite($website->getSite());
@@ -69,7 +75,8 @@ class WebsitesService {
 		} catch (WebsiteDoesNotExistException $e) {
 		}
 
-		$this->websiteRequest->create($website);
+		$this->templatesService->installTemplates($website);
+		//$this->websiteRequest->create($website);
 	}
 
 
