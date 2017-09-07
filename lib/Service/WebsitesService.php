@@ -99,32 +99,11 @@ class WebsitesService {
 			$page = '/' . $page;
 		}
 
-		if ($page === '/') {
-			$page = Webpage::DEFAULT_ROOT;
-		}
-
 		$website = $this->websiteRequest->getWebsiteFromSite($site);
 		$website->setViewer($viewer);
 
-		return $this->getWebpage($website, $page);
+		return $this->picoService->getContent($website);
 	}
 
 
-	public function getWebpage(Website $website, $page) {
-
-		$webpage = new Webpage($website, $page);
-		$webpage->hasToExist();
-		$content = '>' . $webpage->getContent();
-
-		$content = $this->picoService->parseContent($content);
-//		Filesystem::init($website->getUserId(), $website->getUserId() . '/files/');
-//		$localPath = Filesystem::getLocalFile($website->getPath() . $page);
-
-
-//$content = Filesystem::getView()->file_get_contents($website->getPath() . $page));
-
-		return $content;
-//		return $website;
-
-	}
 }

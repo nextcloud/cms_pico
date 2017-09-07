@@ -9,6 +9,7 @@ use OCA\CMSPico\Service\MiscService;
 use OCA\CMSPico\Service\WebsitesService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\DataDisplayResponse;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IRequest;
@@ -69,7 +70,7 @@ class PicoController extends Controller {
 
 		try {
 			$html = $this->websitesService->getWebpageFromSite($site, $page, $this->userId);
-			return $html;
+			return new DataDisplayResponse($html);
 
 		} catch (Exception $e) {
 			return $e->getMessage();

@@ -3,15 +3,21 @@
 
 namespace OCA\CMSPico\Service;
 
+use OCA\CMSPico\Model\Webpage;
+use OCA\CMSPico\Model\Website;
 use Pico;
 
 class PicoService {
+
+	const DIR_CONFIG = 'config/';
+	const DIR_PLUGINS = 'plugins/';
+	const DIR_THEMES = 'themes/';
 
 	/** @var MiscService */
 	private $miscService;
 
 	/**
-	 * SimpleService constructor.
+	 * PicoService constructor.
 	 *
 	 * @param MiscService $miscService
 	 */
@@ -20,17 +26,15 @@ class PicoService {
 	}
 
 
+	public function getContent(Website $website) {
+		$pico = new Pico(
+			$website->getAbsolutePath(),
+			self::DIR_CONFIG, self::DIR_PLUGINS, self::DIR_THEMES
+		);
 
+		$pico->run();
 
-
-	public function parseContent($content)
-	{
-		$pico = new Pico('/home/maxence/sites/nextcloud/server/data/cult/files/qwe/', 'config/', 'plugins/', 'themes/');
-$pico->run();
-
-return	'>>>> ' .	$pico->getRawContent();
-	//	return $content;
-
+		return $pico->getFileContent();
 	}
 
 }

@@ -2,7 +2,13 @@
 
 namespace OCA\CMSPico\Model;
 
+use OC\Files\Filesystem;
+
 class Website implements \JsonSerializable {
+
+
+	const TYPE_PUBLIC = 1;
+	const TYPE_PRIVATE = 2;
 
 	/** @var int */
 	private $id;
@@ -14,7 +20,7 @@ class Website implements \JsonSerializable {
 	private $site;
 
 	/** @var int */
-	private $type = Webpage::TYPE_PUBLIC;
+	private $type = self::TYPE_PUBLIC;
 
 	/** @var array */
 	private $options = [];
@@ -151,6 +157,12 @@ class Website implements \JsonSerializable {
 	 */
 	public function getPath() {
 		return $this->path;
+	}
+
+	public function getAbsolutePath() {
+		Filesystem::init($this->getUserId(), $this->getUserId() . '/files/');
+
+		return Filesystem::getLocalFile($this->getPath());
 	}
 
 
