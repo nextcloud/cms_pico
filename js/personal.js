@@ -9,6 +9,12 @@ var elements = {
 	cms_pico_new_submit: null
 };
 
+var define = {
+	sites: '/sites/',
+	index: '/index.php',
+	nchost: ''
+};
+
 $(document).ready(function () {
 
 	elements.cms_pico_list_websites = $('#cms_pico_list_websites');
@@ -33,7 +39,7 @@ $(document).ready(function () {
 	});
 
 	updateNewWebsite = function (url) {
-		elements.cms_pico_new_url.text('http://www.nextcloud.com/sites/' + url);
+		elements.cms_pico_new_url.text(define.nchost + define.sites  + url);
 		refreshNewFolder();
 	};
 
@@ -64,6 +70,7 @@ $(document).ready(function () {
 		}).done(function (result) {
 			if (result.status === 1) {
 				OCA.notification.onSuccess('Website created');
+				displayWebsites(result.websites);
 				return;
 			}
 			OCA.notification.onFail(
@@ -74,7 +81,6 @@ $(document).ready(function () {
 
 	};
 
-
 	displayWebsites = function (list) {
 
 		elements.cms_pico_list_websites.emptyTable();
@@ -84,28 +90,43 @@ $(document).ready(function () {
 			elements.cms_pico_list_websites.append(tmpl);
 		}
 
-	};
+		elements.cms_pico_list_websites.find('TD.link').each(function () {
+			var url = $(this).parent().attr('data-address');
+			$(this).css('cursor', 'pointer').on('click', function () {
+				window.open(url);
+			});
+		});
 
+		console.log(OC.appswebroots);
+		elements.cms_pico_list_websites.find('TD.path').each(function () {
+			var url = define.nchost + define.index + OC.appswebroots.files + '/?dir=' + $(this).parent().attr('data-path');
+			$(this).css('cursor', 'pointer').on('click', function () {
+				window.open(url);
+			});
+		});
+
+	};
 
 	generateTmplWebsite = function (entry) {
 		var tmpl = $('#tmpl_website').html();
 
 		tmpl = tmpl.replace(/%%id%%/g, escapeHTML(entry.id));
 		tmpl = tmpl.replace(/%%name%%/g, escapeHTML(entry.name));
-		tmpl = tmpl.replace(/%%address%%/g, escapeHTML(entry.site));
+		tmpl = tmpl.replace(/%%address%%/g, define.nchost + define.sites + escapeHTML(entry.site));
 		tmpl = tmpl.replace(/%%path%%/g, escapeHTML(entry.path));
 
 		return tmpl;
 	};
-
 
 	$.ajax({
 		method: 'GET',
 		url: OC.generateUrl('/apps/cms_pico/personal/websites'),
 		data: {}
 	}).done(function (res) {
-		self.displayWebsites(res);
+		self.displayWebsites(res.websites);
 	});
+
+	define.nchost = window.location.protocol + '//' + window.location.host;
 
 	initTweaks = function () {
 		$.fn.emptyTable = function () {

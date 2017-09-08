@@ -34,7 +34,16 @@ style(Application::APP_NAME, 'personal');
 			<td colspan="2" class="title">Your current websites</td>
 		</tr>
 		<tr>
-			<td id="cms_pico_list_websites"></td>
+			<td colspan="2">
+				<table cellspacing="3" cellpadding="3" id="cms_pico_list_websites" style="margin: 20px; width: 700px;">
+					<tr class="header">
+						<td width="33%">Name</td>
+						<td width="33%">Address</td>
+						<td width="33%">Local directory</td>
+					</tr>
+
+				</table>
+			</td>
 		</tr>
 
 
@@ -59,7 +68,7 @@ style(Application::APP_NAME, 'personal');
 		</tr>
 		<tr class="lane">
 			<td class="left">Name of the website:<br/>
-				<em id="cms_pico_new_url">The title of your website</em></td>
+				<em>The title of your website</em></td>
 			<td class="right">
 				<input id="cms_pico_new_name" class="field250" value=""
 					   placeholder="My new site folder"/>
@@ -68,9 +77,9 @@ style(Application::APP_NAME, 'personal');
 
 		<tr class="lane">
 			<td class="left">Address of the website:<br/>
-				<em id="cms_pico_new_url">http://nextcloud/sites/example</em></td>
+				<em id="cms_pico_new_url"> </em></td>
 			<td class="right">
-				<input id="cms_pico_new_website" class="field250" value=""/>
+				<input id="cms_pico_new_website" class="field250" value="" placeholder="my_site"/>
 			</td>
 		</tr>
 
@@ -101,10 +110,10 @@ style(Application::APP_NAME, 'personal');
 	</table>
 
 	<script id="tmpl_website" type="text/template">
-		<tr class="entry" data-website-id="%id%">
-			<td>%%name%%</td>
-			<td>%%address%%</td>
-			<td>%%path%%</td>
+		<tr class="entry" data-id="%id%" data-address="%%address%%" data-path="%%path%%">
+			<td style="font-style: italic; font-weight: bold">%%name%%</td>
+			<td class="link">%%address%%</td>
+			<td class="path">%%path%%</td>
 		</tr>
 	</script>
 

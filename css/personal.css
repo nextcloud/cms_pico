@@ -32,3 +32,16 @@ TD.title {
 INPUT.field250 {
 	width: 250px;
 }
+
+TR.header TD {
+	font-weight: bold;
+	font-size: 12px;
+}
+
+TR.entry {
+	width: 500px;
+}
+
+TR.entry TD {
+	padding: 10px;
+}
