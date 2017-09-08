@@ -4,7 +4,6 @@
 namespace OCA\CMSPico\Service;
 
 use DirectoryIterator;
-use OC\Files\Filesystem;
 use OCA\CMSPico\Model\TemplateFile;
 use OCA\CMSPico\Model\Website;
 use OCP\Files\Folder;
@@ -17,9 +16,6 @@ class TemplatesService {
 	/** @var MiscService */
 	private $miscService;
 
-	/** @var array */
-	private $data = [];
-
 	/** @var Folder */
 	private $websiteFolder;
 
@@ -30,8 +26,6 @@ class TemplatesService {
 	 */
 	function __construct(MiscService $miscService) {
 		$this->miscService = $miscService;
-
-		$this->data['site_title'] = 'TITRE !!';
 	}
 
 
@@ -43,8 +37,9 @@ class TemplatesService {
 		$files = $this->getSourceFiles(self::TEMPLATE_DIR . $website->getTemplateSource() . '/');
 
 		$this->initWebsiteFolder($website);
+		$data = $this->generateData($website);
 		foreach ($files as $file) {
-			$file->applyData($this->data);
+			$file->applyData($data);
 			$this->generateFile($file, $website);
 		}
 	}
@@ -68,8 +63,9 @@ class TemplatesService {
 			}
 
 			if ($file->isDir()) {
-				$files =
-					array_merge($files, $this->getSourceFiles($base, $directory . $file->getFilename()));
+				$files = array_merge(
+					$files, $this->getSourceFiles($base, $directory . $file->getFilename())
+				);
 				continue;
 			}
 
@@ -98,6 +94,19 @@ class TemplatesService {
 	private function initWebsiteFolder(Website $website) {
 		$this->websiteFolder = \OC::$server->getUserFolder($website->getUserId());
 		$this->initFolder($website->getPath());
+	}
+
+
+	/**
+	 * @param Website $website
+	 *
+	 * @return array
+	 */
+	private function generateData(Website $website) {
+		return [
+			'site_title' => $website->getName(),
+			'base_url'   => \OC::$WEBROOT . $website->getSite()
+		];
 	}
 
 	private function initFolder($path) {
