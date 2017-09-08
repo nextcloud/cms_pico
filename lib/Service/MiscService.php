@@ -3,6 +3,8 @@
 namespace OCA\CMSPico\Service;
 
 use OCA\CMSPico\AppInfo\Application;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\DataResponse;
 use OCP\ILogger;
 
 class MiscService {
@@ -40,5 +42,34 @@ class MiscService {
 			$path .= '/';
 		}
 	}
+
+
+	/**
+	 * @param $data
+	 *
+	 * @return DataResponse
+	 */
+	public function fail($data) {
+		$this->log(json_encode($data));
+
+		return new DataResponse(
+			array_merge($data, array('status' => 0)),
+			Http::STATUS_NON_AUTHORATIVE_INFORMATION
+		);
+	}
+
+
+	/**
+	 * @param $data
+	 *
+	 * @return DataResponse
+	 */
+	public function success($data) {
+		return new DataResponse(
+			array_merge($data, array('status' => 1)),
+			Http::STATUS_CREATED
+		);
+	}
+
 }
 

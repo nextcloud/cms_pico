@@ -61,7 +61,7 @@ class WebsitesRequestBuilder extends CoreRequestBuilder {
 		$qb = $this->dbConnection->getQueryBuilder();
 
 		/** @noinspection PhpMethodParametersCountMismatchInspection */
-		$qb->select('w.id', 'w.user_id', 'w.site', 'w.type', 'w.options', 'w.path', 'w.creation')
+		$qb->select('w.id', 'w.name', 'w.user_id', 'w.site', 'w.type', 'w.options', 'w.path', 'w.creation')
 		   ->from(self::TABLE_WEBSITES, 'w');
 
 		$this->default_select_alias = 'w';
@@ -91,12 +91,13 @@ class WebsitesRequestBuilder extends CoreRequestBuilder {
 	protected function parseWebsitesSelectSql($data) {
 		$website = new Website();
 		$website->setId($data['id'])
-			 ->setUserId($data['user_id'])
-			 ->setSite($data['site'])
-			 ->setType($data['type'])
-			 ->setOptions($data['options'])
-			 ->setPath($data['path'])
-			 ->setCreation($data['creation']);
+				->setName($data['name'])
+				->setUserId($data['user_id'])
+				->setSite($data['site'])
+				->setType($data['type'])
+				->setOptions(json_decode($data['options']))
+				->setPath($data['path'])
+				->setCreation($data['creation']);
 
 		return $website;
 	}

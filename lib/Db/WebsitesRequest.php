@@ -19,7 +19,8 @@ class WebsitesRequest extends WebsitesRequestBuilder {
 	public function create(Website $website) {
 		try {
 			$qb = $this->getWebsitesInsertSql();
-			$qb->setValue('user_id', $qb->createNamedParameter($website->getUserId()))
+			$qb->setValue('name', $qb->createNamedParameter($website->getName()))
+			   ->setValue('user_id', $qb->createNamedParameter($website->getUserId()))
 			   ->setValue('site', $qb->createNamedParameter($website->getSite()))
 			   ->setValue('type', $qb->createNamedParameter($website->getType()))
 			   ->setValue('options', $qb->createNamedParameter($website->getOptions()))
@@ -40,10 +41,11 @@ class WebsitesRequest extends WebsitesRequestBuilder {
 	public function update(Website $website) {
 
 		$qb = $this->getWebsitesUpdateSql();
+		$qb->set('name', $qb->createNamedParameter($website->getName()));
 		$qb->set('user_id', $qb->createNamedParameter($website->getUserId()));
 		$qb->set('site', $qb->createNamedParameter($website->getSite()));
 		$qb->set('type', $qb->createNamedParameter($website->getType()));
-		$qb->set('options', $qb->createNamedParameter($website->getOptions()));
+		$qb->set('options', $qb->createNamedParameter(json_encode($website->getOptions())));
 		$qb->set('path', $qb->createNamedParameter($website->getPath()));
 
 		$this->limitToId($qb, $website->getId());
@@ -108,6 +110,5 @@ class WebsitesRequest extends WebsitesRequestBuilder {
 
 		return $this->parseWebsitesSelectSql($data);
 	}
-
 
 }

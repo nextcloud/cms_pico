@@ -1,5 +1,6 @@
 var elements = {
 	cms_pico_list_websites: null,
+	cms_pico_new_name: null,
 	cms_pico_new_url: null,
 	cms_pico_new_website: null,
 	cms_pico_new_path: null,
@@ -10,6 +11,8 @@ var elements = {
 
 $(document).ready(function () {
 
+	elements.cms_pico_list_websites = $('#cms_pico_list_websites');
+	elements.cms_pico_new_name = $('#cms_pico_new_name');
 	elements.cms_pico_new_website = $('#cms_pico_new_website');
 	elements.cms_pico_new_url = $('#cms_pico_new_url');
 	elements.cms_pico_new_path = $('#cms_pico_new_path');
@@ -45,7 +48,9 @@ $(document).ready(function () {
 	};
 
 	createNewWebsite = function () {
+
 		var data = {
+			name: elements.cms_pico_new_name.val(),
 			website: elements.cms_pico_new_website.val(),
 			path: elements.cms_pico_new_path.text()
 		};
@@ -56,10 +61,41 @@ $(document).ready(function () {
 			data: {
 				data: data
 			}
-		}).done(function (res) {
-			console.log(res);
+		}).done(function (result) {
+			if (result.status === 1) {
+				OCA.notification.onSuccess('Website created');
+				return;
+			}
+			OCA.notification.onFail(
+				t('cms_pico', "It was not possible to create your website {name}",
+					{name: result.name}) +
+				': ' + ((result.error) ? result.error : t('circles', 'no error message')));
 		});
 
+	};
+
+
+	displayWebsites = function (list) {
+
+		elements.cms_pico_list_websites.emptyTable();
+
+		for (var i = 0; i < list.length; i++) {
+			var tmpl = self.generateTmplWebsite(list[i]);
+			elements.cms_pico_list_websites.append(tmpl);
+		}
+
+	};
+
+
+	generateTmplWebsite = function (entry) {
+		var tmpl = $('#tmpl_website').html();
+
+		tmpl = tmpl.replace(/%%id%%/g, escapeHTML(entry.id));
+		tmpl = tmpl.replace(/%%name%%/g, escapeHTML(entry.name));
+		tmpl = tmpl.replace(/%%address%%/g, escapeHTML(entry.site));
+		tmpl = tmpl.replace(/%%path%%/g, escapeHTML(entry.path));
+
+		return tmpl;
 	};
 
 
@@ -68,7 +104,49 @@ $(document).ready(function () {
 		url: OC.generateUrl('/apps/cms_pico/personal/websites'),
 		data: {}
 	}).done(function (res) {
-		console.log(JSON.stringify(res));
+		self.displayWebsites(res);
 	});
 
+	initTweaks = function () {
+		$.fn.emptyTable = function () {
+			this.children('tr').each(function () {
+				if ($(this).attr('class') !== 'header') {
+					$(this).remove();
+				}
+			});
+		};
+	};
+
+	self.initTweaks();
 });
+
+
+/**
+ * @constructs Notification
+ */
+var Notification = function () {
+	this.initialize();
+};
+
+Notification.prototype = {
+
+	initialize: function () {
+
+		var notyf = new Notyf({
+			delay: 5000
+		});
+
+		this.onSuccess = function (text) {
+			notyf.confirm(text);
+		};
+
+		this.onFail = function (text) {
+			notyf.alert(text);
+		};
+
+	}
+
+};
+
+OCA.Notification = Notification;
+OCA.notification = new Notification();

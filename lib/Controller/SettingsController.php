@@ -55,9 +55,21 @@ class SettingsController extends Controller {
 	 * @return DataResponse
 	 */
 	public function createPersonalWebsite($data) {
-		$this->websitesService->createWebsite($this->userId, $data['website'], $data['path']);
 
-		return new DataResponse($this->getPersonalWebsites(), Http::STATUS_OK);
+		try {
+			$this->websitesService->createWebsite(
+				$data['name'], $this->userId, $data['website'], $data['path']
+			);
+
+			return $this->miscService->success(
+				[
+					'name'     => $data['name'],
+					'websites' => $this->websitesService->getWebsitesFromUser($this->userId)
+				]
+			);
+		} catch (\Exception $e) {
+			return $this->miscService->fail(['name' => $data['name'], 'error' => $e->getMessage()]);
+		}
 	}
 
 
@@ -67,9 +79,13 @@ class SettingsController extends Controller {
 	 * @return DataResponse
 	 */
 	public function getPersonalWebsites() {
-		$websites = $this->websitesService->getWebsitesFromUser($this->userId);
+		try {
+			$websites = $this->websitesService->getWebsitesFromUser($this->userId);
 
-		return new DataResponse($websites, Http::STATUS_OK);
+			return $this->miscService->success(['websites' => $websites]);
+		} catch (\Exception $e) {
+			return $this->miscService->fail(['error' => $e->getMessage()]);
+		}
 	}
 
 

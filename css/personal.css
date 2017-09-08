@@ -2,7 +2,7 @@ td.left {
 	padding-right: 30px;
 	font-weight: bolder;
 	text-align: right;
-	width: 400px;
+	width: 300px;
 }
 
 tr.lane td {
@@ -16,11 +16,12 @@ td.left em {
 }
 
 td.center {
-	text-align: middle;
+	text-align: center;
 }
 
 td.right {
 	width: 200px;
+	padding-right: 80px;
 }
 
 TD.title {

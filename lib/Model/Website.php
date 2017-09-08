@@ -18,6 +18,9 @@ class Website implements \JsonSerializable {
 	private $userId;
 
 	/** @var string */
+	private $name;
+
+	/** @var string */
 	private $site;
 
 	/** @var int */
@@ -58,6 +61,25 @@ class Website implements \JsonSerializable {
 	 */
 	public function getId() {
 		return $this->id;
+	}
+
+
+	/**
+	 * @param string $name
+	 *
+	 * @return $this
+	 */
+	public function setName($name) {
+		$this->name = $name;
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getName() {
+		return $this->name;
 	}
 
 
@@ -230,6 +252,7 @@ class Website implements \JsonSerializable {
 	public function jsonSerialize() {
 		return array(
 			'id'       => $this->getId(),
+			'name'     => $this->getName(),
 			'user_id'  => $this->getUserId(),
 			'site'     => $this->getSite(),
 			'type'     => $this->getType(),
@@ -253,6 +276,7 @@ class Website implements \JsonSerializable {
 		$website = new Website();
 
 		$website->setId($arr['id'])
+				->setName($arr['name'])
 				->setUserId($arr['user_id'])
 				->setSite($arr['site'])
 				->setType($arr['type'])

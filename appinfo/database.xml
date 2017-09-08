@@ -30,6 +30,13 @@
 			</field>
 
 			<field>
+				<name>name</name>
+				<type>text</type>
+				<length>255</length>
+				<notnull>true</notnull>
+			</field>
+
+			<field>
 				<name>site</name>
 				<type>text</type>
 				<length>255</length>

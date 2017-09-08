@@ -15,9 +15,6 @@ class WebsitesService {
 	/** @var IL10N */
 	private $l10n;
 
-	/** @var string */
-	private $userId;
-
 	/** @var WebsitesRequest */
 	private $websiteRequest;
 
@@ -34,18 +31,16 @@ class WebsitesService {
 	 * SimpleService constructor.
 	 *
 	 * @param IL10N $l10n
-	 * @param $userId
 	 * @param WebsitesRequest $websiteRequest
 	 * @param TemplatesService $templatesService
 	 * @param PicoService $picoService
 	 * @param MiscService $miscService
 	 */
 	function __construct(
-		IL10N $l10n, $userId, WebsitesRequest $websiteRequest, TemplatesService $templatesService,
+		IL10N $l10n, WebsitesRequest $websiteRequest, TemplatesService $templatesService,
 		PicoService $picoService, MiscService $miscService
 	) {
 		$this->l10n = $l10n;
-		$this->userId = $userId;
 		$this->websiteRequest = $websiteRequest;
 		$this->templatesService = $templatesService;
 		$this->picoService = $picoService;
@@ -55,14 +50,16 @@ class WebsitesService {
 
 	/**
 	 * @param string $userId
+	 * @param $name
 	 * @param string $site
 	 * @param string $path
 	 *
 	 * @throws WebsiteAlreadyExistException
 	 */
-	public function createWebsite($userId, $site, $path) {
+	public function createWebsite($name, $userId, $site, $path) {
 		$website = new Website();
-		$website->setUserId($userId)
+		$website->setName($name)
+				->setUserId($userId)
 				->setSite($site)
 				->setPath($path)
 				->setTemplateSource(TemplatesService::TEMPLATE_DEFAULT);
@@ -76,7 +73,7 @@ class WebsitesService {
 		}
 
 		$this->templatesService->installTemplates($website);
-		//$this->websiteRequest->create($website);
+		$this->websiteRequest->create($website);
 	}
 
 
@@ -87,7 +84,6 @@ class WebsitesService {
 	 */
 	public function getWebsitesFromUser($userId) {
 		$websites = $this->websiteRequest->getWebsitesFromUserId($userId);
-		$this->miscService->log('#### ' . json_encode($websites));
 
 		return $websites;
 	}

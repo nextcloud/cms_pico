@@ -51,6 +51,7 @@ class PicoController extends Controller {
 	 *
 	 * @PublicPage
 	 * @NoCSRFRequired
+	 * @return DataDisplayResponse|string
 	 */
 	public function getRoot($site) {
 
@@ -65,6 +66,7 @@ class PicoController extends Controller {
 	 *
 	 * @PublicPage
 	 * @NoCSRFRequired
+	 * @return DataDisplayResponse|string
 	 */
 	public function getPage($site, $page) {
 
@@ -76,33 +78,6 @@ class PicoController extends Controller {
 			return $e->getMessage();
 		}
 
-	}
-
-
-	/**
-	 * @param $data
-	 *
-	 * @return DataResponse
-	 */
-	public function fail($data) {
-		$this->miscService->log('fail: ' . json_encode($data));
-
-		return new DataResponse(
-			array_merge($data, array('status' => 0)),
-			Http::STATUS_NON_AUTHORATIVE_INFORMATION
-		);
-	}
-
-	/**
-	 * @param $data
-	 *
-	 * @return DataResponse
-	 */
-	public function success($data) {
-		return new DataResponse(
-			array_merge($data, array('status' => 1)),
-			Http::STATUS_CREATED
-		);
 	}
 
 
