@@ -56,7 +56,6 @@ class PicoController extends Controller {
 	public function getRoot($site) {
 
 		return $this->getPage($site, '');
-//		return new TemplateResponse(Application::APP_NAME, 'navigate', $data);
 	}
 
 
@@ -77,7 +76,6 @@ class PicoController extends Controller {
 		} catch (Exception $e) {
 			return $e->getMessage();
 		}
-
 	}
 
 

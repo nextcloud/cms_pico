@@ -9,6 +9,10 @@ use OCP\ILogger;
 
 class MiscService {
 
+	const ALPHA = 'abcdefghijklmnopqrstuvwxyz';
+	const ALPHA_NUMERIC = 'abcdefghijklmnopqrstuvwxyz0123456789';
+	const ALPHA_NUMERIC_SCORES = 'abcdefghijklmnopqrstuvwxyz0123456789_-';
+
 	/** @var ILogger */
 	private $logger;
 
@@ -43,6 +47,16 @@ class MiscService {
 		}
 	}
 
+
+	public static function checkChars($line, $chars) {
+		for ($i = 0; $i < strlen($line); $i++) {
+			if (strpos($chars, substr($line, $i, 1)) === false) {
+				return false;
+			}
+		}
+
+		return true;
+	}
 
 	/**
 	 * @param $data

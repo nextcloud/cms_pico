@@ -3,6 +3,9 @@
 namespace OCA\CMSPico\Model;
 
 use OC\Files\Filesystem;
+use OCA\CMSPico\AppInfo\Application;
+use OCA\CMSPico\Exceptions\CheckCharsException;
+use OCA\CMSPico\Exceptions\MinCharsException;
 use OCA\CMSPico\Service\MiscService;
 
 class Website implements \JsonSerializable {
@@ -10,6 +13,12 @@ class Website implements \JsonSerializable {
 
 	const TYPE_PUBLIC = 1;
 	const TYPE_PRIVATE = 2;
+
+	const SITE_LENGTH_MIN = 3;
+	const NAME_LENGTH_MIN = 5;
+
+	/** @var IL10N */
+	private $l10n;
 
 	/** @var int */
 	private $id;
@@ -42,6 +51,7 @@ class Website implements \JsonSerializable {
 	private $templateSource;
 
 	public function __construct() {
+		$this->l10n = \OC::$server->getL10N(Application::APP_NAME);
 	}
 
 
@@ -245,6 +255,23 @@ class Website implements \JsonSerializable {
 		return $this->templateSource;
 	}
 
+
+	public function hasToBeFilledWithValidEntries() {
+
+		if (strlen($this->getSite()) < self::SITE_LENGTH_MIN) {
+			throw new MinCharsException($this->l10n->t('The address of the website must be longer'));
+		}
+
+		if (strlen($this->getName()) < self::NAME_LENGTH_MIN) {
+			throw new MinCharsException($this->l10n->t('The name of the website must be longer'));
+		}
+
+		if (MiscService::checkChars($this->getSite(), MiscService::ALPHA_NUMERIC_SCORES) === false) {
+			throw new CheckCharsException(
+				$this->l10n->t('The address of the website can only contains alpha numeric chars')
+			);
+		}
+	}
 
 	/**
 	 * @return array

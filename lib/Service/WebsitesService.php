@@ -65,6 +65,7 @@ class WebsitesService {
 				->setTemplateSource(TemplatesService::TEMPLATE_DEFAULT);
 
 		try {
+			$website->hasToBeFilledWithValidEntries();
 			$website = $this->websiteRequest->getWebsiteFromSite($website->getSite());
 			throw new WebsiteAlreadyExistException(
 				$this->l10n->t('Website already exist. Please choose another one.')
