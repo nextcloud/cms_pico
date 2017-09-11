@@ -41,7 +41,7 @@ class NavigationController extends Controller {
 	 */
 	public function navigate() {
 		$data = [
-			ConfigService::APP_TEST => $this->configService->getAppValue(
+			ConfigService::APP_TEST          => $this->configService->getAppValue(
 				ConfigService::APP_TEST
 			),
 			ConfigService::APP_TEST_PERSONAL => $this->configService->getUserValue(
@@ -59,7 +59,9 @@ class NavigationController extends Controller {
 	 * @return TemplateResponse
 	 */
 	public function admin() {
-		return new TemplateResponse(Application::APP_NAME, 'settings.admin', [], 'blank');
+		$data = ['nchost' => \OC::$server->getURLGenerator()->getBaseUrl()];
+
+		return new TemplateResponse(Application::APP_NAME, 'settings.admin', $data, 'blank');
 	}
 
 
