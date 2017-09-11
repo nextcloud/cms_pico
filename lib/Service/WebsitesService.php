@@ -79,6 +79,24 @@ class WebsitesService {
 
 
 	/**
+	 * @param int $siteId
+	 *
+	 * @return Website
+	 */
+	public function getWebsiteFromId($siteId) {
+		return $this->websiteRequest->getWebsiteFromId($siteId);
+	}
+
+
+	/**
+	 * @param $website
+	 */
+	public function updateWebsite($website) {
+		$this->websiteRequest->update($website);
+
+	}
+
+	/**
 	 * @param string $userId
 	 *
 	 * @return Website[]

@@ -23,7 +23,7 @@ class WebsitesRequest extends WebsitesRequestBuilder {
 			   ->setValue('user_id', $qb->createNamedParameter($website->getUserId()))
 			   ->setValue('site', $qb->createNamedParameter($website->getSite()))
 			   ->setValue('type', $qb->createNamedParameter($website->getType()))
-			   ->setValue('options', $qb->createNamedParameter($website->getOptions()))
+			   ->setValue('options', $qb->createNamedParameter($website->getOptions(true)))
 			   ->setValue('path', $qb->createNamedParameter($website->getPath()));
 
 			$qb->execute();
@@ -45,7 +45,7 @@ class WebsitesRequest extends WebsitesRequestBuilder {
 		$qb->set('user_id', $qb->createNamedParameter($website->getUserId()));
 		$qb->set('site', $qb->createNamedParameter($website->getSite()));
 		$qb->set('type', $qb->createNamedParameter($website->getType()));
-		$qb->set('options', $qb->createNamedParameter(json_encode($website->getOptions())));
+		$qb->set('options', $qb->createNamedParameter($website->getOptions(true)));
 		$qb->set('path', $qb->createNamedParameter($website->getPath()));
 
 		$this->limitToId($qb, $website->getId());
@@ -85,6 +85,30 @@ class WebsitesRequest extends WebsitesRequestBuilder {
 		$cursor->closeCursor();
 
 		return $websites;
+	}
+
+
+	/**
+	 * return the website corresponding to the Id
+	 *
+	 * @param int $siteId
+	 *
+	 * @return Website
+	 * @throws WebsiteDoesNotExistException
+	 */
+	public function getWebsiteFromId($siteId) {
+		$qb = $this->getWebsitesSelectSql();
+		$this->limitToId($qb, $siteId);
+
+		$cursor = $qb->execute();
+		$data = $cursor->fetch();
+		$cursor->closeCursor();
+
+		if ($data === false) {
+			throw new WebsiteDoesNotExistException($this->l10n->t('Website not found'));
+		}
+
+		return $this->parseWebsitesSelectSql($data);
 	}
 
 

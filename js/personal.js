@@ -39,7 +39,7 @@ $(document).ready(function () {
 	});
 
 	updateNewWebsite = function (url) {
-		elements.cms_pico_new_url.text(define.nchost + define.sites  + url);
+		elements.cms_pico_new_url.text(define.nchost + define.sites + url);
 		refreshNewFolder();
 	};
 
@@ -90,33 +90,74 @@ $(document).ready(function () {
 			elements.cms_pico_list_websites.append(tmpl);
 		}
 
-		elements.cms_pico_list_websites.find('TD.link').each(function () {
-			var url = $(this).parent().attr('data-address');
-			$(this).css('cursor', 'pointer').on('click', function () {
-				window.open(url);
-			});
-		});
-
-		console.log(OC.appswebroots);
-		elements.cms_pico_list_websites.find('TD.path').each(function () {
-			var url = define.nchost + define.index + OC.appswebroots.files + '/?dir=' + $(this).parent().attr('data-path');
-			$(this).css('cursor', 'pointer').on('click', function () {
-				window.open(url);
-			});
-		});
-
+		displayWebsitesLink();
+		displayWebsitesPath();
+		displayWebsitesPrivate();
 	};
+
+
+	displayWebsitesLink = function () {
+		elements.cms_pico_list_websites.find('TD.link').each(function () {
+			var url = String.valueOf($(this).parent().attr('data-address'));
+			$(this).css('cursor', 'pointer').on('click', function () {
+				window.open(url);
+			});
+		});
+	};
+
+
+	displayWebsitesPath = function () {
+		elements.cms_pico_list_websites.find('TD.path').each(function () {
+			var url = define.nchost + define.index + OC.appswebroots.files + '/?dir=' +
+				$(this).parent().attr('data-path');
+			$(this).css('cursor', 'pointer').on('click', function () {
+				window.open(url);
+			});
+		});
+	};
+
+
+	displayWebsitesPrivate = function () {
+		elements.cms_pico_list_websites.find('INPUT.private').each(function () {
+			$(this).prop('checked', ($(this).parent().parent().attr('data-private') === '1'));
+			$(this).on(
+				'change', function () {
+					updateWebsiteOption($(this).parent().parent().attr('data-id'), 'private',
+						($(this).is(':checked')) ? '1' : '0');
+				});
+		});
+	};
+
+	updateWebsiteOption = function (site_id, key, value) {
+		console.log('change: ' + value + ' ' + key);
+		$.ajax({
+			method: 'POST',
+			url: OC.generateUrl('/apps/cms_pico/personal/website/' + site_id + '/option/' + key),
+			data: {
+				value: value
+			}
+		}).done(function (res) {
+			console.log(JSON.stringify(res));
+			self.displayWebsites(res.websites);
+		});
+	};
+
 
 	generateTmplWebsite = function (entry) {
 		var tmpl = $('#tmpl_website').html();
 
-		tmpl = tmpl.replace(/%%id%%/g, escapeHTML(entry.id));
+		tmpl = tmpl.replace(/%%id%%/g, entry.id);
 		tmpl = tmpl.replace(/%%name%%/g, escapeHTML(entry.name));
 		tmpl = tmpl.replace(/%%address%%/g, define.nchost + define.sites + escapeHTML(entry.site));
 		tmpl = tmpl.replace(/%%path%%/g, escapeHTML(entry.path));
 
+		if (entry.options.private === '1') {
+			tmpl = tmpl.replace(/%%private%%/g, escapeHTML(entry.options.private));
+		}
+
 		return tmpl;
 	};
+
 
 	$.ajax({
 		method: 'GET',

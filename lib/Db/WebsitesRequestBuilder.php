@@ -95,7 +95,7 @@ class WebsitesRequestBuilder extends CoreRequestBuilder {
 				->setUserId($data['user_id'])
 				->setSite($data['site'])
 				->setType($data['type'])
-				->setOptions(json_decode($data['options']))
+				->setOptions($data['options'])
 				->setPath($data['path'])
 				->setCreation($data['creation']);
 

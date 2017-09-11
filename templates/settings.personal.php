@@ -35,11 +35,13 @@ style(Application::APP_NAME, 'personal');
 		</tr>
 		<tr>
 			<td colspan="2">
-				<table cellspacing="3" cellpadding="3" id="cms_pico_list_websites" style="margin: 20px; width: 700px;">
+				<table cellspacing="3" cellpadding="3" id="cms_pico_list_websites"
+					   style="margin: 20px; width: 700px;">
 					<tr class="header">
-						<td width="33%">Name</td>
-						<td width="33%">Address</td>
-						<td width="33%">Local directory</td>
+						<td width="30%">Name</td>
+						<td width="30%">Address</td>
+						<td width="30%">Local directory</td>
+						<td width="10%">Private</td>
 					</tr>
 
 				</table>
@@ -110,10 +112,11 @@ style(Application::APP_NAME, 'personal');
 	</table>
 
 	<script id="tmpl_website" type="text/template">
-		<tr class="entry" data-id="%id%" data-address="%%address%%" data-path="%%path%%">
+		<tr class="entry" data-id="%%id%%" data-address="%%address%%" data-path="%%path%%" data-private="%%private%%">
 			<td style="font-style: italic; font-weight: bold">%%name%%</td>
 			<td class="link">%%address%%</td>
 			<td class="path">%%path%%</td>
+			<td><input type="checkbox" value="1" class="private"/></td>
 		</tr>
 	</script>
 

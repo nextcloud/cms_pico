@@ -63,12 +63,40 @@ class SettingsController extends Controller {
 
 			return $this->miscService->success(
 				[
-					'name'     => $data['name'],
+					'name' => $data['name'],
 					'websites' => $this->websitesService->getWebsitesFromUser($this->userId)
 				]
 			);
 		} catch (\Exception $e) {
 			return $this->miscService->fail(['name' => $data['name'], 'error' => $e->getMessage()]);
+		}
+	}
+
+
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @param int $siteId
+	 * @param string $option
+	 * @param string $value
+	 *
+	 * @return DataResponse
+	 */
+	public function editPersonalWebsiteOption($siteId, $option, $value) {
+
+		try {
+			$this->miscService->log('$$$$$ ' . $option . ' ' . $value);
+			$website = $this->websitesService->getWebsiteFromId($siteId);
+
+			$website->hasToBeOwnedBy($this->userId);
+			$website->setOption((string) $option, (string) $value);
+
+			$this->websitesService->updateWebsite($website);
+			return $this->miscService->success(
+				['websites' => $this->websitesService->getWebsitesFromUser($this->userId)]
+			);
+		} catch (\Exception $e) {
+			return $this->miscService->fail(['error' => $e->getMessage()]);
 		}
 	}
 
