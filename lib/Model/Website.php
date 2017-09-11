@@ -7,6 +7,7 @@ use OC\Files\View;
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Exceptions\CheckCharsException;
 use OCA\CMSPico\Exceptions\MinCharsException;
+use OCA\CMSPico\Exceptions\PathContainSpecificFoldersException;
 use OCA\CMSPico\Exceptions\UserIsNotOwnerException;
 use OCA\CMSPico\Exceptions\WebsiteIsPrivateException;
 use OCA\CMSPico\Service\MiscService;
@@ -172,16 +173,12 @@ class Website extends WebsiteCore {
 	/**
 	 * @throws CheckCharsException
 	 * @throws MinCharsException
+	 * @throws PathContainSpecificFoldersException
 	 */
 	public function hasToBeFilledWithValidEntries() {
 
-		if (strlen($this->getSite()) < self::SITE_LENGTH_MIN) {
-			throw new MinCharsException($this->l10n->t('The address of the website must be longer'));
-		}
-
-		if (strlen($this->getName()) < self::NAME_LENGTH_MIN) {
-			throw new MinCharsException($this->l10n->t('The name of the website must be longer'));
-		}
+		$this->hasToBeFilledWithNonEmptyValues();
+		$this->pathCantContainSpecificFolders();
 
 		if (MiscService::checkChars($this->getSite(), MiscService::ALPHA_NUMERIC_SCORES) === false) {
 			throw new CheckCharsException(
@@ -190,4 +187,37 @@ class Website extends WebsiteCore {
 		}
 	}
 
+
+	/**
+	 * @throws MinCharsException
+	 */
+	private function hasToBeFilledWithNonEmptyValues() {
+		if (strlen($this->getSite()) < self::SITE_LENGTH_MIN) {
+			throw new MinCharsException($this->l10n->t('The address of the website must be longer'));
+		}
+
+		if (strlen($this->getName()) < self::NAME_LENGTH_MIN) {
+			throw new MinCharsException($this->l10n->t('The name of the website must be longer'));
+		}
+	}
+
+
+	/**
+	 * this is overkill - NC does not allow to create directory outside of the users' filesystem
+	 * Not sure that there is a single use for this security check
+	 *
+	 * @throws PathContainSpecificFoldersException
+	 */
+	private function pathCantContainSpecificFolders() {
+		$limit = ['.', '..'];
+
+		$folders = explode('/', $this->getPath());
+		foreach ($folders as $folder) {
+			if (in_array($folder, $limit)) {
+				throw new PathContainSpecificFoldersException(
+					$this->l10n->t('Path is malformed, please check.')
+				);
+			}
+		}
+	}
 }

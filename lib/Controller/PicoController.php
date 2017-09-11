@@ -54,23 +54,22 @@ class PicoController extends Controller {
 	 * @return DataDisplayResponse|string
 	 */
 	public function getRoot($site) {
-
-		return $this->getPage($site, '');
+		return $this->getPage($site);
 	}
 
 
 	/**
 	 * @param string $site
 	 *
-	 *
 	 * @PublicPage
 	 * @NoCSRFRequired
 	 * @return DataDisplayResponse|string
 	 */
-	public function getPage($site, $page) {
+	public function getPage($site) {
 
 		try {
-			$html = $this->websitesService->getWebpageFromSite($site, $page, $this->userId);
+			$html = $this->websitesService->getWebpageFromSite($site, $this->userId);
+
 			return new DataDisplayResponse($html);
 
 		} catch (Exception $e) {

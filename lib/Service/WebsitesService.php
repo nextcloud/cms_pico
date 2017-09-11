@@ -110,16 +110,11 @@ class WebsitesService {
 
 	/**
 	 * @param string $site
-	 * @param string $page
 	 * @param string $viewer
 	 *
 	 * @return string
 	 */
-	public function getWebpageFromSite($site, $page, $viewer) {
-
-		if (substr($page, 0, 1) !== '/') {
-			$page = '/' . $page;
-		}
+	public function getWebpageFromSite($site, $viewer) {
 
 		$website = $this->websiteRequest->getWebsiteFromSite($site);
 		$website->setViewer($viewer);
