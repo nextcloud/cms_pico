@@ -136,6 +136,10 @@ class Website extends WebsiteCore {
 	 * @throws WebsiteIsPrivateException
 	 */
 	public function viewerMustHaveAccess() {
+		if ($this->getViewer() === $this->getUserId()) {
+			return;
+		}
+
 		if ($this->getOption('private') !== '1') {
 			return;
 		}
