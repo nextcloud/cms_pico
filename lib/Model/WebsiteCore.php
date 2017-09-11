@@ -148,6 +148,20 @@ class WebsiteCore implements \JsonSerializable {
 
 
 	/**
+	 * @param string $key
+	 *
+	 * @return string
+	 */
+	public function getOption($key) {
+		if (!key_exists($key, $this->options)) {
+			return '';
+		}
+
+		return $this->options[$key];
+	}
+
+
+	/**
 	 * @param array|string $options
 	 *
 	 * @return $this

@@ -7,6 +7,7 @@ use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Exceptions\CheckCharsException;
 use OCA\CMSPico\Exceptions\MinCharsException;
 use OCA\CMSPico\Exceptions\UserIsNotOwnerException;
+use OCA\CMSPico\Exceptions\WebsiteIsPrivateException;
 use OCA\CMSPico\Service\MiscService;
 use OCP\IL10N;
 
@@ -82,6 +83,20 @@ class Website extends WebsiteCore {
 		}
 	}
 
+
+	public function userMustHaveAccess($userId) {
+		if ($this->getOption('private') === '0') {
+			return;
+		}
+
+		if ($this->getUserId() === $userId) {
+			return;
+		}
+
+		throw new WebsiteIsPrivateException(
+			$this->l10n->t('Website is private. You do not have access to this website')
+		);
+	}
 
 	/**
 	 * @throws CheckCharsException

@@ -98,7 +98,7 @@ $(document).ready(function () {
 
 	displayWebsitesLink = function () {
 		elements.cms_pico_list_websites.find('TD.link').each(function () {
-			var url = String.valueOf($(this).parent().attr('data-address'));
+			var url = $(this).parent().attr('data-address');
 			$(this).css('cursor', 'pointer').on('click', function () {
 				window.open(url);
 			});
@@ -129,7 +129,6 @@ $(document).ready(function () {
 	};
 
 	updateWebsiteOption = function (site_id, key, value) {
-		console.log('change: ' + value + ' ' + key);
 		$.ajax({
 			method: 'POST',
 			url: OC.generateUrl('/apps/cms_pico/personal/website/' + site_id + '/option/' + key),
@@ -137,7 +136,6 @@ $(document).ready(function () {
 				value: value
 			}
 		}).done(function (res) {
-			console.log(JSON.stringify(res));
 			self.displayWebsites(res.websites);
 		});
 	};
