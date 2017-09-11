@@ -3,6 +3,7 @@
 namespace OCA\CMSPico\Model;
 
 use OC\Files\Filesystem;
+use OC\Files\View;
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Exceptions\CheckCharsException;
 use OCA\CMSPico\Exceptions\MinCharsException;
@@ -29,16 +30,62 @@ class Website extends WebsiteCore {
 	/** @var string */
 	private $templateSource;
 
+	/** @var View */
+	private $ownerView = null;
+
+	/** @var View */
+	private $viewerView = null;
+
+
 	public function __construct() {
 		$this->l10n = \OC::$server->getL10N(Application::APP_NAME);
 		parent::__construct();
 	}
 
 
-	public function getAbsolutePath() {
-		Filesystem::init($this->getUserId(), $this->getUserId() . '/files/');
+	/**
+	 * init View
+	 */
+	private function initSiteViewerView() {
+		if ($this->viewerView !== null) {
+			return;
+		}
 
-		return Filesystem::getLocalFile($this->getPath());
+		$this->viewerView = new View($this->getViewer() . '/files/');
+	}
+
+
+	/**
+	 * init View
+	 */
+	private function initSiteOwnerView() {
+		if ($this->ownerView !== null) {
+			return;
+		}
+
+		$this->ownerView = new View($this->getUserId() . '/files/');
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public function getAbsolutePath() {
+		$this->initSiteOwnerView();
+
+		return $this->ownerView->getLocalFile($this->getPath());
+	}
+
+
+	/**
+	 * @param string $page
+	 *
+	 * @return false|\OC\Files\FileInfo
+	 */
+	public function getPageInfo($page = '') {
+		$this->initSiteViewerView();
+
+		return $this->viewerView->getFileInfo($this->getPath() . $page);
 	}
 
 
@@ -84,12 +131,15 @@ class Website extends WebsiteCore {
 	}
 
 
-	public function userMustHaveAccess($userId) {
-		if ($this->getOption('private') === '0') {
+	/**
+	 * @throws WebsiteIsPrivateException
+	 */
+	public function viewerMustHaveAccess() {
+		if ($this->getOption('private') !== '1') {
 			return;
 		}
 
-		if ($this->getUserId() === $userId) {
+		if ($this->itemIsSharedToViewer('')) {
 			return;
 		}
 
@@ -97,6 +147,27 @@ class Website extends WebsiteCore {
 			$this->l10n->t('Website is private. You do not have access to this website')
 		);
 	}
+
+
+	/**
+	 * @param string $item
+	 *
+	 * @return bool
+	 */
+	private function itemIsSharedToViewer($item = '') {
+
+		$info = $this->getPageInfo($item);
+		if ($info === false) {
+			return false;
+		}
+
+		if ($info->isShared()) {
+			return true;
+		}
+
+		return false;
+	}
+
 
 	/**
 	 * @throws CheckCharsException

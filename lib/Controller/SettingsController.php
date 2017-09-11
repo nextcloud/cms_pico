@@ -85,7 +85,6 @@ class SettingsController extends Controller {
 	public function editPersonalWebsiteOption($siteId, $option, $value) {
 
 		try {
-			$this->miscService->log('$$$$$ ' . $option . ' ' . $value);
 			$website = $this->websitesService->getWebsiteFromId($siteId);
 
 			$website->hasToBeOwnedBy($this->userId);

@@ -30,9 +30,14 @@ class PicoService {
 	}
 
 
+	/**
+	 * @param Website $website
+	 *
+	 * @return string
+	 */
 	public function getContent(Website $website) {
 
-		$website->userMustHaveAccess($this->userId);
+		$website->viewerMustHaveAccess();
 
 		$pico = new Pico(
 			$website->getAbsolutePath(),
