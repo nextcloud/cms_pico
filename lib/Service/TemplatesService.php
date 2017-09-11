@@ -55,30 +55,28 @@ class TemplatesService {
 
 	/**
 	 * @param $base
-	 * @param string $directory
+	 * @param string $dir
 	 *
 	 * @return TemplateFile[]
 	 */
-	private function getSourceFiles($base, $directory = '') {
+	private function getSourceFiles($base, $dir = '') {
 
 		MiscService::endSlash($base);
-		MiscService::endSlash($directory);
+		MiscService::endSlash($dir);
 
 		$files = [];
-		foreach (new DirectoryIterator($base . $directory) as $file) {
+		foreach (new DirectoryIterator($base . $dir) as $file) {
+
 			if (substr($file->getFilename(), 0, 1) === '.') {
 				continue;
 			}
 
 			if ($file->isDir()) {
-				$files = array_merge(
-					$files, $this->getSourceFiles($base, $directory . $file->getFilename())
-				);
+				$files = array_merge($files, $this->getSourceFiles($base, $dir . $file->getFilename()));
 				continue;
 			}
 
-			$content = file_get_contents($base . $directory . $file->getFilename());
-			$files[] = new TemplateFile($base, $directory . $file->getFilename(), $content);
+			$files[] = new TemplateFile($base, $dir . $file->getFilename());
 		}
 
 		return $files;

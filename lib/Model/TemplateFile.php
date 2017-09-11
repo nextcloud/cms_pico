@@ -18,13 +18,13 @@ class TemplateFile {
 	/**
 	 * TemplateFile constructor.
 	 *
+	 * @param $base
 	 * @param string $filename
-	 * @param string $content
 	 */
-	function __construct($base, $filename, $content) {
+	function __construct($base, $filename) {
 		$this->base = $base;
 		$this->filename = $filename;
-		$this->content = $content;
+		$this->content = file_get_contents($base . $filename);
 	}
 
 
