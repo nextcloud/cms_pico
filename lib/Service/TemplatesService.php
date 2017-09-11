@@ -4,14 +4,20 @@
 namespace OCA\CMSPico\Service;
 
 use DirectoryIterator;
+use Exception;
+use OCA\CMSPico\Exceptions\WriteAccessException;
 use OCA\CMSPico\Model\TemplateFile;
 use OCA\CMSPico\Model\Website;
 use OCP\Files\Folder;
+use OCP\IL10N;
 
 class TemplatesService {
 
 	const TEMPLATE_DEFAULT = 'sample_pico';
 	const TEMPLATE_DIR = __DIR__ . '/../../templates/';
+
+	/** @var IL10N */
+	private $l10n;
 
 	/** @var MiscService */
 	private $miscService;
@@ -22,9 +28,11 @@ class TemplatesService {
 	/**
 	 * TemplatesService constructor.
 	 *
+	 * @param IL10N $l10n
 	 * @param MiscService $miscService
 	 */
-	function __construct(MiscService $miscService) {
+	function __construct(IL10N $l10n, MiscService $miscService) {
+		$this->l10n = $l10n;
 		$this->miscService = $miscService;
 	}
 
@@ -80,11 +88,21 @@ class TemplatesService {
 	/**
 	 * @param TemplateFile $file
 	 * @param Website $website
+	 *
+	 * @throws WriteAccessException
 	 */
 	private function generateFile(TemplateFile $file, Website $website) {
-		$this->initFolder(pathinfo($website->getPath() . $file->getFileName(), PATHINFO_DIRNAME));
-		$new = $this->websiteFolder->newFile($website->getPath() . $file->getFileName());
-		$new->putContent($file->getContent());
+		try {
+			$this->initFolder(pathinfo($website->getPath() . $file->getFileName(), PATHINFO_DIRNAME));
+
+			$new = $this->websiteFolder->newFile($website->getPath() . $file->getFileName());
+			$new->putContent($file->getContent());
+		} catch (Exception $e) {
+			throw new WriteAccessException(
+				$this->l10n->t('Cannot generate template file in this folder')
+			);
+		}
+
 	}
 
 
