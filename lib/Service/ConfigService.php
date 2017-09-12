@@ -49,6 +49,7 @@ class ConfigService {
 	/** @var MiscService */
 	private $miscService;
 
+
 	/**
 	 * ConfigService constructor.
 	 *
@@ -56,13 +57,12 @@ class ConfigService {
 	 * @param string $userId
 	 * @param MiscService $miscService
 	 */
-	public function __construct(
-		IConfig $config, $userId, MiscService $miscService
-	) {
+	public function __construct(IConfig $config, $userId, MiscService $miscService) {
 		$this->config = $config;
 		$this->userId = $userId;
 		$this->miscService = $miscService;
 	}
+
 
 	/**
 	 * Get a value by key
@@ -72,13 +72,11 @@ class ConfigService {
 	 * @return string
 	 */
 	public function getAppValue($key) {
-		$defaultValue = null;
-		if (array_key_exists($key, $this->defaults)) {
-			$defaultValue = $this->defaults[$key];
-		}
+		$defaultValue = $this->getDefaultValue($key);
 
 		return $this->config->getAppValue(Application::APP_NAME, $key, $defaultValue);
 	}
+
 
 	/**
 	 * Set a value by key
@@ -92,6 +90,7 @@ class ConfigService {
 		$this->config->setAppValue(Application::APP_NAME, $key, $value);
 	}
 
+
 	/**
 	 * remove a key
 	 *
@@ -103,6 +102,7 @@ class ConfigService {
 		return $this->config->deleteAppValue(Application::APP_NAME, $key);
 	}
 
+
 	/**
 	 * Get a user value by key
 	 *
@@ -111,15 +111,13 @@ class ConfigService {
 	 * @return string
 	 */
 	public function getUserValue($key) {
-		$defaultValue = null;
-		if (array_key_exists($key, $this->defaults)) {
-			$defaultValue = $this->defaults[$key];
-		}
+		$defaultValue = $this->getDefaultValue($key);
 
 		return $this->config->getUserValue(
 			$this->userId, Application::APP_NAME, $key, $defaultValue
 		);
 	}
+
 
 	/**
 	 * Set a user value by key
@@ -133,6 +131,7 @@ class ConfigService {
 		return $this->config->setUserValue($this->userId, Application::APP_NAME, $key, $value);
 	}
 
+
 	/**
 	 * Get a user value by key and user
 	 *
@@ -144,6 +143,7 @@ class ConfigService {
 	public function getValueForUser($userId, $key) {
 		return $this->config->getUserValue($userId, Application::APP_NAME, $key);
 	}
+
 
 	/**
 	 * Set a user value by key
@@ -157,6 +157,21 @@ class ConfigService {
 	public function setValueForUser($userId, $key, $value) {
 		return $this->config->setUserValue($userId, Application::APP_NAME, $key, $value);
 	}
+
+
+	/**
+	 * @param string $key
+	 *
+	 * @return string
+	 */
+	private function getDefaultValue($key) {
+		if (array_key_exists($key, $this->defaults)) {
+			return (string) $this->defaults[$key];
+		}
+
+		return '';
+	}
+
 
 	/**
 	 * return the cloud version.
