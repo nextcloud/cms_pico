@@ -57,17 +57,17 @@ style(Application::APP_NAME, 'personal');
 			<td>&nbsp;</td>
 		</tr>
 		<tr>
-			<td colspan="2" class="title">Your current websites</td>
+			<td colspan="2" class="title"><?php p($l->t('Your current websites')); ?></td>
 		</tr>
 		<tr>
 			<td colspan="2">
 				<table cellspacing="3" cellpadding="3" id="cms_pico_list_websites"
 					   style="margin: 20px; width: 700px;">
 					<tr class="header">
-						<td width="30%">Name</td>
-						<td width="30%">Address</td>
-						<td width="30%">Local directory</td>
-						<td width="10%">Private</td>
+						<td width="30%"><?php p($l->t('Name')); ?></td>
+						<td width="30%"><?php p($l->t('Address')); ?></td>
+						<td width="30%"><?php p($l->t('Local directory')); ?></td>
+						<td width="10%"><?php p($l->t('Private')); ?></td>
 					</tr>
 
 				</table>
@@ -79,7 +79,7 @@ style(Application::APP_NAME, 'personal');
 			<td>&nbsp;</td>
 		</tr>
 		<tr>
-			<td colspan="2" class="title">Create a new website</td>
+			<td colspan="2" class="title"><?php p($l->t('Create a new website')); ?></td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -95,24 +95,24 @@ style(Application::APP_NAME, 'personal');
 			<td>&nbsp;</td>
 		</tr>
 		<tr class="lane">
-			<td class="left">Name of the website:<br/>
-				<em>The title of your website</em></td>
+			<td class="left"><?php p($l->t('Name of the website:')); ?><br/>
+				<em><?php p($l->t('The title of your website')); ?></em></td>
 			<td class="right">
 				<input id="cms_pico_new_name" class="field250" value=""
-					   placeholder="My new site folder"/>
+					   placeholder="<?php p($l->t('My new site folder')); ?>"/>
 			</td>
 		</tr>
 
 		<tr class="lane">
-			<td class="left">Address of the website:<br/>
+			<td class="left"><?php p($l->t('Address of the website:')); ?><br/>
 				<em id="cms_pico_new_url"> </em></td>
 			<td class="right">
-				<input id="cms_pico_new_website" class="field250" value="" placeholder="my_site"/>
+				<input id="cms_pico_new_website" class="field250" value="" placeholder="<?php p($l->t('my_site')); ?>"/>
 			</td>
 		</tr>
 
 		<tr class="lane">
-			<td class="left">Local directory:<br/>
+			<td class="left"><?php p($l->t('Local directory:')); ?><br/>
 				<em><?php p($l->t('The place to store the website files on your cloud')); ?></em></td>
 			<td class="right">
 				<div style="display: inline;">
@@ -131,7 +131,7 @@ style(Application::APP_NAME, 'personal');
 		<tr class="lane">
 			<td colspan="2" class="center">
 				<input class="field250" type="submit" id="cms_pico_new_submit"
-					   value="Create a new website"/>
+					   value="<?php p($l->t('Create a new website')); ?>"/>
 			</td>
 		</tr>
 
