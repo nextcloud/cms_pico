@@ -30,7 +30,10 @@ use OCA\CMSPico\AppInfo\Application;
 script(Application::APP_NAME, 'vendor/notyf');
 style(Application::APP_NAME, 'notyf');
 
-script(Application::APP_NAME, 'personal');
+script(
+	Application::APP_NAME,
+	['personal.result', 'personal.navigation', 'personal.elements', 'personal']
+);
 style(Application::APP_NAME, 'personal');
 
 ?>
@@ -135,7 +138,8 @@ style(Application::APP_NAME, 'personal');
 	</table>
 
 	<script id="tmpl_website" type="text/template">
-		<tr class="entry" data-id="%%id%%" data-address="%%address%%" data-path="%%path%%" data-private="%%private%%">
+		<tr class="entry" data-id="%%id%%" data-address="%%address%%" data-path="%%path%%"
+			data-private="%%private%%">
 			<td style="font-style: italic; font-weight: bold">%%name%%</td>
 			<td class="link">%%address%%</td>
 			<td class="path">%%path%%</td>
