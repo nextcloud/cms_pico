@@ -85,6 +85,7 @@ var pico_result = {
 		if (result.status === 1) {
 			OCA.notification.onSuccess('Website created');
 			pico_result.displayWebsites(result.websites);
+			pico_nav.resetFields();
 			return;
 		}
 

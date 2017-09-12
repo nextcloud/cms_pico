@@ -56,7 +56,7 @@ var pico_elements = {
 		});
 
 		pico_elements.cms_pico_new_folder.on('click', function () {
-			OC.dialogs.filepicker(t('cms_pico', 'test'), pico_result.pickFolderResult, false,
+			OC.dialogs.filepicker(t('cms_pico', 'test'), pico_nav.pickFolderResult, false,
 				"httpd/unix-directory", true);
 		});
 

@@ -27,12 +27,11 @@
 
 /** global: pico_elements */
 /** global: pico_define */
-/** global: pico_nav */
 
 var pico_nav = {
 
 	updateNewWebsite: function (url) {
-		pico_elements.cms_pico_new_url.text(define.nchost + define.sites + url);
+		pico_elements.cms_pico_new_url.text(pico_define.nchost + pico_define.sites + url);
 		pico_nav.refreshNewFolder();
 	},
 
@@ -51,6 +50,7 @@ var pico_nav = {
 
 	createNewWebsite: function () {
 
+		pico_nav.creatingWebsite(true);
 		var data = {
 			name: pico_elements.cms_pico_new_name.val(),
 			website: pico_elements.cms_pico_new_website.val(),
@@ -64,8 +64,21 @@ var pico_nav = {
 				data: data
 			}
 		}).done(function (result) {
+			pico_nav.creatingWebsite(false);
 			pico_result.createNewWebsiteResult(result);
 		});
+
+	},
+
+
+	creatingWebsite: function (creating) {
+
+		pico_elements.cms_pico_new_submit.prop('disabled', creating);
+		if (creating) {
+			pico_elements.cms_pico_new_submit.val(t('cms_pico', 'Creating your website'));
+		} else {
+			pico_elements.cms_pico_new_submit.val(t('cms_pico', 'Create a new website'));
+		}
 
 	},
 
@@ -83,12 +96,21 @@ var pico_nav = {
 	},
 
 
+	resetFields: function () {
+		pico_elements.cms_pico_new_website.val('');
+		pico_elements.cms_pico_new_name.val('');
+		pico_elements.cms_pico_new_path.text('/');
+		pico_elements.cms_pico_new_url.text('');
+	},
+
+
 	generateTmplWebsite: function (entry) {
 		var tmpl = $('#tmpl_website').html();
 
 		tmpl = tmpl.replace(/%%id%%/g, entry.id);
 		tmpl = tmpl.replace(/%%name%%/g, escapeHTML(entry.name));
-		tmpl = tmpl.replace(/%%address%%/g, pico_define.nchost + pico_define.sites + escapeHTML(entry.site));
+		tmpl = tmpl.replace(/%%address%%/g, pico_define.nchost + pico_define.sites +
+			escapeHTML(entry.site));
 		tmpl = tmpl.replace(/%%path%%/g, escapeHTML(entry.path));
 
 		if (entry.options.private === '1') {
