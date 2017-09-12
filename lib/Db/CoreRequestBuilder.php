@@ -53,7 +53,7 @@ class CoreRequestBuilder {
 	protected $miscService;
 
 	/** @var string */
-	protected $default_select_alias;
+	protected $defaultSelectAlias;
 
 
 	/**
@@ -136,7 +136,7 @@ class CoreRequestBuilder {
 	 */
 	private function limitToDBField(IQueryBuilder &$qb, $field, $value) {
 		$expr = $qb->expr();
-		$pf = ($qb->getType() === QueryBuilder::SELECT) ? $this->default_select_alias . '.' : '';
+		$pf = ($qb->getType() === QueryBuilder::SELECT) ? $this->defaultSelectAlias . '.' : '';
 		$qb->andWhere($expr->eq($pf . $field, $qb->createNamedParameter($value)));
 	}
 

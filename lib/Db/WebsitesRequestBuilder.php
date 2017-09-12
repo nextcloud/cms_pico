@@ -88,7 +88,7 @@ class WebsitesRequestBuilder extends CoreRequestBuilder {
 		$qb->select('w.id', 'w.name', 'w.user_id', 'w.site', 'w.type', 'w.options', 'w.path', 'w.creation')
 		   ->from(self::TABLE_WEBSITES, 'w');
 
-		$this->default_select_alias = 'w';
+		$this->defaultSelectAlias = 'w';
 
 		return $qb;
 	}
