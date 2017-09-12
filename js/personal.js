@@ -26,11 +26,12 @@
 
 /** global: OC */
 /** global: OCA */
+/** global: Notyf */
 
 /** global: pico_elements */
 /** global: pico_result */
 
-var define = {
+var pico_define = {
 	sites: '/sites/',
 	index: '/index.php',
 	nchost: ''
@@ -54,7 +55,7 @@ $(document).ready(function () {
 	CMSPico.prototype = {
 
 		initialize: function () {
-			define.nchost = window.location.protocol + '//' + window.location.host;
+			pico_define.nchost = window.location.protocol + '//' + window.location.host;
 			pico_elements.initElements();
 			pico_elements.initUI();
 			pico_elements.initTweaks();

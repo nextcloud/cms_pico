@@ -23,7 +23,10 @@
  *
  */
 
+/** global: OC */
+/** global: OCA */
 
+/** global: pico_define */
 /** global: pico_elements */
 /** global: pico_nav */
 
@@ -56,7 +59,7 @@ var pico_result = {
 
 	displayWebsitesPath: function () {
 		pico_elements.cms_pico_list_websites.find('TD.path').each(function () {
-			var url = define.nchost + define.index + OC.appswebroots.files + '/?dir=' +
+			var url = pico_define.nchost + pico_define.index + OC.appswebroots.files + '/?dir=' +
 				$(this).parent().attr('data-path');
 			$(this).css('cursor', 'pointer').on('click', function () {
 				window.open(url);

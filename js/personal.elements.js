@@ -23,6 +23,9 @@
  *
  */
 
+/** global: pico_nav */
+/** global: pico_result */
+
 var pico_elements = {
 
 	cms_pico_list_websites: null,

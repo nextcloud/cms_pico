@@ -23,8 +23,11 @@
  *
  */
 
+/** global: OC */
 
 /** global: pico_elements */
+/** global: pico_define */
+/** global: pico_nav */
 
 var pico_nav = {
 
@@ -85,7 +88,7 @@ var pico_nav = {
 
 		tmpl = tmpl.replace(/%%id%%/g, entry.id);
 		tmpl = tmpl.replace(/%%name%%/g, escapeHTML(entry.name));
-		tmpl = tmpl.replace(/%%address%%/g, define.nchost + define.sites + escapeHTML(entry.site));
+		tmpl = tmpl.replace(/%%address%%/g, pico_define.nchost + pico_define.sites + escapeHTML(entry.site));
 		tmpl = tmpl.replace(/%%path%%/g, escapeHTML(entry.path));
 
 		if (entry.options.private === '1') {
