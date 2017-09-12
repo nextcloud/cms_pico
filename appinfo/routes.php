@@ -26,7 +26,6 @@
 
 return [
 	'routes' => [
-		['name' => 'Navigation#navigate', 'url' => '/', 'verb' => 'GET'],
 		[
 			'name' => 'Pico#getRoot', 'url' => '/pico/{site}/', 'verb' => 'GET'
 		],
