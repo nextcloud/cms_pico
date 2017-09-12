@@ -72,29 +72,30 @@ class WebsitesService {
 
 
 	/**
+	 * @param string $name
 	 * @param string $userId
-	 * @param $name
 	 * @param string $site
 	 * @param string $path
+	 * @param int $template
 	 *
 	 * @throws WebsiteAlreadyExistException
 	 */
-	public function createWebsite($name, $userId, $site, $path) {
+	public function createWebsite($name, $userId, $site, $path, $template) {
+		$this->templatesService->templateHasToExist($template);
+
 		$website = new Website();
 		$website->setName($name)
 				->setUserId($userId)
 				->setSite($site)
 				->setPath($path)
-				->setTemplateSource(TemplatesService::TEMPLATE_DEFAULT);
+				->setTemplateSource(TemplatesService::TEMPLATES[$template]);
 
 		try {
 			$website->hasToBeFilledWithValidEntries();
 			$website = $this->websiteRequest->getWebsiteFromSite($website->getSite());
-			throw new WebsiteAlreadyExistException(
-				$this->l10n->t('Website already exist. Please choose another one.')
-			);
+			throw new WebsiteAlreadyExistException($this->l10n->t('Website already exist.'));
 		} catch (WebsiteDoesNotExistException $e) {
-			// Well we want the website to not exist (yet).
+			// In fact we want the website to not exist (yet).
 		}
 
 		$this->templatesService->installTemplates($website);

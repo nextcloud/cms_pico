@@ -29,6 +29,7 @@ namespace OCA\CMSPico\Controller;
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Service\ConfigService;
 use OCA\CMSPico\Service\MiscService;
+use OCA\CMSPico\Service\TemplatesService;
 use OCA\CMSPico\Service\WebsitesService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
@@ -43,6 +44,9 @@ class SettingsController extends Controller {
 	/** @var ConfigService */
 	private $configService;
 
+	/** @var TemplatesService */
+	private $templatesService;
+
 	/** @var WebsitesService */
 	private $websitesService;
 
@@ -56,16 +60,19 @@ class SettingsController extends Controller {
 	 * @param IRequest $request
 	 * @param string $userId
 	 * @param ConfigService $configService
+	 * @param TemplatesService $templatesService
 	 * @param WebsitesService $websitesService
 	 * @param MiscService $miscService
 	 */
 	function __construct(
-		IRequest $request, $userId, ConfigService $configService, WebsitesService $websitesService,
+		IRequest $request, $userId, ConfigService $configService, TemplatesService $templatesService,
+		WebsitesService $websitesService,
 		MiscService $miscService
 	) {
 		parent::__construct(Application::APP_NAME, $request);
 		$this->userId = $userId;
 		$this->configService = $configService;
+		$this->templatesService = $templatesService;
 		$this->websitesService = $websitesService;
 		$this->miscService = $miscService;
 	}
@@ -82,7 +89,7 @@ class SettingsController extends Controller {
 
 		try {
 			$this->websitesService->createWebsite(
-				$data['name'], $this->userId, $data['website'], $data['path']
+				$data['name'], $this->userId, $data['website'], $data['path'], $data['template']
 			);
 
 			return $this->miscService->success(
@@ -146,13 +153,12 @@ class SettingsController extends Controller {
 	 */
 	public function getSettingsAdmin() {
 		$data = [
-			ConfigService::APP_TEST => $this->configService->getAppValue(
-				ConfigService::APP_TEST
-			)
+			'templates_new' => $this->templatesService->getNewTemplatesList()
 		];
 
 		return new DataResponse($data, Http::STATUS_OK);
 	}
+
 
 	/**
 	 * @param $data
@@ -163,6 +169,17 @@ class SettingsController extends Controller {
 		$this->configService->setAppValue(
 			ConfigService::APP_TEST, $data[ConfigService::APP_TEST]
 		);
+
+		return $this->getSettingsAdmin();
+	}
+
+
+	/**
+	 * @param $data
+	 *
+	 * @return DataResponse
+	 */
+	public function addTemplate($data) {
 
 		return $this->getSettingsAdmin();
 	}

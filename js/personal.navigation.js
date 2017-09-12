@@ -43,7 +43,7 @@ var pico_nav = {
 
 
 	refreshNewFolder: function () {
-		pico_elements.cms_pico_new_path.text(pico_elements.cms_pico_new_folder_result + '/' +
+		pico_elements.cms_pico_new_folder.val(pico_elements.cms_pico_new_folder_result + '/' +
 			pico_elements.cms_pico_new_website.val());
 	},
 
@@ -54,7 +54,8 @@ var pico_nav = {
 		var data = {
 			name: pico_elements.cms_pico_new_name.val(),
 			website: pico_elements.cms_pico_new_website.val(),
-			path: pico_elements.cms_pico_new_path.text()
+			path: pico_elements.cms_pico_new_folder.val(),
+			template: pico_elements.cms_pico_new_template.val()
 		};
 
 		$.ajax({
@@ -99,13 +100,18 @@ var pico_nav = {
 	resetFields: function () {
 		pico_elements.cms_pico_new_website.val('');
 		pico_elements.cms_pico_new_name.val('');
-		pico_elements.cms_pico_new_path.text('/');
+		pico_elements.cms_pico_new_folder.val('/');
 		pico_elements.cms_pico_new_url.text('');
 	},
 
 
 	generateTmplWebsite: function (entry) {
-		var tmpl = $('#tmpl_website').html();
+		var div = $('#tmpl_website');
+		if (!div.length) {
+			return;
+		}
+
+		var tmpl = div.html();
 
 		tmpl = tmpl.replace(/%%id%%/g, entry.id);
 		tmpl = tmpl.replace(/%%name%%/g, escapeHTML(entry.name));

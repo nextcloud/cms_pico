@@ -33,7 +33,7 @@ var pico_elements = {
 	cms_pico_new_name: null,
 	cms_pico_new_url: null,
 	cms_pico_new_website: null,
-	cms_pico_new_path: null,
+	cms_pico_new_template: null,
 	cms_pico_new_folder: null,
 	cms_pico_new_folder_result: '',
 	cms_pico_new_submit: null,
@@ -45,7 +45,7 @@ var pico_elements = {
 		pico_elements.cms_pico_new_name = $('#cms_pico_new_name');
 		pico_elements.cms_pico_new_website = $('#cms_pico_new_website');
 		pico_elements.cms_pico_new_url = $('#cms_pico_new_url');
-		pico_elements.cms_pico_new_path = $('#cms_pico_new_path');
+		pico_elements.cms_pico_new_template = $('#cms_pico_new_template');
 		pico_elements.cms_pico_new_folder = $('#cms_pico_new_folder');
 		pico_elements.cms_pico_new_submit = $('#cms_pico_new_submit');
 	},

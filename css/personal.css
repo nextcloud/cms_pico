@@ -29,7 +29,7 @@ TD.title {
 	font-weight: bold;
 }
 
-INPUT.field250 {
+INPUT.field250, SELECT.field250 {
 	width: 250px;
 }
 

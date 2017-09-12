@@ -28,6 +28,7 @@
 /** global: OCA */
 /** global: Notyf */
 /** global: pico_elements */
+/** global: pico_nav */
 /** global: pico_result */
 
 var pico_define = {
@@ -44,6 +45,7 @@ $(document).ready(function () {
 	 */
 	var CMSPico = function () {
 
+		$.extend(CMSPico.prototype, pico_nav);
 		$.extend(CMSPico.prototype, pico_elements);
 		$.extend(CMSPico.prototype, pico_result);
 

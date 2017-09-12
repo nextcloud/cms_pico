@@ -28,6 +28,7 @@ namespace OCA\CMSPico\Service;
 
 use DirectoryIterator;
 use Exception;
+use OCA\CMSPico\Exceptions\TemplateDoesNotExistException;
 use OCA\CMSPico\Exceptions\WriteAccessException;
 use OCA\CMSPico\Model\TemplateFile;
 use OCA\CMSPico\Model\Website;
@@ -37,10 +38,14 @@ use OCP\IL10N;
 class TemplatesService {
 
 	const TEMPLATE_DEFAULT = 'sample_pico';
+	const TEMPLATES = ['sample_pico', 'other template'];
 	const TEMPLATE_DIR = __DIR__ . '/../../templates/';
 
 	/** @var IL10N */
 	private $l10n;
+
+	/** @var ConfigService */
+	private $configService;
 
 	/** @var MiscService */
 	private $miscService;
@@ -52,11 +57,76 @@ class TemplatesService {
 	 * TemplatesService constructor.
 	 *
 	 * @param IL10N $l10n
+	 * @param ConfigService $configService
 	 * @param MiscService $miscService
 	 */
-	function __construct(IL10N $l10n, MiscService $miscService) {
+	function __construct(IL10N $l10n, ConfigService $configService, MiscService $miscService) {
 		$this->l10n = $l10n;
+		$this->configService = $configService;
 		$this->miscService = $miscService;
+	}
+
+
+	/**
+	 * @param $template
+	 *
+	 * @throws TemplateDoesNotExistException
+	 */
+	public function templateHasToExist($template) {
+		if (key_exists($template, self::TEMPLATES)) {
+			return;
+		}
+
+		throw new TemplateDoesNotExistException($this->l10n->t('Template does not exist'));
+	}
+
+
+	/**
+	 * @return array
+	 */
+	public function getTemplatesList() {
+		$templates = self::TEMPLATES;
+		$customs = json_decode($this->configService->getAppValue('templates'), true);
+
+		if ($customs !== null) {
+			return $templates = array_merge($templates, $customs);
+		}
+
+		return $templates;
+	}
+
+
+	/**
+	 * @return array
+	 */
+	public function getNewTemplatesList() {
+
+		$newTemplates = [];
+		$currTemplates = $this->getTemplatesList();
+		$allTemplates = $this->getDirectoriesFromTemplatesDir();
+		foreach ($allTemplates as $template) {
+			if (!in_array($template, $currTemplates)) {
+				$newTemplates[] = $template;
+			}
+		}
+
+		return $newTemplates;
+	}
+
+
+	private function getDirectoriesFromTemplatesDir() {
+
+		$allTemplates = [];
+		foreach (new DirectoryIterator(self::TEMPLATE_DIR) as $file) {
+
+			if (!$file->isDir() || substr($file->getFilename(), 0, 1) === '.') {
+				continue;
+			}
+
+			$allTemplates[] = $file->getFilename();
+		}
+
+		return $allTemplates;
 	}
 
 

@@ -29,14 +29,22 @@ namespace OCA\CMSPico\Controller;
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Service\ConfigService;
 use OCA\CMSPico\Service\MiscService;
+use OCA\CMSPico\Service\TemplatesService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IRequest;
+use OCP\IURLGenerator;
 
 class NavigationController extends Controller {
 
+	/** @var IURLGenerator */
+	private $urlGenerator;
+
 	/** @var ConfigService */
 	private $configService;
+
+	/** @var TemplatesService */
+	private $templatesService;
 
 	/** @var MiscService */
 	private $miscService;
@@ -46,34 +54,20 @@ class NavigationController extends Controller {
 	 * NavigationController constructor.
 	 *
 	 * @param IRequest $request
+	 * @param IURLGenerator $urlGenerator
 	 * @param ConfigService $configService
+	 * @param TemplatesService $templatesService
 	 * @param MiscService $miscService
 	 */
-	function __construct(IRequest $request, ConfigService $configService, MiscService $miscService) {
+	function __construct(
+		IRequest $request, IURLGenerator $urlGenerator, ConfigService $configService,
+		TemplatesService $templatesService, MiscService $miscService
+	) {
 		parent::__construct(Application::APP_NAME, $request);
+		$this->urlGenerator = $urlGenerator;
 		$this->configService = $configService;
+		$this->templatesService = $templatesService;
 		$this->miscService = $miscService;
-	}
-
-
-	/**
-	 * @NoCSRFRequired
-	 * @NoAdminRequired
-	 * @NoSubAdminRequired
-	 *
-	 * @return TemplateResponse
-	 */
-	public function navigate() {
-		$data = [
-			ConfigService::APP_TEST          => $this->configService->getAppValue(
-				ConfigService::APP_TEST
-			),
-			ConfigService::APP_TEST_PERSONAL => $this->configService->getUserValue(
-				ConfigService::APP_TEST_PERSONAL
-			)
-		];
-
-		return new TemplateResponse(Application::APP_NAME, 'navigate', $data);
 	}
 
 
@@ -83,7 +77,10 @@ class NavigationController extends Controller {
 	 * @return TemplateResponse
 	 */
 	public function admin() {
-		$data = ['nchost' => \OC::$server->getURLGenerator()->getBaseUrl()];
+		$data = [
+			'nchost' => $this->urlGenerator->getBaseUrl(),
+			'templates_new' => $this->templatesService->getNewTemplatesList()
+		];
 
 		return new TemplateResponse(Application::APP_NAME, 'settings.admin', $data, 'blank');
 	}
@@ -96,7 +93,13 @@ class NavigationController extends Controller {
 	 * @return TemplateResponse
 	 */
 	public function personal() {
-		return new TemplateResponse(Application::APP_NAME, 'settings.personal', [], 'blank');
+		$data = [
+			'templates' => $this->templatesService->getTemplatesList()
+		];
+		\OC::$server->getLogger()
+					->log(4, '____' . json_encode($data));
+
+		return new TemplateResponse(Application::APP_NAME, 'settings.personal', $data, 'blank');
 	}
 
 

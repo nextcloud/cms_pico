@@ -81,7 +81,7 @@ style(Application::APP_NAME, 'personal');
 		<tr>
 			<td colspan="2" class="title"><?php p($l->t('Create a new website')); ?></td>
 		</tr>
-		<tr>
+			<tr>
 			<td colspan="2">
 				To create a new Site Folder, you will need to specify the front URL address
 				(<?php print(OC::$WEBROOT); ?>/sites/your_site_folder)
@@ -115,13 +115,23 @@ style(Application::APP_NAME, 'personal');
 			<td class="left"><?php p($l->t('Local directory:')); ?><br/>
 				<em><?php p($l->t('The place to store the website files on your cloud')); ?></em></td>
 			<td class="right">
-				<div style="display: inline;">
-					<div style="display: inline;" id="cms_pico_new_path">/</div>
-					<div style="margin-left: 50px; display: inline;">
 						<input type="submit" class="field250" id="cms_pico_new_folder"
-							   value="Choose a folder"/>
-					</div>
-				</div>
+							   value="/"/>
+			</td>
+		</tr>
+
+		<tr class="lane">
+			<td class="left"><?php p($l->t('Base Template:')); ?><br/>
+				<em><?php p($l->t('Choose a template from the list')); ?></em></td>
+			<td class="right">
+				<select id="cms_pico_new_template" class="field250">
+					<?php
+					for($i = 0; $i < sizeof($_['templates']); $i++)
+					{
+						echo '<option value="' . $i . '">' . $_['templates'][$i] . '</option>';
+					}
+					?>
+				</select>
 			</td>
 		</tr>
 

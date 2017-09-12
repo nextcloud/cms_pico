@@ -1,5 +1,4 @@
-<?php
-/**
+/*
  * CMS Pico - Integration of Pico within your files to create websites.
  *
  * This file is licensed under the Affero General Public License version 3 or
@@ -24,27 +23,30 @@
  *
  */
 
-return [
-	'routes' => [
-		[
-			'name' => 'Pico#getRoot', 'url' => '/pico/{site}/', 'verb' => 'GET'
-		],
-		[
-			'name'         => 'Pico#getPage', 'url' => '/pico/{site}/{page}', 'verb' => 'GET',
-			'requirements' => array('page' => '.+')
-		],
 
-		['name' => 'Settings#getPersonalWebsites', 'url' => '/personal/websites', 'verb' => 'GET'],
-		['name' => 'Settings#createPersonalWebsite', 'url' => '/personal/website', 'verb' => 'PUT'],
-		[
-			'name' => 'Settings#editPersonalWebsiteOption',
-			'url'  => '/personal/website/{siteId}/option/{option}', 'verb' => 'POST'
-		],
+var admin_pico_elements = {
 
-		['name' => 'Settings#getSettingsAdmin', 'url' => '/admin/settings', 'verb' => 'GET'],
-		['name' => 'Settings#setSettingsAdmin', 'url' => '/admin/settings', 'verb' => 'POST'],
-		['name' => 'Settings#addTemplate', 'url' => '/admin/templates', 'verb' => 'PUT']
-	]
-];
+	cms_pico_new_templates: null,
 
 
+	initElements: function () {
+		admin_pico_elements.cms_pico_new_templates = $('#cms_pico_new_templates');
+	},
+
+
+	initUI: function () {
+		// pico_elements.cms_pico_new_website.on('input propertychange paste focus', function () {
+		// 	pico_nav.updateNewWebsite($(this).val());
+		// });
+		//
+		// pico_elements.cms_pico_new_folder.on('click', function () {
+		// 	OC.dialogs.filepicker(t('cms_pico', 'test'), pico_nav.pickFolderResult, false,
+		// 		"httpd/unix-directory", true);
+		// });
+		//
+		// pico_elements.cms_pico_new_submit.on('click', function () {
+		// 	pico_nav.createNewWebsite();
+		// });
+	}
+
+};
