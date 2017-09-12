@@ -49,33 +49,6 @@ class Application extends App {
 	}
 
 
-
-	/**
-	 * Register Navigation Tab
-	 */
-	public function registerNavigation() {
-
-		$this->getContainer()
-			 ->getServer()
-			 ->getNavigationManager()
-			 ->add(
-				 function() {
-					 $urlGen = \OC::$server->getURLGenerator();
-					 $navName = \OC::$server->getL10N(self::APP_NAME)
-											->t('Pico CMS');
-
-					 return [
-						 'id' => self::APP_NAME,
-						 'order' => 5,
-						 'href' => $urlGen->linkToRoute('cms_pico.Navigation.navigate'),
-						 'icon' => $urlGen->imagePath(self::APP_NAME, 'ruler.svg'),
-						 'name' => $navName
-					 ];
-				 }
-			 );
-	}
-
-
 	public function registerSettingsAdmin() {
 		\OCP\App::registerAdmin(self::APP_NAME, 'lib/admin');
 	}
