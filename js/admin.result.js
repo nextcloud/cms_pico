@@ -54,6 +54,10 @@ var admin_pico_result = {
 			var tmpl = admin_pico_nav.generateTmplCustomTemplate(templates[i]);
 			admin_pico_elements.cms_pico_curr_templates.append(tmpl);
 		}
+
+		admin_pico_elements.cms_pico_curr_templates.children('tr').each(function () {
+			admin_pico_nav.interactionCurrentTemplate($(this));
+		});
 	}
 
 

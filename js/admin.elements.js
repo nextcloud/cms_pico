@@ -23,6 +23,7 @@
  *
  */
 
+/** global: admin_pico_nav */
 
 var admin_pico_elements = {
 
@@ -46,7 +47,7 @@ var admin_pico_elements = {
 
 		admin_pico_elements.cms_pico_submit.on('click', function() {
 			admin_pico_nav.addCustomTemplate();
-		})
+		});
 	}
 
 };

@@ -43,7 +43,8 @@ return [
 
 		['name' => 'Settings#getSettingsAdmin', 'url' => '/admin/settings', 'verb' => 'GET'],
 		['name' => 'Settings#setSettingsAdmin', 'url' => '/admin/settings', 'verb' => 'POST'],
-		['name' => 'Settings#addCustomTemplate', 'url' => '/admin/templates', 'verb' => 'PUT']
+		['name' => 'Settings#addCustomTemplate', 'url' => '/admin/templates', 'verb' => 'PUT'],
+		['name' => 'Settings#removeCustomTemplate', 'url' => '/admin/templates', 'verb' => 'DELETE']
 	]
 ];
 

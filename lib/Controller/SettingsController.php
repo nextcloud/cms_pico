@@ -183,4 +183,23 @@ class SettingsController extends Controller {
 		return $this->getSettingsAdmin();
 	}
 
+	/**
+	 * @param $template
+	 *
+	 * @return DataResponse
+	 */
+	public function removeCustomTemplate($template) {
+
+		$custom = $this->templatesService->getTemplatesList(true);
+
+		$k = array_search($template, $custom);
+		if ($k !== false) {
+			unset($custom[$k]);
+		}
+
+		$this->configService->setAppValue(ConfigService::CUSTOM_TEMPLATES, json_encode($custom));
+
+		return $this->getSettingsAdmin();
+	}
+
 }

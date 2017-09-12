@@ -94,7 +94,7 @@ class TemplatesService {
 
 		$customs = json_decode($this->configService->getAppValue(ConfigService::CUSTOM_TEMPLATES), true);
 		if ($customs !== null) {
-			return $templates = array_merge($templates, $customs);
+			$templates = array_merge($templates, $customs);
 		}
 
 		return $templates;

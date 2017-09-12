@@ -40,17 +40,40 @@ var admin_pico_nav = {
 		});
 	},
 
+
 	addCustomTemplate: function () {
-	$.ajax({
-		method: 'PUT',
-		url: OC.generateUrl('/apps/cms_pico/admin/templates'),
-		data: {
-			template: admin_pico_elements.cms_pico_new_template.val()
-		}
-	}).done(function (res) {
-		admin_pico_result.displaySettings(res);
-	});
-},
+		$.ajax({
+			method: 'PUT',
+			url: OC.generateUrl('/apps/cms_pico/admin/templates'),
+			data: {
+				template: admin_pico_elements.cms_pico_new_template.val()
+			}
+		}).done(function (res) {
+			admin_pico_result.displaySettings(res);
+		});
+	},
+
+
+	removeCustomTemplate: function (template) {
+		$.ajax({
+			method: 'DELETE',
+			url: OC.generateUrl('/apps/cms_pico/admin/templates'),
+			data: {
+				template: template
+			}
+		}).done(function (res) {
+			admin_pico_result.displaySettings(res);
+		});
+	},
+
+
+	interactionCurrentTemplate: function (div) {
+		var name = div.attr('data-name');
+		div.find('TD.delete').on('click', function () {
+			admin_pico_nav.removeCustomTemplate(name);
+		});
+	},
+
 
 	generateTmplCustomTemplate: function (entry) {
 		var div = $('#tmpl_custom_template');

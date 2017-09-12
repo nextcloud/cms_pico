@@ -136,10 +136,7 @@ RewriteRule /sites/(.*) <?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico/$
 				</select>
 			</td>
 		</tr>
-
-		<tr>
-			<td>&nbsp;</td>
-		</tr>
+		
 		<tr class="lane">
 			<td colspan="2" class="center">
 				<input class="field250" type="submit" id="admin_cms_pico_add_submit"
@@ -153,7 +150,7 @@ RewriteRule /sites/(.*) <?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico/$
 	<script id="tmpl_custom_template" type="text/template">
 		<tr class="entry" data-name="%%name%%">
 			<td style="padding-right: 100px;">%%name%%</td>
-			<td>delete</td>
+			<td class="delete">delete</td>
 		</tr>
 	</script>
 
