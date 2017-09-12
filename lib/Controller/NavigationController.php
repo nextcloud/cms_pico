@@ -78,8 +78,7 @@ class NavigationController extends Controller {
 	 */
 	public function admin() {
 		$data = [
-			'nchost' => $this->urlGenerator->getBaseUrl(),
-			'templates_new' => $this->templatesService->getNewTemplatesList()
+			'nchost' => $this->urlGenerator->getBaseUrl()
 		];
 
 		return new TemplateResponse(Application::APP_NAME, 'settings.admin', $data, 'blank');
@@ -96,8 +95,6 @@ class NavigationController extends Controller {
 		$data = [
 			'templates' => $this->templatesService->getTemplatesList()
 		];
-		\OC::$server->getLogger()
-					->log(4, '____' . json_encode($data));
 
 		return new TemplateResponse(Application::APP_NAME, 'settings.personal', $data, 'blank');
 	}

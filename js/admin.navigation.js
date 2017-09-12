@@ -30,9 +30,38 @@
 
 var admin_pico_nav = {
 
-	 updateNewWebsite: function (url) {
-	 }
+	retrieveSettings: function () {
+		$.ajax({
+			method: 'GET',
+			url: OC.generateUrl('/apps/cms_pico/admin/settings'),
+			data: {}
+		}).done(function (res) {
+			admin_pico_result.displaySettings(res);
+		});
+	},
 
+	addCustomTemplate: function () {
+	$.ajax({
+		method: 'PUT',
+		url: OC.generateUrl('/apps/cms_pico/admin/templates'),
+		data: {
+			template: admin_pico_elements.cms_pico_new_template.val()
+		}
+	}).done(function (res) {
+		admin_pico_result.displaySettings(res);
+	});
+},
+
+	generateTmplCustomTemplate: function (entry) {
+		var div = $('#tmpl_custom_template');
+		if (!div.length) {
+			return;
+		}
+
+		var tmpl = div.html();
+		tmpl = tmpl.replace(/%%name%%/g, escapeHTML(entry));
+		return tmpl;
+	}
 
 
 };

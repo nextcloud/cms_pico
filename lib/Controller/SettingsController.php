@@ -153,6 +153,7 @@ class SettingsController extends Controller {
 	 */
 	public function getSettingsAdmin() {
 		$data = [
+			'templates'     => $this->templatesService->getTemplatesList(true),
 			'templates_new' => $this->templatesService->getNewTemplatesList()
 		];
 
@@ -161,25 +162,23 @@ class SettingsController extends Controller {
 
 
 	/**
-	 * @param $data
-	 *
 	 * @return DataResponse
 	 */
-	public function setSettingsAdmin($data) {
-		$this->configService->setAppValue(
-			ConfigService::APP_TEST, $data[ConfigService::APP_TEST]
-		);
-
+	public function setSettingsAdmin() {
 		return $this->getSettingsAdmin();
 	}
 
 
 	/**
-	 * @param $data
+	 * @param $template
 	 *
 	 * @return DataResponse
 	 */
-	public function addTemplate($data) {
+	public function addCustomTemplate($template) {
+
+		$custom = $this->templatesService->getTemplatesList(true);
+		array_push($custom, $template);
+		$this->configService->setAppValue(ConfigService::CUSTOM_TEMPLATES, json_encode($custom));
 
 		return $this->getSettingsAdmin();
 	}

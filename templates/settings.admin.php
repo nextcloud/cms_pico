@@ -56,7 +56,7 @@ style(Application::APP_NAME, 'admin');
 
 
 		<tr class="lane">
-			<td class="left"><?php p($l->t('Using MOD_PROXY:')); ?><br />
+			<td class="left"><?php p($l->t('Using MOD_PROXY:')); ?><br/>
 				<em><?php p($_['nchost']); ?>/sites/example/</em>
 			</td>
 			<td class="right">
@@ -69,7 +69,7 @@ ProxyPassReverse /sites/ <?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico/
 
 
 		<tr class="lane">
-			<td class="left"><?php p($l->t('Using MOD_REWRITE:')); ?><br />
+			<td class="left"><?php p($l->t('Using MOD_REWRITE:')); ?><br/>
 				<em><?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico/example/</em>
 			</td>
 			<td class="right">
@@ -82,7 +82,7 @@ RewriteRule /sites/(.*) <?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico/$
 
 
 		<tr class="lane">
-			<td class="left"><?php p($l->t('Using MOD_REWRITE and MOD_PROXY:')); ?><br />
+			<td class="left"><?php p($l->t('Using MOD_REWRITE and MOD_PROXY:')); ?><br/>
 				<em><?php p($_['nchost']); ?>/sites/example/</em>
 			</td>
 			<td class="right">
@@ -93,19 +93,18 @@ RewriteRule /sites/(.*) <?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico/$
 			</td>
 		</tr>
 
-
-		<tr>
+		<tr class="lane">
 			<td>&nbsp;</td>
 		</tr>
 
-		<tr>
-			<td colspan="2" class="title"><?php p($l->t('Adding a template')); ?></td>
+		<tr class="lane">
+			<td colspan="2" class="title"><?php p($l->t('Custom templates')); ?></td>
 		</tr>
 
 		<tr>
 			<td colspan="2"><?php p(
 					$l->t(
-						'To add a new template, you will need to create a new folder in apps/cms_pico/templates/'
+						'To add a custom template, you will need to create a new folder in apps/cms_pico/templates/'
 					)
 				); ?>
 				<i><?php echo $_['templates_dir']; ?></i>
@@ -119,21 +118,43 @@ RewriteRule /sites/(.*) <?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico/$
 		</tr>
 
 		<tr class="lane">
-			<td class="left"><?php p($l->t('Select a new template:')); ?><br />
-				<em>Refresh the page if you cannot find your new folder</em>
+			<td class="left"><?php p($l->t('Current custom templates:')); ?><br/>
+				<em>Manage your custom templates</em>
 			</td>
 			<td class="right">
-				<select id="admin_cms_pico_new_template" class="field250">
-					<?php
-					for($i = 0; $i < sizeof($_['templates_new']); $i++)
-					{
-						echo '<option value="' . $i . '">' . $_['templates_new'][$i] . '</option>';
-					}
-					?>
-				</select>
+				<table cellspacing="3" cellpadding="3" id="admin_cms_pico_curr_templates">
+				</table>
+			</td>
+		</tr>
 
+		<tr class="lane">
+			<td class="left"><?php p($l->t('Add a new custom template:')); ?><br/>
+				<em id="admin_cms_pico_refresh_templates">Refresh if you cannot find your new folder</em>
+			</td>
+			<td class="right">
+				<select id="admin_cms_pico_new_templates" class="field250">
+				</select>
+			</td>
+		</tr>
+
+		<tr>
+			<td>&nbsp;</td>
+		</tr>
+		<tr class="lane">
+			<td colspan="2" class="center">
+				<input class="field250" type="submit" id="admin_cms_pico_add_submit"
+					   value="<?php p($l->t('Add custom template')); ?>"/>
 			</td>
 		</tr>
 
 	</table>
+
+
+	<script id="tmpl_custom_template" type="text/template">
+		<tr class="entry" data-name="%%name%%">
+			<td style="padding-right: 100px;">%%name%%</td>
+			<td>delete</td>
+		</tr>
+	</script>
+
 </div>

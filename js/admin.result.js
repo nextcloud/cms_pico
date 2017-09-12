@@ -32,7 +32,29 @@
 var admin_pico_result = {
 
 	displaySettings: function (settings) {
-		console.log(JSON.stringify(settings));
+		admin_pico_result.displayNewTemplates(settings.templates_new);
+		admin_pico_result.displayCurrentTemplates(settings.templates);
+	},
+
+
+	displayNewTemplates: function (templates) {
+		admin_pico_elements.cms_pico_new_template.empty();
+		for (var i = 0; i < templates.length; i++) {
+			admin_pico_elements.cms_pico_new_template.append($('<option>', {
+				value: templates[i],
+				text: templates[i]
+			}));
+		}
+	},
+
+
+	displayCurrentTemplates: function (templates) {
+		admin_pico_elements.cms_pico_curr_templates.emptyTable();
+		for (var i = 0; i < templates.length; i++) {
+			var tmpl = admin_pico_nav.generateTmplCustomTemplate(templates[i]);
+			admin_pico_elements.cms_pico_curr_templates.append(tmpl);
+		}
 	}
+
 
 };

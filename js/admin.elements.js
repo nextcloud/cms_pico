@@ -26,27 +26,27 @@
 
 var admin_pico_elements = {
 
-	cms_pico_new_templates: null,
-
+	cms_pico_curr_templates: null,
+	cms_pico_new_template: null,
+	cms_pico_refresh_templates: null,
+	cms_pico_submit: null,
 
 	initElements: function () {
-		admin_pico_elements.cms_pico_new_templates = $('#cms_pico_new_templates');
+		admin_pico_elements.cms_pico_curr_templates = $('#admin_cms_pico_curr_templates');
+		admin_pico_elements.cms_pico_new_template = $('#admin_cms_pico_new_templates');
+		admin_pico_elements.cms_pico_refresh_templates = $('#admin_cms_pico_refresh_templates');
+		admin_pico_elements.cms_pico_submit = $('#admin_cms_pico_add_submit');
 	},
 
 
 	initUI: function () {
-		// pico_elements.cms_pico_new_website.on('input propertychange paste focus', function () {
-		// 	pico_nav.updateNewWebsite($(this).val());
-		// });
-		//
-		// pico_elements.cms_pico_new_folder.on('click', function () {
-		// 	OC.dialogs.filepicker(t('cms_pico', 'test'), pico_nav.pickFolderResult, false,
-		// 		"httpd/unix-directory", true);
-		// });
-		//
-		// pico_elements.cms_pico_new_submit.on('click', function () {
-		// 	pico_nav.createNewWebsite();
-		// });
+		admin_pico_elements.cms_pico_refresh_templates.css('cursor', 'pointer').on('click', function () {
+			admin_pico_nav.retrieveSettings();
+		});
+
+		admin_pico_elements.cms_pico_submit.on('click', function() {
+			admin_pico_nav.addCustomTemplate();
+		})
 	}
 
 };

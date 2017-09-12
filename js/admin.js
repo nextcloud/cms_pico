@@ -26,7 +26,6 @@
 
 /** global: OC */
 /** global: OCA */
-/** global: Notyf */
 /** global: admin_pico_elements */
 /** global: admin_pico_result */
 /** global: admin_pico_nav */
@@ -51,8 +50,8 @@ $(document).ready(function () {
 		$.extend(AdminCMSPico.prototype, admin_pico_define);
 
 		this.initialize();
-		this.retrieveSettings();
 	};
+
 
 	AdminCMSPico.prototype = {
 
@@ -60,19 +59,8 @@ $(document).ready(function () {
 			admin_pico_define.nchost = window.location.protocol + '//' + window.location.host;
 			admin_pico_elements.initElements();
 			admin_pico_elements.initUI();
-		},
 
-
-		retrieveSettings: function () {
-
-			$.ajax({
-				method: 'GET',
-				url: OC.generateUrl('/apps/cms_pico/admin/settings'),
-				data: {}
-			}).done(function (res) {
-				admin_pico_result.displaySettings(res);
-			});
-
+			admin_pico_nav.retrieveSettings();
 		}
 
 	};

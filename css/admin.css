@@ -2,6 +2,7 @@ td.left {
 	padding-right: 30px;
 	font-weight: bolder;
 	text-align: right;
+	vertical-align: top;
 	width: 400px;
 }
 

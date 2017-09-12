@@ -32,12 +32,10 @@ use OCP\Util;
 
 class ConfigService {
 
-	const APP_TEST = 'test_admin';
-	const APP_TEST_PERSONAL = 'test_personal';
+	const CUSTOM_TEMPLATES = 'custom_templates';
 
 	private $defaults = [
-		self::APP_TEST          => '1',
-		self::APP_TEST_PERSONAL => '0'
+		self::CUSTOM_TEMPLATES => ''
 	];
 
 	/** @var IConfig */

@@ -82,12 +82,17 @@ class TemplatesService {
 
 
 	/**
+	 * @param bool $customOnly
+	 *
 	 * @return array
 	 */
-	public function getTemplatesList() {
-		$templates = self::TEMPLATES;
-		$customs = json_decode($this->configService->getAppValue('templates'), true);
+	public function getTemplatesList($customOnly = false) {
+		$templates = [];
+		if ($customOnly !== true) {
+			$templates = self::TEMPLATES;
+		}
 
+		$customs = json_decode($this->configService->getAppValue(ConfigService::CUSTOM_TEMPLATES), true);
 		if ($customs !== null) {
 			return $templates = array_merge($templates, $customs);
 		}
