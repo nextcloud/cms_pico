@@ -166,7 +166,7 @@ class ConfigService {
 	 */
 	private function getDefaultValue($key) {
 		if (array_key_exists($key, $this->defaults)) {
-			return (string) $this->defaults[$key];
+			return (string)$this->defaults[$key];
 		}
 
 		return '';

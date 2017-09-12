@@ -180,7 +180,7 @@ class WebsiteCore implements \JsonSerializable {
 			return '';
 		}
 
-		return (string) $this->options[$key];
+		return (string)$this->options[$key];
 	}
 
 

@@ -87,7 +87,7 @@ class SettingsController extends Controller {
 
 			return $this->miscService->success(
 				[
-					'name' => $data['name'],
+					'name'     => $data['name'],
 					'websites' => $this->websitesService->getWebsitesFromUser($this->userId)
 				]
 			);
@@ -112,9 +112,10 @@ class SettingsController extends Controller {
 			$website = $this->websitesService->getWebsiteFromId($siteId);
 
 			$website->hasToBeOwnedBy($this->userId);
-			$website->setOption((string) $option, (string) $value);
+			$website->setOption((string)$option, (string)$value);
 
 			$this->websitesService->updateWebsite($website);
+
 			return $this->miscService->success(
 				['websites' => $this->websitesService->getWebsitesFromUser($this->userId)]
 			);
