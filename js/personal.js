@@ -27,7 +27,6 @@
 /** global: OC */
 /** global: OCA */
 /** global: Notyf */
-
 /** global: pico_elements */
 /** global: pico_result */
 

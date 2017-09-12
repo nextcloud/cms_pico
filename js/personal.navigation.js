@@ -24,8 +24,8 @@
  */
 
 /** global: OC */
-
 /** global: pico_elements */
+/** global: pico_result */
 /** global: pico_define */
 
 var pico_nav = {

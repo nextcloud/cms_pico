@@ -25,7 +25,6 @@
 
 /** global: OC */
 /** global: OCA */
-
 /** global: pico_define */
 /** global: pico_elements */
 /** global: pico_nav */

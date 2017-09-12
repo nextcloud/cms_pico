@@ -27,7 +27,7 @@
 namespace OCA\CMSPico;
 
 use OCA\CMSPico\Controller\NavigationController;
-use OCP\AppFramework\Http\TemplateResponse;
+use \OCP\AppFramework\Http\TemplateResponse;
 
 $app = new AppInfo\Application();
 

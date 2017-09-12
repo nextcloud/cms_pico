@@ -23,6 +23,7 @@
  *
  */
 
+/** global: OC */
 /** global: pico_nav */
 /** global: pico_result */
 
@@ -52,7 +53,7 @@ var pico_elements = {
 
 	initUI: function () {
 		pico_elements.cms_pico_new_website.on('input propertychange paste focus', function () {
-			pico_nav.updateNewWebsite($(this).val())
+			pico_nav.updateNewWebsite($(this).val());
 		});
 
 		pico_elements.cms_pico_new_folder.on('click', function () {
