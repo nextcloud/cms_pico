@@ -94,6 +94,7 @@ class WebsitesService {
 				$this->l10n->t('Website already exist. Please choose another one.')
 			);
 		} catch (WebsiteDoesNotExistException $e) {
+			// Well we want the website to not exist (yet).
 		}
 
 		$this->templatesService->installTemplates($website);
