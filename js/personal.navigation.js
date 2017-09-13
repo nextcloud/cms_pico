@@ -76,7 +76,7 @@ var pico_nav = {
 
 		pico_elements.cms_pico_new_submit.prop('disabled', creating);
 		if (creating) {
-			pico_elements.cms_pico_new_submit.val(t('cms_pico', 'Creating your website'));
+			pico_elements.cms_pico_new_submit.val(t('cms_pico', 'Please wait'));
 		} else {
 			pico_elements.cms_pico_new_submit.val(t('cms_pico', 'Create a new website'));
 		}

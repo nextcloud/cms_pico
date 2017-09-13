@@ -78,7 +78,8 @@ class NavigationController extends Controller {
 	 */
 	public function admin() {
 		$data = [
-			'nchost' => $this->urlGenerator->getBaseUrl()
+			'nchost'      => $this->urlGenerator->getBaseUrl(),
+			'ssl_enabled' => (substr($this->urlGenerator->getBaseUrl(), 0, 5) === 'https')
 		];
 
 		return new TemplateResponse(Application::APP_NAME, 'settings.admin', $data, 'blank');

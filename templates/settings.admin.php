@@ -63,6 +63,7 @@ style(Application::APP_NAME, 'admin');
 <pre>
 ProxyPass /sites/ <?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico/
 ProxyPassReverse /sites/ <?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico/
+<?php if ($_['ssl_enabled']) { echo 'SSLProxyEngine on'; } ?>
 </pre>
 			</td>
 		</tr>
@@ -89,6 +90,7 @@ RewriteRule /sites/(.*) <?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico/$
 <pre>
 RewriteEngine On
 RewriteRule /sites/(.*) <?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico/$1 [P]
+<?php if ($_['ssl_enabled']) { echo 'SSLProxyEngine on'; } ?>
 </pre>
 			</td>
 		</tr>
@@ -136,7 +138,7 @@ RewriteRule /sites/(.*) <?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico/$
 				</select>
 			</td>
 		</tr>
-		
+
 		<tr class="lane">
 			<td colspan="2" class="center">
 				<input class="field250" type="submit" id="admin_cms_pico_add_submit"
