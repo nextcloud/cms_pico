@@ -58,8 +58,6 @@ class PicoService {
 	 */
 	public function getContent(Website $website) {
 
-		$website->viewerMustHaveAccess();
-
 		$pico = new Pico(
 			$website->getAbsolutePath(),
 			self::DIR_CONFIG, self::DIR_PLUGINS, self::DIR_THEMES
@@ -67,7 +65,21 @@ class PicoService {
 
 		$pico->run();
 
+		$absolutePath = $this->getAbsolutePathFromPage($pico);
+		$website->contentMustBeLocal($absolutePath);
+		$website->viewerMustHaveAccess($absolutePath, $pico->getFileMeta());
+
 		return $pico->getFileContent();
+	}
+
+
+	/**
+	 * @param Pico $pico
+	 *
+	 * @return string
+	 */
+	private function getAbsolutePathFromPage(Pico $pico) {
+		return $pico->getConfig()['content_dir'] . $pico->getCurrentPage()['id'] . '.md';
 	}
 
 }

@@ -29,11 +29,15 @@ namespace OCA\CMSPico\Model;
 use OC\Files\View;
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Exceptions\CheckCharsException;
+use OCA\CMSPico\Exceptions\ContentDirIsNotLocalException;
 use OCA\CMSPico\Exceptions\MinCharsException;
 use OCA\CMSPico\Exceptions\PathContainSpecificFoldersException;
 use OCA\CMSPico\Exceptions\UserIsNotOwnerException;
+use OCA\CMSPico\Exceptions\WebpageDoesNotExistException;
 use OCA\CMSPico\Exceptions\WebsiteIsPrivateException;
 use OCA\CMSPico\Service\MiscService;
+use OCP\Files\IRootFolder;
+use OCP\Files\NotFoundException;
 use OCP\IL10N;
 
 class Website extends WebsiteCore {
@@ -48,6 +52,9 @@ class Website extends WebsiteCore {
 	/** @var IL10N */
 	private $l10n;
 
+	/** @var IRootFolder */
+	private $rootFolder;
+
 	/** @var string */
 	private $viewer;
 
@@ -55,34 +62,19 @@ class Website extends WebsiteCore {
 	private $templateSource;
 
 	/** @var View */
-	private $ownerView = null;
-
-	/** @var View */
-	private $viewerView = null;
+	private $ownerView;
 
 
 	public function __construct() {
 		$this->l10n = \OC::$server->getL10N(Application::APP_NAME);
+		$this->rootFolder = \OC::$server->getRootFolder();
+
 		parent::__construct();
 	}
 
 
-	/**
-	 * init View
-	 */
-	private function initSiteViewerView() {
-		if ($this->viewerView !== null) {
-			return;
-		}
-
-		$this->viewerView = new View($this->getViewer() . '/files/');
-	}
-
-
-	/**
-	 * init View
-	 */
 	private function initSiteOwnerView() {
+
 		if ($this->ownerView !== null) {
 			return;
 		}
@@ -95,21 +87,53 @@ class Website extends WebsiteCore {
 	 * @return string
 	 */
 	public function getAbsolutePath() {
+
 		$this->initSiteOwnerView();
 
-		return $this->ownerView->getLocalFile($this->getPath());
+		$path = $this->ownerView->getLocalFile($this->getPath());
+		MiscService::endSlash($path);
+
+		return $path;
 	}
 
 
 	/**
-	 * @param string $page
+	 * @param string $local
 	 *
 	 * @return false|\OC\Files\FileInfo
 	 */
-	public function getPageInfo($page = '') {
-		$this->initSiteViewerView();
+	public function isReadableByViewer($local = '') {
 
-		return $this->viewerView->getFileInfo($this->getPath() . $page);
+		$fileId = $this->getPageFileId($local);
+		$viewerFiles = $this->rootFolder->getUserFolder($this->getViewer())
+										->getById($fileId);
+
+		foreach ($viewerFiles as $file) {
+			if ($file->isReadable()) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+
+	/**
+	 * @param string $local
+	 *
+	 * @return int
+	 * @throws WebpageDoesNotExistException
+	 */
+	public function getPageFileId($local = '') {
+
+		try {
+			$ownerFile = $this->rootFolder->getUserFolder($this->getUserId())
+										  ->get($this->getPath() . $local);
+
+			return $ownerFile->getId();
+		} catch (NotFoundException $e) {
+			throw new WebpageDoesNotExistException($this->l10n->t('Webpage does not exist'));
+		}
 	}
 
 
@@ -155,19 +179,38 @@ class Website extends WebsiteCore {
 	}
 
 
+	public function contentMustBeLocal($path) {
+
+		if (strpos($path, $this->getAbsolutePath()) !== 0 || strpos($path, '..') !== false) {
+			throw new ContentDirIsNotLocalException($this->l10n->t('Content Directory is not valid.'));
+		}
+
+	}
+
+
+	public function getRelativePath($path) {
+		if (substr($path, 0, 1) !== '/') {
+			return $path;
+		}
+
+		return substr($path, strlen($this->getAbsolutePath()));
+	}
+
 	/**
+	 * @param string $local
+	 * @param array $meta
+	 *
 	 * @throws WebsiteIsPrivateException
 	 */
-	public function viewerMustHaveAccess() {
-		if ($this->getViewer() === $this->getUserId()) {
+	public function viewerMustHaveAccess($local, $meta) {
+
+		$relativePath = $this->getRelativePath($local);
+		if ($this->pageIsPublic($meta)) {
 			return;
 		}
 
-		if ($this->getOption('private') !== '1') {
-			return;
-		}
-
-		if ($this->itemIsSharedToViewer('')) {
+		if ($this->getViewer() === $this->getUserId()
+			|| $this->isReadableByViewer($relativePath)) {
 			return;
 		}
 
@@ -178,22 +221,21 @@ class Website extends WebsiteCore {
 
 
 	/**
-	 * @param string $item
+	 * @param array $meta
 	 *
 	 * @return bool
 	 */
-	private function itemIsSharedToViewer($item = '') {
+	private function pageIsPublic($meta) {
 
-		$info = $this->getPageInfo($item);
-		if ($info === false) {
+		if (key_exists('access', $meta) && strtolower($meta['access']) === 'private') {
 			return false;
 		}
 
-		if ($info->isShared()) {
-			return true;
+		if ($this->getOption('private') === '1') {
+			return false;
 		}
 
-		return false;
+		return true;
 	}
 
 
