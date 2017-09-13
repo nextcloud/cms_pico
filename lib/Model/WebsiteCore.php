@@ -60,6 +60,12 @@ class WebsiteCore implements \JsonSerializable {
 
 	/** @var int */
 	private $creation;
+	
+	/** @var string */
+	private $viewer;
+
+	/** @var string */
+	private $templateSource;
 
 
 	public function __construct() {
@@ -258,6 +264,37 @@ class WebsiteCore implements \JsonSerializable {
 	 */
 	public function getCreation() {
 		return $this->creation;
+	}
+
+
+
+	/**
+	 * @param string $viewer
+	 */
+	public function setViewer($viewer) {
+		$this->viewer = $viewer;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getViewer() {
+		return $this->viewer;
+	}
+
+
+	/**
+	 * @param string $source
+	 */
+	public function setTemplateSource($source) {
+		$this->templateSource = $source;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getTemplateSource() {
+		return $this->templateSource;
 	}
 
 
