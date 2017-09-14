@@ -148,14 +148,14 @@ style(Application::APP_NAME, 'personal');
 	</table>
 
 	<script id="tmpl_website" type="text/template">
-		<tr class="entry" data-id="%%id%%" data-address="%%address%%" data-path="%%path%%"
+		<tr class="entry" data-id="%%id%%"  data-name="%%name%%" data-address="%%address%%" data-path="%%path%%"
 			data-private="%%private%%">
 			<td style="font-style: italic; font-weight: bold">%%name%%</td>
 			<td class="link">%%address%%</td>
 			<td class="path">%%path%%</td>
 			<td><input type="checkbox" value="1" class="private"/></td>
-			<td class="delete">
-				<button class="icon-delete"
+			<td>
+				<button id="delete" class="icon-delete"
 						title="<?php p($l->t('Delete website')); ?>"></button>
 			</td>
 		</tr>

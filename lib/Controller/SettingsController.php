@@ -26,6 +26,7 @@
 
 namespace OCA\CMSPico\Controller;
 
+use Exception;
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Service\ConfigService;
 use OCA\CMSPico\Service\MiscService;
@@ -98,7 +99,31 @@ class SettingsController extends Controller {
 					'websites' => $this->websitesService->getWebsitesFromUser($this->userId)
 				]
 			);
-		} catch (\Exception $e) {
+		} catch (Exception $e) {
+			return $this->miscService->fail(['name' => $data['name'], 'error' => $e->getMessage()]);
+		}
+	}
+
+
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @param $data
+	 *
+	 * @return DataResponse
+	 */
+	public function removePersonalWebsite($data) {
+
+		try {
+			$this->websitesService->deleteWebsite($data['id'], $this->userId);
+
+			return $this->miscService->success(
+				[
+					'name' => $data['name'],
+					'websites' => $this->websitesService->getWebsitesFromUser($this->userId)
+				]
+			);
+		} catch (Exception $e) {
 			return $this->miscService->fail(['name' => $data['name'], 'error' => $e->getMessage()]);
 		}
 	}
@@ -126,7 +151,7 @@ class SettingsController extends Controller {
 			return $this->miscService->success(
 				['websites' => $this->websitesService->getWebsitesFromUser($this->userId)]
 			);
-		} catch (\Exception $e) {
+		} catch (Exception $e) {
 			return $this->miscService->fail(['error' => $e->getMessage()]);
 		}
 	}
@@ -142,7 +167,7 @@ class SettingsController extends Controller {
 			$websites = $this->websitesService->getWebsitesFromUser($this->userId);
 
 			return $this->miscService->success(['websites' => $websites]);
-		} catch (\Exception $e) {
+		} catch (Exception $e) {
 			return $this->miscService->fail(['error' => $e->getMessage()]);
 		}
 	}

@@ -72,6 +72,32 @@ var pico_nav = {
 	},
 
 
+	deleteWebsite: function (id, name) {
+
+		OC.dialogs.confirm(
+			t('cms_pico',
+				"This operation will delete the website {name} but its content will still be available in your files", {name: name}),
+			t('cms_pico', 'Please confirm'),
+			function (e) {
+				if (e === true) {
+					$.ajax({
+						method: 'DELETE',
+						url: OC.generateUrl('/apps/cms_pico/personal/website'),
+						data: {
+							data: {
+								id: id,
+								name: name
+							}
+						}
+					}).done(function (result) {
+						pico_result.deleteWebsiteResult(result);
+					});
+
+				}
+			});
+	},
+
+
 	creatingWebsite: function (creating) {
 
 		pico_elements.cms_pico_new_submit.prop('disabled', creating);

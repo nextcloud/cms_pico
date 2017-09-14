@@ -36,6 +36,7 @@ return [
 
 		['name' => 'Settings#getPersonalWebsites', 'url' => '/personal/websites', 'verb' => 'GET'],
 		['name' => 'Settings#createPersonalWebsite', 'url' => '/personal/website', 'verb' => 'PUT'],
+		['name' => 'Settings#removePersonalWebsite', 'url' => '/personal/website', 'verb' => 'DELETE'],
 		[
 			'name' => 'Settings#editPersonalWebsiteOption',
 			'url'  => '/personal/website/{siteId}/option/{option}', 'verb' => 'POST'

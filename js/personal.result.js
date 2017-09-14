@@ -31,67 +31,87 @@
 
 var pico_result = {
 
-	displayWebsites: function (list) {
+		displayWebsites: function (list) {
 
-		pico_elements.cms_pico_list_websites.emptyTable();
+			pico_elements.cms_pico_list_websites.emptyTable();
 
-		for (var i = 0; i < list.length; i++) {
-			var tmpl = pico_nav.generateTmplWebsite(list[i]);
-			pico_elements.cms_pico_list_websites.append(tmpl);
-		}
+			for (var i = 0; i < list.length; i++) {
+				var tmpl = pico_nav.generateTmplWebsite(list[i]);
+				pico_elements.cms_pico_list_websites.append(tmpl);
+			}
 
-		pico_result.displayWebsitesLink();
-		pico_result.displayWebsitesPath();
-		pico_result.displayWebsitesPrivate();
-	},
+			pico_elements.cms_pico_list_websites.children('tr').each(function () {
+				pico_result.interactionWebsitesDelete($(this));
+				pico_result.displayWebsitesLink($(this));
+				pico_result.displayWebsitesPath($(this));
+				pico_result.displayWebsitesPrivate($(this));
+			});
+
+		},
 
 
-	displayWebsitesLink: function () {
-		pico_elements.cms_pico_list_websites.find('TD.link').each(function () {
-			var url = $(this).parent().attr('data-address');
-			$(this).css('cursor', 'pointer').on('click', function () {
+		displayWebsitesLink: function (div) {
+			var url = div.attr('data-address');
+			div.find('TD.link').css('cursor', 'pointer').on('click', function () {
 				window.open(url);
 			});
-		});
-	},
+		},
 
 
-	displayWebsitesPath: function () {
-		pico_elements.cms_pico_list_websites.find('TD.path').each(function () {
+		displayWebsitesPath: function (div) {
 			var url = pico_define.nchost + pico_define.index + OC.appswebroots.files + '/?dir=' +
-				$(this).parent().attr('data-path');
-			$(this).css('cursor', 'pointer').on('click', function () {
+				div.attr('data-path');
+			div.find('TD.path').css('cursor', 'pointer').on('click', function () {
 				window.open(url);
 			});
-		});
-	},
+		},
 
 
-	displayWebsitesPrivate: function () {
-		pico_elements.cms_pico_list_websites.find('INPUT.private').each(function () {
-			$(this).prop('checked', ($(this).parent().parent().attr('data-private') === '1'));
-			$(this).on(
+		displayWebsitesPrivate: function (div) {
+			div.find('INPUT.private').prop('checked', div.attr('data-private') === '1').on(
 				'change', function () {
-					pico_nav.updateWebsiteOption($(this).parent().parent().attr('data-id'), 'private',
+					pico_nav.updateWebsiteOption(div.attr('data-id'), 'private',
 						($(this).is(':checked')) ? '1' : '0');
 				});
-		});
-	},
+		},
 
 
-	createNewWebsiteResult: function (result) {
+		interactionWebsitesDelete: function (div) {
+			div.find('BUTTON.icon-delete').on('click', function () {
+				pico_nav.deleteWebsite(div.attr('data-id'), div.attr('data-name'));
+			});
+		},
 
-		if (result.status === 1) {
-			OCA.notification.onSuccess('Website created');
-			pico_result.displayWebsites(result.websites);
-			pico_nav.resetFields();
-			return;
+
+		createNewWebsiteResult: function (result) {
+
+			if (result.status === 1) {
+				OCA.notification.onSuccess('Website created');
+				pico_result.displayWebsites(result.websites);
+				pico_nav.resetFields();
+				return;
+			}
+
+			OCA.notification.onFail(
+				t('cms_pico', "It was not possible to create your website {name}",
+					{name: result.name}) +
+				': ' + ((result.error) ? result.error : t('circles', 'no error message')));
+		},
+
+
+		deleteWebsiteResult: function (result) {
+
+			if (result.status === 1) {
+				OCA.notification.onSuccess('Website removed');
+				pico_result.displayWebsites(result.websites);
+				return;
+			}
+
+			OCA.notification.onFail(
+				t('cms_pico', "It was not possible to remove the website {name}",
+					{name: result.name}) +
+				': ' + ((result.error) ? result.error : t('circles', 'no error message')));
 		}
 
-		OCA.notification.onFail(
-			t('cms_pico', "It was not possible to create your website {name}",
-				{name: result.name}) +
-			': ' + ((result.error) ? result.error : t('circles', 'no error message')));
 	}
-
-};
+;

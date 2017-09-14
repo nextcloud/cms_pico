@@ -105,6 +105,27 @@ class WebsitesService {
 
 	/**
 	 * @param int $siteId
+	 * @param string $userId
+	 */
+	public function deleteWebsite($siteId, $userId) {
+
+		$website = $this->getWebsiteFromId($siteId);
+		$website->hasToBeOwnedBy($userId);
+
+		$this->forceDeleteWebsite($website);
+	}
+
+
+	/**
+	 * @param Website $website
+	 */
+	public function forceDeleteWebsite(Website $website) {
+		$this->websiteRequest->delete($website);
+	}
+
+
+	/**
+	 * @param int $siteId
 	 *
 	 * @return Website
 	 */
