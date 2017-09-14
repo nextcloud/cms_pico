@@ -137,7 +137,6 @@ class Website extends WebsiteCore {
 	}
 
 
-
 	/**
 	 * @param string $userId
 	 *
@@ -157,13 +156,23 @@ class Website extends WebsiteCore {
 	 */
 	public function contentMustBeLocal($path) {
 
-		if (strpos($path, $this->getAbsolutePath()) !== 0 || strpos($path, '..') !== false) {
+		try {
+			$this->pathCantContainSpecificFolders($path);
+			if (strpos($path, $this->getAbsolutePath()) !== 0) {
+				throw new PathContainSpecificFoldersException();
+			}
+
+		} catch (PathContainSpecificFoldersException $e) {
 			throw new ContentDirIsNotLocalException($this->l10n->t('Content Directory is not valid.'));
 		}
-
 	}
 
 
+	/**
+	 * @param string $path
+	 *
+	 * @return bool|string
+	 */
 	public function getRelativePath($path) {
 		if (substr($path, 0, 1) !== '/') {
 			return $path;
@@ -171,6 +180,7 @@ class Website extends WebsiteCore {
 
 		return substr($path, strlen($this->getAbsolutePath()));
 	}
+
 
 	/**
 	 * @param string $local
@@ -251,12 +261,17 @@ class Website extends WebsiteCore {
 	 * this is overkill - NC does not allow to create directory outside of the users' filesystem
 	 * Not sure that there is a single use for this security check
 	 *
+	 * @param string $path
+	 *
 	 * @throws PathContainSpecificFoldersException
 	 */
-	private function pathCantContainSpecificFolders() {
+	private function pathCantContainSpecificFolders($path = '') {
+		if ($path === '')
+			$path = $this->getPath();
+
 		$limit = ['.', '..'];
 
-		$folders = explode('/', $this->getPath());
+		$folders = explode('/', $path);
 		foreach ($folders as $folder) {
 			if (in_array($folder, $limit)) {
 				throw new PathContainSpecificFoldersException(
