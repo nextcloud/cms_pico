@@ -37,8 +37,7 @@ use OCP\IL10N;
 
 class TemplatesService {
 
-	const TEMPLATE_DEFAULT = 'sample_pico';
-	const TEMPLATES = ['sample_pico', 'other template'];
+	const TEMPLATES = ['sample_pico'];
 	const TEMPLATE_DIR = __DIR__ . '/../../templates/';
 
 	/** @var IL10N */
@@ -119,6 +118,9 @@ class TemplatesService {
 	}
 
 
+	/**
+	 * @return array
+	 */
 	private function getDirectoriesFromTemplatesDir() {
 
 		$allTemplates = [];
@@ -223,6 +225,10 @@ class TemplatesService {
 		];
 	}
 
+
+	/**
+	 * @param $path
+	 */
 	private function initFolder($path) {
 
 		if (!$this->websiteFolder->nodeExists($path)) {

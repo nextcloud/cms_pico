@@ -51,7 +51,7 @@ class WebsitesService {
 	private $miscService;
 
 	/**
-	 * TemplatesService constructor.
+	 * WebsitesService constructor.
 	 *
 	 * @param IL10N $l10n
 	 * @param WebsitesRequest $websiteRequest
