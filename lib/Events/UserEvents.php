@@ -24,41 +24,33 @@
  *
  */
 
-namespace OCA\CMSPico\AppInfo;
+namespace OCA\CMSPico\Events;
 
-use OCP\AppFramework\App;
-use OCP\Util;
 
-class Application extends App {
+use OCA\CMSPico\Service\WebsitesService;
+use OCA\CMSPico\Service\MiscService;
 
-	const APP_NAME = 'cms_pico';
+class UserEvents {
+
+	/** @var WebsitesService */
+	private $websitesService;
+
+	/** @var MiscService */
+	private $miscService;
+
+	public function __construct(WebsitesService $websitesService, MiscService $miscService) {
+		$this->websitesService = $websitesService;
+		$this->miscService = $miscService;
+	}
+
 
 	/**
 	 * @param array $params
 	 */
-	public function __construct(array $params = array()) {
-		parent::__construct(self::APP_NAME, $params);
-
-		$this->registerHooks();
+	public function onUserDeleted(array $params) {
+		$userId = $params['uid'];
+		$this->websitesService->onUserRemoved($userId);
 	}
 
-
-	/**
-	 * Register Hooks
-	 */
-	public function registerHooks() {
-		Util::connectHook(
-			'OC_User', 'post_deleteUser', '\OCA\CMSPico\Hooks\UserHooks', 'onUserDeleted'
-		);
-	}
-
-
-	public function registerSettingsAdmin() {
-		\OCP\App::registerAdmin(self::APP_NAME, 'lib/admin');
-	}
-
-	public function registerSettingsPersonal() {
-		\OCP\App::registerPersonal(self::APP_NAME, 'lib/personal');
-	}
 }
 

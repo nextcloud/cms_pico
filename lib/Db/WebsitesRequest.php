@@ -90,6 +90,18 @@ class WebsitesRequest extends WebsitesRequestBuilder {
 
 
 	/**
+	 * @param string $userId
+	 */
+	public function deleteAllFromUser($userId) {
+
+		$qb = $this->getWebsitesDeleteSql();
+		$this->limitToUserId($qb, $userId);
+
+		$qb->execute();
+	}
+
+
+	/**
 	 * return list of websites from a user.
 	 *
 	 * @param string $userId

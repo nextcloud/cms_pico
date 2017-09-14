@@ -24,41 +24,26 @@
  *
  */
 
-namespace OCA\CMSPico\AppInfo;
+namespace OCA\CMSPico\Hooks;
 
-use OCP\AppFramework\App;
-use OCP\Util;
+use OCA\CMSPico\AppInfo\Application;
+use OCA\CMSPico\Events\UserEvents;
 
-class Application extends App {
 
-	const APP_NAME = 'cms_pico';
+class UserHooks {
 
-	/**
-	 * @param array $params
-	 */
-	public function __construct(array $params = array()) {
-		parent::__construct(self::APP_NAME, $params);
+	static protected function getController() {
+		$app = new Application();
 
-		$this->registerHooks();
+		return $app->getContainer()
+				   ->query(UserEvents::class);
 	}
 
 
-	/**
-	 * Register Hooks
-	 */
-	public function registerHooks() {
-		Util::connectHook(
-			'OC_User', 'post_deleteUser', '\OCA\CMSPico\Hooks\UserHooks', 'onUserDeleted'
-		);
+	public static function onUserDeleted($params) {
+		self::getController()
+			->onUserDeleted($params);
 	}
 
-
-	public function registerSettingsAdmin() {
-		\OCP\App::registerAdmin(self::APP_NAME, 'lib/admin');
-	}
-
-	public function registerSettingsPersonal() {
-		\OCP\App::registerPersonal(self::APP_NAME, 'lib/personal');
-	}
 }
 

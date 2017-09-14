@@ -125,6 +125,14 @@ class WebsitesService {
 
 
 	/**
+	 * @param string $userId
+	 */
+	public function onUserRemoved($userId) {
+		$this->websiteRequest->deleteAllFromUser($userId);
+	}
+
+
+	/**
 	 * @param int $siteId
 	 *
 	 * @return Website
@@ -135,9 +143,9 @@ class WebsitesService {
 
 
 	/**
-	 * @param string $website
+	 * @param Website $website
 	 */
-	public function updateWebsite($website) {
+	public function updateWebsite(Website $website) {
 		$this->websiteRequest->update($website);
 
 	}
