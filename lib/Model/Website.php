@@ -26,6 +26,7 @@
 
 namespace OCA\CMSPico\Model;
 
+use Exception;
 use OC\Files\View;
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Exceptions\CheckCharsException;
@@ -100,9 +101,9 @@ class Website extends WebsiteCore {
 	/**
 	 * @param string $local
 	 *
-	 * @return false|\OC\Files\FileInfo
+	 * @throws WebsiteIsPrivateException
 	 */
-	public function isReadableByViewer($local = '') {
+	private function hasToBeReadableByViewer($local = '') {
 
 		$fileId = $this->getPageFileId($local);
 		$viewerFiles = $this->rootFolder->getUserFolder($this->getViewer())
@@ -110,11 +111,11 @@ class Website extends WebsiteCore {
 
 		foreach ($viewerFiles as $file) {
 			if ($file->isReadable()) {
-				return true;
+				return;
 			}
 		}
 
-		return false;
+		throw new WebpageIsNotReadableException();
 	}
 
 
@@ -190,19 +191,23 @@ class Website extends WebsiteCore {
 	 */
 	public function viewerMustHaveAccess($local, $meta) {
 
-		$relativePath = $this->getRelativePath($local);
-		if ($this->pageIsPublic($meta)) {
-			return;
-		}
+		try {
+			$relativePath = $this->getRelativePath($local);
+			if ($this->pageIsPublic($meta)) {
+				return;
+			}
 
-		if ($this->getViewer() === $this->getUserId()
-			|| $this->isReadableByViewer($relativePath)) {
-			return;
-		}
+			if ($this->getViewer() === $this->getUserId()) {
+				return;
+			}
 
-		throw new WebsiteIsPrivateException(
-			$this->l10n->t('Website is private. You do not have access to this website')
-		);
+			$this->hasToBeReadableByViewer($relativePath);
+
+		} catch (Exception $e) {
+			throw new WebsiteIsPrivateException(
+				$this->l10n->t('Website is private. You do not have access to this website')
+			);
+		}
 	}
 
 
@@ -266,8 +271,9 @@ class Website extends WebsiteCore {
 	 * @throws PathContainSpecificFoldersException
 	 */
 	private function pathCantContainSpecificFolders($path = '') {
-		if ($path === '')
+		if ($path === '') {
 			$path = $this->getPath();
+		}
 
 		$limit = ['.', '..'];
 
