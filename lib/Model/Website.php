@@ -59,6 +59,9 @@ class Website extends WebsiteCore {
 	private $ownerView;
 
 
+	/**
+	 * Website constructor.
+	 */
 	public function __construct() {
 		$this->l10n = \OC::$server->getL10N(Application::APP_NAME);
 		$this->rootFolder = \OC::$server->getRootFolder();
@@ -67,6 +70,9 @@ class Website extends WebsiteCore {
 	}
 
 
+	/**
+	 *
+	 */
 	private function initSiteOwnerView() {
 
 		if ($this->ownerView !== null) {
@@ -133,7 +139,7 @@ class Website extends WebsiteCore {
 
 
 	/**
-	 * @param $userId
+	 * @param string $userId
 	 *
 	 * @throws UserIsNotOwnerException
 	 */
@@ -144,6 +150,11 @@ class Website extends WebsiteCore {
 	}
 
 
+	/**
+	 * @param string $path
+	 *
+	 * @throws ContentDirIsNotLocalException
+	 */
 	public function contentMustBeLocal($path) {
 
 		if (strpos($path, $this->getAbsolutePath()) !== 0 || strpos($path, '..') !== false) {

@@ -83,7 +83,7 @@ class MiscService {
 	}
 
 	/**
-	 * @param $data
+	 * @param array $data
 	 *
 	 * @return DataResponse
 	 */
@@ -98,7 +98,7 @@ class MiscService {
 
 
 	/**
-	 * @param $data
+	 * @param array $data
 	 *
 	 * @return DataResponse
 	 */

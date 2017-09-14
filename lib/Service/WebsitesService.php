@@ -114,7 +114,7 @@ class WebsitesService {
 
 
 	/**
-	 * @param $website
+	 * @param string $website
 	 */
 	public function updateWebsite($website) {
 		$this->websiteRequest->update($website);

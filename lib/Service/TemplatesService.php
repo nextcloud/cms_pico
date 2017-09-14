@@ -68,7 +68,7 @@ class TemplatesService {
 
 
 	/**
-	 * @param $template
+	 * @param string $template
 	 *
 	 * @throws TemplateDoesNotExistException
 	 */
@@ -152,7 +152,7 @@ class TemplatesService {
 
 
 	/**
-	 * @param $base
+	 * @param string $base
 	 * @param string $dir
 	 *
 	 * @return TemplateFile[]

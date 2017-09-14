@@ -60,7 +60,7 @@ class WebsiteCore implements \JsonSerializable {
 
 	/** @var int */
 	private $creation;
-	
+
 	/** @var string */
 	private $viewer;
 
@@ -341,7 +341,7 @@ class WebsiteCore implements \JsonSerializable {
 
 
 	/**
-	 * @param $json
+	 * @param string $json
 	 *
 	 * @return null|Website
 	 */

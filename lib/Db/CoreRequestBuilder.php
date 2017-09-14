@@ -89,7 +89,7 @@ class CoreRequestBuilder {
 	 * Limit the request to the User by its Id.
 	 *
 	 * @param IQueryBuilder $qb
-	 * @param $userId
+	 * @param string $userId
 	 */
 	protected function limitToUserId(IQueryBuilder &$qb, $userId) {
 		$this->limitToDBField($qb, 'user_id', $userId);
@@ -100,7 +100,7 @@ class CoreRequestBuilder {
 	 * Limit to the path
 	 *
 	 * @param IQueryBuilder $qb
-	 * @param $userId
+	 * @param string $userId
 	 */
 	protected function limitToPath(IQueryBuilder &$qb, $userId) {
 		$this->limitToDBField($qb, 'path', $userId);
@@ -111,7 +111,7 @@ class CoreRequestBuilder {
 	 * Limit to the site
 	 *
 	 * @param IQueryBuilder $qb
-	 * @param $userId
+	 * @param string $userId
 	 */
 	protected function limitToSite(IQueryBuilder &$qb, $userId) {
 		$this->limitToDBField($qb, 'site', $userId);

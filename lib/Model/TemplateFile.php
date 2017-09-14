@@ -42,7 +42,7 @@ class TemplateFile {
 	/**
 	 * TemplateFile constructor.
 	 *
-	 * @param $base
+	 * @param string $base
 	 * @param string $filename
 	 */
 	function __construct($base, $filename) {

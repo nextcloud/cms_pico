@@ -170,7 +170,7 @@ class SettingsController extends Controller {
 
 
 	/**
-	 * @param $template
+	 * @param string $template
 	 *
 	 * @return DataResponse
 	 */
@@ -184,7 +184,7 @@ class SettingsController extends Controller {
 	}
 
 	/**
-	 * @param $template
+	 * @param string $template
 	 *
 	 * @return DataResponse
 	 */
