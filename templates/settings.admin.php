@@ -63,7 +63,9 @@ style(Application::APP_NAME, 'admin');
 <pre>
 ProxyPass /sites/ <?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico/
 ProxyPassReverse /sites/ <?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico/
-<?php if ($_['ssl_enabled']) { echo 'SSLProxyEngine on'; } ?>
+	<?php if ($_['ssl_enabled']) {
+		echo 'SSLProxyEngine on';
+	} ?>
 </pre>
 			</td>
 		</tr>
@@ -90,7 +92,9 @@ RewriteRule /sites/(.*) <?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico/$
 <pre>
 RewriteEngine On
 RewriteRule /sites/(.*) <?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico/$1 [P]
-<?php if ($_['ssl_enabled']) { echo 'SSLProxyEngine on'; } ?>
+	<?php if ($_['ssl_enabled']) {
+		echo 'SSLProxyEngine on';
+	} ?>
 </pre>
 			</td>
 		</tr>
@@ -152,7 +156,10 @@ RewriteRule /sites/(.*) <?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico/$
 	<script id="tmpl_custom_template" type="text/template">
 		<tr class="entry" data-name="%%name%%">
 			<td style="padding-right: 100px;">%%name%%</td>
-			<td class="delete">delete</td>
+			<td class="delete">
+				<button class="icon-delete"
+						title="<?php p($l->t('Delete custom template')); ?>"></button>
+			</td>
 		</tr>
 	</script>
 

@@ -45,3 +45,7 @@ TR.entry {
 TR.entry TD {
 	padding: 1px;
 }
+
+.icon-delete {
+	border: 0px;
+}
