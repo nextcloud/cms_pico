@@ -26,6 +26,7 @@
 
 /** global: OC */
 /** global: OCA */
+/** global: oc_config */
 /** global: Notyf */
 /** global: pico_elements */
 /** global: pico_nav */

@@ -127,9 +127,13 @@ class WebsiteCore implements \JsonSerializable {
 
 	/**
 	 * @param $theme
+	 *
+	 * @return $this
 	 */
 	public function setTheme($theme) {
 		$this->theme = $theme;
+
+		return $this;
 	}
 
 	/**
@@ -199,11 +203,14 @@ class WebsiteCore implements \JsonSerializable {
 	/**
 	 * @param string $key
 	 * @param string $value
+	 *
+	 * @return $this
 	 */
 	public function setOption($key, $value) {
 		$this->options[$key] = $value;
-	}
 
+		return $this;
+	}
 
 	/**
 	 * @param string $key
@@ -279,10 +286,6 @@ class WebsiteCore implements \JsonSerializable {
 	 * @return $this
 	 */
 	public function setCreation($creation) {
-		if ($creation === null) {
-			return $this;
-		}
-
 		$this->creation = $creation;
 
 		return $this;
@@ -298,9 +301,13 @@ class WebsiteCore implements \JsonSerializable {
 
 	/**
 	 * @param string $viewer
+	 *
+	 * @return $this
 	 */
 	public function setViewer($viewer) {
 		$this->viewer = $viewer;
+
+		return $this;
 	}
 
 	/**
@@ -349,10 +356,12 @@ class WebsiteCore implements \JsonSerializable {
 
 	/**
 	 * @param array $arr
+	 *
+	 * @return bool
 	 */
 	public function fromArray($arr) {
 		if (!is_array($arr)) {
-			return;
+			return false;
 		}
 
 		MiscService::mustContains($arr, ['name', 'user_id', 'site', 'type', 'path']);
@@ -365,6 +374,8 @@ class WebsiteCore implements \JsonSerializable {
 			 ->setOptions(MiscService::get($arr, 'options'))
 			 ->setPath($arr['path'])
 			 ->setCreation(MiscService::get($arr, 'creation'));
+
+		return true;
 	}
 
 
@@ -372,9 +383,6 @@ class WebsiteCore implements \JsonSerializable {
 	 * @param string $json
 	 */
 	public function fromJSON($json) {
-		if (!is_string($json)) {
-			return;
-		}
 		$this->fromArray(json_decode($json, true));
 	}
 
