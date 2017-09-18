@@ -47,6 +47,9 @@ class WebsiteCore implements \JsonSerializable {
 	private $name;
 
 	/** @var string */
+	private $theme = 'default';
+
+	/** @var string */
 	private $site;
 
 	/** @var int */
@@ -121,6 +124,20 @@ class WebsiteCore implements \JsonSerializable {
 		return $this->name;
 	}
 
+
+	/**
+	 * @param $theme
+	 */
+	public function setTheme($theme) {
+		$this->theme = $theme;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getTheme() {
+		return $this->theme;
+	}
 
 	/**
 	 * @param string $userId

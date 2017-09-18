@@ -33,7 +33,7 @@ use Pico;
 
 class PicoService {
 
-	const DIR_CONFIG = 'config/';
+	const DIR_CONFIG = 'Pico/config/';
 	const DIR_PLUGINS = 'Pico/plugins/';
 	const DIR_THEMES = 'Pico/themes/';
 
@@ -73,6 +73,7 @@ class PicoService {
 			$appPath . self::DIR_THEMES
 		);
 
+		$this->generateConfig($pico, $website);
 		$content = $pico->run();
 
 		$absolutePath = $this->getAbsolutePathFromPage($pico);
@@ -85,11 +86,28 @@ class PicoService {
 
 	/**
 	 * @param Pico $pico
+	 * @param Website $website
+	 */
+	private function generateConfig(Pico &$pico, Website $website) {
+		$pico->setConfig(
+			[
+				'content_dir' => 'content/',
+				'content_ext' => '.md',
+				'theme'       => $website->getTheme(),
+				'site_title'  => $website->getName(),
+				'base_url'    => \OC::$WEBROOT . $website->getSite()
+			]
+		);
+	}
+
+
+	/**
+	 * @param Pico $pico
 	 *
 	 * @return string
 	 */
 	private function getAbsolutePathFromPage(Pico $pico) {
-		return $pico->getConfig()['content_dir'] . $pico->getCurrentPage()['id'] . '.md';
+		return $pico->getConfig()['content_dir'] . $pico->getCurrentPage()['id'] . ' . md';
 	}
 
 }

@@ -4,8 +4,8 @@
 /*
  * BASIC
  */
-$config['site_title'] = '%%site_title%%';              // Site title
-$config['base_url'] = '%%base_url%%';                    // Override base URL (e.g. http://example.com)
+$config['site_title'] = '';              // Site title
+$config['base_url'] = '';                    // Override base URL (e.g. http://example.com)
 // $config['rewrite_url'] = null;               // A boolean indicating forced URL rewriting
 
 /*
