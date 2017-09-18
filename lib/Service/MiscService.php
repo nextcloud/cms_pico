@@ -61,6 +61,8 @@ class MiscService {
 
 	/**
 	 * @param string $path
+	 *
+	 * @return string|void
 	 */
 	public static function endSlash(&$path) {
 		if ($path === '') {
@@ -70,6 +72,8 @@ class MiscService {
 		if (substr($path, -1, 1) !== '/') {
 			$path .= '/';
 		}
+
+		return $path;
 	}
 
 

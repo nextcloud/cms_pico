@@ -26,16 +26,22 @@
 
 namespace OCA\CMSPico\Service;
 
+use OC\App\AppManager;
+use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Model\Website;
 use Pico;
 
 class PicoService {
 
 	const DIR_CONFIG = 'config/';
-	const DIR_PLUGINS = 'plugins/';
-	const DIR_THEMES = 'themes/';
+	const DIR_PLUGINS = 'Pico/plugins/';
+	const DIR_THEMES = 'Pico/themes/';
 
 	private $userId;
+
+	/** @var AppManager */
+	private $appManager;
+
 	/** @var MiscService */
 	private $miscService;
 
@@ -43,10 +49,12 @@ class PicoService {
 	 * PicoService constructor.
 	 *
 	 * @param string $userId
+	 * @param AppManager $appManager
 	 * @param MiscService $miscService
 	 */
-	function __construct($userId, MiscService $miscService) {
+	function __construct($userId, AppManager $appManager, MiscService $miscService) {
 		$this->userId = $userId;
+		$this->appManager = $appManager;
 		$this->miscService = $miscService;
 	}
 
@@ -58,18 +66,20 @@ class PicoService {
 	 */
 	public function getContent(Website $website) {
 
+		$appPath = MiscService::endSlash($this->appManager->getAppPath(Application::APP_NAME));
 		$pico = new Pico(
-			$website->getAbsolutePath(),
-			self::DIR_CONFIG, self::DIR_PLUGINS, self::DIR_THEMES
+			$website->getAbsolutePath(), self::DIR_CONFIG,
+			$appPath . self::DIR_PLUGINS,
+			$appPath . self::DIR_THEMES
 		);
 
-		$pico->run();
+		$content = $pico->run();
 
 		$absolutePath = $this->getAbsolutePathFromPage($pico);
 		$website->contentMustBeLocal($absolutePath);
 		$website->viewerMustHaveAccess($absolutePath, $pico->getFileMeta());
 
-		return $pico->getFileContent();
+		return $content;
 	}
 
 
