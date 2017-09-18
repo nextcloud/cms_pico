@@ -32,7 +32,6 @@
 
 var admin_pico_define = {
 	sites: '/sites/',
-	index: '/index.php',
 	nchost: ''
 };
 
