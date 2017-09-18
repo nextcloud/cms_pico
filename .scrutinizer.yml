@@ -7,6 +7,7 @@ filter:
         - 'l10n/*'
         - 'vendor/*'
         - 'js/vendor/*'
+        - 'Pico/*'
         - 'templates/*'
         - 'css/*'
         - 'img/*'
