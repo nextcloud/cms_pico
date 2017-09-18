@@ -33,7 +33,7 @@
 
 var pico_define = {
 	sites: '/sites/',
-	index: '/index.php',
+	index: '',
 	nchost: ''
 };
 
@@ -60,6 +60,11 @@ $(document).ready(function () {
 			pico_elements.initElements();
 			pico_elements.initUI();
 			pico_elements.initTweaks();
+
+			pico_define.index = OC.getRootPath();
+			if (oc_config.modRewriteWorking !== true) {
+				pico_define.index += '/index.php';
+			}
 		},
 
 
