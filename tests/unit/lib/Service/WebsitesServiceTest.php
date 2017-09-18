@@ -28,7 +28,11 @@ namespace OCA\CMSPico\Tests\Service;
 
 use Exception;
 use OCA\CMSPico\AppInfo\Application;
+use OCA\CMSPico\Exceptions\UserIsNotOwnerException;
+use OCA\CMSPico\Exceptions\WebsiteAlreadyExistException;
+use OCA\CMSPico\Exceptions\WebsiteDoesNotExistException;
 use OCA\CMSPico\Model\Website;
+use OCA\CMSPico\Service\MiscService;
 use OCA\CMSPico\Service\WebsitesService;
 use OCA\CMSPico\Tests\Env;
 
@@ -75,20 +79,122 @@ class WebsitesServiceTest extends \PHPUnit_Framework_TestCase {
 	}
 
 
+	/**
+	 *
+	 */
 	public function testWebsiteCreation() {
 		$data = self::INFOS_WEBSITE1;
 		$data['user_id'] = Env::ENV_TEST_USER1;
 
+
+		try {
+			$this->createWebsite($data);
+		} catch (Exception $e) {
+			$this->assertSame(true, false, 'should not returns Exception - ' . $e->getMessage());
+		}
+
+		try {
+			$this->createWebsite($data);
+			$this->assertSame(true, false, 'should return an exception');
+		} catch (WebsiteAlreadyExistException $e) {
+		} catch (Exception $e) {
+			$this->assertSame(true, false, 'should return WebsiteAlreadyExistException');
+		}
+
+	}
+
+
+	/**
+	 *
+	 */
+	public function testWebsitesListing() {
+		$this->assertCount(0, $this->websitesService->getWebsitesFromUser(Env::ENV_TEST_USER2));
+
+		$websites = $this->websitesService->getWebsitesFromUser(Env::ENV_TEST_USER1);
+		$this->assertCount(1, $websites);
+
+		$arr = json_decode(json_encode($websites[0]), true);
+		$path = self::INFOS_WEBSITE1['path'];
+		$path2 = $arr['path'];
+		MiscService::endSlash($path);
+		MiscService::endSlash($path2);
+
+		$this->assertSame(
+			[
+				'name'    => self::INFOS_WEBSITE1['name'],
+				'user_id' => Env::ENV_TEST_USER1,
+				'path'    => $path,
+				'site'    => self::INFOS_WEBSITE1['site'],
+				'type'    => self::INFOS_WEBSITE1['type']
+			],
+			[
+				'name'    => $arr['name'],
+				'user_id' => $arr['user_id'],
+				'path'    => $path2,
+				'site'    => $arr['site'],
+				'type'    => $arr['type']
+			]
+		);
+
+
+	}
+
+
+	/**
+	 *
+	 */
+	public function testWebsiteDeletion() {
+		$data = self::INFOS_WEBSITE1;
+
+
+		try {
+			$data['user_id'] = Env::ENV_TEST_USER2;
+			$this->deleteWebsite($data);
+		} catch (UserIsNotOwnerException $e) {
+		} catch (Exception $e) {
+			$this->assertSame(
+				true, false, 'should returns UserIsNotOwnerException - ' . $e->getMessage()
+			);
+		}
+
+
+		$data['user_id'] = Env::ENV_TEST_USER1;
+
+		try {
+			$this->deleteWebsite($data);
+		} catch (Exception $e) {
+			$this->assertSame(true, false, 'should not returns Exception - ' . $e->getMessage());
+		}
+
+		try {
+			$this->deleteWebsite($data);
+			$this->assertSame(true, false, 'should return an exception');
+		} catch (WebsiteDoesNotExistException $e) {
+		} catch (Exception $e) {
+			$this->assertSame(true, false, 'should return WebsiteDoesNotExistException');
+		}
+
+	}
+
+
+	/**
+	 * @param array $data
+	 */
+	private function createWebsite($data) {
 		$website = new Website($data);
 
 		$this->websitesService->createWebsite(
 			$website->getName(), $website->getUserId(), $website->getSite(), $website->getPath(), 0
 		);
-
 	}
 
+	/**
+	 * @param array $data
+	 */
+	private function deleteWebsite($data) {
+		$website = $this->websitesService->getWebsiteFromSite($data['site']);
 
-	public function testWebsiteDeletion() {
-
+		$this->websitesService->deleteWebsite($website->getId(), $data['user_id']);
 	}
+
 }
