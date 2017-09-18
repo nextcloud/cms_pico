@@ -41,6 +41,7 @@ OC.L10N.register(
     "Name of the website:" : "Verkkosivun nimi:",
     "The title of your website" : "Verkkosivun otsikko",
     "Address of the website:" : "Verkkosivun osoite:",
+    "my_site" : "minun_sivuni",
     "Local directory:" : "Paikallinen kansio:",
     "The place to store the website files on your cloud" : "Paikka pilvessäsi, johon verkkosivujen tiedostot tallennetaan",
     "Base Template:" : "Mallipohja:",
