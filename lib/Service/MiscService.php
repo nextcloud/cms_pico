@@ -85,7 +85,7 @@ class MiscService {
 	 *
 	 * @param string $default
 	 *
-	 * @return array|string
+	 * @return array|string|integer
 	 */
 	public static function get($arr, $k, $default = '') {
 		if (!key_exists($k, $arr)) {
