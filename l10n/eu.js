@@ -1,0 +1,26 @@
+OC.L10N.register(
+    "cms_pico",
+    {
+    "This operation will delete the website {name} but its content will still be available in your files" : "Eragiketa horrek {name} webgunea ezabatuko du baina bere edukia segituko du eskuragarri zure fitxategietan",
+    "Please confirm" : "Onartu",
+    "Create a new website" : "Sortu webgune berria",
+    "It was not possible to create your website {name}" : "Ezin izan da zure {name} webgunea sortu",
+    "no error message" : "Errore mezurik ez",
+    "It was not possible to remove the website {name}" : "Ezin izan da zure {name} webgunea ezabatu",
+    "Website not found" : "Webgunea ez da aurkitu",
+    "Webpage does not exist" : "Web orria ez dago",
+    "You are not the owner of this website" : "Zu ez zara webgune honen jabea",
+    "Content Directory is not valid." : "Edukiaren direktorioa ez da baliogarria",
+    "Website is private. You do not have access to this website" : "Webgunea pribatua da. Ezin zara sartu webgune honetan",
+    "The address of the website can only contains alpha numeric chars" : "Webgunearen helbidea bakarrik karaktere alfanumerikoz osatuta egon behar du.",
+    "The address of the website must be longer" : "Webgunearen helbidea luzeagoa izan behar du",
+    "The name of the website must be longer" : "Webgunearen izena luzeagoa izan behar du",
+    "Path is malformed, please check." : "Fitxategi-bidea gaizki osatuta dago, egiazta ezazu.",
+    "Template does not exist" : "Txantiloia ez dago",
+    "Cannot generate template file in this folder" : "Ezin da txantiloi fitxategirik sortu karpeta honetan",
+    "Website already exist." : "Webgunea dagoeneko existitzen da",
+    "Pico CMS" : "Pico CMS",
+    "Site Folders (Pico CMS)" : "Gunearen karpetak (Pico CMS)",
+    "Your Apache configuration" : "Zure Apache ezarpenak"
+},
+"nplurals=2; plural=(n != 1);");
