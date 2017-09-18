@@ -27,6 +27,7 @@
 namespace OCA\CMSPico\Service;
 
 use OCA\CMSPico\AppInfo\Application;
+use OCA\CMSPico\Exceptions\MissingKeyInArrayException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\ILogger;
@@ -70,6 +71,41 @@ class MiscService {
 			$path .= '/';
 		}
 	}
+
+
+
+
+	/**
+	 * @param $arr
+	 * @param $k
+	 *
+	 * @param string $default
+	 *
+	 * @return array|string
+	 */
+	public static function get($arr, $k, $default = '') {
+		if (!key_exists($k, $arr)) {
+			return $default;
+		}
+
+		return $arr[$k];
+	}
+
+
+	public static function mustContains($data, $arr) {
+		if (!is_array($arr)) {
+			$arr = [$arr];
+		}
+
+		foreach ($arr as $k) {
+			if (!key_exists($k, $data)) {
+				throw new MissingKeyInArrayException('missing_key_in_array');
+			}
+		}
+	}
+
+
+
 
 
 	public static function checkChars($line, $chars) {
