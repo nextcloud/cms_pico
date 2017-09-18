@@ -95,7 +95,7 @@ var pico_result = {
 			OCA.notification.onFail(
 				t('cms_pico', "It was not possible to create your website {name}",
 					{name: result.name}) +
-				': ' + ((result.error) ? result.error : t('circles', 'no error message')));
+				': ' + ((result.error) ? result.error : t('cms_pico', 'no error message')));
 		},
 
 
@@ -110,7 +110,7 @@ var pico_result = {
 			OCA.notification.onFail(
 				t('cms_pico', "It was not possible to remove the website {name}",
 					{name: result.name}) +
-				': ' + ((result.error) ? result.error : t('circles', 'no error message')));
+				': ' + ((result.error) ? result.error : t('cms_pico', 'no error message')));
 		}
 
 	}
