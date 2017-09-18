@@ -68,7 +68,19 @@ class WebsiteCore implements \JsonSerializable {
 	private $templateSource;
 
 
-	public function __construct() {
+	public function __construct($data = '') {
+
+		if ($data === '') {
+			return;
+		}
+
+		if (is_array($data)) {
+			$this->fromArray($data);
+
+			return;
+		}
+
+		$this->fromJSON($data);
 	}
 
 
@@ -267,7 +279,6 @@ class WebsiteCore implements \JsonSerializable {
 	}
 
 
-
 	/**
 	 * @param string $viewer
 	 */
@@ -285,9 +296,13 @@ class WebsiteCore implements \JsonSerializable {
 
 	/**
 	 * @param string $source
+	 *
+	 * @return $this
 	 */
 	public function setTemplateSource($source) {
 		$this->templateSource = $source;
+
+		return $this;
 	}
 
 	/**
@@ -317,36 +332,33 @@ class WebsiteCore implements \JsonSerializable {
 
 	/**
 	 * @param array $arr
-	 *
-	 * @return null|Website
 	 */
-	public static function fromArray($arr) {
+	public function fromArray($arr) {
 		if (!is_array($arr)) {
-			return null;
+			return;
 		}
 
-		$website = new Website();
+		MiscService::mustContains($arr, ['name', 'user_id', 'site', 'type', 'path']);
 
-		$website->setId($arr['id'])
-				->setName($arr['name'])
-				->setUserId($arr['user_id'])
-				->setSite($arr['site'])
-				->setType($arr['type'])
-				->setOptions($arr['options'])
-				->setPath($arr['path'])
-				->setCreation($arr['creation']);
-
-		return $website;
+		$this->setId(MiscService::get($arr, 'id'))
+			 ->setName($arr['name'])
+			 ->setUserId($arr['user_id'])
+			 ->setSite($arr['site'])
+			 ->setType($arr['type'])
+			 ->setOptions(MiscService::get($arr, 'options'))
+			 ->setPath($arr['path'])
+			 ->setCreation(MiscService::get($arr, 'creation'));
 	}
 
 
 	/**
 	 * @param string $json
-	 *
-	 * @return null|Website
 	 */
-	public static function fromJSON($json) {
-		return self::fromArray(json_decode($json, true));
+	public function fromJSON($json) {
+		if (!is_string($json)) {
+			return;
+		}
+		$this->fromArray(json_decode($json, true));
 	}
 
 }

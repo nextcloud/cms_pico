@@ -63,12 +63,14 @@ class Website extends WebsiteCore {
 
 	/**
 	 * Website constructor.
+	 *
+	 * @param string $data
 	 */
-	public function __construct() {
+	public function __construct($data = '') {
 		$this->l10n = \OC::$server->getL10N(Application::APP_NAME);
 		$this->rootFolder = \OC::$server->getRootFolder();
 
-		parent::__construct();
+		parent::__construct($data);
 	}
 
 
