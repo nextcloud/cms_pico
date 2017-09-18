@@ -26,7 +26,9 @@
 
 namespace OCA\CMSPico\Service;
 
+use Exception;
 use OCA\CMSPico\Db\WebsitesRequest;
+use OCA\CMSPico\Exceptions\PicoRuntimeException;
 use OCA\CMSPico\Exceptions\WebsiteAlreadyExistException;
 use OCA\CMSPico\Exceptions\WebsiteDoesNotExistException;
 use OCA\CMSPico\Model\Website;
@@ -179,13 +181,21 @@ class WebsitesService {
 	 * @param string $viewer
 	 *
 	 * @return string
+	 * @throws Exception
 	 */
 	public function getWebpageFromSite($site, $viewer) {
 
-		$website = $this->websiteRequest->getWebsiteFromSite($site);
-		$website->setViewer($viewer);
+		try {
+			$website = $this->websiteRequest->getWebsiteFromSite($site);
+			$website->setViewer($viewer);
 
-		return $this->picoService->getContent($website);
+			return $this->picoService->getContent($website);
+		} catch (PicoRuntimeException $e) {
+			throw new PicoRuntimeException("Webpage cannot be rendered");
+		} catch (Exception $e) {
+			throw $e;
+		}
+
 	}
 
 

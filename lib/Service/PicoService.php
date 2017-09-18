@@ -28,6 +28,7 @@ namespace OCA\CMSPico\Service;
 
 use OC\App\AppManager;
 use OCA\CMSPico\AppInfo\Application;
+use OCA\CMSPico\Exceptions\PicoRuntimeException;
 use OCA\CMSPico\Model\Website;
 use Pico;
 
@@ -63,19 +64,22 @@ class PicoService {
 	 * @param Website $website
 	 *
 	 * @return string
+	 * @throws PicoRuntimeException
 	 */
 	public function getContent(Website $website) {
 
 		$appPath = MiscService::endSlash($this->appManager->getAppPath(Application::APP_NAME));
 		$pico = new Pico(
-			$website->getAbsolutePath(),
-			$appPath . self::DIR_CONFIG,
-			$appPath . self::DIR_PLUGINS,
-			$appPath . self::DIR_THEMES
+			$website->getAbsolutePath(), $appPath . self::DIR_CONFIG,
+			$appPath . self::DIR_PLUGINS, $appPath . self::DIR_THEMES
 		);
 
 		$this->generateConfig($pico, $website);
-		$content = $pico->run();
+		try {
+			$content = $pico->run();
+		} catch (\Exception $e) {
+			throw new PicoRuntimeException($e->getMessage());
+		}
 
 		$absolutePath = $this->getAbsolutePathFromPage($pico);
 		$website->contentMustBeLocal($absolutePath);
