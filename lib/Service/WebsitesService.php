@@ -163,6 +163,19 @@ class WebsitesService {
 
 	/**
 	 * @param string $site
+	 *
+	 * @return Website
+	 */
+	public function getWebsiteFromSite($site) {
+
+		$website = $this->websiteRequest->getWebsiteFromSite($site);
+
+		return $website;
+	}
+
+
+	/**
+	 * @param string $site
 	 * @param string $viewer
 	 *
 	 * @return string
