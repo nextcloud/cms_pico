@@ -68,7 +68,8 @@ class PicoService {
 
 		$appPath = MiscService::endSlash($this->appManager->getAppPath(Application::APP_NAME));
 		$pico = new Pico(
-			$website->getAbsolutePath(), self::DIR_CONFIG,
+			$website->getAbsolutePath(),
+			$appPath . self::DIR_CONFIG,
 			$appPath . self::DIR_PLUGINS,
 			$appPath . self::DIR_THEMES
 		);
@@ -107,7 +108,7 @@ class PicoService {
 	 * @return string
 	 */
 	private function getAbsolutePathFromPage(Pico $pico) {
-		return $pico->getConfig()['content_dir'] . $pico->getCurrentPage()['id'] . ' . md';
+		return $pico->getConfig()['content_dir'] . $pico->getCurrentPage()['id'] . '.md';
 	}
 
 }
