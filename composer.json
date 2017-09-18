@@ -10,6 +10,7 @@
     }
   ],
   "require": {
-    "picocms/pico": "v1.0.6"
+    "picocms/pico": "v1.0.6",
+    "ezyang/htmlpurifier": "v4.9.3"
   }
 }

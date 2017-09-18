@@ -30,8 +30,7 @@
  *
  */
 
-final class Nextcloud extends AbstractPicoPlugin
-{
+final class Nextcloud extends AbstractPicoPlugin {
 	/**
 	 * This plugin is enabled by default?
 	 *
@@ -59,37 +58,37 @@ final class Nextcloud extends AbstractPicoPlugin
 	 *
 	 * @see    Pico::getPlugin()
 	 * @see    Pico::getPlugins()
+	 *
 	 * @param  object[] &$plugins loaded plugin instances
+	 *
 	 * @return void
 	 */
-	public function onPluginsLoaded(array &$plugins)
-	{
-		// your code
+	public function onPluginsLoaded(array &$plugins) {
 	}
 
 	/**
 	 * Triggered after Pico has read its configuration
 	 *
 	 * @see    Pico::getConfig()
+	 *
 	 * @param  array &$config array of config variables
+	 *
 	 * @return void
 	 */
-	public function onConfigLoaded(array &$config)
-	{
+	public function onConfigLoaded(array &$config) {
 		$this->config = $config;
-		// your code
 	}
 
 	/**
 	 * Triggered after Pico has evaluated the request URL
 	 *
 	 * @see    Pico::getRequestUrl()
+	 *
 	 * @param  string &$url part of the URL describing the requested contents
+	 *
 	 * @return void
 	 */
-	public function onRequestUrl(&$url)
-	{
-		// your code
+	public function onRequestUrl(&$url) {
 	}
 
 	/**
@@ -97,12 +96,12 @@ final class Nextcloud extends AbstractPicoPlugin
 	 *
 	 * @see    Pico::getBaseUrl()
 	 * @see    Pico::getRequestFile()
+	 *
 	 * @param  string &$file absolute path to the content file to serve
+	 *
 	 * @return void
 	 */
-	public function onRequestFile(&$file)
-	{
-		// your code
+	public function onRequestFile(&$file) {
 	}
 
 	/**
@@ -110,24 +109,25 @@ final class Nextcloud extends AbstractPicoPlugin
 	 *
 	 * @see    Pico::loadFileContent()
 	 * @see    DummyPlugin::onContentLoaded()
+	 *
 	 * @param  string &$file path to the file which contents will be read
+	 *
 	 * @return void
 	 */
-	public function onContentLoading(&$file)
-	{
-		// your code
+	public function onContentLoading(&$file) {
 	}
 
 	/**
 	 * Triggered after Pico has read the contents of the file to serve
 	 *
 	 * @see    Pico::getRawContent()
+	 *
 	 * @param  string &$rawContent raw file contents
+	 *
 	 * @return void
 	 */
-	public function onContentLoaded(&$rawContent)
-	{
-		// your code
+	public function onContentLoaded(&$rawContent) {
+
 	}
 
 	/**
@@ -135,38 +135,38 @@ final class Nextcloud extends AbstractPicoPlugin
 	 *
 	 * @see    Pico::load404Content()
 	 * @see    DummyPlugin::on404ContentLoaded()
+	 *
 	 * @param  string &$file path to the file which contents were requested
+	 *
 	 * @return void
 	 */
-	public function on404ContentLoading(&$file)
-	{
-		// your code
+	public function on404ContentLoading(&$file) {
 	}
 
 	/**
 	 * Triggered after Pico has read the contents of the 404 file
 	 *
 	 * @see    Pico::getRawContent()
+	 *
 	 * @param  string &$rawContent raw file contents
+	 *
 	 * @return void
 	 */
-	public function on404ContentLoaded(&$rawContent)
-	{
-		// your code
+	public function on404ContentLoaded(&$rawContent) {
 	}
 
 	/**
 	 * Triggered when Pico reads its known meta header fields
 	 *
 	 * @see    Pico::getMetaHeaders()
+	 *
 	 * @param  string[] &$headers list of known meta header
 	 *     fields; the array value specifies the YAML key to search for, the
 	 *     array key is later used to access the found value
+	 *
 	 * @return void
 	 */
-	public function onMetaHeaders(array &$headers)
-	{
-		// your code
+	public function onMetaHeaders(array &$headers) {
 	}
 
 	/**
@@ -174,25 +174,25 @@ final class Nextcloud extends AbstractPicoPlugin
 	 *
 	 * @see    Pico::parseFileMeta()
 	 * @see    DummyPlugin::onMetaParsed()
-	 * @param  string   &$rawContent raw file contents
-	 * @param  string[] &$headers    known meta header fields
+	 *
+	 * @param  string &$rawContent raw file contents
+	 * @param  string[] &$headers known meta header fields
+	 *
 	 * @return void
 	 */
-	public function onMetaParsing(&$rawContent, array &$headers)
-	{
-		// your code
+	public function onMetaParsing(&$rawContent, array &$headers) {
 	}
 
 	/**
 	 * Triggered after Pico has parsed the meta header
 	 *
 	 * @see    Pico::getFileMeta()
+	 *
 	 * @param  string[] &$meta parsed meta data
+	 *
 	 * @return void
 	 */
-	public function onMetaParsed(array &$meta)
-	{
-		// your code
+	public function onMetaParsed(array &$meta) {
 	}
 
 	/**
@@ -201,12 +201,12 @@ final class Nextcloud extends AbstractPicoPlugin
 	 * @see    Pico::prepareFileContent()
 	 * @see    DummyPlugin::prepareFileContent()
 	 * @see    DummyPlugin::onContentParsed()
+	 *
 	 * @param  string &$rawContent raw file contents
+	 *
 	 * @return void
 	 */
-	public function onContentParsing(&$rawContent)
-	{
-		// your code
+	public function onContentParsing(&$rawContent) {
 	}
 
 	/**
@@ -214,24 +214,27 @@ final class Nextcloud extends AbstractPicoPlugin
 	 *
 	 * @see    Pico::parseFileContent()
 	 * @see    DummyPlugin::onContentParsed()
+	 *
 	 * @param  string &$content prepared file contents for parsing
+	 *
 	 * @return void
 	 */
-	public function onContentPrepared(&$content)
-	{
-		// your code
+	public function onContentPrepared(&$content) {
 	}
 
 	/**
 	 * Triggered after Pico has parsed the contents of the file to serve
 	 *
 	 * @see    Pico::getFileContent()
+	 *
 	 * @param  string &$content parsed contents
+	 *
 	 * @return void
 	 */
-	public function onContentParsed(&$content)
-	{
-		// your code
+	public function onContentParsed(&$content) {
+		$config = HTMLPurifier_Config::createDefault();
+		$purifier = new HTMLPurifier($config);
+		$content = $purifier->purify($content);
 	}
 
 	/**
@@ -242,9 +245,7 @@ final class Nextcloud extends AbstractPicoPlugin
 	 * @see    DummyPlugin::onPagesLoaded()
 	 * @return void
 	 */
-	public function onPagesLoading()
-	{
-		// your code
+	public function onPagesLoading() {
 	}
 
 	/**
@@ -266,12 +267,12 @@ final class Nextcloud extends AbstractPicoPlugin
 	 * | meta           | string | parsed meta data of the page             |
 	 *
 	 * @see    DummyPlugin::onPagesLoaded()
+	 *
 	 * @param  array &$pageData data of the loaded page
+	 *
 	 * @return void
 	 */
-	public function onSinglePageLoaded(array &$pageData)
-	{
-		// your code
+	public function onSinglePageLoaded(array &$pageData) {
 	}
 
 	/**
@@ -284,10 +285,12 @@ final class Nextcloud extends AbstractPicoPlugin
 	 * @see    Pico::getCurrentPage()
 	 * @see    Pico::getPreviousPage()
 	 * @see    Pico::getNextPage()
-	 * @param  array[]    &$pages        data of all known pages
-	 * @param  array|null &$currentPage  data of the page being served
+	 *
+	 * @param  array[] &$pages data of all known pages
+	 * @param  array|null &$currentPage data of the page being served
 	 * @param  array|null &$previousPage data of the previous page
-	 * @param  array|null &$nextPage     data of the next page
+	 * @param  array|null &$nextPage data of the next page
+	 *
 	 * @return void
 	 */
 	public function onPagesLoaded(
@@ -296,7 +299,6 @@ final class Nextcloud extends AbstractPicoPlugin
 		array &$previousPage = null,
 		array &$nextPage = null
 	) {
-		// your code
 	}
 
 	/**
@@ -304,9 +306,7 @@ final class Nextcloud extends AbstractPicoPlugin
 	 *
 	 * @return void
 	 */
-	public function onTwigRegistration()
-	{
-		// your code
+	public function onTwigRegistration() {
 	}
 
 	/**
@@ -314,24 +314,24 @@ final class Nextcloud extends AbstractPicoPlugin
 	 *
 	 * @see    Pico::getTwig()
 	 * @see    DummyPlugin::onPageRendered()
-	 * @param  Twig_Environment &$twig          twig template engine
-	 * @param  array            &$twigVariables template variables
-	 * @param  string           &$templateName  file name of the template
+	 *
+	 * @param  Twig_Environment &$twig twig template engine
+	 * @param  array &$twigVariables template variables
+	 * @param  string &$templateName file name of the template
+	 *
 	 * @return void
 	 */
-	public function onPageRendering(Twig_Environment &$twig, array &$twigVariables, &$templateName)
-	{
-		$twigVariables['theme_url'] =  '/apps/cms_pico/Pico/themes/' . $this->config['theme'];
+	public function onPageRendering(Twig_Environment &$twig, array &$twigVariables, &$templateName) {
+		$twigVariables['theme_url'] = '/apps/cms_pico/Pico/themes/' . $this->config['theme'];
 	}
 
 	/**
 	 * Triggered after Pico has rendered the page
 	 *
 	 * @param  string &$output contents which will be sent to the user
+	 *
 	 * @return void
 	 */
-	public function onPageRendered(&$output)
-	{
-		// your code
+	public function onPageRendered(&$output) {
 	}
 }

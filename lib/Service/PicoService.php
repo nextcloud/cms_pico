@@ -26,6 +26,8 @@
 
 namespace OCA\CMSPico\Service;
 
+use HTMLPurifier;
+use HTMLPurifier_Config;
 use OC\App\AppManager;
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Exceptions\PicoRuntimeException;
