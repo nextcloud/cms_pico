@@ -29,7 +29,6 @@ namespace OCA\CMSPico\Service;
 use OCA\CMSPico\Db\WebsitesRequest;
 use OCA\CMSPico\Exceptions\WebsiteAlreadyExistException;
 use OCA\CMSPico\Exceptions\WebsiteDoesNotExistException;
-use OCA\CMSPico\Model\Webpage;
 use OCA\CMSPico\Model\Website;
 use OCP\IL10N;
 
