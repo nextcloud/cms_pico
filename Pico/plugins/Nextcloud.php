@@ -50,6 +50,9 @@ final class Nextcloud extends AbstractPicoPlugin {
 	/** @var array */
 	private $config;
 
+	/** @var HTMLPurifier */
+	private $htmlPurifier;
+
 	/**
 	 * Triggered after Pico has loaded all available plugins
 	 *
@@ -77,6 +80,8 @@ final class Nextcloud extends AbstractPicoPlugin {
 	 */
 	public function onConfigLoaded(array &$config) {
 		$this->config = $config;
+		$this->htmlPurifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+
 	}
 
 	/**
@@ -193,6 +198,12 @@ final class Nextcloud extends AbstractPicoPlugin {
 	 * @return void
 	 */
 	public function onMetaParsed(array &$meta) {
+		$newMeta = [];
+		foreach ($meta as $key => $value) {
+			$newMeta[$key] = $this->htmlPurifier->purify($value);
+		}
+
+		$meta = $newMeta;
 	}
 
 	/**
@@ -232,9 +243,7 @@ final class Nextcloud extends AbstractPicoPlugin {
 	 * @return void
 	 */
 	public function onContentParsed(&$content) {
-		$config = HTMLPurifier_Config::createDefault();
-		$purifier = new HTMLPurifier($config);
-		$content = $purifier->purify($content);
+		$content = $this->htmlPurifier->purify($content);
 	}
 
 	/**
