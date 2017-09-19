@@ -56,7 +56,7 @@ class SettingsController extends Controller {
 
 
 	/**
-	 * NavigationController constructor.
+	 * SettingsController constructor.
 	 *
 	 * @param IRequest $request
 	 * @param string $userId
