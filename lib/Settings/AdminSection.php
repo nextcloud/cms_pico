@@ -31,7 +31,7 @@ use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\Settings\IIconSection;
 
-class Section implements IIconSection {
+class AdminSection implements IIconSection {
 
 	/** @var IL10N */
 	private $l10n;

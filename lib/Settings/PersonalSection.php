@@ -24,18 +24,56 @@
  *
  */
 
-namespace OCA\CMSPico;
+namespace OCA\CMSPico\Settings;
 
-use OCA\CMSPico\Controller\NavigationController;
-use OCP\AppFramework\Http\TemplateResponse;
+use OCA\CMSPico\AppInfo\Application;
+use OCP\IL10N;
+use OCP\IURLGenerator;
+use OCP\Settings\IIconSection;
 
-$app = new AppInfo\Application();
+class PersonalSection implements IIconSection {
 
-/** @var TemplateResponse $response */
-$response = $app->getContainer()
-				->query(NavigationController::class)
-				->admin();
+	/** @var IL10N */
+	private $l10n;
 
-return $response->render();
+	/** @var IURLGenerator */
+	private $urlGenerator;
 
+	/**
+	 * @param IL10N $l10n
+	 * @param IURLGenerator $urlGenerator
+	 */
+	public function __construct(IL10N $l10n,
+								IURLGenerator $urlGenerator) {
+		$this->l10n = $l10n;
+		$this->urlGenerator = $urlGenerator;
+	}
 
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getID() {
+		return Application::APP_NAME;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getName() {
+		return $this->l10n->t('Pico CMS');
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getPriority() {
+		return 75;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getIcon() {
+		return $this->urlGenerator->imagePath(Application::APP_NAME, 'pico_cms.svg');
+	}
+}

@@ -27,26 +27,27 @@
 namespace OCA\CMSPico\Settings;
 
 use OCA\CMSPico\AppInfo\Application;
+use OCA\CMSPico\Service\TemplatesService;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IL10N;
-use OCP\IURLGenerator;
 use OCP\Settings\ISettings;
 
-class Admin implements ISettings {
+class Personal implements ISettings {
 
 	/** @var IL10N */
 	private $l10n;
 
-	/** @var IURLGenerator */
-	private $urlGenerator;
+	/** @var TemplatesService */
+	private $templatesService;
 
 	/**
 	 * @param IL10N $l10n
-	 * @param IURLGenerator $urlGenerator
+	 * @param TemplatesService $templatesService
 	 */
-	public function __construct(IL10N $l10n, IURLGenerator $urlGenerator) {
+	public function __construct(IL10N $l10n, TemplatesService $templatesService) {
+		\OC::$server->getLogger()->log(4, '______');
 		$this->l10n = $l10n;
-		$this->urlGenerator = $urlGenerator;
+		$this->templatesService = $templatesService;
 	}
 
 	/**
@@ -54,13 +55,12 @@ class Admin implements ISettings {
 	 */
 	public function getForm() {
 		$data = [
-			'nchost'      => $this->urlGenerator->getBaseUrl(),
-			'ssl_enabled' => (substr($this->urlGenerator->getBaseUrl(), 0, 5) === 'https')
+			'templates' => $this->templatesService->getTemplatesList()
 		];
 
-		\OC::$server->getLogger()->log(4, '______ ADMIN');
+		\OC::$server->getLogger()->log(4, '______2');
 
-		return new TemplateResponse(Application::APP_NAME, 'settings.admin', $data);
+		return new TemplateResponse(Application::APP_NAME, 'settings.personal', $data);
 	}
 
 	/**
