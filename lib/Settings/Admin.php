@@ -58,8 +58,6 @@ class Admin implements ISettings {
 			'ssl_enabled' => (substr($this->urlGenerator->getBaseUrl(), 0, 5) === 'https')
 		];
 
-		\OC::$server->getLogger()->log(4, '______ ADMIN');
-
 		return new TemplateResponse(Application::APP_NAME, 'settings.admin', $data);
 	}
 

@@ -45,7 +45,6 @@ class Personal implements ISettings {
 	 * @param TemplatesService $templatesService
 	 */
 	public function __construct(IL10N $l10n, TemplatesService $templatesService) {
-		\OC::$server->getLogger()->log(4, '______');
 		$this->l10n = $l10n;
 		$this->templatesService = $templatesService;
 	}
@@ -57,8 +56,6 @@ class Personal implements ISettings {
 		$data = [
 			'templates' => $this->templatesService->getTemplatesList()
 		];
-
-		\OC::$server->getLogger()->log(4, '______2');
 
 		return new TemplateResponse(Application::APP_NAME, 'settings.personal', $data);
 	}
