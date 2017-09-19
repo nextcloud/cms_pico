@@ -48,20 +48,11 @@ $(document).ready(function () {
 		$.extend(AdminCMSPico.prototype, admin_pico_result);
 		$.extend(AdminCMSPico.prototype, admin_pico_define);
 
-		this.initialize();
-	};
+		admin_pico_define.nchost = window.location.protocol + '//' + window.location.host;
+		admin_pico_elements.initElements();
+		admin_pico_elements.initUI();
 
-
-	AdminCMSPico.prototype = {
-
-		initialize: function () {
-			admin_pico_define.nchost = window.location.protocol + '//' + window.location.host;
-			admin_pico_elements.initElements();
-			admin_pico_elements.initUI();
-
-			admin_pico_nav.retrieveSettings();
-		}
-
+		admin_pico_nav.retrieveSettings();
 	};
 
 	OCA.AdminCMSPico = AdminCMSPico;

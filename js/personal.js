@@ -35,7 +35,16 @@
 var pico_define = {
 	sites: '/sites/',
 	index: '',
-	nchost: ''
+	nchost: '',
+
+	init: function () {
+		pico_define.nchost = window.location.protocol + '//' + window.location.host;
+
+		pico_define.index = OC.getRootPath();
+		if (oc_config.modRewriteWorking !== true) {
+			pico_define.index += '/index.php';
+		}
+	}
 };
 
 
@@ -50,39 +59,11 @@ $(document).ready(function () {
 		$.extend(CMSPico.prototype, pico_elements);
 		$.extend(CMSPico.prototype, pico_result);
 
-		this.initialize();
-		this.retrieveWebsites();
+		pico_define.init();
+		pico_elements.init();
+
+		pico_nav.retrieveWebsites();
 	};
-
-	CMSPico.prototype = {
-
-		initialize: function () {
-			pico_define.nchost = window.location.protocol + '//' + window.location.host;
-			pico_elements.initElements();
-			pico_elements.initUI();
-			pico_elements.initTweaks();
-
-			pico_define.index = OC.getRootPath();
-			if (oc_config.modRewriteWorking !== true) {
-				pico_define.index += '/index.php';
-			}
-		},
-
-
-		retrieveWebsites: function () {
-
-			$.ajax({
-				method: 'GET',
-				url: OC.generateUrl('/apps/cms_pico/personal/websites'),
-				data: {}
-			}).done(function (res) {
-				pico_result.displayWebsites(res.websites);
-			});
-
-		}
-
-	};
-
 
 	/**
 	 * @constructs Notification

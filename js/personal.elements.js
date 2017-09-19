@@ -39,6 +39,12 @@ var pico_elements = {
 	cms_pico_new_submit: null,
 
 
+	init: function () {
+		pico_elements.initElements();
+		pico_elements.initUI();
+		pico_elements.initTweaks();
+	},
+
 	initElements: function () {
 
 		pico_elements.cms_pico_list_websites = $('#cms_pico_list_websites');

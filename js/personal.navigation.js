@@ -30,6 +30,17 @@
 
 var pico_nav = {
 
+
+	retrieveWebsites: function () {
+		$.ajax({
+			method: 'GET',
+			url: OC.generateUrl('/apps/cms_pico/personal/websites'),
+			data: {}
+		}).done(function (res) {
+			pico_result.displayWebsites(res.websites);
+		});
+	},
+
 	updateNewWebsite: function (url) {
 		pico_elements.cms_pico_new_url.text(pico_define.nchost + pico_define.sites + url);
 		pico_nav.refreshNewFolder();
