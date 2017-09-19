@@ -346,6 +346,7 @@ class WebsiteCore implements \JsonSerializable {
 			'name'     => $this->getName(),
 			'user_id'  => $this->getUserId(),
 			'site'     => $this->getSite(),
+			'theme'    => $this->getTheme(),
 			'type'     => $this->getType(),
 			'options'  => $this->getOptions(),
 			'path'     => $this->getPath(),
@@ -366,14 +367,15 @@ class WebsiteCore implements \JsonSerializable {
 
 		MiscService::mustContains($arr, ['name', 'user_id', 'site', 'type', 'path']);
 
-		$this->setId((int) MiscService::get($arr, 'id'))
+		$this->setId((int)MiscService::get($arr, 'id'))
 			 ->setName($arr['name'])
 			 ->setUserId($arr['user_id'])
 			 ->setSite($arr['site'])
+			 ->setTheme($arr['theme'])
 			 ->setType($arr['type'])
 			 ->setOptions(MiscService::get($arr, 'options'))
 			 ->setPath($arr['path'])
-			 ->setCreation((int) MiscService::get($arr, 'creation'));
+			 ->setCreation((int)MiscService::get($arr, 'creation'));
 
 		return true;
 	}

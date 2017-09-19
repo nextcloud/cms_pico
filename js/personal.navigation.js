@@ -37,13 +37,54 @@ var pico_nav = {
 			url: OC.generateUrl('/apps/cms_pico/personal/websites'),
 			data: {}
 		}).done(function (res) {
-			pico_result.displayWebsites(res.websites);
+			pico_nav.retrieveWebsitesResult(res);
 		});
 	},
+
+
+	retrieveWebsitesResult: function (result) {
+		if (result.status === 1) {
+			pico_define.themes = result.themes;
+			pico_result.displayWebsites(result.websites);
+			return;
+		}
+
+		OCA.notification.onFail(
+			t('cms_pico', "It was not possible to retrieve the complete list of your websites") +
+			': ' + ((result.error) ? result.error : t('cms_pico', 'no error message')));
+	},
+
 
 	updateNewWebsite: function (url) {
 		pico_elements.cms_pico_new_url.text(pico_define.nchost + pico_define.sites + url);
 		pico_nav.refreshNewFolder();
+	},
+
+
+	updateTheme: function (site_id, theme) {
+		$.ajax({
+			method: 'PUT',
+			url: OC.generateUrl('/apps/cms_pico/personal/website/' + site_id + '/theme'),
+			data: {
+				theme: theme
+			}
+		}).done(function (res) {
+			pico_nav.updateThemeResult(res);
+		});
+	},
+
+
+	updateThemeResult: function (result) {
+		if (result.status === 1) {
+			OCA.notification.onSuccess('Theme updated');
+			pico_result.displayWebsites(result.websites);
+			return;
+		}
+
+		OCA.notification.onFail(
+			t('cms_pico', "It was not possible to update your theme on {name}",
+				{name: result.name}) +
+			': ' + ((result.error) ? result.error : t('cms_pico', 'no error message')));
 	},
 
 
@@ -134,8 +175,21 @@ var pico_nav = {
 				value: value
 			}
 		}).done(function (res) {
-			pico_result.displayWebsites(res.websites);
+			pico_nav.updateWebsiteOptionResult(res);
 		});
+	},
+
+
+	updateWebsiteOptionResult: function (result) {
+		if (result.status === 1) {
+			OCA.notification.onSuccess('Option updated');
+			pico_result.displayWebsites(result.websites);
+			return;
+		}
+
+		OCA.notification.onFail(
+			t('cms_pico', "It was not possible to update your website") +
+			': ' + ((result.error) ? result.error : t('cms_pico', 'no error message')));
 	},
 
 
@@ -160,6 +214,7 @@ var pico_nav = {
 		tmpl = tmpl.replace(/%%address%%/g, pico_define.nchost + pico_define.sites +
 			escapeHTML(entry.site));
 		tmpl = tmpl.replace(/%%path%%/g, escapeHTML(entry.path));
+		tmpl = tmpl.replace(/%%theme%%/g, escapeHTML(entry.theme));
 
 		if (entry.options.private === '1') {
 			tmpl = tmpl.replace(/%%private%%/g, escapeHTML(entry.options.private));

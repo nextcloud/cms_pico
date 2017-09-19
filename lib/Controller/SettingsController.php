@@ -139,6 +139,34 @@ class SettingsController extends Controller {
 	 * @NoAdminRequired
 	 *
 	 * @param int $siteId
+	 * @param string $theme
+	 *
+	 * @return DataResponse
+	 */
+	public function updateWebsiteTheme($siteId, $theme) {
+
+		try {
+			$website = $this->websitesService->getWebsiteFromId($siteId);
+
+			$website->hasToBeOwnedBy($this->userId);
+			$website->setTheme((string)$theme);
+
+			$this->themesService->hasToBeAValidTheme($theme);
+			$this->websitesService->updateWebsite($website);
+
+			return $this->miscService->success(
+				['websites' => $this->websitesService->getWebsitesFromUser($this->userId)]
+			);
+		} catch (Exception $e) {
+			return $this->miscService->fail(['error' => $e->getMessage()]);
+		}
+	}
+
+
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @param int $siteId
 	 * @param string $option
 	 * @param string $value
 	 *
@@ -172,7 +200,12 @@ class SettingsController extends Controller {
 		try {
 			$websites = $this->websitesService->getWebsitesFromUser($this->userId);
 
-			return $this->miscService->success(['websites' => $websites]);
+			return $this->miscService->success(
+				[
+					'themes'   => $this->themesService->getThemesList(),
+					'websites' => $websites
+				]
+			);
 		} catch (Exception $e) {
 			return $this->miscService->fail(['error' => $e->getMessage()]);
 		}
@@ -256,6 +289,7 @@ class SettingsController extends Controller {
 	 * @return DataResponse
 	 */
 	public function removeCustomTheme($theme) {
+
 		$custom = $this->themesService->getThemesList(true);
 
 		$k = array_search($theme, $custom);

@@ -85,7 +85,9 @@ class WebsitesRequestBuilder extends CoreRequestBuilder {
 		$qb = $this->dbConnection->getQueryBuilder();
 
 		/** @noinspection PhpMethodParametersCountMismatchInspection */
-		$qb->select('w.id', 'w.name', 'w.user_id', 'w.site', 'w.type', 'w.options', 'w.path', 'w.creation')
+		$qb->select(
+			'w.id', 'w.name', 'w.user_id', 'w.site', 'w.theme', 'w.type', 'w.options', 'w.path', 'w.creation'
+		)
 		   ->from(self::TABLE_WEBSITES, 'w');
 
 		$this->defaultSelectAlias = 'w';
@@ -119,6 +121,7 @@ class WebsitesRequestBuilder extends CoreRequestBuilder {
 				->setUserId($data['user_id'])
 				->setSite($data['site'])
 				->setType($data['type'])
+				->setTheme($data['theme'])
 				->setOptions($data['options'])
 				->setPath($data['path'])
 				->setCreation($data['creation']);

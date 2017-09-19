@@ -36,6 +36,7 @@ var pico_define = {
 	sites: '/sites/',
 	index: '',
 	nchost: '',
+	themes: [],
 
 	init: function () {
 		pico_define.nchost = window.location.protocol + '//' + window.location.host;

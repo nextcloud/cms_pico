@@ -45,6 +45,7 @@ class WebsitesRequest extends WebsitesRequestBuilder {
 			$qb->setValue('name', $qb->createNamedParameter($website->getName()))
 			   ->setValue('user_id', $qb->createNamedParameter($website->getUserId()))
 			   ->setValue('site', $qb->createNamedParameter($website->getSite()))
+			   ->setValue('theme', $qb->createNamedParameter($website->getTheme()))
 			   ->setValue('type', $qb->createNamedParameter($website->getType()))
 			   ->setValue('options', $qb->createNamedParameter($website->getOptions(true)))
 			   ->setValue('path', $qb->createNamedParameter($website->getPath()));
@@ -67,6 +68,7 @@ class WebsitesRequest extends WebsitesRequestBuilder {
 		$qb->set('name', $qb->createNamedParameter($website->getName()));
 		$qb->set('user_id', $qb->createNamedParameter($website->getUserId()));
 		$qb->set('site', $qb->createNamedParameter($website->getSite()));
+		$qb->set('theme', $qb->createNamedParameter($website->getTheme()));
 		$qb->set('type', $qb->createNamedParameter($website->getType()));
 		$qb->set('options', $qb->createNamedParameter($website->getOptions(true)));
 		$qb->set('path', $qb->createNamedParameter($website->getPath()));

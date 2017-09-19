@@ -69,6 +69,14 @@
 			</field>
 
 			<field>
+				<name>theme</name>
+				<type>text</type>
+				<length>63</length>
+				<notnull>true</notnull>
+				<default>default</default>
+			</field>
+
+			<field>
 				<name>type</name>
 				<type>integer</type>
 				<length>1</length>

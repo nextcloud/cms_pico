@@ -29,6 +29,7 @@ namespace OCA\CMSPico\Service;
 use DirectoryIterator;
 use Exception;
 use OCA\CMSPico\Exceptions\TemplateDoesNotExistException;
+use OCA\CMSPico\Exceptions\ThemeDoesNotExistException;
 use OCA\CMSPico\Exceptions\WriteAccessException;
 use OCA\CMSPico\Model\TemplateFile;
 use OCA\CMSPico\Model\Website;
@@ -82,6 +83,18 @@ class ThemesService {
 		return $themes;
 	}
 
+
+	/**
+	 * @param $theme
+	 *
+	 * @throws ThemeDoesNotExistException
+	 */
+	public function hasToBeAValidTheme($theme) {
+		$themes = $this->getThemesList();
+		if (!in_array($theme, $themes)) {
+			throw new ThemeDoesNotExistException($this->l10n->t('Theme does not exist'));
+		}
+	}
 
 	/**
 	 * @return array

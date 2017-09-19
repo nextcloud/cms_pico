@@ -44,6 +44,7 @@ var pico_result = {
 				pico_result.interactionWebsitesDelete($(this));
 				pico_result.displayWebsitesLink($(this));
 				pico_result.displayWebsitesPath($(this));
+				pico_result.displayWebsitesTheme($(this));
 				pico_result.displayWebsitesPrivate($(this));
 			});
 
@@ -65,6 +66,27 @@ var pico_result = {
 				window.open(url);
 			});
 		},
+
+
+		displayWebsitesTheme: function (div) {
+			var select = div.find('SELECT.theme');
+			for (i = 0; i < pico_define.themes.length; i++) {
+				var theme = pico_define.themes[i];
+				var option = $('<option>', {
+					value: theme,
+					text: theme
+				});
+				if (theme === div.attr('data-theme')) {
+					option.prop('selected', true);
+				}
+				select.append(option);
+			}
+
+			select.on('change', function () {
+				pico_nav.updateTheme(div.attr('data-id'), $(this).val());
+			});
+		},
+
 
 
 		displayWebsitesPrivate: function (div) {
