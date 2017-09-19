@@ -70,7 +70,7 @@ var pico_result = {
 
 		displayWebsitesTheme: function (div) {
 			var select = div.find('SELECT.theme');
-			for (i = 0; i < pico_define.themes.length; i++) {
+			for (var i = 0; i < pico_define.themes.length; i++) {
 				var theme = pico_define.themes[i];
 				var option = $('<option>', {
 					value: theme,
