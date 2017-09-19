@@ -29,10 +29,9 @@ var admin_pico_elements = {
 
 	cms_pico_curr_templates: null,
 	cms_pico_new_template: null,
-	cms_pico_refresh_templates: null,
 	cms_pico_curr_themes: null,
 	cms_pico_new_theme: null,
-	cms_pico_refresh_themes: null,
+	cms_pico_refresh: null,
 	cms_pico_submit_template: null,
 	cms_pico_submit_theme: null,
 
@@ -46,17 +45,16 @@ var admin_pico_elements = {
 	initElements: function () {
 		admin_pico_elements.cms_pico_curr_templates = $('#admin_cms_pico_curr_templates');
 		admin_pico_elements.cms_pico_new_template = $('#admin_cms_pico_new_templates');
-		admin_pico_elements.cms_pico_refresh_templates = $('#admin_cms_pico_refresh_templates');
 		admin_pico_elements.cms_pico_curr_themes = $('#admin_cms_pico_curr_themes');
 		admin_pico_elements.cms_pico_new_theme = $('#admin_cms_pico_new_themes');
-		admin_pico_elements.cms_pico_refresh_themes = $('#admin_cms_pico_refresh_themes');
+		admin_pico_elements.cms_pico_refresh = $('.admin_cms_pico_refresh');
 		admin_pico_elements.cms_pico_submit_template = $('#admin_cms_pico_add_template_submit');
 		admin_pico_elements.cms_pico_submit_theme = $('#admin_cms_pico_add_theme_submit');
 	},
 
 
 	initUI: function () {
-		admin_pico_elements.cms_pico_refresh_templates.css('cursor', 'pointer').on('click', function () {
+		admin_pico_elements.cms_pico_refresh.css('cursor', 'pointer').on('click', function () {
 			admin_pico_nav.retrieveSettings();
 		});
 

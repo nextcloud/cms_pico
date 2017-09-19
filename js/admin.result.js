@@ -32,7 +32,6 @@
 var admin_pico_result = {
 
 	displaySettings: function (settings) {
-		console.log(JSON.stringify(settings));
 		admin_pico_result.displayNewTemplates(settings.templates_new);
 		admin_pico_result.displayCurrentTemplates(settings.templates);
 		admin_pico_result.displayNewThemes(settings.themes_new);

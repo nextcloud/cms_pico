@@ -121,7 +121,7 @@ RewriteRule /sites/(.*) <?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico/$
 
 		<tr class="lane">
 			<td class="left"><?php p($l->t('Add a new custom theme:')); ?><br/>
-				<em id="admin_cms_pico_refresh_themes">Refresh if you cannot find your new folder</em>
+				<em class="admin_cms_pico_refresh">Refresh if you cannot find your new folder</em>
 			</td>
 			<td class="right">
 				<select id="admin_cms_pico_new_themes" class="field250">
@@ -172,7 +172,7 @@ RewriteRule /sites/(.*) <?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico/$
 
 		<tr class="lane">
 			<td class="left"><?php p($l->t('Add a new custom template:')); ?><br/>
-				<em id="admin_cms_pico_refresh_templates">Refresh if you cannot find your new folder</em>
+				<em class="admin_cms_pico_refresh">Refresh if you cannot find your new folder</em>
 			</td>
 			<td class="right">
 				<select id="admin_cms_pico_new_templates" class="field250">
