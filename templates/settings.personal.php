@@ -51,14 +51,14 @@ style(Application::APP_NAME, 'personal');
 
 			</td>
 		</tr>
+	</table>
+</div>
 
+<div class="section">
+	<h2><?php p($l->t('Your current websites')); ?></h2>
 
-		<tr>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td colspan="2" class="title"><?php p($l->t('Your current websites')); ?></td>
-		</tr>
+	<table cellpadding="10" cellpadding="5">
+
 		<tr>
 			<td colspan="2">
 				<table cellspacing="3" cellpadding="3" id="cms_pico_list_websites"
@@ -74,14 +74,13 @@ style(Application::APP_NAME, 'personal');
 				</table>
 			</td>
 		</tr>
+	</table>
+</div>
 
+<div class="section">
+	<h2><?php p($l->t('Create a new website')); ?></h2>
 
-		<tr>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td colspan="2" class="title"><?php p($l->t('Create a new website')); ?></td>
-		</tr>
+	<table cellpadding="10" cellpadding="5">
 		<tr>
 			<td colspan="2">
 				To create a new Site Folder, you will need to specify the front URL address
@@ -135,7 +134,6 @@ style(Application::APP_NAME, 'personal');
 				</select>
 			</td>
 		</tr>
-
 		<tr>
 			<td>&nbsp;</td>
 		</tr>
