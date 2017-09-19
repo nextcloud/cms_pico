@@ -31,6 +31,7 @@ use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Service\ConfigService;
 use OCA\CMSPico\Service\MiscService;
 use OCA\CMSPico\Service\TemplatesService;
+use OCA\CMSPico\Service\ThemesService;
 use OCA\CMSPico\Service\WebsitesService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
@@ -48,6 +49,9 @@ class SettingsController extends Controller {
 	/** @var TemplatesService */
 	private $templatesService;
 
+	/** @var ThemesService */
+	private $themesService;
+
 	/** @var WebsitesService */
 	private $websitesService;
 
@@ -62,18 +66,20 @@ class SettingsController extends Controller {
 	 * @param string $userId
 	 * @param ConfigService $configService
 	 * @param TemplatesService $templatesService
+	 * @param ThemesService $themesService
 	 * @param WebsitesService $websitesService
 	 * @param MiscService $miscService
 	 */
 	function __construct(
 		IRequest $request, $userId, ConfigService $configService, TemplatesService $templatesService,
-		WebsitesService $websitesService,
+		ThemesService $themesService, WebsitesService $websitesService,
 		MiscService $miscService
 	) {
 		parent::__construct(Application::APP_NAME, $request);
 		$this->userId = $userId;
 		$this->configService = $configService;
 		$this->templatesService = $templatesService;
+		$this->themesService = $themesService;
 		$this->websitesService = $websitesService;
 		$this->miscService = $miscService;
 	}
@@ -119,7 +125,7 @@ class SettingsController extends Controller {
 
 			return $this->miscService->success(
 				[
-					'name' => $data['name'],
+					'name'     => $data['name'],
 					'websites' => $this->websitesService->getWebsitesFromUser($this->userId)
 				]
 			);
@@ -179,7 +185,9 @@ class SettingsController extends Controller {
 	public function getSettingsAdmin() {
 		$data = [
 			'templates'     => $this->templatesService->getTemplatesList(true),
-			'templates_new' => $this->templatesService->getNewTemplatesList()
+			'templates_new' => $this->templatesService->getNewTemplatesList(),
+			'themes'        => $this->themesService->getThemesList(true),
+			'themes_new'    => $this->themesService->getNewThemesList()
 		];
 
 		return new DataResponse($data, Http::STATUS_OK);
@@ -223,6 +231,39 @@ class SettingsController extends Controller {
 		}
 
 		$this->configService->setAppValue(ConfigService::CUSTOM_TEMPLATES, json_encode($custom));
+
+		return $this->getSettingsAdmin();
+	}
+
+
+	/**
+	 * @param string $theme
+	 *
+	 * @return DataResponse
+	 */
+	public function addCustomTheme($theme) {
+
+		$custom = $this->themesService->getThemesList(true);
+		array_push($custom, $theme);
+		$this->configService->setAppValue(ConfigService::CUSTOM_THEMES, json_encode($custom));
+
+		return $this->getSettingsAdmin();
+	}
+
+	/**
+	 * @param string $theme
+	 *
+	 * @return DataResponse
+	 */
+	public function removeCustomTheme($theme) {
+		$custom = $this->themesService->getThemesList(true);
+
+		$k = array_search($theme, $custom);
+		if ($k !== false) {
+			unset($custom[$k]);
+		}
+
+		$this->configService->setAppValue(ConfigService::CUSTOM_THEMES, json_encode($custom));
 
 		return $this->getSettingsAdmin();
 	}

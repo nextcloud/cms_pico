@@ -30,7 +30,11 @@ var admin_pico_elements = {
 	cms_pico_curr_templates: null,
 	cms_pico_new_template: null,
 	cms_pico_refresh_templates: null,
-	cms_pico_submit: null,
+	cms_pico_curr_themes: null,
+	cms_pico_new_theme: null,
+	cms_pico_refresh_themes: null,
+	cms_pico_submit_template: null,
+	cms_pico_submit_theme: null,
 
 	init: function() {
 		admin_pico_elements.initElements();
@@ -43,7 +47,11 @@ var admin_pico_elements = {
 		admin_pico_elements.cms_pico_curr_templates = $('#admin_cms_pico_curr_templates');
 		admin_pico_elements.cms_pico_new_template = $('#admin_cms_pico_new_templates');
 		admin_pico_elements.cms_pico_refresh_templates = $('#admin_cms_pico_refresh_templates');
-		admin_pico_elements.cms_pico_submit = $('#admin_cms_pico_add_submit');
+		admin_pico_elements.cms_pico_curr_themes = $('#admin_cms_pico_curr_themes');
+		admin_pico_elements.cms_pico_new_theme = $('#admin_cms_pico_new_themes');
+		admin_pico_elements.cms_pico_refresh_themes = $('#admin_cms_pico_refresh_themes');
+		admin_pico_elements.cms_pico_submit_template = $('#admin_cms_pico_add_template_submit');
+		admin_pico_elements.cms_pico_submit_theme = $('#admin_cms_pico_add_theme_submit');
 	},
 
 
@@ -52,8 +60,12 @@ var admin_pico_elements = {
 			admin_pico_nav.retrieveSettings();
 		});
 
-		admin_pico_elements.cms_pico_submit.on('click', function() {
+		admin_pico_elements.cms_pico_submit_template.on('click', function() {
 			admin_pico_nav.addCustomTemplate();
+		});
+
+		admin_pico_elements.cms_pico_submit_theme.on('click', function() {
+			admin_pico_nav.addCustomTheme();
 		});
 	},
 

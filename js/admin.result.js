@@ -32,8 +32,11 @@
 var admin_pico_result = {
 
 	displaySettings: function (settings) {
+		console.log(JSON.stringify(settings));
 		admin_pico_result.displayNewTemplates(settings.templates_new);
 		admin_pico_result.displayCurrentTemplates(settings.templates);
+		admin_pico_result.displayNewThemes(settings.themes_new);
+		admin_pico_result.displayCurrentThemes(settings.themes);
 	},
 
 
@@ -57,6 +60,30 @@ var admin_pico_result = {
 
 		admin_pico_elements.cms_pico_curr_templates.children('tr').each(function () {
 			admin_pico_nav.interactionCurrentTemplate($(this));
+		});
+	},
+
+
+	displayNewThemes: function (themes) {
+		admin_pico_elements.cms_pico_new_theme.empty();
+		for (var i = 0; i < themes.length; i++) {
+			admin_pico_elements.cms_pico_new_theme.append($('<option>', {
+				value: themes[i],
+				text: themes[i]
+			}));
+		}
+	},
+
+
+	displayCurrentThemes: function (templates) {
+		admin_pico_elements.cms_pico_curr_themes.emptyTable();
+		for (var i = 0; i < templates.length; i++) {
+			var tmpl = admin_pico_nav.generateTmplCustomTheme(templates[i]);
+			admin_pico_elements.cms_pico_curr_themes.append(tmpl);
+		}
+
+		admin_pico_elements.cms_pico_curr_themes.children('tr').each(function () {
+			admin_pico_nav.interactionCurrentTheme($(this));
 		});
 	}
 

@@ -34,7 +34,10 @@ class ConfigService {
 
 	const CUSTOM_TEMPLATES = 'custom_templates';
 
+	const CUSTOM_THEMES = 'custom_themes';
+
 	private $defaults = [
+		self::CUSTOM_THEMES => '',
 		self::CUSTOM_TEMPLATES => ''
 	];
 

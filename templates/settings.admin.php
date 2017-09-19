@@ -36,15 +36,9 @@ style(Application::APP_NAME, 'admin');
 ?>
 
 <div class="section" style="margin: 50px 0px 50px 0px;">
-	<h2><?php p($l->t('Site Folders (Pico CMS)')) ?></h2>
-
+	<h2><?php p($l->t('Your Apache configuration')); ?></h2>
 
 	<table cellpadding="10" cellpadding="5">
-
-		<tr>
-			<td colspan="2" class="title"><?php p($l->t('Your Apache configuration')); ?></td>
-		</tr>
-
 		<tr>
 			<td colspan="2"><?php p(
 					$l->t(
@@ -99,13 +93,56 @@ RewriteRule /sites/(.*) <?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico/$
 			</td>
 		</tr>
 
-		<tr class="lane">
-			<td>&nbsp;</td>
+	</table>
+</div>
+<div class="section" style="margin: 50px 0px 50px 0px;">
+
+	<h2><?php p($l->t('Custom themes')); ?></h2>
+	<table cellpadding="10" cellpadding="5">
+		<tr>
+			<td colspan="2"><?php p(
+					$l->t(
+						'To add a custom theme, you will need to create a new folder in apps/cms_pico/themes/'
+					)
+				); ?>
+				<br/>
+			</td>
 		</tr>
 
 		<tr class="lane">
-			<td colspan="2" class="title"><?php p($l->t('Custom templates')); ?></td>
+			<td class="left"><?php p($l->t('Current custom themes:')); ?><br/>
+				<em>Manage your custom themes</em>
+			</td>
+			<td class="right">
+				<table cellspacing="3" cellpadding="3" id="admin_cms_pico_curr_themes">
+				</table>
+			</td>
 		</tr>
+
+		<tr class="lane">
+			<td class="left"><?php p($l->t('Add a new custom theme:')); ?><br/>
+				<em id="admin_cms_pico_refresh_themes">Refresh if you cannot find your new folder</em>
+			</td>
+			<td class="right">
+				<select id="admin_cms_pico_new_themes" class="field250">
+				</select>
+			</td>
+		</tr>
+
+		<tr class="lane">
+			<td colspan="2" class="center">
+				<input class="field250" type="submit" id="admin_cms_pico_add_theme_submit"
+					   value="<?php p($l->t('Add custom theme')); ?>"/>
+			</td>
+		</tr>
+
+
+	</table>
+</div>
+<div class="section" style="margin: 50px 0px 50px 0px;">
+
+	<h2><?php p($l->t('Custom templates')); ?></h2>
+	<table cellpadding="10" cellpadding="5">
 
 		<tr>
 			<td colspan="2"><?php p(
@@ -145,7 +182,7 @@ RewriteRule /sites/(.*) <?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico/$
 
 		<tr class="lane">
 			<td colspan="2" class="center">
-				<input class="field250" type="submit" id="admin_cms_pico_add_submit"
+				<input class="field250" type="submit" id="admin_cms_pico_add_template_submit"
 					   value="<?php p($l->t('Add custom template')); ?>"/>
 			</td>
 		</tr>
@@ -159,6 +196,17 @@ RewriteRule /sites/(.*) <?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico/$
 			<td class="delete">
 				<button class="icon-delete"
 						title="<?php p($l->t('Delete custom template')); ?>"></button>
+			</td>
+		</tr>
+	</script>
+
+
+	<script id="tmpl_custom_theme" type="text/template">
+		<tr class="entry" data-name="%%name%%">
+			<td style="padding-right: 100px;">%%name%%</td>
+			<td class="delete">
+				<button class="icon-delete"
+						title="<?php p($l->t('Delete custom theme')); ?>"></button>
 			</td>
 		</tr>
 	</script>

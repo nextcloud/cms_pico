@@ -75,8 +75,56 @@ var admin_pico_nav = {
 	},
 
 
+
+	addCustomTheme: function () {
+		$.ajax({
+			method: 'PUT',
+			url: OC.generateUrl('/apps/cms_pico/admin/themes'),
+			data: {
+				theme: admin_pico_elements.cms_pico_new_theme.val()
+			}
+		}).done(function (res) {
+			admin_pico_result.displaySettings(res);
+		});
+	},
+
+
+	removeCustomTheme: function (theme) {
+		$.ajax({
+			method: 'DELETE',
+			url: OC.generateUrl('/apps/cms_pico/admin/themes'),
+			data: {
+				theme: theme
+			}
+		}).done(function (res) {
+			admin_pico_result.displaySettings(res);
+		});
+	},
+
+
+	interactionCurrentTheme: function (div) {
+		var name = div.attr('data-name');
+		div.find('TD.delete').on('click', function () {
+			admin_pico_nav.removeCustomTheme(name);
+		});
+	},
+
+
+
 	generateTmplCustomTemplate: function (entry) {
 		var div = $('#tmpl_custom_template');
+		if (!div.length) {
+			return;
+		}
+
+		var tmpl = div.html();
+		tmpl = tmpl.replace(/%%name%%/g, escapeHTML(entry));
+		return tmpl;
+	},
+
+
+	generateTmplCustomTheme: function (entry) {
+		var div = $('#tmpl_custom_theme');
 		if (!div.length) {
 			return;
 		}
