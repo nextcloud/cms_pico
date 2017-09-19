@@ -49,8 +49,7 @@ $(document).ready(function () {
 		$.extend(AdminCMSPico.prototype, admin_pico_define);
 
 		admin_pico_define.nchost = window.location.protocol + '//' + window.location.host;
-		admin_pico_elements.initElements();
-		admin_pico_elements.initUI();
+		admin_pico_elements.init();
 
 		admin_pico_nav.retrieveSettings();
 	};

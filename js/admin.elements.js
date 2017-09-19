@@ -32,6 +32,13 @@ var admin_pico_elements = {
 	cms_pico_refresh_templates: null,
 	cms_pico_submit: null,
 
+	init: function() {
+		admin_pico_elements.initElements();
+		admin_pico_elements.initUI();
+		admin_pico_elements.initTweaks();
+	},
+
+
 	initElements: function () {
 		admin_pico_elements.cms_pico_curr_templates = $('#admin_cms_pico_curr_templates');
 		admin_pico_elements.cms_pico_new_template = $('#admin_cms_pico_new_templates');
@@ -48,6 +55,16 @@ var admin_pico_elements = {
 		admin_pico_elements.cms_pico_submit.on('click', function() {
 			admin_pico_nav.addCustomTemplate();
 		});
-	}
+	},
 
+	
+	initTweaks: function () {
+		$.fn.emptyTable = function () {
+			this.children('tr').each(function () {
+				if ($(this).attr('class') !== 'header') {
+					$(this).remove();
+				}
+			});
+		};
+	}
 };

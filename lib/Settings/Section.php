@@ -24,8 +24,56 @@
  *
  */
 
-namespace OCA\CMSPico\AppInfo;
+namespace OCA\CMSPico\Settings;
 
-require_once __DIR__ . '/autoload.php';
+use OCA\CMSPico\AppInfo\Application;
+use OCP\IL10N;
+use OCP\IURLGenerator;
+use OCP\Settings\IIconSection;
 
-new Application();
+class Section implements IIconSection {
+
+	/** @var IL10N */
+	private $l10n;
+
+	/** @var IURLGenerator */
+	private $urlGenerator;
+
+	/**
+	 * @param IL10N $l10n
+	 * @param IURLGenerator $urlGenerator
+	 */
+	public function __construct(IL10N $l10n,
+								IURLGenerator $urlGenerator) {
+		$this->l10n = $l10n;
+		$this->urlGenerator = $urlGenerator;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getID() {
+		return Application::APP_NAME;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getName() {
+		return $this->l10n->t('Pico CMS');
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getPriority() {
+		return 75;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getIcon() {
+		return $this->urlGenerator->imagePath(Application::APP_NAME, 'pico_cms.svg');
+	}
+}
