@@ -1,4 +1,6 @@
 <?php
+
+
 /**
  * CMS Pico - Integration of Pico within your files to create websites.
  *
@@ -29,7 +31,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 final class Nextcloud extends AbstractPicoPlugin {
 	/**
 	 * This plugin is enabled by default?
@@ -54,22 +55,6 @@ final class Nextcloud extends AbstractPicoPlugin {
 	private $htmlPurifier;
 
 	/**
-	 * Triggered after Pico has loaded all available plugins
-	 *
-	 * This event is triggered nevertheless the plugin is enabled or not.
-	 * It is NOT guaranteed that plugin dependencies are fulfilled!
-	 *
-	 * @see    Pico::getPlugin()
-	 * @see    Pico::getPlugins()
-	 *
-	 * @param  object[] &$plugins loaded plugin instances
-	 *
-	 * @return void
-	 */
-	public function onPluginsLoaded(array &$plugins) {
-	}
-
-	/**
 	 * Triggered after Pico has read its configuration
 	 *
 	 * @see    Pico::getConfig()
@@ -84,109 +69,13 @@ final class Nextcloud extends AbstractPicoPlugin {
 
 	}
 
-	/**
-	 * Triggered after Pico has evaluated the request URL
-	 *
-	 * @see    Pico::getRequestUrl()
-	 *
-	 * @param  string &$url part of the URL describing the requested contents
-	 *
-	 * @return void
-	 */
-	public function onRequestUrl(&$url) {
+
+	public function setEnabled($enabled, $recursive = true, $auto = false) {
+		if ($enabled === false) {
+			throw new RuntimeException('Nextcloud plugin cannot be disabled');
+		}
 	}
 
-	/**
-	 * Triggered after Pico has discovered the content file to serve
-	 *
-	 * @see    Pico::getBaseUrl()
-	 * @see    Pico::getRequestFile()
-	 *
-	 * @param  string &$file absolute path to the content file to serve
-	 *
-	 * @return void
-	 */
-	public function onRequestFile(&$file) {
-	}
-
-	/**
-	 * Triggered before Pico reads the contents of the file to serve
-	 *
-	 * @see    Pico::loadFileContent()
-	 * @see    DummyPlugin::onContentLoaded()
-	 *
-	 * @param  string &$file path to the file which contents will be read
-	 *
-	 * @return void
-	 */
-	public function onContentLoading(&$file) {
-	}
-
-	/**
-	 * Triggered after Pico has read the contents of the file to serve
-	 *
-	 * @see    Pico::getRawContent()
-	 *
-	 * @param  string &$rawContent raw file contents
-	 *
-	 * @return void
-	 */
-	public function onContentLoaded(&$rawContent) {
-
-	}
-
-	/**
-	 * Triggered before Pico reads the contents of a 404 file
-	 *
-	 * @see    Pico::load404Content()
-	 * @see    DummyPlugin::on404ContentLoaded()
-	 *
-	 * @param  string &$file path to the file which contents were requested
-	 *
-	 * @return void
-	 */
-	public function on404ContentLoading(&$file) {
-	}
-
-	/**
-	 * Triggered after Pico has read the contents of the 404 file
-	 *
-	 * @see    Pico::getRawContent()
-	 *
-	 * @param  string &$rawContent raw file contents
-	 *
-	 * @return void
-	 */
-	public function on404ContentLoaded(&$rawContent) {
-	}
-
-	/**
-	 * Triggered when Pico reads its known meta header fields
-	 *
-	 * @see    Pico::getMetaHeaders()
-	 *
-	 * @param  string[] &$headers list of known meta header
-	 *     fields; the array value specifies the YAML key to search for, the
-	 *     array key is later used to access the found value
-	 *
-	 * @return void
-	 */
-	public function onMetaHeaders(array &$headers) {
-	}
-
-	/**
-	 * Triggered before Pico parses the meta header
-	 *
-	 * @see    Pico::parseFileMeta()
-	 * @see    DummyPlugin::onMetaParsed()
-	 *
-	 * @param  string &$rawContent raw file contents
-	 * @param  string[] &$headers known meta header fields
-	 *
-	 * @return void
-	 */
-	public function onMetaParsing(&$rawContent, array &$headers) {
-	}
 
 	/**
 	 * Triggered after Pico has parsed the meta header
