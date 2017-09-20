@@ -24,39 +24,20 @@
  *
  */
 
-namespace OCA\CMSPico\AppInfo;
 
-use OCP\AppFramework\App;
-use OCP\Util;
+namespace OCA\CMSPico;
 
-class Application extends App {
+use OCA\CMSPico\AppInfo\Application;
+use OCA\CMSPico\Controller\SettingsController;
+use OCP\AppFramework\Http\TemplateResponse;
 
-	const APP_NAME = 'cms_pico';
+$app = new Application();
 
-	/**
-	 * @param array $params
-	 */
-	public function __construct(array $params = array()) {
-		parent::__construct(self::APP_NAME, $params);
+/** @var TemplateResponse $response */
+$response = $app->getContainer()
+				->query(SettingsController::class)
+				->nc12personal();
 
-		$this->registerHooks();
-	}
+return $response->render();
 
-
-	/**
-	 * Register Hooks
-	 */
-	public function registerHooks() {
-		Util::connectHook(
-			'OC_User', 'post_deleteUser', '\OCA\CMSPico\Hooks\UserHooks', 'onUserDeleted'
-		);
-	}
-
-	public function registerSettingsPersonal() {
-		$ver = Util::getVersion();
-		if ($ver[0] < 13) {
-			\OCP\App::registerPersonal(self::APP_NAME, 'lib/personal');
-		}
-	}
-}
 

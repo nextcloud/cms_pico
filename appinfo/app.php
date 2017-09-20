@@ -28,4 +28,5 @@ namespace OCA\CMSPico\AppInfo;
 
 require_once __DIR__ . '/autoload.php';
 
-new Application();
+$app = new Application();
+$app->registerSettingsPersonal();
