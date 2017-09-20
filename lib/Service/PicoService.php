@@ -40,6 +40,8 @@ class PicoService {
 	const DIR_PLUGINS = 'Pico/plugins/';
 	const DIR_THEMES = 'Pico/themes/';
 
+	const NC_PLUGIN = 'Nextcloud';
+
 	private $userId;
 
 	/** @var AppManager */
@@ -83,6 +85,7 @@ class PicoService {
 			throw new PicoRuntimeException($e->getMessage());
 		}
 
+		$pico->getPlugin(self::NC_PLUGIN);
 		$absolutePath = $this->getAbsolutePathFromPage($pico);
 		$website->contentMustBeLocal($absolutePath);
 		$website->viewerMustHaveAccess($absolutePath, $pico->getFileMeta());
