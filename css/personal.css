@@ -46,6 +46,9 @@ TR.entry TD {
 	padding: 1px;
 }
 
+TD.path, TD.link {
+	font-size: 11px;
+}
 .icon-delete {
 	border: 0px;
 }

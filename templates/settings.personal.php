@@ -62,13 +62,14 @@ style(Application::APP_NAME, 'personal');
 		<tr>
 			<td colspan="2">
 				<table cellspacing="3" cellpadding="3" id="cms_pico_list_websites"
-					   style="margin: 20px; width: 900px;">
+					   style="margin: 20px; width: 800px;">
 					<tr class="header">
-						<td width="25%"><?php p($l->t('Name')); ?></td>
-						<td width="25%"><?php p($l->t('Address')); ?></td>
-						<td width="25%"><?php p($l->t('Local directory')); ?></td>
-						<td width="15%"><?php p($l->t('Theme')); ?></td>
-						<td width="10%"><?php p($l->t('Private')); ?></td>
+						<td width="25%">&nbsp;&nbsp;&nbsp;<?php p($l->t('Name')); ?></td>
+						<td width="40%">&nbsp;&nbsp;&nbsp;<?php p($l->t('Address')); ?> / <?php p(
+								$l->t('Local directory')
+							); ?></td>
+						<td width="20%">&nbsp;&nbsp;&nbsp;<?php p($l->t('Theme')); ?></td>
+						<td width="15%"><?php p($l->t('Private')); ?></td>
 					</tr>
 
 				</table>
@@ -150,10 +151,18 @@ style(Application::APP_NAME, 'personal');
 		<tr class="entry" data-id="%%id%%" data-name="%%name%%" data-address="%%address%%"
 			data-path="%%path%%" data-theme="%%theme%%" data-private="%%private%%">
 			<td style="font-style: italic; font-weight: bold">%%name%%</td>
-			<td class="link">%%address%%</td>
-			<td class="path">%%path%%</td>
+			<td>
+				<table>
+					<tr>
+						<td class="link">%%address%%</td>
+					</tr>
+					<tr>
+						<td class="path">%%path%%</td>
+					</tr>
+				</table>
+			</td>
 			<td><select class="theme"></select></select></td>
-			<td><input type="checkbox" value="1" class="private"/></td>
+			<td>&nbsp;&nbsp;&nbsp;<input type="checkbox" value="1" class="private"/></td>
 			<td>
 				<button id="delete" class="icon-delete"
 						title="<?php p($l->t('Delete website')); ?>"></button>
