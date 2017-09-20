@@ -116,8 +116,8 @@ class WebsitesServiceTest extends \PHPUnit_Framework_TestCase {
 		$arr = json_decode(json_encode($websites[0]), true);
 		$path = self::INFOS_WEBSITE1['path'];
 		$path2 = $arr['path'];
-		MiscService::endSlash($path);
-		MiscService::endSlash($path2);
+		$path = MiscService::endSlash($path);
+		$path2 = MiscService::endSlash($path2);
 
 		$this->assertSame(
 			[

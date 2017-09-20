@@ -27,7 +27,10 @@
 namespace OCA\CMSPico\Service;
 
 use Exception;
+use OC\Encryption\Manager;
+use OC\Server;
 use OCA\CMSPico\Db\WebsitesRequest;
+use OCA\CMSPico\Exceptions\EncryptedFilesystemException;
 use OCA\CMSPico\Exceptions\PicoRuntimeException;
 use OCA\CMSPico\Exceptions\WebsiteAlreadyExistException;
 use OCA\CMSPico\Exceptions\WebsiteDoesNotExistException;
@@ -38,6 +41,9 @@ class WebsitesService {
 
 	/** @var IL10N */
 	private $l10n;
+
+	/** @var Manager */
+	private $encryptionManager;
 
 	/** @var WebsitesRequest */
 	private $websiteRequest;
@@ -59,12 +65,16 @@ class WebsitesService {
 	 * @param TemplatesService $templatesService
 	 * @param PicoService $picoService
 	 * @param MiscService $miscService
+	 *
+	 * @internal param Manager $encryptionManager
 	 */
 	function __construct(
 		IL10N $l10n, WebsitesRequest $websiteRequest, TemplatesService $templatesService,
 		PicoService $picoService, MiscService $miscService
 	) {
+
 		$this->l10n = $l10n;
+		$this->encryptionManager = \OC::$server->getEncryptionManager();
 		$this->websiteRequest = $websiteRequest;
 		$this->templatesService = $templatesService;
 		$this->picoService = $picoService;
@@ -188,6 +198,10 @@ class WebsitesService {
 		try {
 			$website = $this->websiteRequest->getWebsiteFromSite($site);
 			$website->setViewer($viewer);
+
+			if ($this->encryptionManager->isEnabled()) {
+				throw new EncryptedFilesystemException('cms_pico does not support encrypted filesystem');
+			}
 
 			return $this->picoService->getContent($website);
 		} catch (PicoRuntimeException $e) {

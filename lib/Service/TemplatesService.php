@@ -161,8 +161,8 @@ class TemplatesService {
 	 */
 	private function getSourceFiles($base, $dir = '') {
 
-		MiscService::endSlash($base);
-		MiscService::endSlash($dir);
+		$base = MiscService::endSlash($base);
+		$dir = MiscService::endSlash($dir);
 
 		$files = [];
 		foreach (new DirectoryIterator($base . $dir) as $file) {

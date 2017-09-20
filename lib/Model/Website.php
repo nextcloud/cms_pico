@@ -93,11 +93,9 @@ class Website extends WebsiteCore {
 	public function getAbsolutePath() {
 
 		$this->initSiteOwnerView();
-
 		$path = $this->ownerView->getLocalFile($this->getPath());
-		MiscService::endSlash($path);
 
-		return $path;
+		return MiscService::endSlash($path);
 	}
 
 

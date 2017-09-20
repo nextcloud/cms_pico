@@ -266,8 +266,7 @@ class WebsiteCore implements \JsonSerializable {
 	 * @return $this
 	 */
 	public function setPath($path) {
-		MiscService::endSlash($path);
-		$this->path = $path;
+		$this->path = MiscService::endSlash($path);
 
 		return $this;
 	}
