@@ -26,11 +26,13 @@
 
 namespace OCA\CMSPico\Service;
 
+use Exception;
 use HTMLPurifier;
 use HTMLPurifier_Config;
 use OC\App\AppManager;
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Exceptions\PicoRuntimeException;
+use OCA\CMSPico\Exceptions\PluginNextcloudNotLoadedException;
 use OCA\CMSPico\Model\Website;
 use Pico;
 
@@ -85,7 +87,7 @@ class PicoService {
 			throw new PicoRuntimeException($e->getMessage());
 		}
 
-		$pico->getPlugin(self::NC_PLUGIN);
+		$this->pluginNextcloudMustBeLoaded($pico);
 		$absolutePath = $this->getAbsolutePathFromPage($pico);
 		$website->contentMustBeLocal($absolutePath);
 		$website->viewerMustHaveAccess($absolutePath, $pico->getFileMeta());
@@ -120,4 +122,14 @@ class PicoService {
 		return $pico->getConfig()['content_dir'] . $pico->getCurrentPage()['id'] . '.md';
 	}
 
+
+
+	private function pluginNextcloudMustBeLoaded(Pico $pico) {
+		try {
+			$pico->getPlugin(self::NC_PLUGIN);
+		} catch (Exception $e)
+		{
+			throw new PluginNextcloudNotLoadedException($e->getMessage());
+		}
+	}
 }
