@@ -38,7 +38,7 @@ use OCP\IL10N;
 class TemplatesService {
 
 	const TEMPLATES = ['sample_pico'];
-	const TEMPLATE_DIR = __DIR__ . '/../../templates/';
+	const TEMPLATE_DIR = __DIR__ . '/../../Pico/templates/';
 
 	/** @var IL10N */
 	private $l10n;
