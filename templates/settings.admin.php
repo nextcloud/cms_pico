@@ -182,7 +182,7 @@ RewriteRule /sites/(.*) <?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico/$
 
 		<tr class="lane">
 			<td colspan="2" class="center">
-				<input class="field250" type="submit" id="admin_cms_pico_add_template_submit"
+				<input type="submit" id="admin_cms_pico_add_template_submit"
 					   value="<?php p($l->t('Add custom template')); ?>"/>
 			</td>
 		</tr>
