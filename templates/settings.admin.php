@@ -102,7 +102,7 @@ RewriteRule /sites/(.*) <?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico/$
 		<tr>
 			<td colspan="2"><?php p(
 					$l->t(
-						'To add a custom theme, you will need to create a new folder in apps/cms_pico/themes/'
+						'To add a custom theme, you will need to create a new folder in apps/cms_pico/Pico/themes/'
 					)
 				); ?>
 				<br/>
@@ -131,7 +131,7 @@ RewriteRule /sites/(.*) <?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico/$
 
 		<tr class="lane">
 			<td colspan="2" class="center">
-				<input class="field250" type="submit" id="admin_cms_pico_add_theme_submit"
+				<input type="submit" id="admin_cms_pico_add_theme_submit"
 					   value="<?php p($l->t('Add custom theme')); ?>"/>
 			</td>
 		</tr>
@@ -147,14 +147,14 @@ RewriteRule /sites/(.*) <?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico/$
 		<tr>
 			<td colspan="2"><?php p(
 					$l->t(
-						'To add a custom template, you will need to create a new folder in apps/cms_pico/templates/'
+						'To add a custom template, you will need to create a new folder in apps/cms_pico/Pico/templates/'
 					)
 				); ?>
 				<i><?php echo $_['templates_dir']; ?></i>
 				<br/>
 				<?php p(
 					$l->t(
-						'Please use the sample_pico base structure: your template will need the config/ folder to be identical.'
+						'Please use the sample_pico base structure.'
 					)
 				); ?>
 			</td>
