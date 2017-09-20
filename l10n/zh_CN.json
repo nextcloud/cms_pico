@@ -1,10 +1,10 @@
 { "translations": {
     "test" : "测试",
+    "no error message" : "没有错误消息",
     "Please confirm" : "请确认",
     "Please wait" : "请等待",
     "Create a new website" : "创建一个新的网站",
     "It was not possible to create your website {name}" : "无法创建您的网站: {name}",
-    "no error message" : "没有错误消息",
     "It was not possible to remove the website {name}" : "无法删除该网站: {name}",
     "Website not found" : "找不到网站",
     "Webpage does not exist" : "网页不存在",
