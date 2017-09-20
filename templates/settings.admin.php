@@ -150,13 +150,6 @@ RewriteRule /sites/(.*) <?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico/$
 						'To add a custom template, you will need to create a new folder in apps/cms_pico/Pico/templates/'
 					)
 				); ?>
-				<i><?php echo $_['templates_dir']; ?></i>
-				<br/>
-				<?php p(
-					$l->t(
-						'Please use the sample_pico base structure.'
-					)
-				); ?>
 			</td>
 		</tr>
 

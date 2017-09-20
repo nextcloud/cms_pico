@@ -38,6 +38,9 @@ style(Application::APP_NAME, 'personal');
 
 ?>
 
+
+<fieldset id="cmspicoPersonalSettings">
+
 <div class="section">
 	<h2><?php p($l->t('Site Folders (Pico CMS)')) ?></h2>
 
@@ -172,3 +175,4 @@ style(Application::APP_NAME, 'personal');
 
 </div>
 
+</fieldset>
