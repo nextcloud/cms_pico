@@ -7,6 +7,7 @@ source_dir=$(build_dir)/source
 sign_dir=$(build_dir)/sign
 package_name=$(app_name)
 cert_dir=$(HOME)/.nextcloud/certificates
+codecov_token_dir=$(HOME)/.nextcloud/codecov_token
 version+=0.9.2
 
 all: appstore
@@ -26,6 +27,9 @@ composer:
 
 test: composer
 	vendor/bin/phpunit --coverage-clover=coverage.xml --configuration=tests/phpunit.xml tests
+	@if [ -f $(codecov_token_dir)/$(app_name) ]; then \
+		bash <(curl -s https://codecov.io/bash) -t @$(codecov_token_dir)/$(app_name) \
+	fi
 
 appstore: composer clean
 	mkdir -p $(sign_dir)
