@@ -30,8 +30,14 @@
 	</testsuite>
 	<filter>
 		<whitelist>
-			<directory suffix=".php">../appinfo</directory>
 			<directory suffix=".php">../lib</directory>
+			<exclude>
+				<directory suffix=".php">../lib/Hooks</directory>
+				<directory suffix=".php">../lib/Settings</directory>
+				<directory suffix=".php">../lib/Events</directory>
+				<directory suffix=".php">../lib/Exceptions</directory>
+				<file>../lib/personal.php</file>
+			</exclude>
 		</whitelist>
 	</filter>
 	<logging>

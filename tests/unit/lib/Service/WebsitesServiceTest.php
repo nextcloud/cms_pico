@@ -28,6 +28,8 @@ namespace OCA\CMSPico\Tests\Service;
 
 use Exception;
 use OCA\CMSPico\AppInfo\Application;
+use OCA\CMSPico\Exceptions\PicoRuntimeException;
+use OCA\CMSPico\Exceptions\PluginNextcloudNotLoadedException;
 use OCA\CMSPico\Exceptions\UserIsNotOwnerException;
 use OCA\CMSPico\Exceptions\WebsiteAlreadyExistException;
 use OCA\CMSPico\Exceptions\WebsiteDoesNotExistException;
@@ -48,6 +50,17 @@ class WebsitesServiceTest extends \PHPUnit_Framework_TestCase {
 		'private'  => '0'
 	];
 
+	const INFOS_WEBSITE2 = [
+		'name'     => 'website2',
+		'path'     => '/website2',
+		'type'     => '1',
+		'site'     => 'website2',
+		'template' => 0,
+		'private'  => '0'
+	];
+
+
+	const PICO_FOLDER = __DIR__ . '/../../../../Pico/';
 
 	/** @var WebsitesService */
 	private $websitesService;
@@ -86,7 +99,6 @@ class WebsitesServiceTest extends \PHPUnit_Framework_TestCase {
 		$data = self::INFOS_WEBSITE1;
 		$data['user_id'] = Env::ENV_TEST_USER1;
 
-
 		try {
 			$this->createWebsite($data);
 		} catch (Exception $e) {
@@ -107,8 +119,24 @@ class WebsitesServiceTest extends \PHPUnit_Framework_TestCase {
 	/**
 	 *
 	 */
+	public function testWebsite2Creation() {
+		$data = self::INFOS_WEBSITE2;
+		$data['user_id'] = Env::ENV_TEST_USER2;
+
+		try {
+			$this->createWebsite($data);
+		} catch (Exception $e) {
+			$this->assertSame(true, false, 'should not returns Exception - ' . $e->getMessage());
+		}
+	}
+
+
+	/**
+	 *
+	 */
 	public function testWebsitesListing() {
-		$this->assertCount(0, $this->websitesService->getWebsitesFromUser(Env::ENV_TEST_USER2));
+		$this->assertCount(1, $this->websitesService->getWebsitesFromUser(Env::ENV_TEST_USER2));
+		$this->assertCount(0, $this->websitesService->getWebsitesFromUser(Env::ENV_TEST_USER3));
 
 		$websites = $this->websitesService->getWebsitesFromUser(Env::ENV_TEST_USER1);
 		$this->assertCount(1, $websites);
@@ -135,6 +163,99 @@ class WebsitesServiceTest extends \PHPUnit_Framework_TestCase {
 				'type'    => $arr['type']
 			]
 		);
+
+	}
+
+
+	public function testWebsiteUpdate() {
+		$websites = $this->websitesService->getWebsitesFromUser(Env::ENV_TEST_USER1);
+		$this->assertCount(1, $websites);
+
+		$website = array_shift($websites);
+		$websiteCopyData = json_encode($website);
+		$website->setName('name2');
+		$website->setTheme('theme2');
+		$website->setSite('site2');
+		$website->setOption('private', '1');
+
+		$this->websitesService->updateWebsite($website);
+
+		$websites = $this->websitesService->getWebsitesFromUser(Env::ENV_TEST_USER1);
+		$this->assertCount(1, $websites);
+		$website2 = array_shift($websites);
+
+		$this->assertSame(
+			[
+				'name'    => 'name2',
+				'theme'   => 'theme2',
+				'site'    => 'site2',
+				'private' => '1'
+			],
+			[
+				'name'    => $website2->getName(),
+				'theme'   => $website2->getTheme(),
+				'site'    => $website2->getSite(),
+				'private' => $website2->getOption('private')
+			]
+		);
+
+		$websiteCopy = new Website(json_decode($websiteCopyData, true));
+		$this->websitesService->updateWebsite($websiteCopy);
+	}
+
+
+	public function testWebpage() {
+
+		$websites = $this->websitesService->getWebsitesFromUser(Env::ENV_TEST_USER1);
+		$website = array_shift($websites);
+
+		// test normal website.
+		$content = $this->websitesService->getWebpageFromSite(
+			$website->getSite(), Env::ENV_TEST_USER1
+		);
+
+		if (substr($content, 0, 15) !== '<!DOCTYPE html>') {
+			$this->assertSame(true, false, 'Unexpected content');
+		}
+
+		// test random website
+		try {
+			$this->websitesService->getWebpageFromSite(
+				'random_website', Env::ENV_TEST_USER1
+			);
+			$this->assertSame(true, false, 'Should return an exception');
+		} catch (WebsiteDoesNotExistException $e) {
+		} catch (Exception $e) {
+			$this->assertSame(true, false, 'Should return WebsiteDoesNotExistException');
+		}
+
+
+		// test to load page with no plugins.
+		rename(self::PICO_FOLDER . '/plugins/Nextcloud.php', './Nextcloud.php');
+		try {
+			$content =
+				$this->websitesService->getWebpageFromSite($website->getSite(), Env::ENV_TEST_USER1);
+			$this->assertSame(true, false, 'Should return an exception');
+		} catch (PluginNextcloudNotLoadedException $e) {
+		} catch (Exception $e) {
+			$this->assertSame(true, false, 'Should return PluginNextcloudNotLoadedException');
+		}
+
+		rename('./Nextcloud.php', self::PICO_FOLDER . '/plugins/Nextcloud.php');
+
+
+		// test website with no content
+		rename($website->getAbsolutePath() . 'content', './content');
+		try {
+			$content =
+				$this->websitesService->getWebpageFromSite($website->getSite(), Env::ENV_TEST_USER1);
+			$this->assertSame(true, false, 'Should return an exception');
+		} catch (PicoRuntimeException $e) {
+		} catch (Exception $e) {
+			$this->assertSame(true, false, 'Should return PicoRuntimeException' . $e->getMessage());
+		}
+
+		rename('./content', $website->getAbsolutePath() . 'content');
 
 
 	}
@@ -174,6 +295,17 @@ class WebsitesServiceTest extends \PHPUnit_Framework_TestCase {
 			$this->assertSame(true, false, 'should return WebsiteDoesNotExistException');
 		}
 
+	}
+
+
+	public function testUserRemoved() {
+		$websites = $this->websitesService->getWebsitesFromUser(Env::ENV_TEST_USER2);
+		$this->assertCount(1, $websites);
+
+		$this->websitesService->onUserRemoved(Env::ENV_TEST_USER2);
+
+		$websites = $this->websitesService->getWebsitesFromUser(Env::ENV_TEST_USER2);
+		$this->assertCount(0, $websites);
 	}
 
 
