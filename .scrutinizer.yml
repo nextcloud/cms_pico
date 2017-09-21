@@ -15,28 +15,11 @@ filter:
         - 'build/*'
         - 'documentation/*'
 
-build:
-    tests:
-        override:
-            -
-                command: 'vendor/bin/phpunit --coverage-clover=coverage.clover --configuration=tests/phpunit.xml tests'
-                coverage:
-                    file: 'coverage.clover'
-                    format: 'clover'
-
 tools:
     sensiolabs_security_checker: true
     php_sim: true
     php_pdepend: true
     php_analyzer: true
-    php_code_coverage:
-        config_path: tests/
-        test_command: phpunit
-        only_changesets: true
-        enabled: true
-        filter:
-            paths: [src/php]
-            excluded_paths: []
 
 checks:
     php:
