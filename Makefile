@@ -27,10 +27,10 @@ composer:
 
 test: SHELL:=/bin/bash
 test: composer
-        vendor/bin/phpunit --coverage-clover=coverage.xml --configuration=tests/phpunit.xml tests
-        @if [ -f $(codecov_token_dir)/$(app_name) ]; then \
-                bash <(curl -s https://codecov.io/bash) -t @$(codecov_token_dir)/$(app_name) ; \
-        fi
+	vendor/bin/phpunit --coverage-clover=coverage.xml --configuration=tests/phpunit.xml tests
+	@if [ -f $(codecov_token_dir)/$(app_name) ]; then \
+		bash <(curl -s https://codecov.io/bash) -t @$(codecov_token_dir)/$(app_name) ; \
+	fi
 
 
 appstore: composer clean
