@@ -26,8 +26,6 @@
     "Using MOD_REWRITE:" : "Usando MOD_REWRITE:",
     "Using MOD_REWRITE and MOD_PROXY:" : "Usando MOD_REWRITE and MOD_PROXY:",
     "Custom templates" : "Plantillas personalizadas",
-    "To add a custom template, you will need to create a new folder in apps/cms_pico/templates/" : "Para agregar una plantilla personalizada, necesitará crear una nueva carpeta en apps/cms_pico/templates/",
-    "Please use the sample_pico base structure: your template will need the config/ folder to be identical." : "Utilice la estructura base sample_pico: su plantilla necesitará que la carpeta config/ sea idéntica.",
     "Current custom templates:" : "Plantillas personalizadas actuales:",
     "Add a new custom template:" : "Incluir una nueva plantilla personalizada:",
     "Add custom template" : "Incluir plantilla personalizada",

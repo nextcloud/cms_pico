@@ -21,8 +21,6 @@
     "Website already exist." : "Veebisait on juba olemas",
     "Your Apache configuration" : "Sinu Apache konfiguratsioon",
     "Custom templates" : "Kohandatud mallid",
-    "To add a custom template, you will need to create a new folder in apps/cms_pico/templates/" : "Kohandatud malli lisamiseks pead looma kausta kohta apps/cms_pico/templates",
-    "Please use the sample_pico base structure: your template will need the config/ folder to be identical." : "Palun kasuta sample_pico põhistruktuuri: sinu mallil on vaja config/ kausta, et olla identne.",
     "Current custom templates:" : "Praegused kohandatud mallid:",
     "Add a new custom template:" : "Lisa uus kohandatud mall:",
     "Add custom template" : "Lisa kohandatud mall",

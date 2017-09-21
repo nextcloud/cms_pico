@@ -28,8 +28,6 @@ OC.L10N.register(
     "Using MOD_REWRITE:" : "Użycie MOD_REWRITE: ",
     "Using MOD_REWRITE and MOD_PROXY:" : "Użycie MOD_REWRITE i MOD_PROXY: ",
     "Custom templates" : "Własne szablony",
-    "To add a custom template, you will need to create a new folder in apps/cms_pico/templates/" : "Aby stworzyć własny szablon niezbędne będzie stworzenie folderu w apps/cms_pico/templates/",
-    "Please use the sample_pico base structure: your template will need the config/ folder to be identical." : "Proszę użyj bazowej struktury sample_pico: Twój szablon będzie wymagać identycznego foldera config/",
     "Current custom templates:" : "Aktualne szablony własne: ",
     "Add a new custom template:" : "Dodaj nowy szablon własny: ",
     "Add custom template" : "Dodaj własny szablon",

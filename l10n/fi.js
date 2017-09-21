@@ -27,7 +27,6 @@ OC.L10N.register(
     "Using MOD_REWRITE:" : "Käyttäen MOD_REWRITE-moduulia:",
     "Using MOD_REWRITE and MOD_PROXY:" : "Käyttäen sekä MOD_REWRITE että MOD_PROXY -moduuleita:",
     "Custom templates" : "Muokatut mallipohjat",
-    "To add a custom template, you will need to create a new folder in apps/cms_pico/templates/" : "Lisätäksesi muokatun mallipohjan, sinun tulee luoda uusi kansio sijaintiin apps/cms_pico/templates/",
     "Current custom templates:" : "Nykyiset muokatut mallipohjat:",
     "Add a new custom template:" : "Lisää uusi muokattu mallipohja:",
     "Add custom template" : "Lisää muokattu mallipohja",

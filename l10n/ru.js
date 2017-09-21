@@ -23,7 +23,6 @@ OC.L10N.register(
     "Using MOD_REWRITE:" : "Используя  MOD_REWRITE:",
     "Using MOD_REWRITE and MOD_PROXY:" : "Используя MOD_REWRITE и MOD_PROXY:",
     "Custom templates" : "Пользовательские шаблоны",
-    "To add a custom template, you will need to create a new folder in apps/cms_pico/templates/" : "Для добавления пользовательского шаблона создайте новую папке в «apps/cms_pico/templates/»",
     "Current custom templates:" : "Существующие пользовательские шаблоны:",
     "Add a new custom template:" : "Создать пользовательский шаблон:",
     "Add custom template" : "Добавить пользовательский шаблон",

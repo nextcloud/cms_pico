@@ -28,8 +28,6 @@ OC.L10N.register(
     "Using MOD_REWRITE:" : "Bruker MOD_REWRITE:",
     "Using MOD_REWRITE and MOD_PROXY:" : "Bruker MOD_REWRITE og MOD_PROXY:",
     "Custom templates" : "Egendefinerte maler",
-    "To add a custom template, you will need to create a new folder in apps/cms_pico/templates/" : "For å legge til en egendefinert mal, vil du måtte opprette en ny mappe i apps/cms_pico/templates/",
-    "Please use the sample_pico base structure: your template will need the config/ folder to be identical." : "Bruk sample_pico innholdsstrukturen. Din mal vil kun fungere hvis /config-mappen er identisk.",
     "Current custom templates:" : "Nåværende egendefinerte maler:",
     "Add a new custom template:" : "Legg til egen egendefinert mal:",
     "Add custom template" : "Legg til egendefinert mal",

@@ -22,7 +22,6 @@
     "Using MOD_REWRITE:" : "使用MOD_REWRITE重写模块:",
     "Using MOD_REWRITE and MOD_PROXY:" : "使用“MOD_REWRITE重写模块”和\"MOD_PROXY模块\":",
     "Custom templates" : "自定义模板",
-    "To add a custom template, you will need to create a new folder in apps/cms_pico/templates/" : "要添加一个新的自定义模板，您需要在 apps/cms_pico/templates/ 目录中创建一个新的文件夹",
     "Current custom templates:" : "当前自定义模板:",
     "Add a new custom template:" : "添加一个新的自定义模板:",
     "Add custom template" : "添加自定义模板",

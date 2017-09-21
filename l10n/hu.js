@@ -27,8 +27,6 @@ OC.L10N.register(
     "Using MOD_REWRITE:" : "MOD_REWRITE használata:",
     "Using MOD_REWRITE and MOD_PROXY:" : "MOD_REWRITE és MOD_PROXY használata:",
     "Custom templates" : "Egyéni sablonok",
-    "To add a custom template, you will need to create a new folder in apps/cms_pico/templates/" : "Egyéni sablon hozzáadásához létre kell hoznod egy új mappát  az apps/cms_pico/templates/ könyvtárban",
-    "Please use the sample_pico base structure: your template will need the config/ folder to be identical." : "Kérlek használd a sample_pico alap struktúrát: a sablondhoz szükség lesz egy azonos config/ mappára.",
     "Current custom templates:" : "Aktuális egyéni sablonok:",
     "Add a new custom template:" : "Új egyéni sablon hozzáadás:",
     "Add custom template" : "Egyéni sablon hozzáadás",

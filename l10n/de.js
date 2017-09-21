@@ -28,8 +28,6 @@ OC.L10N.register(
     "Using MOD_REWRITE:" : "Verwende MOD_REWRITE:",
     "Using MOD_REWRITE and MOD_PROXY:" : "Verwende MOD_REWRITE und MOD_PROXY:",
     "Custom templates" : "Benutzerdefinierte Vorlage",
-    "To add a custom template, you will need to create a new folder in apps/cms_pico/templates/" : "Um eine benutzerdefinierte Vorlage hinzuzufügen, müssen Sie einen neuen Ordner in apps/cms_pico/templates/ erstellen",
-    "Please use the sample_pico base structure: your template will need the config/ folder to be identical." : "Bitte verwenden Sie die sample_pico Basisstruktur: Ihre Vorlage benötigt das config/ Verzeichnis damit diese verwendet werden kann.",
     "Current custom templates:" : "Aktuelle benutzerdefinierte Vorlage:",
     "Add a new custom template:" : "Hinzufügen neue benutzerdefinierte Vorlage:",
     "Add custom template" : "Benutzerdefinierte Vorlage hinzufügen",

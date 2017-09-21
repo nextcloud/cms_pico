@@ -26,8 +26,6 @@
     "Using MOD_REWRITE:" : "Utiliser MOD_REWRITE :",
     "Using MOD_REWRITE and MOD_PROXY:" : "Utiliser MOD_REWRITE et MOD_PROXY :",
     "Custom templates" : "Modèles personnalisés",
-    "To add a custom template, you will need to create a new folder in apps/cms_pico/templates/" : "Pour ajouter un modèle personnalisé, vous devez créer un nouveau dossier dans apps/cms_pico/templates/",
-    "Please use the sample_pico base structure: your template will need the config/ folder to be identical." : "Merci d'utiliser la structure de base \"sample_pico\" : votre template doit comporter le répertoire \"config/\" pour être identique",
     "Current custom templates:" : "Modèle personnalisé actuel :",
     "Add a new custom template:" : "Ajouter un nouveau modèle personnalisé :",
     "Add custom template" : "Ajouter le modèle personnalisé",
