@@ -29,6 +29,14 @@ tools:
     php_sim: true
     php_pdepend: true
     php_analyzer: true
+    php_code_coverage:
+        config_path: tests/
+        test_command: phpunit
+        only_changesets: true
+        enabled: true
+        filter:
+            paths: [src/php]
+            excluded_paths: []
 
 checks:
     php:
