@@ -70,6 +70,10 @@ pipeline:
       - wget https://raw.githubusercontent.com/nextcloud/travis_ci/master/before_install.sh
       - bash ./before_install.sh $APP_NAME $CORE_BRANCH $DB
       - cd ../server/apps/$APP_NAME
+      - composer install
+      - cd ../..
+      - ./occ app:enable $APP_NAME
+      - cd apps/$APP_NAME
 
       # Run phpunit tests
       - cd tests/
@@ -93,6 +97,10 @@ pipeline:
       - wget https://raw.githubusercontent.com/nextcloud/travis_ci/master/before_install.sh
       - bash ./before_install.sh $APP_NAME $CORE_BRANCH $DB
       - cd ../server/apps/$APP_NAME
+      - composer install
+      - cd ../..
+      - ./occ app:enable $APP_NAME
+      - cd apps/$APP_NAME
 
       # Run phpunit tests
       - cd tests/
@@ -111,6 +119,10 @@ pipeline:
       - wget https://raw.githubusercontent.com/nextcloud/travis_ci/master/before_install.sh
       - bash ./before_install.sh $APP_NAME $CORE_BRANCH $DB
       - cd ../server/apps/$APP_NAME
+      - composer install
+      - cd ../..
+      - ./occ app:enable $APP_NAME
+      - cd apps/$APP_NAME
 
       # Run phpunit tests
       - cd tests/
@@ -131,6 +143,10 @@ pipeline:
       - wget https://raw.githubusercontent.com/nextcloud/travis_ci/master/before_install.sh
       - bash ./before_install.sh $APP_NAME $CORE_BRANCH $DB
       - cd ../server/apps/$APP_NAME
+      - composer install
+      - cd ../..
+      - ./occ app:enable $APP_NAME
+      - cd apps/$APP_NAME
 
       # Run phpunit tests
       - cd tests/
@@ -154,6 +170,10 @@ pipeline:
       - wget https://raw.githubusercontent.com/nextcloud/travis_ci/master/before_install.sh
       - bash ./before_install.sh $APP_NAME $CORE_BRANCH $DB
       - cd ../server/apps/$APP_NAME
+      - composer install
+      - cd ../..
+      - ./occ app:enable $APP_NAME
+      - cd apps/$APP_NAME
 
       # Run phpunit tests
       - cd tests/
@@ -172,6 +192,10 @@ pipeline:
       - wget https://raw.githubusercontent.com/nextcloud/travis_ci/master/before_install.sh
       - bash ./before_install.sh $APP_NAME $CORE_BRANCH $DB
       - cd ../server/apps/$APP_NAME
+      - composer install
+      - cd ../..
+      - ./occ app:enable $APP_NAME
+      - cd apps/$APP_NAME
 
       # Run phpunit tests
       - cd tests/
