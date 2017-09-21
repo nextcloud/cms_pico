@@ -65,6 +65,10 @@ class ThemesService {
 
 
 	/**
+	 * getThemesList();
+	 *
+	 * returns all available themes.
+	 *
 	 * @param bool $customOnly
 	 *
 	 * @return array
@@ -85,6 +89,8 @@ class ThemesService {
 
 
 	/**
+	 * Check if a theme exist.
+	 *
 	 * @param $theme
 	 *
 	 * @throws ThemeDoesNotExistException
@@ -97,6 +103,8 @@ class ThemesService {
 	}
 
 	/**
+	 * returns theme from the Pico/themes/ dir that are not available yet to users.
+	 *
 	 * @return array
 	 */
 	public function getNewThemesList() {
@@ -115,6 +123,8 @@ class ThemesService {
 
 
 	/**
+	 * returns all customs theme from Pico/themes.
+	 *
 	 * @return array
 	 */
 	private function getDirectoriesFromThemesDir() {

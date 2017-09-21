@@ -55,7 +55,7 @@ final class Nextcloud extends AbstractPicoPlugin {
 	private $htmlPurifier;
 
 	/**
-	 * Triggered after Pico has read its configuration
+	 * Loading stuff.
 	 *
 	 * @see    Pico::getConfig()
 	 *
@@ -70,6 +70,13 @@ final class Nextcloud extends AbstractPicoPlugin {
 	}
 
 
+	/**
+	 * We don't want anyone to disable this plugin.
+	 *
+	 * @param bool $enabled
+	 * @param bool $recursive
+	 * @param bool $auto
+	 */
 	public function setEnabled($enabled, $recursive = true, $auto = false) {
 		if ($enabled === false) {
 			throw new RuntimeException('Nextcloud plugin cannot be disabled');
@@ -78,9 +85,7 @@ final class Nextcloud extends AbstractPicoPlugin {
 
 
 	/**
-	 * Triggered after Pico has parsed the meta header
-	 *
-	 * @see    Pico::getFileMeta()
+	 * purify all entries from meta.
 	 *
 	 * @param  string[] &$meta parsed meta data
 	 *
@@ -95,35 +100,9 @@ final class Nextcloud extends AbstractPicoPlugin {
 		$meta = $newMeta;
 	}
 
-	/**
-	 * Triggered before Pico parses the pages content
-	 *
-	 * @see    Pico::prepareFileContent()
-	 * @see    DummyPlugin::prepareFileContent()
-	 * @see    DummyPlugin::onContentParsed()
-	 *
-	 * @param  string &$rawContent raw file contents
-	 *
-	 * @return void
-	 */
-	public function onContentParsing(&$rawContent) {
-	}
 
 	/**
-	 * Triggered after Pico has prepared the raw file contents for parsing
-	 *
-	 * @see    Pico::parseFileContent()
-	 * @see    DummyPlugin::onContentParsed()
-	 *
-	 * @param  string &$content prepared file contents for parsing
-	 *
-	 * @return void
-	 */
-	public function onContentPrepared(&$content) {
-	}
-
-	/**
-	 * Triggered after Pico has parsed the contents of the file to serve
+	 * Purify the content from the page.
 	 *
 	 * @see    Pico::getFileContent()
 	 *
@@ -135,80 +114,9 @@ final class Nextcloud extends AbstractPicoPlugin {
 		$content = $this->htmlPurifier->purify($content);
 	}
 
-	/**
-	 * Triggered before Pico reads all known pages
-	 *
-	 * @see    Pico::readPages()
-	 * @see    DummyPlugin::onSinglePageLoaded()
-	 * @see    DummyPlugin::onPagesLoaded()
-	 * @return void
-	 */
-	public function onPagesLoading() {
-	}
 
 	/**
-	 * Triggered when Pico reads a single page from the list of all known pages
-	 *
-	 * The `$pageData` parameter consists of the following values:
-	 *
-	 * | Array key      | Type   | Description                              |
-	 * | -------------- | ------ | ---------------------------------------- |
-	 * | id             | string | relative path to the content file        |
-	 * | url            | string | URL to the page                          |
-	 * | title          | string | title of the page (YAML header)          |
-	 * | description    | string | description of the page (YAML header)    |
-	 * | author         | string | author of the page (YAML header)         |
-	 * | time           | string | timestamp derived from the Date header   |
-	 * | date           | string | date of the page (YAML header)           |
-	 * | date_formatted | string | formatted date of the page               |
-	 * | raw_content    | string | raw, not yet parsed contents of the page |
-	 * | meta           | string | parsed meta data of the page             |
-	 *
-	 * @see    DummyPlugin::onPagesLoaded()
-	 *
-	 * @param  array &$pageData data of the loaded page
-	 *
-	 * @return void
-	 */
-	public function onSinglePageLoaded(array &$pageData) {
-	}
-
-	/**
-	 * Triggered after Pico has read all known pages
-	 *
-	 * See {@link DummyPlugin::onSinglePageLoaded()} for details about the
-	 * structure of the page data.
-	 *
-	 * @see    Pico::getPages()
-	 * @see    Pico::getCurrentPage()
-	 * @see    Pico::getPreviousPage()
-	 * @see    Pico::getNextPage()
-	 *
-	 * @param  array[] &$pages data of all known pages
-	 * @param  array|null &$currentPage data of the page being served
-	 * @param  array|null &$previousPage data of the previous page
-	 * @param  array|null &$nextPage data of the next page
-	 *
-	 * @return void
-	 */
-	public function onPagesLoaded(
-		array &$pages,
-		array &$currentPage = null,
-		array &$previousPage = null,
-		array &$nextPage = null
-	) {
-	}
-
-	/**
-	 * Triggered before Pico registers the twig template engine
-	 *
-	 * @return void
-	 */
-	public function onTwigRegistration() {
-	}
-
-	/**
-	 * Triggered before Pico renders the page
+	 * We force the theme_url so user cannot set his own theme.
 	 *
 	 * @see    Pico::getTwig()
 	 * @see    DummyPlugin::onPageRendered()
@@ -223,13 +131,4 @@ final class Nextcloud extends AbstractPicoPlugin {
 		$twigVariables['theme_url'] = '/apps/cms_pico/Pico/themes/' . $this->config['theme'];
 	}
 
-	/**
-	 * Triggered after Pico has rendered the page
-	 *
-	 * @param  string &$output contents which will be sent to the user
-	 *
-	 * @return void
-	 */
-	public function onPageRendered(&$output) {
-	}
 }

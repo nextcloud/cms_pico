@@ -67,6 +67,13 @@ class PicoService {
 
 
 	/**
+	 * getContent();
+	 *
+	 * main method that will create a Pico object, feed it with settings and get the content to be
+	 * displayed.
+	 * We check that the Nextcloud plugin is loaded, that the content location is a valid directory.
+	 * In case of a private page, we check the viewer have a read access to the source files.
+	 *
 	 * @param Website $website
 	 *
 	 * @return string
@@ -123,12 +130,10 @@ class PicoService {
 	}
 
 
-
 	private function pluginNextcloudMustBeLoaded(Pico $pico) {
 		try {
 			$pico->getPlugin(self::NC_PLUGIN);
-		} catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			throw new PluginNextcloudNotLoadedException($e->getMessage());
 		}
 	}

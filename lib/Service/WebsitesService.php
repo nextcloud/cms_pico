@@ -83,6 +83,11 @@ class WebsitesService {
 
 
 	/**
+	 * createWebsite();
+	 *
+	 * create website using the templates file.
+	 * We check that the template exists and that the inputs are valid.
+	 *
 	 * @param string $name
 	 * @param string $userId
 	 * @param string $site
@@ -115,6 +120,10 @@ class WebsitesService {
 
 
 	/**
+	 * deleteWebsite();
+	 *
+	 * Delete a website regarding its Id and the userId
+	 *
 	 * @param int $siteId
 	 * @param string $userId
 	 */
@@ -128,6 +137,13 @@ class WebsitesService {
 
 
 	/**
+	 * forceDeleteWebsite();
+	 *
+	 * delete a website.
+	 *
+	 * Warning: this method does not check the ownership of the website.
+	 * Please use deleteWebsite().
+	 *
 	 * @param Website $website
 	 */
 	public function forceDeleteWebsite(Website $website) {
@@ -136,6 +152,10 @@ class WebsitesService {
 
 
 	/**
+	 * Event onUserRemoved();
+	 *
+	 * Delete all website from the removed user.
+	 *
 	 * @param string $userId
 	 */
 	public function onUserRemoved($userId) {
@@ -144,6 +164,10 @@ class WebsitesService {
 
 
 	/**
+	 * getWebsiteFromId();
+	 *
+	 * returns the website from its Id.
+	 *
 	 * @param int $siteId
 	 *
 	 * @return Website
@@ -154,6 +178,10 @@ class WebsitesService {
 
 
 	/**
+	 * updateWebsite();
+	 *
+	 * update a Website.
+	 *
 	 * @param Website $website
 	 */
 	public function updateWebsite(Website $website) {
@@ -162,6 +190,10 @@ class WebsitesService {
 	}
 
 	/**
+	 * getWebsitesFromUser();
+	 *
+	 * returns all website from a user.
+	 *
 	 * @param string $userId
 	 *
 	 * @return Website[]
@@ -174,6 +206,10 @@ class WebsitesService {
 
 
 	/**
+	 * getWebsiteFromSite();
+	 *
+	 * returns website regarding its keyword/site.
+	 *
 	 * @param string $site
 	 *
 	 * @return Website
@@ -187,6 +223,11 @@ class WebsitesService {
 
 
 	/**
+	 * getWebpageFromSite();
+	 *
+	 * Get the correct Page from Pico regarding its keyword/site.
+	 * We assign a viewer (current user) to manage private webpages.
+	 *
 	 * @param string $site
 	 * @param string $viewer
 	 *

@@ -67,6 +67,8 @@ class TemplatesService {
 
 
 	/**
+	 * check if template exist.
+	 *
 	 * @param string $template
 	 *
 	 * @throws TemplateDoesNotExistException
@@ -81,6 +83,8 @@ class TemplatesService {
 
 
 	/**
+	 * returns all templates available to users.
+	 *
 	 * @param bool $customOnly
 	 *
 	 * @return array
@@ -101,6 +105,8 @@ class TemplatesService {
 
 
 	/**
+	 * returns theme from the Pico/templates/ dir that are not available yet to users.
+	 *
 	 * @return array
 	 */
 	public function getNewTemplatesList() {
@@ -119,6 +125,8 @@ class TemplatesService {
 
 
 	/**
+	 * returns custom templates from Pico/templates/
+	 *
 	 * @return array
 	 */
 	private function getDirectoriesFromTemplatesDir() {
@@ -138,6 +146,9 @@ class TemplatesService {
 
 
 	/**
+	 * Install templates into a new website.
+	 * Templates will be parsed and formatted in the process.
+	 *
 	 * @param Website $website
 	 */
 	public function installTemplates(Website $website) {
