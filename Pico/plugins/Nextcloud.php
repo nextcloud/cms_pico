@@ -92,14 +92,28 @@ final class Nextcloud extends AbstractPicoPlugin {
 	 * @return void
 	 */
 	public function onMetaParsed(array &$meta) {
-		$newMeta = [];
-		foreach ($meta as $key => $value) {
-			$newMeta[$key] = $this->htmlPurifier->purify($value);
-		}
-
+		$newMeta = $this->parseArray($meta);
 		$meta = $newMeta;
 	}
 
+
+	/**
+	 * @param array $meta
+	 *
+	 * @return array
+	 */
+	private function parseArray(array $meta) {
+		$newMeta = [];
+		foreach ($meta as $key => $value) {
+			if (is_array($value)) {
+				$newMeta[$key] = $this->parseArray($value);
+			} else {
+				$newMeta[$key] = $this->htmlPurifier->purify($value);
+			}
+		}
+
+		return $newMeta;
+	}
 
 	/**
 	 * Purify the content from the page.
