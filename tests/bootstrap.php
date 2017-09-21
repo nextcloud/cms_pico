@@ -24,8 +24,6 @@
  *
  */
 
-use OCA\CMSPico\AppInfo\Application;
-
 if (!defined('PHPUNIT_RUN')) {
 	define('PHPUNIT_RUN', 1);
 }
@@ -34,7 +32,7 @@ require_once __DIR__ . '/../../../lib/base.php';
 
 \OC::$loader->addValidRoot(OC::$SERVERROOT . '/tests');
 
-\OC_App::loadApp(Application::APP_NAME);
+\OC_App::loadApp('cms_pico');
 
 if (!class_exists('PHPUnit_Framework_TestCase')) {
 	require_once('PHPUnit/Autoload.php');
