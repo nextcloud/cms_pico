@@ -246,6 +246,7 @@ class WebsitesService {
 
 			return $this->picoService->getContent($website);
 		} catch (PicoRuntimeException $e) {
+			$this->miscService->log('Webpage cannot be rendered - ' . $e->getMessage());
 			throw new PicoRuntimeException("Webpage cannot be rendered");
 		} catch (Exception $e) {
 			throw $e;
