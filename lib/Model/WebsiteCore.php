@@ -73,10 +73,6 @@ class WebsiteCore implements \JsonSerializable {
 
 	public function __construct($data = '') {
 
-		if ($data === '') {
-			return;
-		}
-
 		if (is_array($data)) {
 			$this->fromArray($data);
 
