@@ -61,7 +61,7 @@ class Env implements \PHPUnit_Framework_TestListener {
 	}
 
 	public function startTestSuite(\PHPUnit_Framework_TestSuite $suite) {
-		if ($suite->getName() !== '.') {
+		if ($suite->getName() !== 'tests') {
 			return;
 		}
 

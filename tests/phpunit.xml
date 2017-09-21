@@ -25,7 +25,7 @@
   -->
 
 <phpunit bootstrap="bootstrap.php">
-	<testsuite name="cmspico">
+	<testsuite name="cms_pico">
 		<directory suffix='Test.php'>.</directory>
 	</testsuite>
 	<filter>

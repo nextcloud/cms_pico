@@ -24,6 +24,9 @@ clean:
 composer:
 	composer install
 
+test: composer
+	vendor/bin/phpunit --coverage-clover=coverage.xml --configuration=tests/phpunit.xml tests
+
 appstore: composer clean
 	mkdir -p $(sign_dir)
 	rsync -a \
