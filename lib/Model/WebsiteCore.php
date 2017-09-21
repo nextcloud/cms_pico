@@ -131,6 +131,10 @@ class WebsiteCore implements \JsonSerializable {
 	 * @return $this
 	 */
 	public function setTheme($theme) {
+		if ($theme === '') {
+			return $this;
+		}
+
 		$this->theme = $theme;
 
 		return $this;
@@ -370,7 +374,7 @@ class WebsiteCore implements \JsonSerializable {
 			 ->setName($arr['name'])
 			 ->setUserId($arr['user_id'])
 			 ->setSite($arr['site'])
-			 ->setTheme($arr['theme'])
+			 ->setTheme(MiscService::get($arr, 'theme'))
 			 ->setType($arr['type'])
 			 ->setOptions(MiscService::get($arr, 'options'))
 			 ->setPath($arr['path'])
