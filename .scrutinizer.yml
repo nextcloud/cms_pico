@@ -15,6 +15,15 @@ filter:
         - 'build/*'
         - 'documentation/*'
 
+build:
+    tests:
+        override:
+            -
+                command: 'vendor/bin/phpunit --coverage-clover=clover.xml'
+                coverage:
+                    file: 'clover.xml'
+                    format: 'clover'
+
 tools:
     sensiolabs_security_checker: true
     php_sim: true
