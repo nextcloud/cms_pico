@@ -61,10 +61,6 @@ class Env implements \PHPUnit_Framework_TestListener {
 	}
 
 	public function startTestSuite(\PHPUnit_Framework_TestSuite $suite) {
-		if ($suite->getName() !== 'tests') {
-			return;
-		}
-
 		$userManager = \OC::$server->getUserManager();
 		$this->users = self::listUsers();
 
