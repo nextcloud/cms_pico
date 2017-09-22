@@ -181,12 +181,36 @@ pipeline:
     when:
       matrix:
         TESTS: php7.0-stable12
+
   php7.1-stable12:
     image: nextcloudci/php7.1:php7.1-12
     environment:
       - APP_NAME=cms_pico
       - CORE_BRANCH=stable12
       - DB=sqlite
+    commands:
+      # Pre-setup steps
+      - wget https://raw.githubusercontent.com/nextcloud/travis_ci/master/before_install.sh
+      - bash ./before_install.sh $APP_NAME $CORE_BRANCH $DB
+      - cd ../server/apps/$APP_NAME
+      - composer install
+      - cd ../..
+      - ./occ app:enable $APP_NAME
+      - cd apps/$APP_NAME
+
+      # Run phpunit tests
+      - cd tests/
+      - phpunit --configuration phpunit.xml .
+    when:
+      matrix:
+        TESTS: php7.1-stable12
+
+ php7.1-stable12-mysql:
+    image: nextcloudci/php7.1:php7.1-12
+    environment:
+      - APP_NAME=cms_pico
+      - CORE_BRANCH=stable12
+      - DB=mysql
     commands:
       # Pre-setup steps
       - wget https://raw.githubusercontent.com/nextcloud/travis_ci/master/before_install.sh
