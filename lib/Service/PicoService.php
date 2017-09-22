@@ -180,7 +180,7 @@ class PicoService {
 				'content_ext' => '.md',
 				'theme'       => $website->getTheme(),
 				'site_title'  => $website->getName(),
-				'base_url'    => '/index.php/apps/cms_pico/pico/' . $website->getSite()
+				'base_url'    => \OC::$WEBROOT . '/index.php/apps/cms_pico/pico/' . $website->getSite()
 			]
 		);
 	}
