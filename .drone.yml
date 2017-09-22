@@ -205,7 +205,7 @@ pipeline:
       matrix:
         TESTS: php7.1-stable12
 
- php7.1-stable12-mysql:
+  php7.1-stable12-mysql:
     image: nextcloudci/php7.1:php7.1-12
     environment:
       - APP_NAME=cms_pico
