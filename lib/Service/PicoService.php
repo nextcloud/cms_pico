@@ -35,6 +35,9 @@ use OCA\CMSPico\Exceptions\AssetDoesNotExistException;
 use OCA\CMSPico\Exceptions\PicoRuntimeException;
 use OCA\CMSPico\Exceptions\PluginNextcloudNotLoadedException;
 use OCA\CMSPico\Model\Website;
+use OCP\Files;
+use OCP\Files\File;
+use OCP\Files\IRootFolder;
 use Pico;
 
 class PicoService {
@@ -52,6 +55,9 @@ class PicoService {
 	/** @var AppManager */
 	private $appManager;
 
+	/** @var IRootFolder */
+	private $rootFolder;
+
 	/** @var ThemesService */
 	private $themesService;
 
@@ -63,14 +69,17 @@ class PicoService {
 	 *
 	 * @param string $userId
 	 * @param AppManager $appManager
+	 * @param IRootFolder $rootFolder
 	 * @param ThemesService $themesService
 	 * @param MiscService $miscService
 	 */
 	function __construct(
-		$userId, AppManager $appManager, ThemesService $themesService, MiscService $miscService
+		$userId, AppManager $appManager, IRootFolder $rootFolder, ThemesService $themesService,
+		MiscService $miscService
 	) {
 		$this->userId = $userId;
 		$this->appManager = $appManager;
+		$this->rootFolder = $rootFolder;
 		$this->themesService = $themesService;
 		$this->miscService = $miscService;
 	}
@@ -103,15 +112,19 @@ class PicoService {
 	 * @throws AssetDoesNotExistException
 	 */
 	public function getContentFromAssets(Website $website, $asset) {
-		$website->pathCantContainSpecificFolders($website->getPage());
-
+		$website->pathCantContainSpecificFolders($asset);
 		$relativePath = $website->getPath() . self::DIR_ASSETS . $asset;
-		$absolutePath = $website->getAbsolutePath($relativePath, false);
 
 		try {
-			$website->getPageFileId(self::DIR_ASSETS . $asset);
 
-			return file_get_contents($absolutePath);
+			$userFolder = $this->rootFolder->getUserFolder($website->getUserId());
+
+			/** @var File $file */
+			$file = $userFolder->get($relativePath);
+
+			header('Content-type: ' . $file->getMimeType());
+
+			return $file->getContent();
 		} catch (Exception $e) {
 			throw new AssetDoesNotExistException("404");
 		}
