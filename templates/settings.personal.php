@@ -132,7 +132,7 @@ style(Application::APP_NAME, 'personal');
 				<select id="cms_pico_new_template" class="field250">
 					<?php
 					for ($i = 0; $i < sizeof($_['templates']); $i++) {
-						echo '<option value="' . $i . '">' . $_['templates'][$i] . '</option>';
+						echo '<option value="' . $_['templates'][$i] . '">' . $_['templates'][$i] . '</option>';
 					}
 					?>
 				</select>

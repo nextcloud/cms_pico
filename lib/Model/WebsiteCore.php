@@ -389,7 +389,7 @@ class WebsiteCore implements \JsonSerializable {
 			 ->setName($arr['name'])
 			 ->setUserId($arr['user_id'])
 			 ->setSite($arr['site'])
-			 ->setPage($arr['page'])
+			 ->setPage(MiscService::get($arr, 'page'))
 			 ->setTheme(MiscService::get($arr, 'theme', 'default'))
 			 ->setType($arr['type'])
 			 ->setOptions(MiscService::get($arr, 'options'))

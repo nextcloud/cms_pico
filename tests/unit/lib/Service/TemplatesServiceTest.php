@@ -77,6 +77,10 @@ class TemplatesServiceTest extends \PHPUnit_Framework_TestCase {
 	 */
 	public function testTemplates() {
 
+		if (file_exists(WebsitesServiceTest::PICO_FOLDER . '/templates/this_is_a_template')) {
+			rmdir(WebsitesServiceTest::PICO_FOLDER . '/templates/this_is_a_template');
+		}
+
 		$this->assertCount(1, $this->templatesService->getTemplatesList());
 		$this->assertCount(0, $this->templatesService->getTemplatesList(true));
 		$this->assertCount(0, $this->templatesService->getNewTemplatesList());

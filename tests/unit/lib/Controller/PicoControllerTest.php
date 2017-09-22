@@ -99,7 +99,7 @@ class PicoControllerTest extends \PHPUnit_Framework_TestCase {
 	 *
 	 */
 	public function testGetPage() {
-		$result = $this->picoController->getPage(self::INFOS_WEBSITE1['site']);
+		$result = $this->picoController->getPage(self::INFOS_WEBSITE1['site'], '');
 		$content = $result->getData();
 		if (substr($content, 0, 15) !== '<!DOCTYPE html>') {
 			$this->assertSame(true, false, 'Unexpected content');

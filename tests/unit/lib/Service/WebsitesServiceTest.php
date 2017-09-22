@@ -211,7 +211,7 @@ class WebsitesServiceTest extends \PHPUnit_Framework_TestCase {
 
 		// test normal website.
 		$content = $this->websitesService->getWebpageFromSite(
-			$website->getSite(), Env::ENV_TEST_USER1
+			$website->getSite(), Env::ENV_TEST_USER1, ''
 		);
 
 		if (substr($content, 0, 15) !== '<!DOCTYPE html>') {
@@ -221,7 +221,7 @@ class WebsitesServiceTest extends \PHPUnit_Framework_TestCase {
 		// test random website
 		try {
 			$this->websitesService->getWebpageFromSite(
-				'random_website', Env::ENV_TEST_USER1
+				'random_website', Env::ENV_TEST_USER1, ''
 			);
 			$this->assertSame(true, false, 'Should return an exception');
 		} catch (WebsiteDoesNotExistException $e) {
@@ -234,7 +234,7 @@ class WebsitesServiceTest extends \PHPUnit_Framework_TestCase {
 		rename(self::PICO_FOLDER . '/plugins/Nextcloud.php', './Nextcloud.php');
 		try {
 			$content =
-				$this->websitesService->getWebpageFromSite($website->getSite(), Env::ENV_TEST_USER1);
+				$this->websitesService->getWebpageFromSite($website->getSite(), Env::ENV_TEST_USER1, '');
 			$this->assertSame(true, false, 'Should return an exception');
 		} catch (PluginNextcloudNotLoadedException $e) {
 		} catch (Exception $e) {
@@ -248,7 +248,7 @@ class WebsitesServiceTest extends \PHPUnit_Framework_TestCase {
 		rename($website->getAbsolutePath() . 'content', './content');
 		try {
 			$content =
-				$this->websitesService->getWebpageFromSite($website->getSite(), Env::ENV_TEST_USER1);
+				$this->websitesService->getWebpageFromSite($website->getSite(), Env::ENV_TEST_USER1, '');
 			$this->assertSame(true, false, 'Should return an exception');
 		} catch (PicoRuntimeException $e) {
 		} catch (Exception $e) {

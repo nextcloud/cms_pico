@@ -92,7 +92,7 @@ class WebsitesService {
 	 * @param string $userId
 	 * @param string $site
 	 * @param string $path
-	 * @param int $template
+	 * @param string $template
 	 *
 	 * @throws WebsiteAlreadyExistException
 	 */
