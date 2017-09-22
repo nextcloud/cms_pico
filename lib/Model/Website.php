@@ -88,12 +88,22 @@ class Website extends WebsiteCore {
 
 
 	/**
+	 * @param string $path
+	 * @param bool $end
+	 *
 	 * @return string
 	 */
-	public function getAbsolutePath() {
+	public function getAbsolutePath($path = '', $end = true) {
+		if ($path === '') {
+			$path = $this->getPath();
+		}
 
 		$this->initSiteOwnerView();
-		$path = $this->ownerView->getLocalFile($this->getPath());
+		$path = $this->ownerView->getLocalFile($path);
+
+		if ($end === false) {
+			return $path;
+		}
 
 		return MiscService::endSlash($path);
 	}
@@ -271,7 +281,7 @@ class Website extends WebsiteCore {
 	 *
 	 * @throws PathContainSpecificFoldersException
 	 */
-	private function pathCantContainSpecificFolders($path = '') {
+	public function pathCantContainSpecificFolders($path = '') {
 		if ($path === '') {
 			$path = $this->getPath();
 		}

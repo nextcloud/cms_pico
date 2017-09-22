@@ -31,9 +31,13 @@ use HTMLPurifier;
 use HTMLPurifier_Config;
 use OC\App\AppManager;
 use OCA\CMSPico\AppInfo\Application;
+use OCA\CMSPico\Exceptions\AssetDoesNotExistException;
 use OCA\CMSPico\Exceptions\PicoRuntimeException;
 use OCA\CMSPico\Exceptions\PluginNextcloudNotLoadedException;
 use OCA\CMSPico\Model\Website;
+use OCP\Files;
+use OCP\Files\File;
+use OCP\Files\IRootFolder;
 use Pico;
 
 class PicoService {
@@ -42,12 +46,20 @@ class PicoService {
 	const DIR_PLUGINS = 'Pico/plugins/';
 	const DIR_THEMES = 'Pico/themes/';
 
+	const DIR_ASSETS = 'assets/';
+
 	const NC_PLUGIN = 'Nextcloud';
 
 	private $userId;
 
 	/** @var AppManager */
 	private $appManager;
+
+	/** @var IRootFolder */
+	private $rootFolder;
+
+	/** @var ThemesService */
+	private $themesService;
 
 	/** @var MiscService */
 	private $miscService;
@@ -57,17 +69,70 @@ class PicoService {
 	 *
 	 * @param string $userId
 	 * @param AppManager $appManager
+	 * @param IRootFolder $rootFolder
+	 * @param ThemesService $themesService
 	 * @param MiscService $miscService
 	 */
-	function __construct($userId, AppManager $appManager, MiscService $miscService) {
+	function __construct(
+		$userId, AppManager $appManager, IRootFolder $rootFolder, ThemesService $themesService,
+		MiscService $miscService
+	) {
 		$this->userId = $userId;
 		$this->appManager = $appManager;
+		$this->rootFolder = $rootFolder;
+		$this->themesService = $themesService;
 		$this->miscService = $miscService;
 	}
 
 
 	/**
 	 * getContent();
+	 *
+	 * @param Website $website
+	 *
+	 * @return string
+	 */
+	public function getContent(Website $website) {
+
+		if (strpos($website->getPage(), self::DIR_ASSETS) === 0) {
+			return $this->getContentFromAssets(
+				$website, substr($website->getPage(), strlen(self::DIR_ASSETS))
+			);
+		} else {
+			return $this->getContentFromPico($website);
+		}
+	}
+
+
+	/**
+	 * @param Website $website
+	 * @param $asset
+	 *
+	 * @return string
+	 * @throws AssetDoesNotExistException
+	 */
+	public function getContentFromAssets(Website $website, $asset) {
+		$website->pathCantContainSpecificFolders($asset);
+		$relativePath = $website->getPath() . self::DIR_ASSETS . $asset;
+
+		try {
+
+			$userFolder = $this->rootFolder->getUserFolder($website->getUserId());
+
+			/** @var File $file */
+			$file = $userFolder->get($relativePath);
+
+			header('Content-type: ' . $file->getMimeType());
+
+			return $file->getContent();
+		} catch (Exception $e) {
+			throw new AssetDoesNotExistException("404");
+		}
+	}
+
+
+	/**
+	 * getContentFromPico();
 	 *
 	 * main method that will create a Pico object, feed it with settings and get the content to be
 	 * displayed.
@@ -79,7 +144,7 @@ class PicoService {
 	 * @return string
 	 * @throws PicoRuntimeException
 	 */
-	public function getContent(Website $website) {
+	public function getContentFromPico(Website $website) {
 
 		$appPath = MiscService::endSlash($this->appManager->getAppPath(Application::APP_NAME));
 		$pico = new Pico(
@@ -95,7 +160,7 @@ class PicoService {
 		}
 
 		$this->pluginNextcloudMustBeLoaded($pico);
-		$absolutePath = $this->getAbsolutePathFromPage($pico);
+		$absolutePath = $this->getAbsolutePathFromPico($pico);
 		$website->contentMustBeLocal($absolutePath);
 		$website->viewerMustHaveAccess($absolutePath, $pico->getFileMeta());
 
@@ -108,28 +173,34 @@ class PicoService {
 	 * @param Website $website
 	 */
 	private function generateConfig(Pico &$pico, Website $website) {
+		$this->themesService->hasToBeAValidTheme($website->getTheme());
 		$pico->setConfig(
 			[
 				'content_dir' => 'content/',
 				'content_ext' => '.md',
 				'theme'       => $website->getTheme(),
 				'site_title'  => $website->getName(),
-				'base_url'    => \OC::$WEBROOT . $website->getSite()
+				'base_url'    => \OC::$WEBROOT . '/index.php/apps/cms_pico/pico/' . $website->getSite()
 			]
 		);
 	}
 
 
 	/**
-	 * @param Pico $pico
+	 * @param Pico $pico ][p
 	 *
 	 * @return string
 	 */
-	private function getAbsolutePathFromPage(Pico $pico) {
+	private function getAbsolutePathFromPico(Pico $pico) {
 		return $pico->getConfig()['content_dir'] . $pico->getCurrentPage()['id'] . '.md';
 	}
 
 
+	/**
+	 * @param Pico $pico
+	 *
+	 * @throws PluginNextcloudNotLoadedException
+	 */
 	private function pluginNextcloudMustBeLoaded(Pico $pico) {
 		try {
 			$pico->getPlugin(self::NC_PLUGIN);

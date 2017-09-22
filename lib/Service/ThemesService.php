@@ -102,6 +102,7 @@ class ThemesService {
 		}
 	}
 
+
 	/**
 	 * returns theme from the Pico/themes/ dir that are not available yet to users.
 	 *

@@ -104,7 +104,7 @@ class WebsitesService {
 				->setUserId($userId)
 				->setSite($site)
 				->setPath($path)
-				->setTemplateSource(TemplatesService::TEMPLATES[$template]);
+				->setTemplateSource($this->templatesService->getTemplatesList()[$template]);
 
 		try {
 			$website->hasToBeFilledWithValidEntries();
@@ -230,15 +230,18 @@ class WebsitesService {
 	 *
 	 * @param string $site
 	 * @param string $viewer
+	 * @param $page
 	 *
 	 * @return string
 	 * @throws Exception
+	 * @throws PicoRuntimeException
 	 */
-	public function getWebpageFromSite($site, $viewer) {
+	public function getWebpageFromSite($site, $viewer, $page) {
 
 		try {
 			$website = $this->websiteRequest->getWebsiteFromSite($site);
 			$website->setViewer($viewer);
+			$website->setPage($page);
 
 			if ($this->encryptionManager->isEnabled()) {
 				throw new EncryptedFilesystemException('cms_pico does not support encrypted filesystem');
