@@ -74,8 +74,7 @@ class TemplatesService {
 	 * @throws TemplateDoesNotExistException
 	 */
 	public function templateHasToExist($template) {
-		$templates = $this->getTemplatesList();
-		if (!in_array($template, $templates)) {
+		if (!key_exists($template, $this->getTemplatesList())) {
 			throw new TemplateDoesNotExistException($this->l10n->t('Template does not exist'));
 		}
 	}

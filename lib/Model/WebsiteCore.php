@@ -61,6 +61,9 @@ class WebsiteCore implements \JsonSerializable {
 	/** @var string */
 	private $path;
 
+	/** @var string */
+	private $page;
+
 	/** @var int */
 	private $creation;
 
@@ -127,10 +130,6 @@ class WebsiteCore implements \JsonSerializable {
 	 * @return $this
 	 */
 	public function setTheme($theme) {
-		if ($theme === '') {
-			return $this;
-		}
-
 		$this->theme = $theme;
 
 		return $this;
@@ -280,6 +279,25 @@ class WebsiteCore implements \JsonSerializable {
 
 
 	/**
+	 * @param string $page
+	 *
+	 * @return $this
+	 */
+	public function setPage($page) {
+		$this->page = $page;
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getPage() {
+		return $this->page;
+	}
+
+
+	/**
 	 * @param int $creation
 	 *
 	 * @return $this
@@ -345,6 +363,7 @@ class WebsiteCore implements \JsonSerializable {
 			'name'     => $this->getName(),
 			'user_id'  => $this->getUserId(),
 			'site'     => $this->getSite(),
+			'page'     => $this->getPage(),
 			'theme'    => $this->getTheme(),
 			'type'     => $this->getType(),
 			'options'  => $this->getOptions(),
@@ -370,7 +389,8 @@ class WebsiteCore implements \JsonSerializable {
 			 ->setName($arr['name'])
 			 ->setUserId($arr['user_id'])
 			 ->setSite($arr['site'])
-			 ->setTheme(MiscService::get($arr, 'theme'))
+			 ->setPage($arr['page'])
+			 ->setTheme(MiscService::get($arr, 'theme', 'default'))
 			 ->setType($arr['type'])
 			 ->setOptions(MiscService::get($arr, 'options'))
 			 ->setPath($arr['path'])

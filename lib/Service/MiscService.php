@@ -78,8 +78,6 @@ class MiscService {
 	}
 
 
-
-
 	/**
 	 * @param $arr
 	 * @param $k
@@ -108,9 +106,6 @@ class MiscService {
 			}
 		}
 	}
-
-
-
 
 
 	public static function checkChars($line, $chars) {
