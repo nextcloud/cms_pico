@@ -195,15 +195,14 @@ class Website extends WebsiteCore {
 
 
 	/**
-	 * @param string $local
+	 * @param string $path
 	 * @param array $meta
 	 *
 	 * @throws WebsiteIsPrivateException
 	 */
-	public function viewerMustHaveAccess($local, $meta) {
+	public function viewerMustHaveAccess($path, $meta = []) {
 
 		try {
-			$relativePath = $this->getRelativePath($local);
 			if ($this->pageIsPublic($meta)) {
 				return;
 			}
@@ -212,7 +211,7 @@ class Website extends WebsiteCore {
 				return;
 			}
 
-			$this->hasToBeReadableByViewer($relativePath);
+			$this->hasToBeReadableByViewer($path);
 
 		} catch (Exception $e) {
 			throw new WebsiteIsPrivateException(

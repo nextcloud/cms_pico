@@ -34,6 +34,7 @@ use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Exceptions\AssetDoesNotExistException;
 use OCA\CMSPico\Exceptions\PicoRuntimeException;
 use OCA\CMSPico\Exceptions\PluginNextcloudNotLoadedException;
+use OCA\CMSPico\Exceptions\WebsiteIsPrivateException;
 use OCA\CMSPico\Model\Website;
 use OCP\Files;
 use OCP\Files\File;
@@ -110,22 +111,26 @@ class PicoService {
 	 *
 	 * @return string
 	 * @throws AssetDoesNotExistException
+	 * @throws WebsiteIsPrivateException
 	 */
 	public function getContentFromAssets(Website $website, $asset) {
 		$website->pathCantContainSpecificFolders($asset);
-		$relativePath = $website->getPath() . self::DIR_ASSETS . $asset;
 
 		try {
-
+			$website->viewerMustHaveAccess(self::DIR_ASSETS . $asset);
 			$userFolder = $this->rootFolder->getUserFolder($website->getUserId());
 
 			/** @var File $file */
-			$file = $userFolder->get($relativePath);
+			$file = $userFolder->get($website->getPath() . self::DIR_ASSETS . $asset);
+			$content = $file->getContent();
 
 			header('Content-type: ' . $file->getMimeType());
 
-			return $file->getContent();
-		} catch (Exception $e) {
+			return $content;
+		} catch (WebsiteIsPrivateException $e) {
+			throw $e;
+		} catch
+		(Exception $e) {
 			throw new AssetDoesNotExistException("404");
 		}
 	}
@@ -162,7 +167,8 @@ class PicoService {
 		$this->pluginNextcloudMustBeLoaded($pico);
 		$absolutePath = $this->getAbsolutePathFromPico($pico);
 		$website->contentMustBeLocal($absolutePath);
-		$website->viewerMustHaveAccess($absolutePath, $pico->getFileMeta());
+
+		$website->viewerMustHaveAccess($website->getRelativePath($absolutePath), $pico->getFileMeta());
 
 		return $content;
 	}

@@ -217,11 +217,7 @@ class WebsiteCore implements \JsonSerializable {
 	 * @return string
 	 */
 	public function getOption($key) {
-		if (!key_exists($key, $this->options)) {
-			return '';
-		}
-
-		return (string)$this->options[$key];
+		return (string)MiscService::get($this->options, $key, '');
 	}
 
 
