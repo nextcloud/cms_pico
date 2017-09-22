@@ -226,7 +226,7 @@ pipeline:
       - phpunit --configuration phpunit.xml .
     when:
       matrix:
-        TESTS: php7.1-stable12
+        TESTS: php7.1-stable12-mysql
 
 
 matrix:
@@ -237,6 +237,7 @@ matrix:
     - TESTS: php5.6-stable12
     - TESTS: php7.0-stable12
     - TESTS: php7.1-stable12
+    - TESTS: php7.1-stable12-mysql
     - TESTS: check-app-compatbility
     - TESTS: check-app-compatbility-stable12
     - TESTS: signed-off-check
