@@ -13,7 +13,7 @@ Because Pico is using the **Markdown** format, you should consider enabling the 
 
 ]]>
 	</description>
-	<version>0.9.3</version>
+	<version>0.9.4</version>
 	<licence>agpl</licence>
 	<author>Maxence Lange</author>
 	<namespace>CMSPico</namespace>
