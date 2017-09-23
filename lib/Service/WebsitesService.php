@@ -104,7 +104,7 @@ class WebsitesService {
 				->setUserId($userId)
 				->setSite($site)
 				->setPath($path)
-				->setTemplateSource($this->templatesService->getTemplatesList()[$template]);
+				->setTemplateSource($template);
 
 		try {
 			$website->hasToBeFilledWithValidEntries();
