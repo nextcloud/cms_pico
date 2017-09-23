@@ -32,22 +32,6 @@
  *
  */
 final class PicoNextcloud extends AbstractPicoPlugin {
-	/**
-	 * This plugin is enabled by default?
-	 *
-	 * @see AbstractPicoPlugin::$enabled
-	 * @var boolean
-	 */
-	protected $enabled = true;
-
-	/**
-	 * This plugin depends on ...
-	 *
-	 * @see AbstractPicoPlugin::$dependsOn
-	 * @var string[]
-	 */
-	protected $dependsOn = array();
-
 	/** @var array */
 	private $config;
 
@@ -80,7 +64,6 @@ final class PicoNextcloud extends AbstractPicoPlugin {
 	 * @return void
 	 */
 	public function onConfigLoaded(array &$config) {
-		$this->config = $config;
 		$this->htmlPurifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
 	}
 
@@ -116,6 +99,7 @@ final class PicoNextcloud extends AbstractPicoPlugin {
 		return $newMeta;
 	}
 
+
 	/**
 	 * Purify the content from the page.
 	 *
@@ -143,7 +127,6 @@ final class PicoNextcloud extends AbstractPicoPlugin {
 	 * @return void
 	 */
 	public function onPageRendering(Twig_Environment &$twig, array &$twigVariables, &$templateName) {
-		$twigVariables['theme_url'] = '/apps/cms_pico/Pico/themes/' . $this->config['theme'];
+		$twigVariables['theme_url'] = '/apps/cms_pico/Pico/themes/' . $this->getConfig('theme');
 	}
-
 }
