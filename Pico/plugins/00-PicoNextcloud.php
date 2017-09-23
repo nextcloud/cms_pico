@@ -54,6 +54,22 @@ final class PicoNextcloud extends AbstractPicoPlugin {
 	/** @var HTMLPurifier */
 	private $htmlPurifier;
 
+
+	/**
+	 * We don't want anyone to disable this plugin.
+	 *
+	 * @param bool $enabled
+	 * @param bool $recursive
+	 * @param bool $auto
+	 */
+	public function setEnabled($enabled, $recursive = true, $auto = false) {
+		if (!$enabled) {
+			throw new RuntimeException('PicoNextcloud plugin must not be disabled');
+		}
+
+		parent::setEnabled($enabled, $recursive, $auto);
+	}
+
 	/**
 	 * Loading stuff.
 	 *
@@ -66,21 +82,6 @@ final class PicoNextcloud extends AbstractPicoPlugin {
 	public function onConfigLoaded(array &$config) {
 		$this->config = $config;
 		$this->htmlPurifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
-
-	}
-
-
-	/**
-	 * We don't want anyone to disable this plugin.
-	 *
-	 * @param bool $enabled
-	 * @param bool $recursive
-	 * @param bool $auto
-	 */
-	public function setEnabled($enabled, $recursive = true, $auto = false) {
-		if ($enabled === false) {
-			throw new RuntimeException('Nextcloud plugin cannot be disabled');
-		}
 	}
 
 
