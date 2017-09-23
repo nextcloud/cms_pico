@@ -184,9 +184,13 @@ class PicoService {
 			[
 				'site_title'    => $website->getName(),
 				'base_url'      => \OC::$WEBROOT . '/index.php/apps/cms_pico/pico/' . $website->getSite(),
+				'rewrite_url'   => true,
 				'theme'         => $website->getTheme(),
 				'content_dir'   => 'content/',
 				'content_ext'   => '.md',
+				'PicoNextcloud' => [
+					'site_id' => $website->getSite()
+				]
 			]
 		);
 	}

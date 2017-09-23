@@ -69,6 +69,29 @@ final class PicoNextcloud extends AbstractPicoPlugin {
 
 
 	/**
+	 * Triggered after Pico has evaluated the request URL
+	 *
+	 * @see    Pico::getRequestUrl()
+	 * @param  string &$url part of the URL describing the requested contents
+	 * @return void
+	 */
+	public function onRequestUrl(&$url)
+	{
+		$pluginConfig = $this->getConfig('PicoNextcloud');
+		$ncSiteId = !empty($pluginConfig['site_id']) ? $pluginConfig['site_id'] : '';
+
+		$requestUri = \OC::$server->getRequest()->getRawPathInfo();
+		if ($requestUri && $ncSiteId) {
+			$baseRequestUri = '/apps/cms_pico/pico/' . $ncSiteId . '/';
+			$baseRequestUriLength = strlen($baseRequestUri);
+			if (substr($requestUri, 0, $baseRequestUriLength) === $baseRequestUri) {
+				$url = substr($requestUri, $baseRequestUriLength);
+			}
+		}
+	}
+
+
+	/**
 	 * purify all entries from meta.
 	 *
 	 * @param  string[] &$meta parsed meta data
