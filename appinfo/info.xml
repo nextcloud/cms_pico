@@ -6,8 +6,6 @@
 	<summary>Integrate Pico and let your users manage their own websites</summary>
 	<description><![CDATA[
 
-Welcome to the cms_pico wiki!
-
 The app **cms_pico** integrate [Pico](https://picocms.org/) in your Nextcloud. This will allow your users to create and manage their own websites with address like: https://cloud.example.com/sites/my_site/. The source of the website will be stored in the users' files and the **Markdown** will be formatted by **Pico** to generate the pages.
 
 Because Pico is using the **Markdown** format, you should consider enabling the [Markdown Editor](https://apps.nextcloud.com/apps/files_markdown) app.
@@ -21,13 +19,15 @@ Because Pico is using the **Markdown** format, you should consider enabling the 
 	<namespace>CMSPico</namespace>
 	<documentation>
 		<admin>https://github.com/nextcloud/cms_pico/wiki</admin>
+		<user>https://github.com/nextcloud/cms_pico/wiki</user>
 	</documentation>
 	<category>tools</category>
 	<website>https://github.com/nextcloud/cms_pico</website>
 	<bugs>https://github.com/nextcloud/cms_pico/issues</bugs>
 	<repository>https://github.com/nextcloud/cms_pico.git</repository>
-	<!--<screenshot>-->
-	<!--</screenshot>-->
+	<screenshot>
+		https://raw.githubusercontent.com/nextcloud/cms_pico/master/screenshots/list_websites.png
+	</screenshot>
 	<dependencies>
 		<nextcloud min-version="12" max-version="13"/>
 	</dependencies>
