@@ -49,7 +49,7 @@ class PicoService {
 
 	const DIR_ASSETS = 'assets/';
 
-	const NC_PLUGIN = 'Nextcloud';
+	const NC_PLUGIN = 'PicoNextcloud';
 
 	private $userId;
 
