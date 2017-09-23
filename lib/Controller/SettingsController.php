@@ -303,6 +303,12 @@ class SettingsController extends Controller {
 		return $this->getSettingsAdmin();
 	}
 
+
+	/**
+	 * compat NC 12 and lower
+	 *
+	 * @return TemplateResponse
+	 */
 	public function nc12personal() {
 		$data = [
 			'templates' => $this->templatesService->getTemplatesList()
