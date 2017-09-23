@@ -193,12 +193,12 @@ class PicoService {
 
 
 	/**
-	 * @param Pico $pico ][p
+	 * @param Pico $pico
 	 *
 	 * @return string
 	 */
 	private function getAbsolutePathFromPico(Pico $pico) {
-		return $pico->getConfig()['content_dir'] . $pico->getCurrentPage()['id'] . '.md';
+		return $pico->getRequestFile() ?: '';
 	}
 
 
