@@ -150,6 +150,6 @@ final class PicoNextcloud extends AbstractPicoPlugin {
 	 * @return void
 	 */
 	public function onPageRendering(Twig_Environment &$twig, array &$twigVariables, &$templateName) {
-		$twigVariables['theme_url'] = '/apps/cms_pico/Pico/themes/' . $this->getConfig('theme');
+		$twigVariables['theme_url'] = OC_App::getAppWebPath('cms_pico') . '/Pico/themes/' . $this->getConfig('theme');
 	}
 }
