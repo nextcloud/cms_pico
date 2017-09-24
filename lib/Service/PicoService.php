@@ -49,7 +49,7 @@ class PicoService {
 
 	const DIR_ASSETS = 'assets/';
 
-	const NC_PLUGIN = 'Nextcloud';
+	const NC_PLUGIN = 'PicoNextcloud';
 
 	private $userId;
 
@@ -178,27 +178,31 @@ class PicoService {
 	 * @param Pico $pico
 	 * @param Website $website
 	 */
-	private function generateConfig(Pico &$pico, Website $website) {
+	private function generateConfig(Pico $pico, Website $website) {
 		$this->themesService->hasToBeAValidTheme($website->getTheme());
 		$pico->setConfig(
 			[
-				'content_dir' => 'content/',
-				'content_ext' => '.md',
-				'theme'       => $website->getTheme(),
-				'site_title'  => $website->getName(),
-				'base_url'    => \OC::$WEBROOT . '/index.php/apps/cms_pico/pico/' . $website->getSite()
+				'site_title'    => $website->getName(),
+				'base_url'      => \OC::$WEBROOT . '/index.php/apps/cms_pico/pico/' . $website->getSite(),
+				'rewrite_url'   => true,
+				'theme'         => $website->getTheme(),
+				'content_dir'   => 'content/',
+				'content_ext'   => '.md',
+				'PicoNextcloud' => [
+					'site_id' => $website->getSite()
+				]
 			]
 		);
 	}
 
 
 	/**
-	 * @param Pico $pico ][p
+	 * @param Pico $pico
 	 *
 	 * @return string
 	 */
 	private function getAbsolutePathFromPico(Pico $pico) {
-		return $pico->getConfig()['content_dir'] . $pico->getCurrentPage()['id'] . '.md';
+		return $pico->getRequestFile() ?: '';
 	}
 
 

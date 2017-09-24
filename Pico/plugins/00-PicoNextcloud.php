@@ -31,28 +31,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-final class Nextcloud extends AbstractPicoPlugin {
-	/**
-	 * This plugin is enabled by default?
-	 *
-	 * @see AbstractPicoPlugin::$enabled
-	 * @var boolean
-	 */
-	protected $enabled = true;
-
-	/**
-	 * This plugin depends on ...
-	 *
-	 * @see AbstractPicoPlugin::$dependsOn
-	 * @var string[]
-	 */
-	protected $dependsOn = array();
-
+final class PicoNextcloud extends AbstractPicoPlugin {
 	/** @var array */
 	private $config;
 
 	/** @var HTMLPurifier */
 	private $htmlPurifier;
+
+
+	/**
+	 * We don't want anyone to disable this plugin.
+	 *
+	 * @param bool $enabled
+	 * @param bool $recursive
+	 * @param bool $auto
+	 */
+	public function setEnabled($enabled, $recursive = true, $auto = false) {
+		if (!$enabled) {
+			throw new RuntimeException('PicoNextcloud plugin must not be disabled');
+		}
+
+		parent::setEnabled($enabled, $recursive, $auto);
+	}
 
 	/**
 	 * Loading stuff.
@@ -64,22 +64,29 @@ final class Nextcloud extends AbstractPicoPlugin {
 	 * @return void
 	 */
 	public function onConfigLoaded(array &$config) {
-		$this->config = $config;
 		$this->htmlPurifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
-
 	}
 
 
 	/**
-	 * We don't want anyone to disable this plugin.
+	 * Triggered after Pico has evaluated the request URL
 	 *
-	 * @param bool $enabled
-	 * @param bool $recursive
-	 * @param bool $auto
+	 * @see    Pico::getRequestUrl()
+	 * @param  string &$url part of the URL describing the requested contents
+	 * @return void
 	 */
-	public function setEnabled($enabled, $recursive = true, $auto = false) {
-		if ($enabled === false) {
-			throw new RuntimeException('Nextcloud plugin cannot be disabled');
+	public function onRequestUrl(&$url)
+	{
+		$pluginConfig = $this->getConfig('PicoNextcloud');
+		$ncSiteId = !empty($pluginConfig['site_id']) ? $pluginConfig['site_id'] : '';
+
+		$requestUri = \OC::$server->getRequest()->getRawPathInfo();
+		if ($requestUri && $ncSiteId) {
+			$baseRequestUri = '/apps/cms_pico/pico/' . $ncSiteId . '/';
+			$baseRequestUriLength = strlen($baseRequestUri);
+			if (substr($requestUri, 0, $baseRequestUriLength) === $baseRequestUri) {
+				$url = substr($requestUri, $baseRequestUriLength);
+			}
 		}
 	}
 
@@ -115,6 +122,7 @@ final class Nextcloud extends AbstractPicoPlugin {
 		return $newMeta;
 	}
 
+
 	/**
 	 * Purify the content from the page.
 	 *
@@ -142,7 +150,6 @@ final class Nextcloud extends AbstractPicoPlugin {
 	 * @return void
 	 */
 	public function onPageRendering(Twig_Environment &$twig, array &$twigVariables, &$templateName) {
-		$twigVariables['theme_url'] = '/apps/cms_pico/Pico/themes/' . $this->config['theme'];
+		$twigVariables['theme_url'] = OC_App::getAppWebPath('cms_pico') . '/Pico/themes/' . $this->getConfig('theme');
 	}
-
 }
