@@ -41,7 +41,7 @@ class PicoControllerTest extends \PHPUnit_Framework_TestCase {
 		'path'     => '/pico1',
 		'type'     => '1',
 		'site'     => 'pico',
-		'template' => 0,
+		'template' => 'sample_pico',
 		'private'  => '0'
 	];
 
@@ -145,7 +145,7 @@ class PicoControllerTest extends \PHPUnit_Framework_TestCase {
 		$website = new Website($data);
 
 		$this->websitesService->createWebsite(
-			$website->getName(), $website->getUserId(), $website->getSite(), $website->getPath(), 0
+			$website->getName(), $website->getUserId(), $website->getSite(), $website->getPath(), $data['template']
 		);
 	}
 

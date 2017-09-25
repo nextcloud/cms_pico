@@ -46,7 +46,7 @@ class WebsitesServiceTest extends \PHPUnit_Framework_TestCase {
 		'path'     => '/website1',
 		'type'     => '1',
 		'site'     => 'website1',
-		'template' => 0,
+		'template' => 'sample_pico',
 		'private'  => '0'
 	];
 
@@ -55,7 +55,7 @@ class WebsitesServiceTest extends \PHPUnit_Framework_TestCase {
 		'path'     => '/website2',
 		'type'     => '1',
 		'site'     => 'website2',
-		'template' => 0,
+		'template' => 'sample_pico',
 		'private'  => '0'
 	];
 
@@ -316,7 +316,7 @@ class WebsitesServiceTest extends \PHPUnit_Framework_TestCase {
 		$website = new Website($data);
 
 		$this->websitesService->createWebsite(
-			$website->getName(), $website->getUserId(), $website->getSite(), $website->getPath(), 0
+			$website->getName(), $website->getUserId(), $website->getSite(), $website->getPath(), $data['template']
 		);
 	}
 
