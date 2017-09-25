@@ -50,8 +50,6 @@ class PicoService {
 
 	const DIR_ASSETS = 'assets/';
 
-	const NC_PLUGIN = 'PicoNextcloud';
-
 	private $userId;
 
 	/** @var AppManager */
@@ -162,7 +160,7 @@ class PicoService {
 		$this->generateConfig($pico, $website);
 		try {
 			$content = $pico->run();
-		} catch (\Exception $e) {
+		} catch (Exception $e) {
 			throw new PicoRuntimeException($e->getMessage());
 		}
 
