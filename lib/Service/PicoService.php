@@ -29,6 +29,7 @@ namespace OCA\CMSPico\Service;
 use Exception;
 use HTMLPurifier;
 use HTMLPurifier_Config;
+use OC;
 use OC\App\AppManager;
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Exceptions\AssetDoesNotExistException;
@@ -36,10 +37,10 @@ use OCA\CMSPico\Exceptions\PicoRuntimeException;
 use OCA\CMSPico\Exceptions\PluginNextcloudNotLoadedException;
 use OCA\CMSPico\Exceptions\WebsiteIsPrivateException;
 use OCA\CMSPico\Model\Website;
+use OCA\CMSPico\Pico;
 use OCP\Files;
 use OCP\Files\File;
 use OCP\Files\IRootFolder;
-use Pico;
 
 class PicoService {
 
@@ -129,8 +130,7 @@ class PicoService {
 			return $content;
 		} catch (WebsiteIsPrivateException $e) {
 			throw $e;
-		} catch
-		(Exception $e) {
+		} catch (Exception $e) {
 			throw new AssetDoesNotExistException("404");
 		}
 	}
@@ -153,8 +153,10 @@ class PicoService {
 
 		$appPath = MiscService::endSlash($this->appManager->getAppPath(Application::APP_NAME));
 		$pico = new Pico(
-			$website->getAbsolutePath(), $appPath . self::DIR_CONFIG,
-			$appPath . self::DIR_PLUGINS, $appPath . self::DIR_THEMES
+			$website->getAbsolutePath(),
+			$appPath . self::DIR_CONFIG,
+			$appPath . self::DIR_PLUGINS,
+			$appPath . self::DIR_THEMES
 		);
 
 		$this->generateConfig($pico, $website);
@@ -164,7 +166,6 @@ class PicoService {
 			throw new PicoRuntimeException($e->getMessage());
 		}
 
-		$this->pluginNextcloudMustBeLoaded($pico);
 		$absolutePath = $this->getAbsolutePathFromPico($pico);
 		$website->contentMustBeLocal($absolutePath);
 
@@ -182,15 +183,12 @@ class PicoService {
 		$this->themesService->hasToBeAValidTheme($website->getTheme());
 		$pico->setConfig(
 			[
-				'site_title'    => $website->getName(),
-				'base_url'      => \OC::$WEBROOT . '/index.php/apps/cms_pico/pico/' . $website->getSite(),
-				'rewrite_url'   => true,
-				'theme'         => $website->getTheme(),
-				'content_dir'   => 'content/',
-				'content_ext'   => '.md',
-				'PicoNextcloud' => [
-					'site_id' => $website->getSite()
-				]
+				'site_title'     => $website->getName(),
+				'base_url'       => OC::$WEBROOT . '/index.php/apps/cms_pico/pico/' . $website->getSite(),
+				'theme'          => $website->getTheme(),
+				'content_dir'    => 'content/',
+				'content_ext'    => '.md',
+				'nextcloud_site' => $website->getSite()
 			]
 		);
 	}
@@ -203,19 +201,5 @@ class PicoService {
 	 */
 	private function getAbsolutePathFromPico(Pico $pico) {
 		return $pico->getRequestFile() ?: '';
-	}
-
-
-	/**
-	 * @param Pico $pico
-	 *
-	 * @throws PluginNextcloudNotLoadedException
-	 */
-	private function pluginNextcloudMustBeLoaded(Pico $pico) {
-		try {
-			$pico->getPlugin(self::NC_PLUGIN);
-		} catch (Exception $e) {
-			throw new PluginNextcloudNotLoadedException($e->getMessage());
-		}
 	}
 }
