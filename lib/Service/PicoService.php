@@ -178,11 +178,13 @@ class PicoService {
 	 * @param Website $website
 	 */
 	private function generateConfig(Pico $pico, Website $website) {
+		$appBaseUrl = OC::$WEBROOT . '/index.php/apps/' . Application::APP_NAME;
 		$this->themesService->hasToBeAValidTheme($website->getTheme());
+
 		$pico->setConfig(
 			[
 				'site_title'     => $website->getName(),
-				'base_url'       => OC::$WEBROOT . '/index.php/apps/cms_pico/pico/' . $website->getSite(),
+				'base_url'       => $appBaseUrl . '/pico/' . $website->getSite(),
 				'theme'          => $website->getTheme(),
 				'content_dir'    => 'content/',
 				'content_ext'    => '.md',
