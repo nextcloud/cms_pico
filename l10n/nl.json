@@ -1,9 +1,13 @@
 { "translations": {
     "test" : "test",
+    "It was not possible to retrieve the complete list of your websites" : "Het was niet mogelijk om de volledige lijst van uw websites op te halen",
     "no error message" : "geen foutboodschap",
+    "It was not possible to update your theme on {name}" : "Het was niet mogelijk uw thema op {naam} bij te werken",
+    "This operation will delete the website {name} but its content will still be available in your files" : "Deze bewerking zal de website {name} verwijderen, maar de inhoud is nog steeds beschikbaar in uw bestanden",
     "Please confirm" : "Graag bevestigen",
     "Please wait" : "Even geduld",
     "Create a new website" : "Creëer een nieuwe website",
+    "It was not possible to update your website" : "Het was niet mogelijk uw website bij te werken",
     "Website not found" : "Website niet gevonden",
     "Webpage does not exist" : "Webpagina bestaat niet",
     "You are not the owner of this website" : "Je bent niet de eigenaar van deze website",
