@@ -50,7 +50,7 @@ appstore: composer clean
 	--exclude=/issue_template.md \
 	--exclude=/README.md \
 	--exclude=/.gitattributes \
-	--exclude=/.gitignore \
+	--exclude=.gitignore \
 	--exclude=/.scrutinizer.yml \
 	--exclude=/.travis.yml \
 	--exclude=/Makefile \
