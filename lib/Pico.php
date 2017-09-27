@@ -54,24 +54,17 @@ class Pico extends \Pico {
 	}
 
 
-	public function setRequestedUrl($requestedUrl) {
-		$this->requestedUrl = $requestedUrl;
+	public function setRequestUrl($requestUrl) {
+		$this->requestUrl = $requestUrl;
 	}
 
 
 	/**
-	 * Evaluates the requested URL.
+	 * do not evaluate requested URL.
 	 *
-	 * Besides Pico's built-in `QUERY_STRING`-based routing (e.g. `?sub/page`),
-	 * we additionally fully support Nextcloud's `PATH_INFO`-based routing
-	 * (e.g. `/index.php/apps/cms_pico/pico/sub/page`).
+	 * @see setRequestUrl
 	 */
 	protected function evaluateRequestUrl() {
-		parent::evaluateRequestUrl();
-
-		if (!$this->requestUrl) {
-			$this->requestUrl = trim($this->requestedUrl, '/');
-		}
 	}
 
 
