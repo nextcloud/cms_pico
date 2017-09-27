@@ -81,12 +81,12 @@ class TemplatesServiceTest extends \PHPUnit_Framework_TestCase {
 			rmdir(WebsitesServiceTest::PICO_FOLDER . '/templates/this_is_a_template');
 		}
 
-		$this->assertCount(1, $this->templatesService->getTemplatesList());
+		$this->assertCount(2, $this->templatesService->getTemplatesList());
 		$this->assertCount(0, $this->templatesService->getTemplatesList(true));
 		$this->assertCount(0, $this->templatesService->getNewTemplatesList());
 
 		mkdir(WebsitesServiceTest::PICO_FOLDER . '/templates/this_is_a_template');
-		$this->assertCount(1, $this->templatesService->getTemplatesList());
+		$this->assertCount(2, $this->templatesService->getTemplatesList());
 		$this->assertCount(0, $this->templatesService->getTemplatesList(true));
 		$this->assertCount(1, $this->templatesService->getNewTemplatesList());
 
@@ -99,19 +99,19 @@ class TemplatesServiceTest extends \PHPUnit_Framework_TestCase {
 		}
 
 		$this->settingsController->addCustomTemplate('this_is_a_template');
-		$this->assertCount(2, $this->templatesService->getTemplatesList());
+		$this->assertCount(3, $this->templatesService->getTemplatesList());
 		$this->assertCount(1, $this->templatesService->getTemplatesList(true));
 		$this->assertCount(0, $this->templatesService->getNewTemplatesList());
 
 		$this->templatesService->templateHasToExist('this_is_a_template');
 
 		$this->settingsController->removeCustomTemplate('this_is_a_template');
-		$this->assertCount(1, $this->templatesService->getTemplatesList());
+		$this->assertCount(2, $this->templatesService->getTemplatesList());
 		$this->assertCount(0, $this->templatesService->getTemplatesList(true));
 		$this->assertCount(1, $this->templatesService->getNewTemplatesList());
 
 		rmdir(WebsitesServiceTest::PICO_FOLDER . '/templates/this_is_a_template');
-		$this->assertCount(1, $this->templatesService->getTemplatesList());
+		$this->assertCount(2, $this->templatesService->getTemplatesList());
 		$this->assertCount(0, $this->templatesService->getTemplatesList(true));
 		$this->assertCount(0, $this->templatesService->getNewTemplatesList());
 
