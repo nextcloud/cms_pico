@@ -29,7 +29,6 @@ namespace OCA\CMSPico\Tests\Service;
 use Exception;
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Exceptions\PicoRuntimeException;
-use OCA\CMSPico\Exceptions\PluginNextcloudNotLoadedException;
 use OCA\CMSPico\Exceptions\UserIsNotOwnerException;
 use OCA\CMSPico\Exceptions\WebsiteAlreadyExistException;
 use OCA\CMSPico\Exceptions\WebsiteDoesNotExistException;
@@ -228,21 +227,6 @@ class WebsitesServiceTest extends \PHPUnit_Framework_TestCase {
 		} catch (Exception $e) {
 			$this->assertSame(true, false, 'Should return WebsiteDoesNotExistException');
 		}
-
-
-		// test to load page with no plugins.
-		rename(self::PICO_FOLDER . '/plugins/Nextcloud.php', './Nextcloud.php');
-		try {
-			$content =
-				$this->websitesService->getWebpageFromSite($website->getSite(), Env::ENV_TEST_USER1, '');
-			$this->assertSame(true, false, 'Should return an exception');
-		} catch (PluginNextcloudNotLoadedException $e) {
-		} catch (Exception $e) {
-			$this->assertSame(true, false, 'Should return PluginNextcloudNotLoadedException');
-		}
-
-		rename('./Nextcloud.php', self::PICO_FOLDER . '/plugins/Nextcloud.php');
-
 
 		// test website with no content
 		rename($website->getAbsolutePath() . 'content', './content');

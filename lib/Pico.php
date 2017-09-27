@@ -34,6 +34,9 @@ class Pico extends \Pico {
 	/** @var HTMLPurifier */
 	protected $htmlPurifier;
 
+	/** @var string */
+	protected $requestedUrl;
+
 	/**
 	 * Loads the config.php from Pico::$configDir.
 	 *
@@ -51,31 +54,17 @@ class Pico extends \Pico {
 	}
 
 
+	public function setRequestUrl($requestUrl) {
+		$this->requestUrl = $requestUrl;
+	}
+
+
 	/**
-	 * Evaluates the requested URL.
+	 * do not evaluate requested URL.
 	 *
-	 * Besides Pico's built-in `QUERY_STRING`-based routing (e.g. `?sub/page`),
-	 * we additionally fully support Nextcloud's `PATH_INFO`-based routing
-	 * (e.g. `/index.php/apps/cms_pico/pico/sub/page`).
+	 * @see setRequestUrl
 	 */
 	protected function evaluateRequestUrl() {
-		parent::evaluateRequestUrl();
-
-		if (!$this->requestUrl) {
-			$pathInfo = \OC::$server->getRequest()
-									->getRawPathInfo();
-			if ($pathInfo) {
-				$basePathInfo =
-					\OC::$WEBROOT . '/apps/' . Application::APP_NAME . '/pico/' . $this->getConfig(
-						'nextcloud_site'
-					) . '/';
-				$basePathInfoLength = strlen($basePathInfo);
-				if (substr($pathInfo, 0, $basePathInfoLength) === $basePathInfo) {
-					$this->requestUrl = substr($pathInfo, $basePathInfoLength);
-					$this->requestUrl = trim($this->requestUrl, '/');
-				}
-			}
-		}
 	}
 
 
