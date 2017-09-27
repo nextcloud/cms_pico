@@ -173,7 +173,7 @@ class PicoService {
 	 * @param Website $website
 	 */
 	private function setupPico(Pico $pico, Website $website) {
-		$pico->setRequestedUrl($website->getPage());
+		$pico->setRequestUrl($website->getPage());
 
 		$this->themesService->hasToBeAValidTheme($website->getTheme());
 
