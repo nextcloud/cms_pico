@@ -152,7 +152,7 @@ class PicoService {
 			$appPath . self::DIR_THEMES
 		);
 
-		$this->generateConfig($pico, $website);
+		$this->setupPico($pico, $website);
 		try {
 			$content = $pico->run();
 		} catch (Exception $e) {
@@ -172,10 +172,12 @@ class PicoService {
 	 * @param Pico $pico
 	 * @param Website $website
 	 */
-	private function generateConfig(Pico $pico, Website $website) {
-		$appBaseUrl = \OC::$WEBROOT . '/index.php/apps/' . Application::APP_NAME;
+	private function setupPico(Pico $pico, Website $website) {
+		$pico->setRequestedUrl($website->getPage());
+
 		$this->themesService->hasToBeAValidTheme($website->getTheme());
 
+		$appBaseUrl = \OC::$WEBROOT . '/index.php/apps/' . Application::APP_NAME;
 		$pico->setConfig(
 			[
 				'site_title'     => $website->getName(),

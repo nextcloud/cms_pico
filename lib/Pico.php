@@ -34,6 +34,9 @@ class Pico extends \Pico {
 	/** @var HTMLPurifier */
 	protected $htmlPurifier;
 
+	/** @var string */
+	protected $requestedUrl;
+
 	/**
 	 * Loads the config.php from Pico::$configDir.
 	 *
@@ -51,6 +54,11 @@ class Pico extends \Pico {
 	}
 
 
+	public function setRequestedUrl($requestedUrl) {
+		$this->requestedUrl = $requestedUrl;
+	}
+
+
 	/**
 	 * Evaluates the requested URL.
 	 *
@@ -62,19 +70,7 @@ class Pico extends \Pico {
 		parent::evaluateRequestUrl();
 
 		if (!$this->requestUrl) {
-			$pathInfo = \OC::$server->getRequest()
-									->getRawPathInfo();
-			if ($pathInfo) {
-				$basePathInfo =
-					\OC::$WEBROOT . '/apps/' . Application::APP_NAME . '/pico/' . $this->getConfig(
-						'nextcloud_site'
-					) . '/';
-				$basePathInfoLength = strlen($basePathInfo);
-				if (substr($pathInfo, 0, $basePathInfoLength) === $basePathInfo) {
-					$this->requestUrl = substr($pathInfo, $basePathInfoLength);
-					$this->requestUrl = trim($this->requestUrl, '/');
-				}
-			}
+			$this->requestUrl = trim($this->requestedUrl, '/');
 		}
 	}
 
