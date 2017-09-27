@@ -27,18 +27,13 @@
 namespace OCA\CMSPico\Service;
 
 use Exception;
-use HTMLPurifier;
-use HTMLPurifier_Config;
-use OC;
 use OC\App\AppManager;
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Exceptions\AssetDoesNotExistException;
 use OCA\CMSPico\Exceptions\PicoRuntimeException;
-use OCA\CMSPico\Exceptions\PluginNextcloudNotLoadedException;
 use OCA\CMSPico\Exceptions\WebsiteIsPrivateException;
 use OCA\CMSPico\Model\Website;
 use OCA\CMSPico\Pico;
-use OCP\Files;
 use OCP\Files\File;
 use OCP\Files\IRootFolder;
 
@@ -178,7 +173,7 @@ class PicoService {
 	 * @param Website $website
 	 */
 	private function generateConfig(Pico $pico, Website $website) {
-		$appBaseUrl = OC::$WEBROOT . '/index.php/apps/' . Application::APP_NAME;
+		$appBaseUrl = \OC::$WEBROOT . '/index.php/apps/' . Application::APP_NAME;
 		$this->themesService->hasToBeAValidTheme($website->getTheme());
 
 		$pico->setConfig(

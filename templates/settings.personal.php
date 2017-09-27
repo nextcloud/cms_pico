@@ -88,7 +88,7 @@ style(Application::APP_NAME, 'personal');
 		<tr>
 			<td colspan="2">
 				To create a new Site Folder, you will need to specify the front URL address
-				(<?php print(OC::$WEBROOT); ?>/sites/your_site_folder)
+				(<?php print(\OC::$WEBROOT); ?>/sites/your_site_folder)
 				that <br/>
 				will be used to access your site and a local directory in your files where your templates
 				will be stored.<br/>

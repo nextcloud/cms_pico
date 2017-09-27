@@ -27,11 +27,10 @@ namespace OCA\CMSPico;
 
 use HTMLPurifier;
 use HTMLPurifier_Config;
-use OC;
-use OC_App;
 use OCA\CMSPico\AppInfo\Application;
 
 class Pico extends \Pico {
+
 	/** @var HTMLPurifier */
 	protected $htmlPurifier;
 
@@ -51,6 +50,7 @@ class Pico extends \Pico {
 		}
 	}
 
+
 	/**
 	 * Evaluates the requested URL.
 	 *
@@ -62,9 +62,13 @@ class Pico extends \Pico {
 		parent::evaluateRequestUrl();
 
 		if (!$this->requestUrl) {
-			$pathInfo = OC::$server->getRequest()->getRawPathInfo();
+			$pathInfo = \OC::$server->getRequest()
+									->getRawPathInfo();
 			if ($pathInfo) {
-				$basePathInfo = '/apps/' . Application::APP_NAME . '/pico/' . $this->getConfig('nextcloud_site') . '/';
+				$basePathInfo =
+					\OC::$WEBROOT . '/apps/' . Application::APP_NAME . '/pico/' . $this->getConfig(
+						'nextcloud_site'
+					) . '/';
 				$basePathInfoLength = strlen($basePathInfo);
 				if (substr($pathInfo, 0, $basePathInfoLength) === $basePathInfo) {
 					$this->requestUrl = substr($pathInfo, $basePathInfoLength);
@@ -74,23 +78,28 @@ class Pico extends \Pico {
 		}
 	}
 
+
 	/**
 	 * Returns the parsed and purified file meta from raw file contents.
 	 *
-	 * @param  string   $rawContent
+	 * @param  string $rawContent
 	 * @param  string[] $headers
+	 *
 	 * @return array
 	 * @throws \Symfony\Component\Yaml\Exception\ParseException
 	 */
 	public function parseFileMeta($rawContent, array $headers) {
 		$meta = parent::parseFileMeta($rawContent, $headers);
+
 		return $this->purifyFileMeta($meta);
 	}
+
 
 	/**
 	 * Purifies file meta.
 	 *
 	 * @param array $meta
+	 *
 	 * @return array
 	 */
 	protected function purifyFileMeta(array $meta) {
@@ -99,23 +108,29 @@ class Pico extends \Pico {
 			if (is_array($value)) {
 				$newMeta[$key] = $this->purifyFileMeta($value);
 			} else {
-				$newMeta[$key] = $this->getHtmlPurifier()->purify($value);
+				$newMeta[$key] = $this->getHtmlPurifier()
+									  ->purify($value);
 			}
 		}
 
 		return $newMeta;
 	}
 
+
 	/**
 	 * Returns the parsed and purified contents of a page.
 	 *
 	 * @param  string $markdown
+	 *
 	 * @return string
 	 */
 	public function parseFileContent($markdown) {
 		$content = parent::parseFileContent($markdown);
-		return $this->getHtmlPurifier()->purify($content);
+
+		return $this->getHtmlPurifier()
+					->purify($content);
 	}
+
 
 	/**
 	 * Returns the variables passed to the template.
@@ -126,9 +141,12 @@ class Pico extends \Pico {
 	 */
 	protected function getTwigVariables() {
 		$twigVariables = parent::getTwigVariables();
-		$twigVariables['theme_url'] = OC_App::getAppWebPath(Application::APP_NAME) . '/Pico/themes/' . $this->getConfig('theme');
+		$twigVariables['theme_url'] =
+			\OC_App::getAppWebPath(Application::APP_NAME) . '/Pico/themes/' . $this->getConfig('theme');
+
 		return $twigVariables;
 	}
+
 
 	/**
 	 * Returns the HTMLPurifier instance.
