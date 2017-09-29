@@ -177,7 +177,6 @@ class PicoService {
 
 		$this->themesService->hasToBeAValidTheme($website->getTheme());
 
-		$appBaseUrl = \OC::$WEBROOT . '/index.php/apps/' . Application::APP_NAME;
 		$pico->setConfig(
 			[
 				'site_title'     => $website->getName(),

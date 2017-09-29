@@ -199,6 +199,7 @@ var pico_nav = {
 		pico_elements.cms_pico_new_name.val('');
 		pico_elements.cms_pico_new_folder.val('/');
 		pico_elements.cms_pico_new_url.text('');
+		pico_elements.cms_pico_new_folder_result = '';
 	},
 
 

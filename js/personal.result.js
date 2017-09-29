@@ -60,8 +60,9 @@ var pico_result = {
 
 
 		displayWebsitesPath: function (div) {
-			var url = pico_define.nchost + pico_define.index + OC.appswebroots.files + '/?dir=' +
+			var url = pico_define.nchost + pico_define.index + '/apps/files/?dir=' +
 				div.attr('data-path');
+
 			div.find('TD.path').css('cursor', 'pointer').on('click', function () {
 				window.open(url);
 			});

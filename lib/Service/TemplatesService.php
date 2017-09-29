@@ -176,7 +176,7 @@ class TemplatesService {
 		$files = [];
 		foreach (new DirectoryIterator($base . $dir) as $file) {
 
-			if (substr($file->getFilename(), 0, 1) === '.') {
+			if (substr($file->getFilename(), 0, 1) === '.' && $file->getFilename() !== '.empty') {
 				continue;
 			}
 
@@ -200,9 +200,13 @@ class TemplatesService {
 	 */
 	private function generateFile(TemplateFile $file, Website $website) {
 		try {
-			$this->initFolder(pathinfo($website->getPath() . $file->getFileName(), PATHINFO_DIRNAME));
+			$this->initFolder(pathinfo($website->getPath() . $file->getFilename(), PATHINFO_DIRNAME));
 
-			$new = $this->websiteFolder->newFile($website->getPath() . $file->getFileName());
+			if (substr($file->getFilename(), -6) === '.empty') {
+				return;
+			}
+
+			$new = $this->websiteFolder->newFile($website->getPath() . $file->getFilename());
 			$new->putContent($file->getContent());
 		} catch (Exception $e) {
 			throw new WriteAccessException(

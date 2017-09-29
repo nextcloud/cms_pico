@@ -55,9 +55,10 @@ class TemplateFile {
 	/**
 	 * @return string
 	 */
-	public function getFileName() {
+	public function getFilename() {
 		return $this->filename;
 	}
+
 
 	/**
 	 * @param string $content
