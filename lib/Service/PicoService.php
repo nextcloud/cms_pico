@@ -180,7 +180,7 @@ class PicoService {
 		$pico->setConfig(
 			[
 				'site_title'     => $website->getName(),
-				'base_url'       => $appBaseUrl . '/pico/' . $website->getSite(),
+				'base_url'       => '/sites/' . $website->getSite(),
 				'theme'          => $website->getTheme(),
 				'content_dir'    => 'content/',
 				'content_ext'    => '.md',
