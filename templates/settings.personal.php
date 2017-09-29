@@ -42,13 +42,13 @@ style(Application::APP_NAME, 'personal');
 <fieldset id="cmspicoPersonalSettings">
 
 <div class="section">
-	<h2><?php p($l->t('Site Folders (Pico CMS)')) ?></h2>
+	<h2><?php p($l->t('Pico CMS')) ?></h2>
 
 	<table cellpadding="10" cellpadding="5">
 		<tr>
 			<td colspan="2">
 
-				Site folders allows you to create a website as a sub-folder of the cloud.<br/>
+				This app allows you to create a website as a sub-folder of the cloud.<br/>
 				Using the Pico CMS, your files - in Markdown format - will be parsed and served up
 				to browsers as html.<br/>
 
@@ -99,16 +99,16 @@ style(Application::APP_NAME, 'personal');
 			<td>&nbsp;</td>
 		</tr>
 		<tr class="lane">
-			<td class="left"><?php p($l->t('Name of the website:')); ?><br/>
-				<em><?php p($l->t('The title of your website')); ?></em></td>
+			<td class="left"><?php p($l->t('Name of the site:')); ?><br/>
+				<em><?php p($l->t('The title of your site')); ?></em></td>
 			<td class="right">
 				<input id="cms_pico_new_name" class="field250" value=""
-					   placeholder="<?php p($l->t('My new site folder')); ?>"/>
+					   placeholder="<?php p($l->t('My new site')); ?>"/>
 			</td>
 		</tr>
 
 		<tr class="lane">
-			<td class="left"><?php p($l->t('Address of the website:')); ?><br/>
+			<td class="left"><?php p($l->t('Address of the site:')); ?><br/>
 				<em id="cms_pico_new_url"> </em></td>
 			<td class="right">
 				<input id="cms_pico_new_website" class="field250" value=""
