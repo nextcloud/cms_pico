@@ -176,7 +176,7 @@ class TemplatesService {
 		$files = [];
 		foreach (new DirectoryIterator($base . $dir) as $file) {
 
-			if (substr($file->getFilename(), 0, 1) === '.' && $file->getFilename() !== '.empty') {
+			if (substr($file->getFilename(), 0, 1) === '.') {
 				continue;
 			}
 
@@ -202,7 +202,7 @@ class TemplatesService {
 		try {
 			$this->initFolder(pathinfo($website->getPath() . $file->getFilename(), PATHINFO_DIRNAME));
 
-			if (substr($file->getFilename(), -6) === '.empty') {
+			if (substr($file->getFilename(), -5) === 'empty') {
 				return;
 			}
 
