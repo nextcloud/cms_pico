@@ -15,9 +15,6 @@
     "Your Apache configuration" : "Jūsų Apache konfigūracija",
     "Address" : "Adresas",
     "Local directory" : "Vietinis katalogas",
-    "Name of the website:" : "Svetainės pavadinimas:",
-    "The title of your website" : "Jūsų svetainės pavadinimas",
-    "Address of the website:" : "Svetainės adresas:",
     "Local directory:" : "Vietinis katalogas:",
     "Delete website" : "Ištrinti svetainę"
 },"pluralForm" :"nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);"
