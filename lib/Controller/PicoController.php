@@ -34,6 +34,7 @@ use OCA\CMSPico\Service\WebsitesService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\DataDisplayResponse;
 use OCP\AppFramework\Http\DataDownloadResponse;
+use OCP\AppFramework\Http\Response;
 use OCP\Files\IMimeTypeDetector;
 use OCP\IRequest;
 
@@ -63,7 +64,8 @@ class PicoController extends Controller {
 	 * @param IMimeTypeDetector $mimeTypeDetector
 	 */
 	public function __construct(
-		IRequest $request, $userId, WebsitesService $websitesService, MiscService $miscService, IMimeTypeDetector $mimeTypeDetector
+		IRequest $request, $userId, WebsitesService $websitesService, MiscService $miscService,
+		IMimeTypeDetector $mimeTypeDetector
 	) {
 		parent::__construct(Application::APP_NAME, $request);
 
@@ -79,34 +81,37 @@ class PicoController extends Controller {
 	 *
 	 * @PublicPage
 	 * @NoCSRFRequired
-	 * @return DataDisplayResponse|string
+
+	 * @return Response
 	 */
 	public function getRoot($site) {
-		return $this->getPage($site , '');
+		return $this->getPage($site, '');
 	}
 
 
 	/**
 	 * @param string $site
 	 * @param $page
-	 *
-	 * @return DataDisplayResponse|DataDownloadResponse|string
+
 	 * @PublicPage
 	 * @NoCSRFRequired
+	 *
+	 * @return Response
 	 */
 	public function getPage($site, $page) {
 		try {
 			$html = $this->websitesService->getWebpageFromSite($site, $this->userId, $page);
 
-			if(strpos($page, PicoService::DIR_ASSETS) === 0) {
+			if (strpos($page, PicoService::DIR_ASSETS) === 0) {
 				$probableMimeType = $this->mimeTypeDetector->detectPath($page);
 				$secureMimeType = $this->mimeTypeDetector->getSecureMimeType($probableMimeType);
+
 				return new DataDownloadResponse($html, basename($page), $secureMimeType);
 			} else {
 				return new DataDisplayResponse($html);
 			}
 		} catch (Exception $e) {
-			return $e->getMessage();
+			return new DataDisplayResponse($e->getMessage());
 		}
 	}
 
