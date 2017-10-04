@@ -17,9 +17,6 @@ OC.L10N.register(
     "Your Apache configuration" : "Jūsų Apache konfigūracija",
     "Address" : "Adresas",
     "Local directory" : "Vietinis katalogas",
-    "Name of the website:" : "Svetainės pavadinimas:",
-    "The title of your website" : "Jūsų svetainės pavadinimas",
-    "Address of the website:" : "Svetainės adresas:",
     "Local directory:" : "Vietinis katalogas:",
     "Delete website" : "Ištrinti svetainę"
 },
