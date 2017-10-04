@@ -118,8 +118,6 @@ class PicoService {
 			$file = $userFolder->get($website->getPath() . self::DIR_ASSETS . $asset);
 			$content = $file->getContent();
 
-			header('Content-type: ' . $file->getMimeType());
-
 			return $content;
 		} catch (WebsiteIsPrivateException $e) {
 			throw $e;
