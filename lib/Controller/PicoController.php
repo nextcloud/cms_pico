@@ -29,9 +29,13 @@ namespace OCA\CMSPico\Controller;
 use Exception;
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Service\MiscService;
+use OCA\CMSPico\Service\PicoService;
 use OCA\CMSPico\Service\WebsitesService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\DataDisplayResponse;
+use OCP\AppFramework\Http\DataDownloadResponse;
+use OCP\AppFramework\Http\Response;
+use OCP\Files\IMimeTypeDetector;
 use OCP\IRequest;
 
 class PicoController extends Controller {
@@ -46,6 +50,9 @@ class PicoController extends Controller {
 	/** @var MiscService */
 	private $miscService;
 
+	/** @var IMimeTypeDetector */
+	private $mimeTypeDetector;
+
 
 	/**
 	 * PicoController constructor.
@@ -54,15 +61,18 @@ class PicoController extends Controller {
 	 * @param IRequest $userId
 	 * @param WebsitesService $websitesService
 	 * @param MiscService $miscService
+	 * @param IMimeTypeDetector $mimeTypeDetector
 	 */
 	public function __construct(
-		IRequest $request, $userId, WebsitesService $websitesService, MiscService $miscService
+		IRequest $request, $userId, WebsitesService $websitesService, MiscService $miscService,
+		IMimeTypeDetector $mimeTypeDetector
 	) {
 		parent::__construct(Application::APP_NAME, $request);
 
 		$this->userId = $userId;
 		$this->websitesService = $websitesService;
 		$this->miscService = $miscService;
+		$this->mimeTypeDetector = $mimeTypeDetector;
 	}
 
 
@@ -71,30 +81,37 @@ class PicoController extends Controller {
 	 *
 	 * @PublicPage
 	 * @NoCSRFRequired
-	 * @return DataDisplayResponse|string
+
+	 * @return Response
 	 */
 	public function getRoot($site) {
-		return $this->getPage($site , '');
+		return $this->getPage($site, '');
 	}
 
 
 	/**
 	 * @param string $site
 	 * @param $page
-	 *
-	 * @return DataDisplayResponse|string
+
 	 * @PublicPage
 	 * @NoCSRFRequired
+	 *
+	 * @return Response
 	 */
 	public function getPage($site, $page) {
-
 		try {
 			$html = $this->websitesService->getWebpageFromSite($site, $this->userId, $page);
 
-			return new DataDisplayResponse($html);
+			if (strpos($page, PicoService::DIR_ASSETS) === 0) {
+				$probableMimeType = $this->mimeTypeDetector->detectPath($page);
+				$secureMimeType = $this->mimeTypeDetector->getSecureMimeType($probableMimeType);
 
+				return new DataDownloadResponse($html, basename($page), $secureMimeType);
+			} else {
+				return new DataDisplayResponse($html);
+			}
 		} catch (Exception $e) {
-			return $e->getMessage();
+			return new DataDisplayResponse($e->getMessage());
 		}
 	}
 
