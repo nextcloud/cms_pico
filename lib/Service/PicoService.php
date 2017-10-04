@@ -177,10 +177,11 @@ class PicoService {
 
 		$this->themesService->hasToBeAValidTheme($website->getTheme());
 
+		$appBaseUrl = \OC::$WEBROOT . '/index.php/apps/' . Application::APP_NAME;
 		$pico->setConfig(
 			[
 				'site_title'     => $website->getName(),
-				'base_url'       => '/sites/' . $website->getSite(),
+				'base_url'       => $appBaseUrl . '/pico/' . $website->getSite(),
 				'theme'          => $website->getTheme(),
 				'content_dir'    => 'content/',
 				'content_ext'    => '.md',
