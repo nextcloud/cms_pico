@@ -26,7 +26,7 @@ OC.L10N.register(
     "Theme does not exist" : "Ce thème n'existe pas ",
     "Website already exist." : "Le site web existe déjà.",
     "Pico CMS" : "Pico CMS",
-    "Your Apache configuration" : "Votre configuration Apache",
+    "Your Apache configuration" : "Votre configuration d'Apache",
     "Choose the best way to link to your users' website. Copy one of the example below and paste the line in your Apache configuration" : "Choisissez la meilleure manière de lier le site web de vos utilisateurs. Copiez l'un des exemples plus bas and collez la ligne dans votre configuration Apache.",
     "Using MOD_PROXY:" : "Utiliser MOD_PROXY :",
     "Using MOD_REWRITE:" : "Utiliser MOD_REWRITE :",
