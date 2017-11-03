@@ -36,6 +36,7 @@ OC.L10N.register(
     "Address" : "Cím",
     "Local directory" : "Helyi könyvtár",
     "Private" : "Privát",
+    "The title of your site" : "Oldalad címe",
     "my_site" : "en_oldalam",
     "Local directory:" : "Helyi könyvtár:",
     "The place to store the website files on your cloud" : "A hely a felhődben, ahol a webhelyeid fájljait tároljuk",
