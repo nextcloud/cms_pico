@@ -13,6 +13,8 @@ OC.L10N.register(
     "Website not found" : "Vefsvæði fannst ekki",
     "Webpage does not exist" : "Vefsíða er ekki til",
     "You are not the owner of this website" : "Þú ert ekki eigandi þessa vefsvæðis",
+    "Content Directory is not valid." : "Gagnamappan er ógild",
+    "The address of the website can only contains alpha numeric chars" : "Vistfang vefsvæðisins má einungis innihalda bókstafi og tölustafi",
     "The address of the website must be longer" : "Vistfang vefsvæðisins verður að vera lengra",
     "The name of the website must be longer" : "Nafn vefsvæðisins verður að vera lengra",
     "Path is malformed, please check." : "Slóðin er gölluð, athugaðu þetta.",
