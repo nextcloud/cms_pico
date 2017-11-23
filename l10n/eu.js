@@ -1,7 +1,8 @@
 OC.L10N.register(
     "cms_pico",
     {
-    "test" : "froga",
+    "test" : "Proba",
+    "It was not possible to retrieve the complete list of your websites" : "Ezin da zure webguneen zerrenda osoa jaso ",
     "no error message" : "Errore mezurik ez",
     "This operation will delete the website {name} but its content will still be available in your files" : "Eragiketa horrek {name} webgunea ezabatuko du baina bere edukia segituko du eskuragarri zure fitxategietan",
     "Please confirm" : "Onartu",
