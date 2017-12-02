@@ -1,5 +1,6 @@
 { "translations": {
     "test" : "Δοκιμή",
+    "It was not possible to retrieve the complete list of your websites" : "Δεν ήταν δυνατό να ανακληθεί ολόκληρη η λίστα των ιστοσελίδων σας",
     "no error message" : "κανένα μήνυμα σφάλματος",
     "This operation will delete the website {name} but its content will still be available in your files" : "Αυτή η ενέργεια θα διαγράψει τον ιστότοπο {name}, αλλά το περιεχόμενό του θα είναι ακόμα διαθέσιμο στα αρχεία σας",
     "Please confirm" : "Παρακαλούμε επιβεβαιώστε",
