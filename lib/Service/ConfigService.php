@@ -37,7 +37,7 @@ class ConfigService {
 	const CUSTOM_THEMES = 'custom_themes';
 
 	private $defaults = [
-		self::CUSTOM_THEMES => '',
+		self::CUSTOM_THEMES    => '',
 		self::CUSTOM_TEMPLATES => ''
 	];
 
@@ -49,7 +49,6 @@ class ConfigService {
 
 	/** @var MiscService */
 	private $miscService;
-
 
 	/**
 	 * ConfigService constructor.

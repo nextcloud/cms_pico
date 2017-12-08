@@ -48,6 +48,8 @@ class TemplateFile {
 	function __construct($base, $filename) {
 		$this->base = $base;
 		$this->filename = $filename;
+
+		// TODO: get the content from File
 		$this->content = file_get_contents($base . $filename);
 	}
 

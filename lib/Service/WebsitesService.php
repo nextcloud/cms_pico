@@ -28,7 +28,6 @@ namespace OCA\CMSPico\Service;
 
 use Exception;
 use OC\Encryption\Manager;
-use OC\Server;
 use OCA\CMSPico\Db\WebsitesRequest;
 use OCA\CMSPico\Exceptions\EncryptedFilesystemException;
 use OCA\CMSPico\Exceptions\PicoRuntimeException;

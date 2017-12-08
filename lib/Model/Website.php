@@ -49,7 +49,7 @@ class Website extends WebsiteCore {
 	const TYPE_PRIVATE = 2;
 
 	const SITE_LENGTH_MIN = 3;
-	const NAME_LENGTH_MIN = 5;
+	const NAME_LENGTH_MIN = 3;
 
 	/** @var IL10N */
 	private $l10n;

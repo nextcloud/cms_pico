@@ -34,9 +34,7 @@ Because Pico is using the **Markdown** format, you should consider enabling the 
 	<website>https://github.com/nextcloud/cms_pico</website>
 	<bugs>https://github.com/nextcloud/cms_pico/issues</bugs>
 	<repository>https://github.com/nextcloud/cms_pico.git</repository>
-	<screenshot>
-		https://raw.githubusercontent.com/nextcloud/cms_pico/master/screenshots/list_websites.png
-	</screenshot>
+	<screenshot>https://raw.githubusercontent.com/nextcloud/cms_pico/master/screenshots/list_websites.png</screenshot>
 	<dependencies>
 		<nextcloud min-version="12" max-version="13"/>
 	</dependencies>
