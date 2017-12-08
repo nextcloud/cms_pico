@@ -117,6 +117,40 @@ class FileService {
 	}
 
 
+
+
+/**
+ * // TODO: this function should use File from nc, not read on the filesystem
+	 * @param string $base
+	 * @param string $dir
+	 *
+	 * @return string[]
+	 */
+	public function getAppDataFiles($base, $dir = '') {
+
+		$base = MiscService::endSlash($base);
+		$dir = MiscService::endSlash($dir);
+
+		$files = [];
+		foreach (new DirectoryIterator($base . $dir) as $file) {
+
+			if (substr($file->getFilename(), 0, 1) === '.') {
+				continue;
+			}
+
+			if ($file->isDir()) {
+				$files[] = $dir . $file->getFilename() . '/';
+				$files = array_merge($files, $this->getSourceFiles($base, $dir . $file->getFilename()));
+				continue;
+			}
+
+			$files[] = $dir . $file->getFilename();
+		}
+
+		return $files;
+	}
+
+
 	/**
 	 * @param string $dir
 	 *

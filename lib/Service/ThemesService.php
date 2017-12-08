@@ -47,6 +47,9 @@ class ThemesService {
 	/** @var ConfigService */
 	private $configService;
 
+	/** @var FileService */
+	private $fileService;
+
 	/** @var MiscService */
 	private $miscService;
 
@@ -55,11 +58,15 @@ class ThemesService {
 	 *
 	 * @param IL10N $l10n
 	 * @param ConfigService $configService
+	 * @param FileService $fileService
 	 * @param MiscService $miscService
 	 */
-	function __construct(IL10N $l10n, ConfigService $configService, MiscService $miscService) {
+	function __construct(
+		IL10N $l10n, ConfigService $configService, FileService $fileService, MiscService $miscService
+	) {
 		$this->l10n = $l10n;
 		$this->configService = $configService;
+		$this->fileService = $fileService;
 		$this->miscService = $miscService;
 	}
 
@@ -112,7 +119,8 @@ class ThemesService {
 
 		$newThemes = [];
 		$currThemes = $this->getThemesList();
-		$allThemes = $this->getDirectoriesFromThemesDir();
+		$allThemes = $this->fileService->getDirectoriesFromAppDataFolder(PicoService::DIR_THEMES);
+
 		foreach ($allThemes as $theme) {
 			if (!in_array($theme, $currThemes)) {
 				$newThemes[] = $theme;
@@ -120,27 +128,6 @@ class ThemesService {
 		}
 
 		return $newThemes;
-	}
-
-
-	/**
-	 * returns all customs theme from Pico/themes.
-	 *
-	 * @return array
-	 */
-	private function getDirectoriesFromThemesDir() {
-
-		$allThemes = [];
-		foreach (new DirectoryIterator(self::THEMES_DIR) as $file) {
-
-			if (!$file->isDir() || substr($file->getFilename(), 0, 1) === '.') {
-				continue;
-			}
-
-			$allThemes[] = $file->getFilename();
-		}
-
-		return $allThemes;
 	}
 
 }

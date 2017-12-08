@@ -46,6 +46,9 @@ class TemplatesService {
 	/** @var ConfigService */
 	private $configService;
 
+	/** @var FileService */
+	private $fileService;
+
 	/** @var MiscService */
 	private $miscService;
 
@@ -57,11 +60,16 @@ class TemplatesService {
 	 *
 	 * @param IL10N $l10n
 	 * @param ConfigService $configService
+	 * @param FileService $fileService
 	 * @param MiscService $miscService
 	 */
-	function __construct(IL10N $l10n, ConfigService $configService, MiscService $miscService) {
+	function __construct(
+		IL10N $l10n, ConfigService $configService, FileService $fileService,
+		MiscService $miscService
+	) {
 		$this->l10n = $l10n;
 		$this->configService = $configService;
+		$this->fileService = $fileService;
 		$this->miscService = $miscService;
 	}
 
@@ -111,7 +119,7 @@ class TemplatesService {
 
 		$newTemplates = [];
 		$currTemplates = $this->getTemplatesList();
-		$allTemplates = $this->getDirectoriesFromTemplatesDir();
+		$allTemplates = $this->fileService->getDirectoriesFromAppDataFolder(PicoService::DIR_TEMPLATES);
 		foreach ($allTemplates as $template) {
 			if (!in_array($template, $currTemplates)) {
 				$newTemplates[] = $template;
@@ -123,27 +131,6 @@ class TemplatesService {
 
 
 	/**
-	 * returns custom templates from Pico/templates/
-	 *
-	 * @return array
-	 */
-	private function getDirectoriesFromTemplatesDir() {
-
-		$allTemplates = [];
-		foreach (new DirectoryIterator(self::TEMPLATE_DIR) as $file) {
-
-			if (!$file->isDir() || substr($file->getFilename(), 0, 1) === '.') {
-				continue;
-			}
-
-			$allTemplates[] = $file->getFilename();
-		}
-
-		return $allTemplates;
-	}
-
-
-	/**
 	 * Install templates into a new website.
 	 * Templates will be parsed and formatted in the process.
 	 *
@@ -151,44 +138,23 @@ class TemplatesService {
 	 */
 	public function installTemplates(Website $website) {
 
-		$files = $this->getSourceFiles(self::TEMPLATE_DIR . $website->getTemplateSource() . '/');
+		$dir = $this->fileService->getAppDataFolderAbsolutePath(PicoService::DIR_TEMPLATES);
+		$dir .= MiscService::endSlash($website->getTemplateSource());
+
+		$files = $this->fileService->getAppDataFiles($dir);
 
 		$this->initWebsiteFolder($website);
 		$data = $this->generateData($website);
 		foreach ($files as $file) {
-			$file->applyData($data);
-			$this->generateFile($file, $website);
-		}
-	}
 
-
-	/**
-	 * @param string $base
-	 * @param string $dir
-	 *
-	 * @return TemplateFile[]
-	 */
-	private function getSourceFiles($base, $dir = '') {
-
-		$base = MiscService::endSlash($base);
-		$dir = MiscService::endSlash($dir);
-
-		$files = [];
-		foreach (new DirectoryIterator($base . $dir) as $file) {
-
-			if (substr($file->getFilename(), 0, 1) === '.') {
+			if (substr($file, -1) === '/') {
 				continue;
 			}
 
-			if ($file->isDir()) {
-				$files = array_merge($files, $this->getSourceFiles($base, $dir . $file->getFilename()));
-				continue;
-			}
-
-			$files[] = new TemplateFile($base, $dir . $file->getFilename());
+			$template = new TemplateFile($dir, $file);
+			$template->applyData($data);
+			$this->generateFile($template, $website);
 		}
-
-		return $files;
 	}
 
 
