@@ -174,6 +174,10 @@ class ConfigService {
 	}
 
 
+	public function getSystemValue($key, $default) {
+		return $this->config->getSystemValue($key, $default);
+	}
+
 	/**
 	 * return the cloud version.
 	 * if $complete is true, return a string x.y.z

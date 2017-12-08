@@ -39,9 +39,10 @@ use OCP\Files\IRootFolder;
 
 class PicoService {
 
-	const DIR_CONFIG = 'Pico/config/';
-	const DIR_PLUGINS = 'Pico/plugins/';
-	const DIR_THEMES = 'Pico/themes/';
+	const DIR_TEMPLATES = 'templates';
+	const DIR_CONFIG = 'config';
+	const DIR_PLUGINS = 'plugins';
+	const DIR_THEMES = 'themes';
 
 	const DIR_ASSETS = 'assets/';
 
@@ -52,6 +53,12 @@ class PicoService {
 
 	/** @var IRootFolder */
 	private $rootFolder;
+
+	/** @var ConfigService */
+	private $configService;
+
+	/** @var FileService */
+	private $fileService;
 
 	/** @var ThemesService */
 	private $themesService;
@@ -65,16 +72,21 @@ class PicoService {
 	 * @param string $userId
 	 * @param AppManager $appManager
 	 * @param IRootFolder $rootFolder
+	 * @param ConfigService $configService
+	 * @param FileService $fileService
 	 * @param ThemesService $themesService
 	 * @param MiscService $miscService
 	 */
 	function __construct(
-		$userId, AppManager $appManager, IRootFolder $rootFolder, ThemesService $themesService,
+		$userId, AppManager $appManager, IRootFolder $rootFolder,
+		ConfigService $configService, FileService $fileService, ThemesService $themesService,
 		MiscService $miscService
 	) {
 		$this->userId = $userId;
 		$this->appManager = $appManager;
 		$this->rootFolder = $rootFolder;
+		$this->configService = $configService;
+		$this->fileService = $fileService;
 		$this->themesService = $themesService;
 		$this->miscService = $miscService;
 	}
@@ -142,12 +154,11 @@ class PicoService {
 	 */
 	public function getContentFromPico(Website $website) {
 
-		$appPath = MiscService::endSlash($this->appManager->getAppPath(Application::APP_NAME));
 		$pico = new Pico(
 			$website->getAbsolutePath(),
-			$appPath . self::DIR_CONFIG,
-			$appPath . self::DIR_PLUGINS,
-			$appPath . self::DIR_THEMES
+			$this->fileService->getAppDataFolderAbsolutePath(self::DIR_CONFIG),
+			$this->fileService->getAppDataFolderAbsolutePath(self::DIR_PLUGINS),
+			$this->fileService->getAppDataFolderAbsolutePath(self::DIR_THEMES)
 		);
 
 		$this->setupPico($pico, $website);
