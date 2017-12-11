@@ -102,11 +102,14 @@ RewriteRule /sites/(.*) <?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico/$
 		<tr>
 			<td colspan="2"><?php p(
 					$l->t(
-						'To add a custom theme, you will need to create a new folder in apps/cms_pico/Pico/themes/'
+						"To add a custom theme, you will need to create a new folder in the 'themes' directory:"
 					)
 				); ?>
 				<br/>
 			</td>
+		</tr>
+		<tr>
+			<td colspan="2" style="padding-left: 100px;"><b><?php p($_['pathToThemes']); ?></b></td>
 		</tr>
 
 		<tr class="lane">
@@ -147,10 +150,13 @@ RewriteRule /sites/(.*) <?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico/$
 		<tr>
 			<td colspan="2"><?php p(
 					$l->t(
-						'To add a custom template, you will need to create a new folder in apps/cms_pico/Pico/templates/'
+						"To add a custom template, you will need to create a new folder in the 'templates' directory:"
 					)
 				); ?>
 			</td>
+		</tr>
+		<tr>
+			<td colspan="2" style="padding-left: 100px;"><b><?php p($_['pathToTemplates']); ?></b></td>
 		</tr>
 
 		<tr class="lane">

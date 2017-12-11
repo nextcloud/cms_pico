@@ -27,6 +27,7 @@
 namespace OCA\CMSPico\Settings;
 
 use OCA\CMSPico\AppInfo\Application;
+use OCA\CMSPico\Service\FileService;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IL10N;
 use OCP\IURLGenerator;
@@ -40,26 +41,36 @@ class Admin implements ISettings {
 	/** @var IURLGenerator */
 	private $urlGenerator;
 
+	/** @var FileService */
+	private $fileService;
+
+
 	/**
 	 * @param IL10N $l10n
 	 * @param IURLGenerator $urlGenerator
+	 * @param FileService $fileService
 	 */
-	public function __construct(IL10N $l10n, IURLGenerator $urlGenerator) {
+	public function __construct(IL10N $l10n, IURLGenerator $urlGenerator, FileService $fileService) {
 		$this->l10n = $l10n;
 		$this->urlGenerator = $urlGenerator;
+		$this->fileService = $fileService;
 	}
+
 
 	/**
 	 * @return TemplateResponse
 	 */
 	public function getForm() {
 		$data = [
-			'nchost'      => $this->urlGenerator->getBaseUrl(),
-			'ssl_enabled' => (substr($this->urlGenerator->getBaseUrl(), 0, 5) === 'https')
+			'nchost'          => $this->urlGenerator->getBaseUrl(),
+			'ssl_enabled'     => (substr($this->urlGenerator->getBaseUrl(), 0, 5) === 'https'),
+			'pathToThemes'    => $this->fileService->getAppDataFolderPath('themes', true),
+			'pathToTemplates' => $this->fileService->getAppDataFolderPath('templates', true)
 		];
 
 		return new TemplateResponse(Application::APP_NAME, 'settings.admin', $data);
 	}
+
 
 	/**
 	 * @return string the section ID, e.g. 'sharing'
@@ -67,6 +78,7 @@ class Admin implements ISettings {
 	public function getSection() {
 		return Application::APP_NAME;
 	}
+
 
 	/**
 	 * @return int whether the form should be rather on the top or bottom of
