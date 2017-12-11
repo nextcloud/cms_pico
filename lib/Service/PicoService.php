@@ -156,9 +156,9 @@ class PicoService {
 
 		$pico = new Pico(
 			$website->getAbsolutePath(),
-			$this->fileService->getAppDataFolderAbsolutePath(self::DIR_CONFIG),
-			$this->fileService->getAppDataFolderAbsolutePath(self::DIR_PLUGINS),
-			$this->fileService->getAppDataFolderAbsolutePath(self::DIR_THEMES)
+			$this->fileService->getAppDataFolderPath(self::DIR_CONFIG, true),
+			$this->fileService->getAppDataFolderPath(self::DIR_PLUGINS, true),
+			$this->fileService->getAppDataFolderPath(self::DIR_THEMES, true)
 		);
 
 		$this->setupPico($pico, $website);

@@ -138,7 +138,7 @@ class TemplatesService {
 	 */
 	public function installTemplates(Website $website) {
 
-		$dir = $this->fileService->getAppDataFolderAbsolutePath(PicoService::DIR_TEMPLATES);
+		$dir = $this->fileService->getAppDataFolderPath(PicoService::DIR_TEMPLATES, true);
 		$dir .= MiscService::endSlash($website->getTemplateSource());
 
 		$files = $this->fileService->getAppDataFiles($dir);

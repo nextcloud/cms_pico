@@ -74,7 +74,7 @@ class FileService {
 	public function getDirectoriesFromAppDataFolder($dir) {
 // do we still use DirectoryIterator as files are in DB ?
 		$all = [];
-		foreach (new DirectoryIterator($this->getAppDataFolderAbsolutePath($dir)) as $file) {
+		foreach (new DirectoryIterator($this->getAppDataFolderPath($dir, true)) as $file) {
 			if (!$file->isDir() || substr($file->getFilename(), 0, 1) === '.') {
 				continue;
 			}
@@ -117,10 +117,9 @@ class FileService {
 	}
 
 
-
-
-/**
- * // TODO: this function should use File from nc, not read on the filesystem
+	/**
+	 * // TODO: this function should use File from nc, not read on the filesystem
+	 *
 	 * @param string $base
 	 * @param string $dir
 	 *
@@ -154,9 +153,11 @@ class FileService {
 	/**
 	 * @param string $dir
 	 *
+	 * @param bool $absolute
+	 *
 	 * @return string
 	 */
-	public function getAppDataFolderAbsolutePath($dir) {
+	public function getAppDataFolderPath($dir, $absolute = false) {
 
 		$appNode = $this->getAppDataFolder();
 
@@ -166,9 +167,13 @@ class FileService {
 			$this->createAppDataFolder($appNode, $dir);
 		}
 
-		$appPath = MiscService::endSlash($this->configService->getSystemValue('datadirectory', null));
-		$appPath .= MiscService::endSlash($appNode->getInternalPath());
+		$appPath = '';
+		if ($absolute) {
+			$dataDir = $this->configService->getSystemValue('datadirectory', null);
+			$appPath .= MiscService::endSlash($dataDir);
+		}
 
+		$appPath .= MiscService::endSlash($appNode->getInternalPath());
 		$appPath .= MiscService::endSlash($dir);
 
 		return $appPath;
