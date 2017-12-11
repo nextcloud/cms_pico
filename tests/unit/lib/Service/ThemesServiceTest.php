@@ -30,12 +30,15 @@ use Exception;
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Controller\SettingsController;
 use OCA\CMSPico\Exceptions\ThemeDoesNotExistException;
+use OCA\CMSPico\Service\FileService;
 use OCA\CMSPico\Service\ThemesService;
 use OCA\CMSPico\Tests\Env;
 
 
 class ThemesServiceTest extends \PHPUnit_Framework_TestCase {
 
+	/** @var FileService */
+	private $fileService;
 
 	/** @var SettingsController */
 	private $settingsController;
@@ -56,6 +59,7 @@ class ThemesServiceTest extends \PHPUnit_Framework_TestCase {
 		$app = new Application();
 		$container = $app->getContainer();
 
+		$this->fileService = $container->query(FileService::class);
 		$this->themesService = $container->query(ThemesService::class);
 		$this->settingsController = $container->query(SettingsController::class);
 	}
@@ -81,7 +85,7 @@ class ThemesServiceTest extends \PHPUnit_Framework_TestCase {
 		$this->assertCount(0, $this->themesService->getThemesList(true));
 		$this->assertCount(0, $this->themesService->getNewThemesList());
 
-		mkdir(WebsitesServiceTest::PICO_FOLDER . '/themes/this_is_a_test');
+		mkdir($this->fileService->getAppDataFolderPath('themes', true) . 'this_is_a_test');
 		$this->assertCount(1, $this->themesService->getThemesList());
 		$this->assertCount(0, $this->themesService->getThemesList(true));
 		$this->assertCount(1, $this->themesService->getNewThemesList());
@@ -106,7 +110,7 @@ class ThemesServiceTest extends \PHPUnit_Framework_TestCase {
 		$this->assertCount(0, $this->themesService->getThemesList(true));
 		$this->assertCount(1, $this->themesService->getNewThemesList());
 
-		rmdir(WebsitesServiceTest::PICO_FOLDER . '/themes/this_is_a_test');
+		rmdir($this->fileService->getAppDataFolderPath('themes', true) . 'this_is_a_test');
 		$this->assertCount(1, $this->themesService->getThemesList());
 		$this->assertCount(0, $this->themesService->getThemesList(true));
 		$this->assertCount(0, $this->themesService->getNewThemesList());

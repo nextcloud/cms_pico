@@ -33,6 +33,7 @@ use OCA\CMSPico\Exceptions\UserIsNotOwnerException;
 use OCA\CMSPico\Exceptions\WebsiteAlreadyExistException;
 use OCA\CMSPico\Exceptions\WebsiteDoesNotExistException;
 use OCA\CMSPico\Model\Website;
+use OCA\CMSPico\Service\FileService;
 use OCA\CMSPico\Service\MiscService;
 use OCA\CMSPico\Service\WebsitesService;
 use OCA\CMSPico\Tests\Env;
@@ -58,8 +59,6 @@ class WebsitesServiceTest extends \PHPUnit_Framework_TestCase {
 		'private'  => '0'
 	];
 
-
-	const PICO_FOLDER = __DIR__ . '/../../../../Pico/';
 
 	/** @var WebsitesService */
 	private $websitesService;
@@ -300,7 +299,8 @@ class WebsitesServiceTest extends \PHPUnit_Framework_TestCase {
 		$website = new Website($data);
 
 		$this->websitesService->createWebsite(
-			$website->getName(), $website->getUserId(), $website->getSite(), $website->getPath(), $data['template']
+			$website->getName(), $website->getUserId(), $website->getSite(), $website->getPath(),
+			$data['template']
 		);
 	}
 

@@ -30,12 +30,15 @@ use Exception;
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Controller\SettingsController;
 use OCA\CMSPico\Exceptions\TemplateDoesNotExistException;
+use OCA\CMSPico\Service\FileService;
 use OCA\CMSPico\Service\TemplatesService;
 use OCA\CMSPico\Tests\Env;
 
 
 class TemplatesServiceTest extends \PHPUnit_Framework_TestCase {
 
+	/** @var FileService */
+	private $fileService;
 
 	/** @var SettingsController */
 	private $settingsController;
@@ -56,6 +59,7 @@ class TemplatesServiceTest extends \PHPUnit_Framework_TestCase {
 		$app = new Application();
 		$container = $app->getContainer();
 
+		$this->fileService = $container->query(FileService::class);
 		$this->templatesService = $container->query(TemplatesService::class);
 		$this->settingsController = $container->query(SettingsController::class);
 	}
@@ -77,15 +81,15 @@ class TemplatesServiceTest extends \PHPUnit_Framework_TestCase {
 	 */
 	public function testTemplates() {
 
-		if (file_exists(WebsitesServiceTest::PICO_FOLDER . '/templates/this_is_a_template')) {
-			rmdir(WebsitesServiceTest::PICO_FOLDER . '/templates/this_is_a_template');
+		if (file_exists($this->fileService->getAppDataFolderPath('templates', true) . 'this_is_a_template')) {
+			rmdir($this->fileService->getAppDataFolderPath('templates', true) . 'this_is_a_template');
 		}
 
 		$this->assertCount(2, $this->templatesService->getTemplatesList());
 		$this->assertCount(0, $this->templatesService->getTemplatesList(true));
 		$this->assertCount(0, $this->templatesService->getNewTemplatesList());
 
-		mkdir(WebsitesServiceTest::PICO_FOLDER . '/templates/this_is_a_template');
+		mkdir($this->fileService->getAppDataFolderPath('templates', true) . 'this_is_a_template');
 		$this->assertCount(2, $this->templatesService->getTemplatesList());
 		$this->assertCount(0, $this->templatesService->getTemplatesList(true));
 		$this->assertCount(1, $this->templatesService->getNewTemplatesList());
@@ -110,7 +114,7 @@ class TemplatesServiceTest extends \PHPUnit_Framework_TestCase {
 		$this->assertCount(0, $this->templatesService->getTemplatesList(true));
 		$this->assertCount(1, $this->templatesService->getNewTemplatesList());
 
-		rmdir(WebsitesServiceTest::PICO_FOLDER . '/templates/this_is_a_template');
+		rmdir($this->fileService->getAppDataFolderPath('templates', true) . 'this_is_a_template');
 		$this->assertCount(2, $this->templatesService->getTemplatesList());
 		$this->assertCount(0, $this->templatesService->getTemplatesList(true));
 		$this->assertCount(0, $this->templatesService->getNewTemplatesList());
