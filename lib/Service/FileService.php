@@ -29,11 +29,8 @@ namespace OCA\CMSPico\Service;
 use DirectoryIterator;
 use Exception;
 use OCA\CMSPico\AppInfo\Application;
-use OCA\CMSPico\Model\TemplateFile;
 use OCP\Files\Folder;
-use OCP\Files\IAppData;
 use OCP\Files\IRootFolder;
-use OCP\Files\Node;
 use OCP\Files\NotFoundException;
 
 class FileService {
@@ -74,6 +71,14 @@ class FileService {
 	public function getDirectoriesFromAppDataFolder($dir) {
 // do we still use DirectoryIterator as files are in DB ?
 		$all = [];
+
+		$appNode = $this->getAppDataFolder();
+		try {
+			$appNode->get($dir);
+		} catch (NotFoundException $e) {
+			$this->createAppDataFolder($appNode, $dir);
+		}
+
 		foreach (new DirectoryIterator($this->getAppDataFolderPath($dir, true)) as $file) {
 			if (!$file->isDir() || substr($file->getFilename(), 0, 1) === '.') {
 				continue;

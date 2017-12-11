@@ -26,20 +26,12 @@
 
 namespace OCA\CMSPico\Service;
 
-use DirectoryIterator;
-use Exception;
-use OCA\CMSPico\Exceptions\TemplateDoesNotExistException;
 use OCA\CMSPico\Exceptions\ThemeDoesNotExistException;
-use OCA\CMSPico\Exceptions\WriteAccessException;
-use OCA\CMSPico\Model\TemplateFile;
-use OCA\CMSPico\Model\Website;
-use OCP\Files\Folder;
 use OCP\IL10N;
 
 class ThemesService {
 
 	const THEMES = ['default'];
-	const THEMES_DIR = __DIR__ . '/../../Pico/themes/';
 
 	/** @var IL10N */
 	private $l10n;

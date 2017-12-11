@@ -26,7 +26,6 @@
 
 namespace OCA\CMSPico\Service;
 
-use DirectoryIterator;
 use Exception;
 use OCA\CMSPico\Exceptions\TemplateDoesNotExistException;
 use OCA\CMSPico\Exceptions\WriteAccessException;
@@ -38,7 +37,6 @@ use OCP\IL10N;
 class TemplatesService {
 
 	const TEMPLATES = ['sample_pico', 'empty'];
-	const TEMPLATE_DIR = __DIR__ . '/../../Pico/templates/';
 
 	/** @var IL10N */
 	private $l10n;
