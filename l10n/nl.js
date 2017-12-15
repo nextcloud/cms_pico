@@ -10,7 +10,7 @@ OC.L10N.register(
     "Please wait" : "Even geduld",
     "Create a new website" : "Creëer een nieuwe website",
     "It was not possible to update your website" : "Het was niet mogelijk je website bij te werken",
-    "It was not possible to create your website {name}" : "Het was niet mogelijk om jouw site te maken {name}",
+    "It was not possible to create your website {name}" : "Het was niet mogelijk om je website {name} te maken",
     "It was not possible to remove the website {name}" : "Het was niet mogelijk om website {name} te verwijderen",
     "Website not found" : "Website niet gevonden",
     "Webpage does not exist" : "Webpagina bestaat niet",
