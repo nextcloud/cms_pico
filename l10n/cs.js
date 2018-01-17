@@ -36,6 +36,7 @@ OC.L10N.register(
     "Add a new custom theme:" : "Přidat nový vlastní motiv:",
     "Add custom theme" : "Přidat vlastní motiv",
     "Custom templates" : "Vlastní šablony",
+    "To add a custom template, you will need to create a new folder in the 'templates' directory:" : "Chcete-li přidat vlastní šablonu, musíte vytvořit novou složku ve složce 'šablony'",
     "Current custom templates:" : "Aktuální vlastní šablony:",
     "Add a new custom template:" : "Přidat novou vlastní šablonu:",
     "Add custom template" : "Přidat vlastní šablonu",
