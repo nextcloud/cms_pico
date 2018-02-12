@@ -39,8 +39,8 @@ appstore: composer clean
 	--exclude=/build \
 	--exclude=/docs \
 	--exclude=/l10n/templates \
-	--exclude=/l10n/.tx \
 	--exclude=/tests \
+	--exclude=/.tx \
 	--exclude=/.git \
 	--exclude=/.github \
 	--exclude=/composer.json \
