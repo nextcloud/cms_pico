@@ -27,12 +27,13 @@
 namespace OCA\CMSPico\Settings;
 
 use OCA\CMSPico\AppInfo\Application;
+use OCA\CMSPico\Compat\Settings;
 use OCA\CMSPico\Service\TemplatesService;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IL10N;
 use OCP\Settings\ISettings;
 
-class Personal implements ISettings {
+class Personal extends Settings implements ISettings {
 
 	/** @var IL10N */
 	private $l10n;

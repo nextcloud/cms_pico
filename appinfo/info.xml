@@ -41,9 +41,10 @@ Because Pico is using the **Markdown** format, you should consider enabling the 
 
 	<settings>
 		<admin>OCA\CMSPico\Settings\Admin</admin>
-		<admin-section>OCA\CMSPico\Settings\AdminSection</admin-section>
 		<personal>OCA\CMSPico\Settings\Personal</personal>
-		<personal-section>OCA\CMSPico\Settings\PersonalSection</personal-section>
 	</settings>
-
+	<settings-sections>
+		<admin>OCA\CMSPico\Settings\AdminSection</admin>
+		<personal>OCA\CMSPico\Settings\PersonalSection</personal>
+	</settings-sections>
 </info>

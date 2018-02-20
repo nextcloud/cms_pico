@@ -27,13 +27,14 @@
 namespace OCA\CMSPico\Settings;
 
 use OCA\CMSPico\AppInfo\Application;
+use OCA\CMSPico\Compat\Settings;
 use OCA\CMSPico\Service\FileService;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\Settings\ISettings;
 
-class Admin implements ISettings {
+class Admin extends Settings implements ISettings {
 
 	/** @var IL10N */
 	private $l10n;
@@ -62,8 +63,8 @@ class Admin implements ISettings {
 	 */
 	public function getForm() {
 		$data = [
-			'nchost'          => $this->urlGenerator->getBaseUrl(),
-			'ssl_enabled'     => (substr($this->urlGenerator->getBaseUrl(), 0, 5) === 'https'),
+			'nchost'          => $this->urlGenerator->getAbsoluteURL('/'),
+			'ssl_enabled'     => (substr($this->urlGenerator->getAbsoluteURL('/'), 0, 5) === 'https'),
 			'pathToThemes'    => $this->fileService->getAppDataFolderPath('themes', true),
 			'pathToTemplates' => $this->fileService->getAppDataFolderPath('templates', true)
 		];

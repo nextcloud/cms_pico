@@ -27,11 +27,11 @@
 namespace OCA\CMSPico\Settings;
 
 use OCA\CMSPico\AppInfo\Application;
+use OCA\CMSPico\Compat\Section;
 use OCP\IL10N;
 use OCP\IURLGenerator;
-use OCP\Settings\IIconSection;
 
-class PersonalSection implements IIconSection {
+class PersonalSection extends Section {
 
 	/** @var IL10N */
 	private $l10n;
