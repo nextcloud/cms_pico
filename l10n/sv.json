@@ -34,6 +34,7 @@
     "Add a new custom theme:" : "Lägg till ett nytt anpassat tema:",
     "Add custom theme" : "Lägg till anpassat tema",
     "Custom templates" : "Anpassade mallar",
+    "To add a custom template, you will need to create a new folder in the 'templates' directory:" : "För att lägga till en mall behöver du skapa en ny mapp i 'mall'-mappen:",
     "Current custom templates:" : "Nuvarande anpassade mappar:",
     "Add a new custom template:" : "Lägg till en ny anpassad mapp:",
     "Add custom template" : "Lägg till anpassad mapp",
