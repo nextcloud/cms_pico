@@ -69,7 +69,7 @@ class Admin extends Settings implements ISettings {
 			'pathToTemplates' => $this->fileService->getAppDataFolderPath('templates', true)
 		];
 
-		return new TemplateResponse(Application::APP_NAME, 'settings.admin', $data);
+		return new TemplateResponse(Application::APP_NAME, 'settings.admin', $data, 'blank');
 	}
 
 

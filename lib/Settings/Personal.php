@@ -58,7 +58,7 @@ class Personal extends Settings implements ISettings {
 			'templates' => $this->templatesService->getTemplatesList()
 		];
 
-		return new TemplateResponse(Application::APP_NAME, 'settings.personal', $data);
+		return new TemplateResponse(Application::APP_NAME, 'settings.personal', $data, 'blank');
 	}
 
 	/**
