@@ -52,6 +52,6 @@ TD.path, TD.link {
 .icon-delete {
 	border: 0px;
 }
-.nav-icon-pico-cms {
+.icon-pico-cms, .nav-icon-pico-cms {
 	background-image: url('../img/pico_cms.svg?v=1');
 }

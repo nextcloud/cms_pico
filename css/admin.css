@@ -27,3 +27,7 @@ INPUT.field250, SELECT.field250 {
 .icon-delete {
 	border: 0px;
 }
+
+.icon-pico-cms {
+	background-image: url('../img/pico_cms.svg?v=1');
+}
