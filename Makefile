@@ -38,7 +38,7 @@ appstore: composer clean
 	rsync -a \
 	--exclude=/build \
 	--exclude=/docs \
-	--exclude=/l10n/templates \
+	--exclude=/translationfiles \
 	--exclude=/tests \
 	--exclude=/.tx \
 	--exclude=/.git \
