@@ -32,6 +32,7 @@ OC.L10N.register(
     "Using MOD_REWRITE:" : "Použitím MOD_REWRITE:",
     "Using MOD_REWRITE and MOD_PROXY:" : "Použitím MOD_REWRITE a MOD_PROXY:",
     "Custom themes" : "Vlastní motiv",
+    "To add a custom theme, you will need to create a new folder in the 'themes' directory:" : "Chcete-li přidat vlastní šablonu, musíte vytvořit novou složku ve složce 'themes'",
     "Current custom themes:" : "Aktuální vlastní motivy:",
     "Add a new custom theme:" : "Přidat nový vlastní motiv:",
     "Add custom theme" : "Přidat vlastní motiv",
