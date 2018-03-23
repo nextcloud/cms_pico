@@ -1,6 +1,7 @@
 OC.L10N.register(
     "cms_pico",
     {
+    "test" : "testi",
     "no error message" : "ei virheilmoitusta",
     "This operation will delete the website {name} but its content will still be available in your files" : "Tämä toiminto poistaa verkkosivun {name}, mutta sen sisältö on yhä saatavilla tiedostoissasi",
     "Please confirm" : "Vahvista muutokset",
