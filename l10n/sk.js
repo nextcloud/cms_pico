@@ -37,4 +37,4 @@ OC.L10N.register(
     "Choose a template from the list" : "Vyberte šablónu zo zoznamu",
     "Delete website" : "Zmazať webstránku"
 },
-"nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;");
+"nplurals=4; plural=(n % 1 == 0 ? 4: n==1 ? 1: n % 1 == 0 && n>=2 && n<=4 ? 3);");
