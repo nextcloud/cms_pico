@@ -60,4 +60,4 @@ OC.L10N.register(
     "Choose a template from the list" : "სიიდან აირჩიეთ შაბლონი ",
     "Delete website" : "ვებ-საიტის გაუქმება"
 },
-"nplurals=2; plural=(n==1);");
+"nplurals=2; plural=(n!=1);");

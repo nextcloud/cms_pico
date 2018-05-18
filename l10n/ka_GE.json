@@ -57,5 +57,5 @@
     "Base Template:" : "მთავარი შაბლონი:",
     "Choose a template from the list" : "სიიდან აირჩიეთ შაბლონი ",
     "Delete website" : "ვებ-საიტის გაუქმება"
-},"pluralForm" :"nplurals=2; plural=(n==1);"
+},"pluralForm" :"nplurals=2; plural=(n!=1);"
 }
