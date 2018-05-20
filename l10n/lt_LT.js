@@ -13,10 +13,12 @@ OC.L10N.register(
     "Path is malformed, please check." : "Kelias yra netaisyklingas, prašome patikrinti.",
     "Template does not exist" : "Šablono nėra",
     "Cannot generate template file in this folder" : "Nepavyksta sukurti šablono failo šiame aplanke",
+    "Theme does not exist" : "Temos nėra",
     "Website already exist." : "Svetainė jau yra.",
     "Your Apache configuration" : "Jūsų Apache konfigūracija",
     "Address" : "Adresas",
     "Local directory" : "Vietinis katalogas",
+    "Theme" : "Tema",
     "Local directory:" : "Vietinis katalogas:",
     "Delete website" : "Ištrinti svetainę"
 },

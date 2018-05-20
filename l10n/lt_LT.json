@@ -11,10 +11,12 @@
     "Path is malformed, please check." : "Kelias yra netaisyklingas, prašome patikrinti.",
     "Template does not exist" : "Šablono nėra",
     "Cannot generate template file in this folder" : "Nepavyksta sukurti šablono failo šiame aplanke",
+    "Theme does not exist" : "Temos nėra",
     "Website already exist." : "Svetainė jau yra.",
     "Your Apache configuration" : "Jūsų Apache konfigūracija",
     "Address" : "Adresas",
     "Local directory" : "Vietinis katalogas",
+    "Theme" : "Tema",
     "Local directory:" : "Vietinis katalogas:",
     "Delete website" : "Ištrinti svetainę"
 },"pluralForm" :"nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);"
