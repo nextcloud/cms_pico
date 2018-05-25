@@ -24,6 +24,7 @@
     "Theme does not exist" : "Il tema non esiste",
     "Website already exist." : "Il sito web esiste già.",
     "Pico CMS" : "Pico CMS",
+    "Integrate Pico and let your users manage their own websites" : "Integra Pico e consente ai tuoi utenti di gestire i loro siti web",
     "Your Apache configuration" : "La tua configurazione di Apache",
     "Choose the best way to link to your users' website. Copy one of the example below and paste the line in your Apache configuration" : "Scegli il modo migliore di collegarti al sito dei tuoi utenti. Copia uno degli esempi seguenti e incollare la riga nella configurazione di Apache",
     "Using MOD_PROXY:" : "Utilizzare MOD_PROXY:",
