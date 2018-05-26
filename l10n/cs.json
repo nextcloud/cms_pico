@@ -1,10 +1,10 @@
 { "translations": {
-    "test" : "test",
+    "test" : "zkouška",
     "It was not possible to retrieve the complete list of your websites" : "Nebylo možné získat kompletní seznam vašich webových stránek",
     "no error message" : "Žádná chybová zpráva",
     "It was not possible to update your theme on {name}" : "Nebylo možné aktualizovat váš motiv na  {name}",
     "This operation will delete the website {name} but its content will still be available in your files" : "Tato operace odstraní webovou stránku {name}, ale její obsah bude stále dostupný ve vašich souborech",
-    "Please confirm" : "Prosím potvrďte",
+    "Please confirm" : "Potvrďte",
     "Please wait" : "Čekejte prosím",
     "Create a new website" : "Vytvořit nový web",
     "It was not possible to update your website" : "Vaši webovou stránku nebylo možné aktualizovat",
