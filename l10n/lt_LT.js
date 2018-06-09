@@ -16,6 +16,7 @@ OC.L10N.register(
     "Theme does not exist" : "Temos nėra",
     "Website already exist." : "Svetainė jau yra.",
     "Your Apache configuration" : "Jūsų Apache konfigūracija",
+    "Your current websites" : "Jūsų dabartinės svetainės",
     "Address" : "Adresas",
     "Local directory" : "Vietinis katalogas",
     "Theme" : "Tema",
