@@ -6,7 +6,7 @@
     "This operation will delete the website {name} but its content will still be available in your files" : "Bu işlem {name} web sitesini silecek ancak içerikler dosyalarınızda bulunmaya devam edecek",
     "Please confirm" : "Lütfen onaylayın",
     "Please wait" : "Lütfen bekleyin",
-    "Create a new website" : "Yeni bir web sitesi ekle",
+    "Create a new website" : "Web sitesi ekle",
     "It was not possible to update your website" : "Web siteniz güncellenemedi",
     "It was not possible to create your website {name}" : "{name} web siteniz oluşturulamadı",
     "It was not possible to remove the website {name}" : "{name} web siteniz kaldırılamadı",
