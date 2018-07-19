@@ -24,6 +24,7 @@
     "Theme does not exist" : "Motiv neexistuje",
     "Website already exist." : "Webová stránka již existuje",
     "Pico CMS" : "Pico CMS",
+    "Integrate Pico and let your users manage their own websites" : "Začlenit Pico a umožnit uživatelů spravovat jejich vlastní webové stránky",
     "Your Apache configuration" : "Konfigurace Apache",
     "Choose the best way to link to your users' website. Copy one of the example below and paste the line in your Apache configuration" : "Vyberte nejlepší způsob, jak propojit webové stránky uživatelů. Zkopírujte jeden z níže uvedených příkladů a vložte řádek do konfigurace Apache",
     "Using MOD_PROXY:" : "Použitím MOD_PROXY:",
