@@ -7,7 +7,7 @@
 ## Description
 
 The app **Pico CMS** integrate [Pico CMS](https://picocms.org/) in your Nextcloud.
-This will allow your users to create and manage their own websites with address like *https\://cloud.example.com\/sites/my_site/* or *http\://mysite.com\/site/test*.
+This will allow your users to create and manage their own websites with address like *https://<spam></spam>cloud.example.com\/sites\/my_site\/* or *http://<spam></spam>mysite.com\/site\/test*.
 
 ## Edit using *Markdown*
 
