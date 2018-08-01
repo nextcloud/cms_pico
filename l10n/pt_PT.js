@@ -22,7 +22,7 @@ OC.L10N.register(
     "The name of the website must be longer" : "O nome deste website tem de ser mais longo",
     "Path is malformed, please check." : "O caminho está malformado, por favor verifique.",
     "Template does not exist" : "O modelo não existe",
-    "Cannot generate template file in this folder" : "Não foi possível gerar um ficheiro modelo nesta pasta.",
+    "Cannot generate template file in this folder" : "Não é possível gerar um ficheiro modelo nesta pasta",
     "Theme does not exist" : "O tema não existe",
     "Website already exist." : "O website já existe",
     "Pico CMS" : "Pico CMS",
