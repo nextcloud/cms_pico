@@ -25,7 +25,7 @@
     "Website already exist." : "O website já existe",
     "Pico CMS" : "Pico CMS",
     "Your Apache configuration" : "A sua configuração Apache",
-    "Choose the best way to link to your users' website. Copy one of the example below and paste the line in your Apache configuration" : "Escolha a melhor forma de se ligar aos websites dos seus utilizadores. Copie um dos exemplos a baixo e cole a linha na configuração do Apache",
+    "Choose the best way to link to your users' website. Copy one of the example below and paste the line in your Apache configuration" : "Escolha a melhor forma para se ligar ao site da Web dos seus utilizadores. Copie um dos exemplos abaixo e cole a linha na configuração do Apache",
     "Using MOD_PROXY:" : "A usar MOD_PROXY:",
     "Using MOD_REWRITE:" : "A usar MOD_REWRITE:",
     "Using MOD_REWRITE and MOD_PROXY:" : "A usar MOD_REWRITE e MOD_PROXY:",
