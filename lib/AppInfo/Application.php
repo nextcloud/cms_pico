@@ -39,9 +39,14 @@ class Application extends App {
 	public function __construct(array $params = array()) {
 		parent::__construct(self::APP_NAME, $params);
 
+		$this->loadIcons();
 		$this->registerHooks();
 	}
 
+
+	protected function loadIcons() {
+		Util::addStyle(self::APP_NAME, 'icons');
+	}
 
 	/**
 	 * Register Hooks

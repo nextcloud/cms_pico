@@ -27,12 +27,13 @@
 namespace OCA\CMSPico\Settings;
 
 use OCA\CMSPico\AppInfo\Application;
+use OCA\CMSPico\Compat\Settings;
 use OCA\CMSPico\Service\TemplatesService;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IL10N;
 use OCP\Settings\ISettings;
 
-class Personal implements ISettings {
+class Personal extends Settings implements ISettings {
 
 	/** @var IL10N */
 	private $l10n;
@@ -57,7 +58,7 @@ class Personal implements ISettings {
 			'templates' => $this->templatesService->getTemplatesList()
 		];
 
-		return new TemplateResponse(Application::APP_NAME, 'settings.personal', $data);
+		return new TemplateResponse(Application::APP_NAME, 'settings.personal', $data, 'blank');
 	}
 
 	/**

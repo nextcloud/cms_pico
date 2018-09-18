@@ -5,8 +5,8 @@
  * This file is licensed under the Affero General Public License version 3 or
  * later. See the COPYING file.
  *
- * @author Maxence Lange <maxence@artificial-owl.com>
- * @copyright 2017
+ * @author Viktar Dubiniuk <victor.dubiniuk@gmail.com>
+ * @copyright 2018
  * @license GNU AGPL version 3 or any later version
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,56 +24,23 @@
  *
  */
 
-namespace OCA\CMSPico\Settings;
+namespace OCA\CMSPico\Compat;
 
-use OCA\CMSPico\AppInfo\Application;
-use OCA\CMSPico\Compat\Section;
-use OCP\IL10N;
-use OCP\IURLGenerator;
+use OCP\Settings\ISettings;
 
-class AdminSection extends Section {
-
-	/** @var IL10N */
-	private $l10n;
-
-	/** @var IURLGenerator */
-	private $urlGenerator;
+abstract class Settings implements ISettings{
 
 	/**
-	 * @param IL10N $l10n
-	 * @param IURLGenerator $urlGenerator
+	 * @return string
 	 */
-	public function __construct(IL10N $l10n,
-								IURLGenerator $urlGenerator) {
-		$this->l10n = $l10n;
-		$this->urlGenerator = $urlGenerator;
+	public function getSectionID() {
+		return $this->getSection();
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * @return \OCP\AppFramework\Http\TemplateResponse|\OCP\Template
 	 */
-	public function getID() {
-		return Application::APP_NAME;
-	}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getName() {
-		return $this->l10n->t('Pico CMS');
-	}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getPriority() {
-		return 75;
-	}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getIcon() {
-		return $this->urlGenerator->imagePath(Application::APP_NAME, 'pico_cms.svg');
+	public function getPanel() {
+		return $this->getForm();
 	}
 }
