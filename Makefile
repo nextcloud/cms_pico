@@ -6,11 +6,40 @@ appstore_dir=$(build_dir)/appstore
 source_dir=$(build_dir)/source
 sign_dir=$(build_dir)/sign
 package_name=$(app_name)
-cert_dir=$(HOME)/.nextcloud/certificates
+cert_dir=$(HOME)/.owncloud/certificates
 codecov_token_dir=$(HOME)/.nextcloud/codecov_token
 version+=0.9.7
+appstore_package_name=$(sign_dir)/$(app_name)
+
+COMPOSER_BIN=$(build_dir)/composer.phar
+
+#
+# Signing
+#
+occ=$(CURDIR)/../../occ
+private_key=$(cert_dir)/$(app_name).key
+certificate=$(cert_dir)/$(app_name).crt
+sign=php -f $(occ) integrity:sign-app --privateKey="$(private_key)" --certificate="$(certificate)"
+sign_skip_msg="Skipping signing, either no key and certificate found in $(private_key) and $(certificate) or occ can not be found at $(occ)"
+
+ifneq (,$(wildcard $(private_key)))
+ifneq (,$(wildcard $(certificate)))
+ifneq (,$(wildcard $(occ)))
+	CAN_SIGN=true
+endif
+endif
+endif
+
 
 all: appstore
+
+#
+# Basic required tools
+#
+$(COMPOSER_BIN):
+	mkdir -p $(build_dir)
+	cd $(build_dir) && curl -sS https://getcomposer.org/installer | php
+
 
 release: appstore create-tag
 
@@ -22,8 +51,8 @@ clean:
 	rm -rf $(build_dir)
 	rm -rf node_modules
 
-composer:
-	composer install
+composer: $(COMPOSER_BIN)
+	php $(COMPOSER_BIN) install
 
 test: SHELL:=/bin/bash
 test: composer
@@ -56,9 +85,10 @@ appstore: composer clean
 	--exclude=/Makefile \
 	--exclude=/vendor/picocms/pico/index.php \
 	$(project_dir)/ $(sign_dir)/$(app_name)
-	tar -czf $(build_dir)/$(app_name)-$(version).tar.gz \
-		-C $(sign_dir) $(app_name)
-	@if [ -f $(cert_dir)/$(app_name).key ]; then \
-		echo "Signing package…"; \
-		openssl dgst -sha512 -sign $(cert_dir)/$(app_name).key $(build_dir)/$(app_name)-$(version).tar.gz | openssl base64; \
-	fi
+
+    ifdef CAN_SIGN
+	   $(sign) --path="$(appstore_package_name)"
+    else
+	    @echo $(sign_skip_msg)
+    endif
+	tar -czf $(appstore_package_name).tar.gz -C $(appstore_package_name)/../ $(app_name)
