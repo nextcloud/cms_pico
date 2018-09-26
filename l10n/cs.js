@@ -4,7 +4,7 @@ OC.L10N.register(
     "test" : "zkouška",
     "It was not possible to retrieve the complete list of your websites" : "Nebylo možné získat úplný seznam vašich webových stránek",
     "no error message" : "Žádná chybová zpráva",
-    "It was not possible to update your theme on {name}" : "Nebylo možné aktualizovat váš motiv na  {name}",
+    "It was not possible to update your theme on {name}" : "Nebylo možné aktualizovat váš motiv vzhledu na {name}",
     "This operation will delete the website {name} but its content will still be available in your files" : "Tato operace odstraní webovou stránku {name}, ale její obsah bude stále dostupný ve vašich souborech",
     "Please confirm" : "Potvrďte",
     "Please wait" : "Vyčkejte",
