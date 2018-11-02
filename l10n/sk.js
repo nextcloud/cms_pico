@@ -17,6 +17,8 @@ OC.L10N.register(
     "You are not the owner of this website" : "Nie ste majiteľom tejto webstránky",
     "Content Directory is not valid." : "Adresár s obsahom je neplatný",
     "Website is private. You do not have access to this website" : "Webstránka je súkromná. Nemáte prístup k tejto lokalite",
+    "The address of the website can only contains alpha numeric chars" : "Adresa stránky môže obsahovať iba alfanumerické znaky",
+    "The address of the website must be longer" : "Adresa stránky musí byť dlhšia",
     "The name of the website must be longer" : "Názov webstránky musí byť dlhší",
     "Template does not exist" : "Šablóna neexistuje",
     "Website already exist." : "Webstránka už existuje.",
