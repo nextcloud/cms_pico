@@ -37,6 +37,7 @@ OC.L10N.register(
     "Address" : "Helbidea",
     "Local directory" : "Direktorio lokala",
     "Private" : "Pribatua",
+    "My new site" : "Nire gune berria",
     "my_site" : "my_site",
     "Local directory:" : "Direktorio lokala:",
     "The place to store the website files on your cloud" : "Zure webguneko fitxategiak lainoan gordetzeko lekua",
