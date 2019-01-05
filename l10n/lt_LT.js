@@ -1,7 +1,9 @@
 OC.L10N.register(
     "cms_pico",
     {
+    "no error message" : "jokio klaidos pranešimo",
     "This operation will delete the website {name} but its content will still be available in your files" : "Ši operacija ištrins svetainę {name}, tačiau jos turinys vis dar bus prieinamas jūsų failuose",
+    "Please confirm" : "Patvirtinkite",
     "Please wait" : "Prašome palaukti",
     "Create a new website" : "Sukurti naują svetainę",
     "Website not found" : "Svetainė nerasta",
