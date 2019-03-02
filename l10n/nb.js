@@ -34,7 +34,7 @@ OC.L10N.register(
     "Using MOD_REWRITE:" : "Bruker MOD_REWRITE:",
     "Using MOD_REWRITE and MOD_PROXY:" : "Bruker MOD_REWRITE og MOD_PROXY:",
     "Custom themes" : "Tilpass temaer",
-    "To add a custom theme, you will need to create a new folder in the 'themes' directory:" : "For å legge til en egendefinert drakt, vil du måtte opprette en ny mappe i \"themes\"-mappen.",
+    "To add a custom theme, you will need to create a new folder in the 'themes' directory:" : "For å legge til et egendefinert tema, vil du måtte opprette en ny mappe i \"themes\"-mappen.",
     "Current custom themes:" : "Nåværende tilpassede temaer:",
     "Add a new custom theme:" : "Legg til eget tema:",
     "Add custom theme" : "Legg til eget tema",
