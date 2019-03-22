@@ -2,7 +2,7 @@ OC.L10N.register(
     "cms_pico",
     {
     "test" : "Test",
-    "It was not possible to retrieve the complete list of your websites" : "Der Abruf der vollständigen Liste deiner Websites war nicht möglich",
+    "It was not possible to retrieve the complete list of your websites" : "Der Abruf der vollständigen Liste Deiner Websites war nicht möglich",
     "no error message" : "Keine Fehlermeldung",
     "It was not possible to update your theme on {name}" : "Das Aktualisieren des Themes auf {name} war nicht möglich",
     "This operation will delete the website {name} but its content will still be available in your files" : "Dies wird die Website {name} löschen, ihr Inhalt bleibt aber weiterhin in Deinen Dateien verfügbar",
@@ -52,7 +52,7 @@ OC.L10N.register(
     "Theme" : "Theme",
     "Private" : "Privat",
     "Name of the site:" : "Name der Seite:",
-    "The title of your site" : "Titel deiner Seite",
+    "The title of your site" : "Titel Deiner Seite",
     "My new site" : "Meine neue Seite",
     "Address of the site:" : "Adresse der Seite:",
     "my_site" : "my_site",
