@@ -45,7 +45,7 @@ OC.L10N.register(
     "Add custom template" : "Benutzerdefinierte Vorlage hinzufügen",
     "Delete custom template" : "Benutzerdefinierte Vorlage löschen",
     "Delete custom theme" : "Benutzerdefiniertes Design löschen",
-    "Your current websites" : "Deine aktuelle Website",
+    "Your current websites" : "Ihre aktuelle Website",
     "Name" : "Name",
     "Address" : "Adresse",
     "Local directory" : "Lokaler Ordner",
