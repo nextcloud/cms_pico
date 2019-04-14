@@ -60,6 +60,6 @@ OC.L10N.register(
     "The place to store the website files on your cloud" : "O lugar para almacenar os ficheiros do sitio na súa nube",
     "Base Template:" : "Modelo base:",
     "Choose a template from the list" : "Escolla un modelo da lista",
-    "Delete website" : "Eliminar sitio web"
+    "Delete website" : "Eliminar o sitio web"
 },
 "nplurals=2; plural=(n != 1);");
