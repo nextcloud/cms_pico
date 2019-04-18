@@ -36,6 +36,10 @@ github-upload:
 composer:
 	composer install --prefer-dist
 
+clean:
+	rm -rf $(build_dir)
+	rm -rf node_modules
+
 appstore: composer clean
 	mkdir -p $(sign_dir)
 	rsync -a \
