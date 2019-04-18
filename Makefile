@@ -32,6 +32,9 @@ github-upload:
 		--name "$(app_name)-$(version).tar.gz" \
 		--file $(build_dir)/$(app_name)-$(version).tar.gz
 
+# composer packages
+composer:
+	composer install --prefer-dist
 
 appstore: composer clean
 	mkdir -p $(sign_dir)
