@@ -29,13 +29,22 @@ namespace OCA\CMSPico\Controller;
 use Exception;
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Service\MiscService;
+use OCA\CMSPico\Http\NotModifiedResponse;
+use OCA\CMSPico\Http\NotPermittedResponse;
+use OCA\CMSPico\Http\PicoFileResponse;
+use OCA\CMSPico\Service\FileService;
 use OCA\CMSPico\Service\PicoService;
 use OCA\CMSPico\Service\WebsitesService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\DataDisplayResponse;
 use OCP\AppFramework\Http\DataDownloadResponse;
+use OCP\AppFramework\Http\NotFoundResponse;
 use OCP\AppFramework\Http\Response;
+use OCP\Files\File;
 use OCP\Files\IMimeTypeDetector;
+use OCP\Files\InvalidPathException;
+use OCP\Files\NotFoundException;
+use OCP\Files\NotPermittedException;
 use OCP\IRequest;
 
 class PicoController extends Controller {
@@ -47,6 +56,9 @@ class PicoController extends Controller {
 	/** @var WebsitesService */
 	private $websitesService;
 
+	/** @var FileService */
+	private $fileService;
+
 	/** @var MiscService */
 	private $miscService;
 
@@ -57,20 +69,26 @@ class PicoController extends Controller {
 	/**
 	 * PicoController constructor.
 	 *
-	 * @param IRequest $request
-	 * @param IRequest $userId
-	 * @param WebsitesService $websitesService
-	 * @param MiscService $miscService
+	 * @param IRequest          $request
+	 * @param string            $userId
+	 * @param WebsitesService   $websitesService
+	 * @param FileService       $fileService
+	 * @param MiscService       $miscService
 	 * @param IMimeTypeDetector $mimeTypeDetector
 	 */
 	public function __construct(
-		IRequest $request, $userId, WebsitesService $websitesService, MiscService $miscService,
+		IRequest $request,
+		string $userId,
+		WebsitesService $websitesService,
+		FileService $fileService,
+		MiscService $miscService,
 		IMimeTypeDetector $mimeTypeDetector
 	) {
 		parent::__construct(Application::APP_NAME, $request);
 
 		$this->userId = $userId;
 		$this->websitesService = $websitesService;
+		$this->fileService = $fileService;
 		$this->miscService = $miscService;
 		$this->mimeTypeDetector = $mimeTypeDetector;
 	}
@@ -81,7 +99,7 @@ class PicoController extends Controller {
 	 *
 	 * @PublicPage
 	 * @NoCSRFRequired
-
+	 *
 	 * @return Response
 	 */
 	public function getRoot($site) {
@@ -92,7 +110,7 @@ class PicoController extends Controller {
 	/**
 	 * @param string $site
 	 * @param $page
-
+	 *
 	 * @PublicPage
 	 * @NoCSRFRequired
 	 *
@@ -115,5 +133,63 @@ class PicoController extends Controller {
 		}
 	}
 
+	/**
+	 * @PublicPage
+	 * @NoCSRFRequired
+	 *
+	 * @return Response
+	 */
+	public function getPlugin($file) : Response {
+		try {
+			$file = $this->fileService->getFile(PicoService::DIR_PLUGINS . '/' . $file);
+			return $this->createFileResponse($file);
+		} catch (NotFoundException $e) {
+			return new NotFoundResponse();
+		} catch (NotPermittedException $e) {
+			return new NotPermittedResponse();
+		}
+	}
 
+	/**
+	 * @PublicPage
+	 * @NoCSRFRequired
+	 *
+	 * @return Response
+	 */
+	public function getTheme($file) : Response {
+		try {
+			$file = $this->fileService->getFile(PicoService::DIR_THEMES . '/' . $file);
+			return $this->createFileResponse($file);
+		} catch (NotFoundException $e) {
+			return new NotFoundResponse();
+		} catch (NotPermittedException $e) {
+			return new NotPermittedResponse();
+		}
+	}
+
+	/**
+	 * @param File        $file
+	 * @param string|null $secureFileType
+	 *
+	 * @return Response
+	 * @throws NotFoundException
+	 * @throws NotPermittedException
+	 */
+	private function createFileResponse(File $file, string $secureFileType = null) : Response
+	{
+		try {
+			$etag = $file->getEtag();
+		} catch (InvalidPathException $e) {
+			throw new NotFoundException();
+		}
+
+		$response = new PicoFileResponse($file, $secureFileType);
+
+		$clientEtag = $this->request->getHeader('If-None-Match');
+		if ($etag && (preg_match('/^"?' . preg_quote($etag, '/') . '(?>"?$|-)/', $clientEtag) === 1)) {
+			return new NotModifiedResponse($response);
+		}
+
+		return $response;
+	}
 }

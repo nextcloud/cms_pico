@@ -27,11 +27,12 @@
 namespace OCA\CMSPico\Service;
 
 use DirectoryIterator;
-use Exception;
 use OCA\CMSPico\AppInfo\Application;
+use OCP\Files\File;
 use OCP\Files\Folder;
 use OCP\Files\IRootFolder;
 use OCP\Files\NotFoundException;
+use OCP\Files\NotPermittedException;
 
 class FileService {
 
@@ -49,6 +50,9 @@ class FileService {
 
 	/** @var Folder */
 	private $appDataFolder;
+
+	/** @var string */
+	private $fileExtensionBlacklist = '/^ph(?:ar|p|ps|tml|p[0-9]+)$/';
 
 
 	/**
@@ -227,5 +231,26 @@ class FileService {
 		return $this->appDataFolder;
 	}
 
+	/**
+	 * @param string $file
+	 *
+	 * @return File
+	 * @throws NotFoundException
+	 * @throws NotPermittedException
+	 */
+	public function getFile($file) : File
+	{
+		/** @var File $fileNode */
+		$fileNode = $this->getAppDataFolder()->get($file);
 
+		if (!($fileNode instanceof File)) {
+			throw new NotFoundException();
+		}
+
+		if (preg_match($this->fileExtensionBlacklist, $fileNode->getExtension()) === 1) {
+			throw new NotPermittedException();
+		}
+
+		return $fileNode;
+	}
 }

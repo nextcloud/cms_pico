@@ -26,12 +26,18 @@
 
 return [
 	'routes' => [
+		[ 'name' => 'Pico#getRoot', 'url' => '/pico/{site}/', 'verb' => 'GET' ],
 		[
-			'name' => 'Pico#getRoot', 'url' => '/pico/{site}/', 'verb' => 'GET'
+			'name' => 'Pico#getPage', 'url' => '/pico/{site}/{page}', 'verb' => 'GET',
+			'requirements' => array('page' => '.+')
 		],
 		[
-			'name'         => 'Pico#getPage', 'url' => '/pico/{site}/{page}', 'verb' => 'GET',
-			'requirements' => array('page' => '.+')
+			'name' => 'Pico#getTheme', 'url' => '/themes/{file}', 'verb' => 'GET',
+			'requirements' => array('file' => '.+')
+		],
+		[
+			'name' => 'Pico#getPlugin', 'url' => '/plugins/{file}', 'verb' => 'GET',
+			'requirements' => array('file' => '.+')
 		],
 
 		['name' => 'Settings#getPersonalWebsites', 'url' => '/personal/websites', 'verb' => 'GET'],
