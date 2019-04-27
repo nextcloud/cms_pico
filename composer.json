@@ -10,7 +10,13 @@
     }
   ],
   "require": {
-    "picocms/pico": "v1.0.6",
-    "ezyang/htmlpurifier": "v4.9.3"
+    "picocms/pico": "~2.0.0",
+    "picocms/pico-theme": "~2.0.0",
+    "picocms/composer-installer": "^1.0",
+    "ezyang/htmlpurifier": "^4.10"
+  },
+  "extra": {
+    "pico-theme-dir": "Pico/themes/",
+    "pico-plugin-dir": "Pico/plugins/"
   }
 }
