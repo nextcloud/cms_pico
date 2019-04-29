@@ -26,7 +26,7 @@
 
 namespace OCA\CMSPico\Service;
 
-use OCA\CMSPico\Exceptions\ThemeDoesNotExistException;
+use OCA\CMSPico\Exceptions\ThemeNotFoundException;
 use OCP\IL10N;
 
 class ThemesService {
@@ -92,12 +92,12 @@ class ThemesService {
 	 *
 	 * @param $theme
 	 *
-	 * @throws ThemeDoesNotExistException
+	 * @throws ThemeNotFoundException
 	 */
 	public function hasToBeAValidTheme($theme) {
 		$themes = $this->getThemesList();
 		if (!in_array($theme, $themes)) {
-			throw new ThemeDoesNotExistException($this->l10n->t('Theme does not exist'));
+			throw new ThemeNotFoundException($this->l10n->t('Theme does not exist'));
 		}
 	}
 

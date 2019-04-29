@@ -29,7 +29,7 @@ namespace OCA\CMSPico\Tests\Service;
 use Exception;
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Controller\SettingsController;
-use OCA\CMSPico\Exceptions\ThemeDoesNotExistException;
+use OCA\CMSPico\Exceptions\ThemeNotFoundException;
 use OCA\CMSPico\Service\FileService;
 use OCA\CMSPico\Service\ThemesService;
 use OCA\CMSPico\Tests\Env;
@@ -93,7 +93,7 @@ class ThemesServiceTest extends \PHPUnit_Framework_TestCase {
 		try {
 			$this->themesService->hasToBeAValidTheme('this_is_a_test');
 			$this->assertSame(true, false, 'should return an exception');
-		} catch (ThemeDoesNotExistException $e) {
+		} catch (ThemeNotFoundException $e) {
 		} catch (Exception $e) {
 			$this->assertSame(true, false, 'should return ThemeDoesNotExistException');
 		}
@@ -118,7 +118,7 @@ class ThemesServiceTest extends \PHPUnit_Framework_TestCase {
 		try {
 			$this->themesService->hasToBeAValidTheme('this_is_a_test');
 			$this->assertSame(true, false, 'should return an exception');
-		} catch (ThemeDoesNotExistException $e) {
+		} catch (ThemeNotFoundException $e) {
 		} catch (Exception $e) {
 			$this->assertSame(true, false, 'should return ThemeDoesNotExistException');
 		}
