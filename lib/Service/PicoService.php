@@ -29,7 +29,7 @@ namespace OCA\CMSPico\Service;
 use Exception;
 use OC\App\AppManager;
 use OCA\CMSPico\AppInfo\Application;
-use OCA\CMSPico\Exceptions\AssetDoesNotExistException;
+use OCA\CMSPico\Exceptions\AssetNotFoundException;
 use OCA\CMSPico\Exceptions\PicoRuntimeException;
 use OCA\CMSPico\Exceptions\WebsiteIsPrivateException;
 use OCA\CMSPico\Model\Website;
@@ -116,7 +116,7 @@ class PicoService {
 	 * @param $asset
 	 *
 	 * @return string
-	 * @throws AssetDoesNotExistException
+	 * @throws AssetNotFoundException
 	 * @throws WebsiteIsPrivateException
 	 */
 	public function getContentFromAssets(Website $website, $asset) {
@@ -134,7 +134,7 @@ class PicoService {
 		} catch (WebsiteIsPrivateException $e) {
 			throw $e;
 		} catch (Exception $e) {
-			throw new AssetDoesNotExistException("404");
+			throw new AssetNotFoundException();
 		}
 	}
 
