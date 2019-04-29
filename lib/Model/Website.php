@@ -35,7 +35,7 @@ use OCA\CMSPico\Exceptions\MinCharsException;
 use OCA\CMSPico\Exceptions\PathContainSpecificFoldersException;
 use OCA\CMSPico\Exceptions\UserIsNotOwnerException;
 use OCA\CMSPico\Exceptions\PageNotFoundException;
-use OCA\CMSPico\Exceptions\WebpageIsNotReadableException;
+use OCA\CMSPico\Exceptions\PageNotPermittedException;
 use OCA\CMSPico\Exceptions\WebsiteIsPrivateException;
 use OCA\CMSPico\Service\MiscService;
 use OCP\Files\IRootFolder;
@@ -112,7 +112,7 @@ class Website extends WebsiteCore {
 	/**
 	 * @param string $local
 	 *
-	 * @throws WebpageIsNotReadableException
+	 * @throws PageNotPermittedException
 	 */
 	private function hasToBeReadableByViewer($local = '') {
 
@@ -126,7 +126,7 @@ class Website extends WebsiteCore {
 			}
 		}
 
-		throw new WebpageIsNotReadableException();
+		throw new PageNotPermittedException();
 	}
 
 
