@@ -142,7 +142,7 @@ class WebsitesRequest extends WebsitesRequestBuilder {
 		$cursor->closeCursor();
 
 		if ($data === false) {
-			throw new WebsiteNotFoundException($this->l10n->t('Website not found'));
+			throw new WebsiteNotFoundException();
 		}
 
 		return $this->parseWebsitesSelectSql($data);
@@ -166,7 +166,7 @@ class WebsitesRequest extends WebsitesRequestBuilder {
 		$cursor->closeCursor();
 
 		if ($data === false) {
-			throw new WebsiteNotFoundException($this->l10n->t('Website not found'));
+			throw new WebsiteNotFoundException();
 		}
 
 		return $this->parseWebsitesSelectSql($data);

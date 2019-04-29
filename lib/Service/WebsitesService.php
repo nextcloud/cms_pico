@@ -108,7 +108,7 @@ class WebsitesService {
 		try {
 			$website->hasToBeFilledWithValidEntries();
 			$website = $this->websiteRequest->getWebsiteFromSite($website->getSite());
-			throw new WebsiteExistsException($this->l10n->t('Website already exist.'));
+			throw new WebsiteExistsException();
 		} catch (WebsiteNotFoundException $e) {
 			// In fact we want the website to not exist (yet).
 		}
@@ -243,13 +243,13 @@ class WebsitesService {
 			$website->setPage($page);
 
 			if ($this->encryptionManager->isEnabled()) {
-				throw new EncryptedFilesystemException('cms_pico does not support encrypted filesystem');
+				throw new EncryptedFilesystemException();
 			}
 
 			return $this->picoService->getContent($website);
 		} catch (PicoRuntimeException $e) {
 			$this->miscService->log('Webpage cannot be rendered - ' . $e->getMessage());
-			throw new PicoRuntimeException("Webpage cannot be rendered");
+			throw $e;
 		} catch (Exception $e) {
 			throw $e;
 		}

@@ -24,9 +24,11 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace OCA\CMSPico\Exceptions;
 
-class WriteAccessException extends \Exception {
+class WriteAccessException extends \Exception
+{
 
 }
-

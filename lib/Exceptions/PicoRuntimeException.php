@@ -24,9 +24,22 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace OCA\CMSPico\Exceptions;
 
-class PicoRuntimeException extends \Exception {
+class PicoRuntimeException extends \Exception
+{
+	/** @var \Exception */
+	private $exception;
 
+	/**
+	 * PicoRuntimeException constructor.
+	 * @param \Exception $exception
+	 */
+	public function __construct(\Exception $exception)
+	{
+		$this->exception = $exception;
+		parent::__construct($exception->getMessage(), $exception->getCode(), $exception->getPrevious());
+	}
 }
-

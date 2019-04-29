@@ -24,9 +24,11 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace OCA\CMSPico\Exceptions;
 
-class CheckCharsException extends \Exception {
+class CheckCharsException extends \Exception
+{
 
 }
-

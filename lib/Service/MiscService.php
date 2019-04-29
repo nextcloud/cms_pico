@@ -102,7 +102,7 @@ class MiscService {
 
 		foreach ($arr as $k) {
 			if (!key_exists($k, $data)) {
-				throw new MissingKeyInArrayException('missing_key_in_array');
+				throw new MissingKeyInArrayException();
 			}
 		}
 	}

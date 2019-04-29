@@ -24,9 +24,11 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace OCA\CMSPico\Exceptions;
 
-class ContentDirIsNotLocalException extends \Exception {
+class ContentDirIsNotLocalException extends \Exception
+{
 
 }
-

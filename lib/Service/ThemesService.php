@@ -97,7 +97,7 @@ class ThemesService {
 	public function hasToBeAValidTheme($theme) {
 		$themes = $this->getThemesList();
 		if (!in_array($theme, $themes)) {
-			throw new ThemeNotFoundException($this->l10n->t('Theme does not exist'));
+			throw new ThemeNotFoundException();
 		}
 	}
 

@@ -165,7 +165,7 @@ class PicoService {
 		try {
 			$content = $pico->run();
 		} catch (Exception $e) {
-			throw new PicoRuntimeException($e->getMessage());
+			throw new PicoRuntimeException($e);
 		}
 
 		$absolutePath = $this->getAbsolutePathFromPico($pico);

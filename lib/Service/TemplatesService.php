@@ -81,7 +81,7 @@ class TemplatesService {
 	 */
 	public function templateHasToExist($template) {
 		if (!in_array($template, $this->getTemplatesList())) {
-			throw new TemplateNotFoundException($this->l10n->t('Template does not exist'));
+			throw new TemplateNotFoundException();
 		}
 	}
 
@@ -173,9 +173,7 @@ class TemplatesService {
 			$new = $this->websiteFolder->newFile($website->getPath() . $file->getFilename());
 			$new->putContent($file->getContent());
 		} catch (Exception $e) {
-			throw new WriteAccessException(
-				$this->l10n->t('Cannot generate template file in this folder')
-			);
+			throw new WriteAccessException();
 		}
 
 	}

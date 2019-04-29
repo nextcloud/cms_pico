@@ -24,9 +24,11 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace OCA\CMSPico\Exceptions;
 
-class MissingKeyInArrayException extends \Exception {
+class MissingKeyInArrayException extends \Exception
+{
 
 }
-

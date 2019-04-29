@@ -144,7 +144,7 @@ class Website extends WebsiteCore {
 
 			return $ownerFile->getId();
 		} catch (NotFoundException $e) {
-			throw new PageNotFoundException($this->l10n->t('Webpage does not exist'));
+			throw new PageNotFoundException();
 		}
 	}
 
@@ -156,7 +156,7 @@ class Website extends WebsiteCore {
 	 */
 	public function hasToBeOwnedBy($userId) {
 		if ($this->getUserId() !== $userId) {
-			throw new UserIsNotOwnerException($this->l10n->t('You are not the owner of this website'));
+			throw new UserIsNotOwnerException();
 		}
 	}
 
@@ -214,9 +214,7 @@ class Website extends WebsiteCore {
 			$this->hasToBeReadableByViewer($path);
 
 		} catch (Exception $e) {
-			throw new WebsiteNotPermittedException(
-				$this->l10n->t('Website is private. You do not have access to this website')
-			);
+			throw new WebsiteNotPermittedException();
 		}
 	}
 
@@ -290,9 +288,7 @@ class Website extends WebsiteCore {
 		$folders = explode('/', $path);
 		foreach ($folders as $folder) {
 			if (in_array($folder, $limit)) {
-				throw new PathContainSpecificFoldersException(
-					$this->l10n->t('Path is malformed, please check.')
-				);
+				throw new PathContainSpecificFoldersException();
 			}
 		}
 	}
