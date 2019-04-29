@@ -32,7 +32,7 @@ use OCA\CMSPico\Db\WebsitesRequest;
 use OCA\CMSPico\Exceptions\EncryptedFilesystemException;
 use OCA\CMSPico\Exceptions\PicoRuntimeException;
 use OCA\CMSPico\Exceptions\WebsiteAlreadyExistException;
-use OCA\CMSPico\Exceptions\WebsiteDoesNotExistException;
+use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
 use OCA\CMSPico\Model\Website;
 use OCP\IL10N;
 
@@ -109,7 +109,7 @@ class WebsitesService {
 			$website->hasToBeFilledWithValidEntries();
 			$website = $this->websiteRequest->getWebsiteFromSite($website->getSite());
 			throw new WebsiteAlreadyExistException($this->l10n->t('Website already exist.'));
-		} catch (WebsiteDoesNotExistException $e) {
+		} catch (WebsiteNotFoundException $e) {
 			// In fact we want the website to not exist (yet).
 		}
 

@@ -27,7 +27,7 @@
 namespace OCA\CMSPico\Db;
 
 
-use OCA\CMSPico\Exceptions\WebsiteDoesNotExistException;
+use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
 use OCA\CMSPico\Model\Website;
 
 class WebsitesRequest extends WebsitesRequestBuilder {
@@ -131,7 +131,7 @@ class WebsitesRequest extends WebsitesRequestBuilder {
 	 * @param int $siteId
 	 *
 	 * @return Website
-	 * @throws WebsiteDoesNotExistException
+	 * @throws WebsiteNotFoundException
 	 */
 	public function getWebsiteFromId($siteId) {
 		$qb = $this->getWebsitesSelectSql();
@@ -142,7 +142,7 @@ class WebsitesRequest extends WebsitesRequestBuilder {
 		$cursor->closeCursor();
 
 		if ($data === false) {
-			throw new WebsiteDoesNotExistException($this->l10n->t('Website not found'));
+			throw new WebsiteNotFoundException($this->l10n->t('Website not found'));
 		}
 
 		return $this->parseWebsitesSelectSql($data);
@@ -155,7 +155,7 @@ class WebsitesRequest extends WebsitesRequestBuilder {
 	 * @param string $site
 	 *
 	 * @return Website
-	 * @throws WebsiteDoesNotExistException
+	 * @throws WebsiteNotFoundException
 	 */
 	public function getWebsiteFromSite($site) {
 		$qb = $this->getWebsitesSelectSql();
@@ -166,7 +166,7 @@ class WebsitesRequest extends WebsitesRequestBuilder {
 		$cursor->closeCursor();
 
 		if ($data === false) {
-			throw new WebsiteDoesNotExistException($this->l10n->t('Website not found'));
+			throw new WebsiteNotFoundException($this->l10n->t('Website not found'));
 		}
 
 		return $this->parseWebsitesSelectSql($data);
