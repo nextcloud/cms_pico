@@ -34,7 +34,7 @@ use OCA\CMSPico\Exceptions\ContentDirIsNotLocalException;
 use OCA\CMSPico\Exceptions\MinCharsException;
 use OCA\CMSPico\Exceptions\PathContainSpecificFoldersException;
 use OCA\CMSPico\Exceptions\UserIsNotOwnerException;
-use OCA\CMSPico\Exceptions\WebpageDoesNotExistException;
+use OCA\CMSPico\Exceptions\PageNotFoundException;
 use OCA\CMSPico\Exceptions\WebpageIsNotReadableException;
 use OCA\CMSPico\Exceptions\WebsiteIsPrivateException;
 use OCA\CMSPico\Service\MiscService;
@@ -134,7 +134,7 @@ class Website extends WebsiteCore {
 	 * @param string $local
 	 *
 	 * @return int
-	 * @throws WebpageDoesNotExistException
+	 * @throws PageNotFoundException
 	 */
 	public function getPageFileId($local = '') {
 
@@ -144,7 +144,7 @@ class Website extends WebsiteCore {
 
 			return $ownerFile->getId();
 		} catch (NotFoundException $e) {
-			throw new WebpageDoesNotExistException($this->l10n->t('Webpage does not exist'));
+			throw new PageNotFoundException($this->l10n->t('Webpage does not exist'));
 		}
 	}
 
