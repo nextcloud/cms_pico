@@ -24,38 +24,47 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace OCA\CMSPico\AppInfo;
 
 use OCP\AppFramework\App;
 use OCP\Util;
 
-class Application extends App {
-
+class Application extends App
+{
+	/** @var string */
 	const APP_NAME = 'cms_pico';
 
 	/**
 	 * @param array $params
 	 */
-	public function __construct(array $params = array()) {
+	public function __construct(array $params = [])
+	{
 		parent::__construct(self::APP_NAME, $params);
 
+		$this->registerAutoloader();
 		$this->registerHooks();
 	}
 
-
 	/**
-	 * Register Hooks
+	 * Register hooks.
 	 */
-	public function registerHooks() {
+	public function registerHooks()
+	{
 		Util::connectHook(
 			'OC_User', 'post_deleteUser', '\OCA\CMSPico\Hooks\UserHooks', 'onUserDeleted'
 		);
 	}
 
-	public function registerSettingsPersonal() {
-		$ver = Util::getVersion();
-		if ($ver[0] < 13) {
-			\OCP\App::registerPersonal(self::APP_NAME, 'lib/personal');
+	/**
+	 * Register autoloader.
+	 */
+	public function registerAutoloader()
+	{
+		$composerDir = __DIR__ . '/../../vendor/';
+		if (is_dir($composerDir) && file_exists($composerDir . 'autoload.php')) {
+			require_once($composerDir . 'autoload.php');
 		}
 	}
 }

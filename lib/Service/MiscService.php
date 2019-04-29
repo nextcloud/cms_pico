@@ -144,26 +144,5 @@ class MiscService {
 			Http::STATUS_CREATED
 		);
 	}
-
-
-	/**
-	 * return the cloud version.
-	 * if $complete is true, return a string x.y.z
-	 *
-	 * @param boolean $complete
-	 *
-	 * @return string|integer
-	 */
-	public function getCloudVersion($complete = false) {
-		$ver = Util::getVersion();
-
-		if ($complete) {
-			return implode('.', $ver);
-		}
-
-		return $ver[0];
-	}
-
-
 }
 

@@ -22,7 +22,7 @@ Because Pico is using the **Markdown** format, you should consider enabling the 
 
 ]]>
 	</description>
-	<version>0.9.8</version>
+	<version>1.0.0</version>
 	<licence>agpl</licence>
 	<author>Maxence Lange</author>
 	<namespace>CMSPico</namespace>
@@ -36,7 +36,7 @@ Because Pico is using the **Markdown** format, you should consider enabling the 
 	<repository>https://github.com/nextcloud/cms_pico.git</repository>
 	<screenshot>https://raw.githubusercontent.com/nextcloud/cms_pico/master/screenshots/list_websites.png</screenshot>
 	<dependencies>
-		<nextcloud min-version="12" max-version="16"/>
+		<nextcloud min-version="14" max-version="16"/>
 	</dependencies>
 
 	<settings>
