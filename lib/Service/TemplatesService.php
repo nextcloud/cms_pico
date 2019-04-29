@@ -27,7 +27,7 @@
 namespace OCA\CMSPico\Service;
 
 use Exception;
-use OCA\CMSPico\Exceptions\TemplateDoesNotExistException;
+use OCA\CMSPico\Exceptions\TemplateNotFoundException;
 use OCA\CMSPico\Exceptions\WriteAccessException;
 use OCA\CMSPico\Model\TemplateFile;
 use OCA\CMSPico\Model\Website;
@@ -77,11 +77,11 @@ class TemplatesService {
 	 *
 	 * @param string $template
 	 *
-	 * @throws TemplateDoesNotExistException
+	 * @throws TemplateNotFoundException
 	 */
 	public function templateHasToExist($template) {
 		if (!in_array($template, $this->getTemplatesList())) {
-			throw new TemplateDoesNotExistException($this->l10n->t('Template does not exist'));
+			throw new TemplateNotFoundException($this->l10n->t('Template does not exist'));
 		}
 	}
 

@@ -29,7 +29,7 @@ namespace OCA\CMSPico\Tests\Service;
 use Exception;
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Controller\SettingsController;
-use OCA\CMSPico\Exceptions\TemplateDoesNotExistException;
+use OCA\CMSPico\Exceptions\TemplateNotFoundException;
 use OCA\CMSPico\Service\FileService;
 use OCA\CMSPico\Service\TemplatesService;
 use OCA\CMSPico\Tests\Env;
@@ -97,7 +97,7 @@ class TemplatesServiceTest extends \PHPUnit_Framework_TestCase {
 		try {
 			$this->templatesService->templateHasToExist('this_is_a_template');
 			$this->assertSame(true, false, 'should return an exception');
-		} catch (TemplateDoesNotExistException $e) {
+		} catch (TemplateNotFoundException $e) {
 		} catch (Exception $e) {
 			$this->assertSame(true, false, 'should return TemplateDoesNotExistException');
 		}
@@ -122,7 +122,7 @@ class TemplatesServiceTest extends \PHPUnit_Framework_TestCase {
 		try {
 			$this->templatesService->templateHasToExist('this_is_a_template');
 			$this->assertSame(true, false, 'should return an exception');
-		} catch (TemplateDoesNotExistException $e) {
+		} catch (TemplateNotFoundException $e) {
 		} catch (Exception $e) {
 			$this->assertSame(true, false, 'should return TemplateDoesNotExistException');
 		}
