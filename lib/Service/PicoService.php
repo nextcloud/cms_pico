@@ -31,7 +31,7 @@ use OC\App\AppManager;
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Exceptions\AssetNotFoundException;
 use OCA\CMSPico\Exceptions\PicoRuntimeException;
-use OCA\CMSPico\Exceptions\WebsiteIsPrivateException;
+use OCA\CMSPico\Exceptions\WebsiteNotPermittedException;
 use OCA\CMSPico\Model\Website;
 use OCA\CMSPico\Pico;
 use OCP\Files\File;
@@ -117,7 +117,7 @@ class PicoService {
 	 *
 	 * @return string
 	 * @throws AssetNotFoundException
-	 * @throws WebsiteIsPrivateException
+	 * @throws WebsiteNotPermittedException
 	 */
 	public function getContentFromAssets(Website $website, $asset) {
 		$website->pathCantContainSpecificFolders($asset);
@@ -131,7 +131,7 @@ class PicoService {
 			$content = $file->getContent();
 
 			return $content;
-		} catch (WebsiteIsPrivateException $e) {
+		} catch (WebsiteNotPermittedException $e) {
 			throw $e;
 		} catch (Exception $e) {
 			throw new AssetNotFoundException();

@@ -36,7 +36,7 @@ use OCA\CMSPico\Exceptions\PathContainSpecificFoldersException;
 use OCA\CMSPico\Exceptions\UserIsNotOwnerException;
 use OCA\CMSPico\Exceptions\PageNotFoundException;
 use OCA\CMSPico\Exceptions\PageNotPermittedException;
-use OCA\CMSPico\Exceptions\WebsiteIsPrivateException;
+use OCA\CMSPico\Exceptions\WebsiteNotPermittedException;
 use OCA\CMSPico\Service\MiscService;
 use OCP\Files\IRootFolder;
 use OCP\Files\NotFoundException;
@@ -198,7 +198,7 @@ class Website extends WebsiteCore {
 	 * @param string $path
 	 * @param array $meta
 	 *
-	 * @throws WebsiteIsPrivateException
+	 * @throws WebsiteNotPermittedException
 	 */
 	public function viewerMustHaveAccess($path, $meta = []) {
 
@@ -214,7 +214,7 @@ class Website extends WebsiteCore {
 			$this->hasToBeReadableByViewer($path);
 
 		} catch (Exception $e) {
-			throw new WebsiteIsPrivateException(
+			throw new WebsiteNotPermittedException(
 				$this->l10n->t('Website is private. You do not have access to this website')
 			);
 		}
