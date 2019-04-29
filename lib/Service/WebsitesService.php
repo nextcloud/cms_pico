@@ -31,7 +31,7 @@ use OC\Encryption\Manager;
 use OCA\CMSPico\Db\WebsitesRequest;
 use OCA\CMSPico\Exceptions\EncryptedFilesystemException;
 use OCA\CMSPico\Exceptions\PicoRuntimeException;
-use OCA\CMSPico\Exceptions\WebsiteAlreadyExistException;
+use OCA\CMSPico\Exceptions\WebsiteExistsException;
 use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
 use OCA\CMSPico\Model\Website;
 use OCP\IL10N;
@@ -93,7 +93,7 @@ class WebsitesService {
 	 * @param string $path
 	 * @param string $template
 	 *
-	 * @throws WebsiteAlreadyExistException
+	 * @throws WebsiteExistsException
 	 */
 	public function createWebsite($name, $userId, $site, $path, $template) {
 		$this->templatesService->templateHasToExist($template);
@@ -108,7 +108,7 @@ class WebsitesService {
 		try {
 			$website->hasToBeFilledWithValidEntries();
 			$website = $this->websiteRequest->getWebsiteFromSite($website->getSite());
-			throw new WebsiteAlreadyExistException($this->l10n->t('Website already exist.'));
+			throw new WebsiteExistsException($this->l10n->t('Website already exist.'));
 		} catch (WebsiteNotFoundException $e) {
 			// In fact we want the website to not exist (yet).
 		}

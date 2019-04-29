@@ -30,7 +30,7 @@ use Exception;
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Exceptions\PicoRuntimeException;
 use OCA\CMSPico\Exceptions\UserIsNotOwnerException;
-use OCA\CMSPico\Exceptions\WebsiteAlreadyExistException;
+use OCA\CMSPico\Exceptions\WebsiteExistsException;
 use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
 use OCA\CMSPico\Model\Website;
 use OCA\CMSPico\Service\FileService;
@@ -106,7 +106,7 @@ class WebsitesServiceTest extends \PHPUnit_Framework_TestCase {
 		try {
 			$this->createWebsite($data);
 			$this->assertSame(true, false, 'should return an exception');
-		} catch (WebsiteAlreadyExistException $e) {
+		} catch (WebsiteExistsException $e) {
 		} catch (Exception $e) {
 			$this->assertSame(true, false, 'should return WebsiteAlreadyExistException');
 		}
