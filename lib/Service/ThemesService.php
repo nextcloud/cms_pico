@@ -28,12 +28,17 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Service;
 
+use OC\App\AppManager;
+use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Exceptions\ThemeNotFoundException;
 use OCP\IL10N;
 
 class ThemesService
 {
 	const THEMES = ['default'];
+
+	/** @var AppManager */
+	private $appManager;
 
 	/** @var IL10N */
 	private $l10n;
@@ -50,17 +55,20 @@ class ThemesService
 	/**
 	 * ThemesService constructor.
 	 *
+	 * @param AppManager $appManager
 	 * @param IL10N $l10n
 	 * @param ConfigService $configService
 	 * @param FileService $fileService
 	 * @param MiscService $miscService
 	 */
 	function __construct(
+		AppManager $appManager,
 		IL10N $l10n,
 		ConfigService $configService,
 		FileService $fileService,
 		MiscService $miscService
 	) {
+		$this->appManager = $appManager;
 		$this->l10n = $l10n;
 		$this->configService = $configService;
 		$this->fileService = $fileService;
@@ -97,9 +105,11 @@ class ThemesService
 	 *
 	 * @param $theme
 	 *
+	 * @return void
 	 * @throws ThemeNotFoundException
 	 */
-	public function hasToBeAValidTheme($theme) {
+	public function assertValidTheme($theme)
+	{
 		$themes = $this->getThemesList();
 		if (!in_array($theme, $themes)) {
 			throw new ThemeNotFoundException();
@@ -127,4 +137,20 @@ class ThemesService
 		return $newThemes;
 	}
 
+	/**
+	 * @return string
+	 */
+	public function getThemesPath() : string
+	{
+		$appPath = $this->appManager->getAppPath(Application::APP_NAME);
+		return $appPath . '/Pico/' . PicoService::DIR_THEMES . '/';
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getThemesUrl() : string
+	{
+		return \OC_App::getAppWebPath(Application::APP_NAME) . '/Pico/' . PicoService::DIR_THEMES . '/';
+	}
 }

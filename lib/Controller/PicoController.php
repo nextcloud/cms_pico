@@ -28,18 +28,28 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Controller;
 
-use Exception;
 use OCA\CMSPico\AppInfo\Application;
+use OCA\CMSPico\Exceptions\AssetInvalidPathException;
+use OCA\CMSPico\Exceptions\AssetNotFoundException;
+use OCA\CMSPico\Exceptions\AssetNotPermittedException;
+use OCA\CMSPico\Exceptions\EncryptedFilesystemException;
+use OCA\CMSPico\Exceptions\PageInvalidPathException;
+use OCA\CMSPico\Exceptions\PageNotFoundException;
+use OCA\CMSPico\Exceptions\PageNotPermittedException;
+use OCA\CMSPico\Exceptions\PicoRuntimeException;
+use OCA\CMSPico\Exceptions\ThemeNotFoundException;
+use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
+use OCA\CMSPico\Exceptions\WebsiteNotPermittedException;
+use OCA\CMSPico\Http\NotFoundResponse;
 use OCA\CMSPico\Http\NotModifiedResponse;
 use OCA\CMSPico\Http\NotPermittedResponse;
+use OCA\CMSPico\Http\PicoErrorResponse;
 use OCA\CMSPico\Http\PicoFileResponse;
+use OCA\CMSPico\Http\PicoPageResponse;
 use OCA\CMSPico\Service\FileService;
 use OCA\CMSPico\Service\PicoService;
 use OCA\CMSPico\Service\WebsitesService;
 use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http\DataDisplayResponse;
-use OCP\AppFramework\Http\DataDownloadResponse;
-use OCP\AppFramework\Http\NotFoundResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\Files\File;
 use OCP\Files\IMimeTypeDetector;
@@ -110,19 +120,62 @@ class PicoController extends Controller
 	 */
 	public function getPage(string $site, string $page) : Response
 	{
+		if (strpos($page, PicoService::DIR_ASSETS . '/') === 0) {
+			return $this->getAsset($site, $page);
+		}
+
 		try {
-			$html = $this->websitesService->getWebpageFromSite($site, $this->userId, $page);
+			$page = $this->websitesService->getPage($site, $this->userId, $page);
+			return new PicoPageResponse($page);
+		} catch (WebsiteNotFoundException $e) {
+			return new NotFoundResponse('The requested website could not be found on the server. Maybe the website was deleted?');
+		} catch (WebsiteNotPermittedException $e) {
+			return new NotPermittedResponse('You don\'t have access to this private website. Maybe the share was deleted or has expired?');
+		} catch (EncryptedFilesystemException $e) {
+			return new NotPermittedResponse('This website is hosted on a encrypted Nextcloud instance and thus could not be accessed.');
+		} catch (ThemeNotFoundException $e) {
+			return new NotFoundResponse('This website uses a theme that could not be found on the server and thus could not be built.');
+		} catch (PageInvalidPathException $e) {
+			return new NotFoundResponse('The requested website page could not be found on the server. Maybe the page was deleted?');
+		} catch (PageNotFoundException $e) {
+			return new NotFoundResponse('The requested website page could not be found on the server. Maybe the page was deleted?');
+		} catch (PageNotPermittedException $e) {
+			return new NotPermittedResponse('You don\'t have access to this website page. Maybe the share was deleted or has expired?');
+		} catch (PicoRuntimeException $e) {
+			return new PicoErrorResponse('The requested website page could not be built, so that the server was unable to complete your request.', $e);
+		}
+	}
 
-			if (strpos($page, PicoService::DIR_ASSETS) === 0) {
-				$probableMimeType = $this->mimeTypeDetector->detectPath($page);
-				$secureMimeType = $this->mimeTypeDetector->getSecureMimeType($probableMimeType);
+	/**
+	 * @param string $site
+	 * @param string $page
+	 * @return Response
+	 */
+	private function getAsset(string $site, string $page) : Response
+	{
+		try {
+			$asset = $this->websitesService->getAsset($site, $this->userId, $page);
 
-				return new DataDownloadResponse($html, basename($page), $secureMimeType);
-			} else {
-				return new DataDisplayResponse($html);
+			try {
+				$secureMimeType = $this->mimeTypeDetector->getSecureMimeType($asset->getMimetype());
+				return $this->createFileResponse($asset, $secureMimeType);
+			} catch (NotFoundException $e) {
+				throw new AssetNotFoundException($e);
+			} catch (NotPermittedException $e) {
+				throw new AssetNotPermittedException($e);
 			}
-		} catch (Exception $e) {
-			return new DataDisplayResponse($e->getMessage());
+		} catch (WebsiteNotFoundException $e) {
+			return new NotFoundResponse('The requested website could not be found on the server. Maybe the website was deleted?');
+		} catch (WebsiteNotPermittedException $e) {
+			return new NotPermittedResponse('You don\'t have access to this private website. Maybe the share was deleted or has expired?');
+		} catch (EncryptedFilesystemException $e) {
+			return new NotPermittedResponse('This website is hosted on a encrypted Nextcloud instance and thus could not be accessed.');
+		} catch (AssetInvalidPathException $e) {
+			return new NotFoundResponse('The requested website asset could not be found on the server. Maybe the asset was deleted?');
+		} catch (AssetNotFoundException $e) {
+			return new NotFoundResponse('The requested website asset could not be found on the server. Maybe the asset was deleted?');
+		} catch (AssetNotPermittedException $e) {
+			return new NotPermittedResponse('You don\'t have access to this website asset. Maybe the share was deleted or has expired?');
 		}
 	}
 

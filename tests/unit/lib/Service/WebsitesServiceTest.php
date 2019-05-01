@@ -208,9 +208,9 @@ class WebsitesServiceTest extends \PHPUnit_Framework_TestCase {
 		$website = array_shift($websites);
 
 		// test normal website.
-		$content = $this->websitesService->getWebpageFromSite(
+		$content = $this->websitesService->getPage(
 			$website->getSite(), Env::ENV_TEST_USER1, ''
-		);
+		)->getContent();
 
 		if (substr($content, 0, 15) !== '<!DOCTYPE html>') {
 			$this->assertSame(true, false, 'Unexpected content');
@@ -218,7 +218,7 @@ class WebsitesServiceTest extends \PHPUnit_Framework_TestCase {
 
 		// test random website
 		try {
-			$this->websitesService->getWebpageFromSite(
+			$this->websitesService->getPage(
 				'random_website', Env::ENV_TEST_USER1, ''
 			);
 			$this->assertSame(true, false, 'Should return an exception');
@@ -228,10 +228,11 @@ class WebsitesServiceTest extends \PHPUnit_Framework_TestCase {
 		}
 
 		// test website with no content
-		rename($website->getAbsolutePath() . 'content', './content');
+		rename($website->getWebsitePath() . 'content', './content');
 		try {
 			$content =
-				$this->websitesService->getWebpageFromSite($website->getSite(), Env::ENV_TEST_USER1, '');
+				$this->websitesService->getPage($website->getSite(), Env::ENV_TEST_USER1, '')
+					->getContent();
 			$this->assertSame(true, false, 'Should return an exception');
 		} catch (PicoRuntimeException $e) {
 		} catch (Exception $e) {

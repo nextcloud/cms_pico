@@ -29,7 +29,11 @@ namespace OCA\CMSPico;
 
 use HTMLPurifier;
 use HTMLPurifier_Config;
-use OCA\CMSPico\AppInfo\Application;
+use OCA\CMSPico\Exceptions\PageInvalidPathException;
+use OCA\CMSPico\Exceptions\PageNotFoundException;
+use OCA\CMSPico\Exceptions\PageNotPermittedException;
+use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
+use OCA\CMSPico\Model\Website;
 use Symfony\Component\Yaml\Exception\ParseException;
 
 class Pico extends \Pico
@@ -37,18 +41,49 @@ class Pico extends \Pico
 	/** @var HTMLPurifier */
 	protected $htmlPurifier;
 
+	/** @var Website */
+	private $website;
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @throws PageInvalidPathException
+	 * @throws PageNotFoundException
+	 * @throws PageNotPermittedException
+	 */
+	public function run()
+	{
+		return parent::run();
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
 	protected function loadConfig()
 	{
+		$themeUrl = $this->config['theme_url'] ?? null;
+
 		parent::loadConfig();
 
-		$this->config['rewrite_url'] = true;
+		if ($themeUrl && ($themeUrl[0] === '/')) {
+			$this->config['theme_url'] = $themeUrl;
+		}
 
 		if (empty($this->config['nextcloud_site'])) {
 			$this->config['nextcloud_site'] = 'default';
 		}
+	}
+
+	/**
+	 * Set's Nextcloud's website instance.
+	 *
+	 * @param Website $website Nextcloud's website instance
+	 *
+	 * @return void
+	 */
+	public function setNextcloudWebsite(Website $website)
+	{
+		$this->website = $website;
 	}
 
 	/**
@@ -73,6 +108,23 @@ class Pico extends \Pico
 	protected function evaluateRequestUrl()
 	{
 		// do nothing
+	}
+
+	/**
+	 * Checks whether a file is readable in Nextcloud and returns the raw contents of this file
+	 *
+	 * @param string $file file path
+	 *
+	 * @return string raw contents of the file
+	 *
+	 * @throws WebsiteNotFoundException
+	 * @throws PageInvalidPathException
+	 * @throws PageNotFoundException
+	 * @throws PageNotPermittedException
+	 */
+	public function loadFileContent($file)
+	{
+		return $this->website->getFileContent($file);
 	}
 
 	/**
@@ -122,21 +174,6 @@ class Pico extends \Pico
 	{
 		$content = parent::parseFileContent($markdown);
 		return $this->getHtmlPurifier()->purify($content);
-	}
-
-	/**
-	 * Returns the variables passed to the template.
-	 *
-	 * Let Pico's `theme_url` point directly to the app's themes directory.
-	 *
-	 * @return array
-	 */
-	protected function getTwigVariables() {
-		$twigVariables = parent::getTwigVariables();
-		$twigVariables['theme_url'] =
-			\OC_App::getAppWebPath(Application::APP_NAME) . '/Pico/themes/' . $this->getConfig('theme');
-
-		return $twigVariables;
 	}
 
 	/**

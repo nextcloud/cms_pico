@@ -152,7 +152,7 @@ class SettingsController extends Controller {
 			$website->hasToBeOwnedBy($this->userId);
 			$website->setTheme((string)$theme);
 
-			$this->themesService->hasToBeAValidTheme($theme);
+			$this->themesService->assertValidTheme($theme);
 			$this->websitesService->updateWebsite($website);
 
 			return $this->miscService->success(

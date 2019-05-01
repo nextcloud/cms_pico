@@ -91,7 +91,7 @@ class ThemesServiceTest extends \PHPUnit_Framework_TestCase {
 		$this->assertCount(1, $this->themesService->getNewThemesList());
 
 		try {
-			$this->themesService->hasToBeAValidTheme('this_is_a_test');
+			$this->themesService->assertValidTheme('this_is_a_test');
 			$this->assertSame(true, false, 'should return an exception');
 		} catch (ThemeNotFoundException $e) {
 		} catch (Exception $e) {
@@ -103,7 +103,7 @@ class ThemesServiceTest extends \PHPUnit_Framework_TestCase {
 		$this->assertCount(1, $this->themesService->getThemesList(true));
 		$this->assertCount(0, $this->themesService->getNewThemesList());
 
-		$this->themesService->hasToBeAValidTheme('this_is_a_test');
+		$this->themesService->assertValidTheme('this_is_a_test');
 
 		$this->settingsController->removeCustomTheme('this_is_a_test');
 		$this->assertCount(1, $this->themesService->getThemesList());
@@ -116,7 +116,7 @@ class ThemesServiceTest extends \PHPUnit_Framework_TestCase {
 		$this->assertCount(0, $this->themesService->getNewThemesList());
 
 		try {
-			$this->themesService->hasToBeAValidTheme('this_is_a_test');
+			$this->themesService->assertValidTheme('this_is_a_test');
 			$this->assertSame(true, false, 'should return an exception');
 		} catch (ThemeNotFoundException $e) {
 		} catch (Exception $e) {

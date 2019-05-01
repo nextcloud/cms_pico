@@ -46,18 +46,6 @@ class MiscService {
 		$this->logger = $logger;
 	}
 
-	/**
-	 * @param string $message
-	 * @param int $level
-	 */
-	public function log($message, $level = 2) {
-		$data = array(
-			'app'   => Application::APP_NAME,
-			'level' => $level
-		);
-
-		$this->logger->log($level, $message, $data);
-	}
 
 	/**
 	 * @param string $path

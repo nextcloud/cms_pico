@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace OCA\CMSPico\Http;
 
 use OCP\AppFramework\Http\DownloadResponse;
+use OCP\AppFramework\Http\EmptyContentSecurityPolicy;
 use OCP\Constants;
 use OCP\Files\File;
 use OCP\Files\InvalidPathException;
@@ -48,6 +49,8 @@ class PicoFileResponse extends DownloadResponse
 	{
 		$this->file = $file;
 
+		parent::setContentSecurityPolicy(new PicoContentSecurityPolicy());
+
 		try {
 			$etag = $file->getEtag();
 			$lastModified = $file->getMTime();
@@ -77,6 +80,22 @@ class PicoFileResponse extends DownloadResponse
 	}
 
 	/**
+	 * @param EmptyContentSecurityPolicy $csp
+	 *
+	 * @return $this
+	 */
+	public function setContentSecurityPolicy(EmptyContentSecurityPolicy $csp) : self
+	{
+		if (!($csp instanceof PicoContentSecurityPolicy)) {
+			// Pico really needs its own CSP...
+			return $this;
+		}
+
+		parent::setContentSecurityPolicy($csp);
+		return $this;
+	}
+
+	/**
 	 * @param int $cacheSeconds
 	 *
 	 * @return $this
@@ -95,8 +114,7 @@ class PicoFileResponse extends DownloadResponse
 				// ignore DateTime and DateInterval exceptions
 			}
 		} else {
-			$cacheControl = 'no-cache, must-revalidate';
-			$this->addHeader('Cache-Control', $cacheControl);
+			$this->addHeader('Cache-Control', 'no-cache, must-revalidate');
 			$this->addHeader('Pragma', null);
 			$this->addHeader('Expires', null);
 		}

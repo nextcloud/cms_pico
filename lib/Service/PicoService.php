@@ -28,16 +28,22 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Service;
 
-use Exception;
 use OC\App\AppManager;
 use OCA\CMSPico\AppInfo\Application;
-use OCA\CMSPico\Exceptions\AssetNotFoundException;
+use OCA\CMSPico\Exceptions\PageInvalidPathException;
+use OCA\CMSPico\Exceptions\PageNotFoundException;
+use OCA\CMSPico\Exceptions\PageNotPermittedException;
 use OCA\CMSPico\Exceptions\PicoRuntimeException;
+use OCA\CMSPico\Exceptions\ThemeNotFoundException;
+use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
 use OCA\CMSPico\Exceptions\WebsiteNotPermittedException;
+use OCA\CMSPico\Model\PicoPage;
 use OCA\CMSPico\Model\Website;
 use OCA\CMSPico\Pico;
-use OCP\Files\File;
-use OCP\Files\IRootFolder;
+use OCP\Files\InvalidPathException;
+use OCP\Files\NotFoundException;
+use OCP\Files\NotPermittedException;
+use OCP\ILogger;
 
 class PicoService
 {
@@ -45,8 +51,8 @@ class PicoService
 	const DIR_CONFIG = 'config';
 	const DIR_PLUGINS = 'plugins';
 	const DIR_THEMES = 'themes';
-
-	const DIR_ASSETS = 'assets/';
+	const DIR_CONTENT = 'content';
+	const DIR_ASSETS = 'assets';
 
 	/** @var string */
 	private $userId;
@@ -54,11 +60,8 @@ class PicoService
 	/** @var AppManager */
 	private $appManager;
 
-	/** @var IRootFolder */
-	private $rootFolder;
-
-	/** @var ConfigService */
-	private $configService;
+	/** @var ILogger */
+	private $logger;
 
 	/** @var FileService */
 	private $fileService;
@@ -66,150 +69,117 @@ class PicoService
 	/** @var ThemesService */
 	private $themesService;
 
-	/** @var MiscService */
-	private $miscService;
+	/** @var PluginsService */
+	private $pluginsService;
 
 	/**
 	 * PicoService constructor.
 	 *
 	 * @param string $userId
 	 * @param AppManager $appManager
-	 * @param IRootFolder $rootFolder
-	 * @param ConfigService $configService
+	 * @param ILogger $logger
 	 * @param FileService $fileService
 	 * @param ThemesService $themesService
-	 * @param MiscService $miscService
+	 * @param PluginsService $pluginsService
 	 */
 	function __construct(
 		string $userId,
 		AppManager $appManager,
-		IRootFolder $rootFolder,
-		ConfigService $configService,
+		ILogger $logger,
 		FileService $fileService,
 		ThemesService $themesService,
-		MiscService $miscService
+		PluginsService $pluginsService
 	) {
 		$this->userId = $userId;
 		$this->appManager = $appManager;
-		$this->rootFolder = $rootFolder;
-		$this->configService = $configService;
+		$this->logger = $logger;
 		$this->fileService = $fileService;
 		$this->themesService = $themesService;
-		$this->miscService = $miscService;
-	}
-
-	/**
-	 * getContent();
-	 *
-	 * @param Website $website
-	 *
-	 * @return string
-	 */
-	public function getContent(Website $website)
-	{
-		if (strpos($website->getPage(), self::DIR_ASSETS) === 0) {
-			return $this->getContentFromAssets(
-				$website, substr($website->getPage(), strlen(self::DIR_ASSETS))
-			);
-		} else {
-			return $this->getContentFromPico($website);
-		}
+		$this->pluginsService = $pluginsService;
 	}
 
 	/**
 	 * @param Website $website
-	 * @param $asset
 	 *
-	 * @return string
-	 * @throws AssetNotFoundException
+	 * @return PicoPage
+	 * @throws WebsiteNotFoundException
 	 * @throws WebsiteNotPermittedException
-	 */
-	public function getContentFromAssets(Website $website, $asset)
-	{
-		$website->pathCantContainSpecificFolders($asset);
-
-		try {
-			$website->viewerMustHaveAccess(self::DIR_ASSETS . $asset);
-			$userFolder = $this->rootFolder->getUserFolder($website->getUserId());
-
-			/** @var File $file */
-			$file = $userFolder->get($website->getPath() . self::DIR_ASSETS . $asset);
-			$content = $file->getContent();
-
-			return $content;
-		} catch (WebsiteNotPermittedException $e) {
-			throw $e;
-		} catch (Exception $e) {
-			throw new AssetNotFoundException();
-		}
-	}
-
-	/**
-	 * getContentFromPico();
-	 *
-	 * main method that will create a Pico object, feed it with settings and get the content to be
-	 * displayed.
-	 * We check that the Nextcloud plugin is loaded, that the content location is a valid directory.
-	 * In case of a private page, we check the viewer have a read access to the source files.
-	 *
-	 * @param Website $website
-	 *
-	 * @return string
+	 * @throws ThemeNotFoundException
+	 * @throws PageInvalidPathException
+	 * @throws PageNotFoundException
+	 * @throws PageNotPermittedException
 	 * @throws PicoRuntimeException
 	 */
-	public function getContentFromPico(Website $website)
+	public function getPage(Website $website) : PicoPage
 	{
-		$pico = new Pico(
-			$website->getAbsolutePath(),
-			$this->fileService->getAppDataFolderPath(self::DIR_CONFIG, true),
-			$this->fileService->getAppDataFolderPath(self::DIR_PLUGINS, true),
-			$this->fileService->getAppDataFolderPath(self::DIR_THEMES, true)
-		);
-
-		$this->setupPico($pico, $website);
 		try {
-			$content = $pico->run();
-		} catch (Exception $e) {
-			throw new PicoRuntimeException($e);
+			$page = $website->getPage();
+			$page = $website->normalizePath($page);
+
+			$website->assertViewerAccess($page);
+
+			$this->themesService->assertValidTheme($website->getTheme());
+
+			$pico = new Pico(
+				$website->getWebsitePath(),
+				$this->fileService->getAppDataFolderPath(self::DIR_CONFIG, true),
+				$this->pluginsService->getPluginsPath(),
+				$this->themesService->getThemesPath()
+			);
+
+			$this->setupPico($website, $pico, $page);
+
+			try {
+				$output = $pico->run();
+			} catch (PageInvalidPathException $e) {
+				throw $e;
+			} catch (PageNotFoundException $e) {
+				throw $e;
+			} catch (PageNotPermittedException $e) {
+				throw $e;
+			} catch (\Exception $e) {
+				$exception = new PicoRuntimeException($e);
+				$this->logger->logException($exception, [ 'app' => Application::APP_NAME ]);
+				throw $exception;
+			}
+
+			$picoPage = new PicoPage($website, $pico, $output);
+			$website->assertViewerAccess($picoPage->getRelativePath(), $picoPage->getMeta());
+		} catch (InvalidPathException $e) {
+			throw new PageInvalidPathException($e);
+		} catch (NotFoundException $e) {
+			throw new PageNotFoundException($e);
+		} catch (NotPermittedException $e) {
+			throw new PageNotPermittedException($e);
 		}
 
-		$absolutePath = $this->getAbsolutePathFromPico($pico);
-		$website->contentMustBeLocal($absolutePath);
-
-		$website->viewerMustHaveAccess($website->getRelativePath($absolutePath), $pico->getFileMeta());
-
-		return $content;
+		return $picoPage;
 	}
 
 	/**
-	 * @param Pico $pico
 	 * @param Website $website
+	 * @param Pico $pico
+	 * @param string $page
+	 *
+	 * @return void
 	 */
-	private function setupPico(Pico $pico, Website $website)
+	private function setupPico(Website $website, Pico $pico, string $page)
 	{
-		$pico->setRequestUrl($website->getPage());
+		$pico->setRequestUrl($page);
+		$pico->setNextcloudWebsite($website);
 
-		$this->themesService->hasToBeAValidTheme($website->getTheme());
-
-		$appBaseUrl = \OC::$WEBROOT . '/index.php/apps/' . Application::APP_NAME;
 		$pico->setConfig(
 			[
 				'site_title'     => $website->getName(),
-				'base_url'       => $appBaseUrl . '/pico/' . $website->getSite(),
+				'base_url'       => $website->getWebsiteUrl(),
+				'rewrite_url'    => true,
+				'timezone'       => $website->getTimeZone(),
 				'theme'          => $website->getTheme(),
-				'content_dir'    => 'content/',
+				'theme_url'      => $this->themesService->getThemesUrl(),
+				'content_dir'    => self::DIR_CONTENT,
 				'content_ext'    => '.md',
 				'nextcloud_site' => $website->getSite()
 			]
 		);
-	}
-
-	/**
-	 * @param Pico $pico
-	 *
-	 * @return string
-	 */
-	private function getAbsolutePathFromPico(Pico $pico) {
-		return $pico->getRequestFile() ?: '';
 	}
 }

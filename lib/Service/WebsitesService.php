@@ -30,13 +30,25 @@ namespace OCA\CMSPico\Service;
 
 use Exception;
 use OC\Encryption\Manager;
+use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Db\WebsitesRequest;
+use OCA\CMSPico\Exceptions\AssetInvalidPathException;
+use OCA\CMSPico\Exceptions\AssetNotFoundException;
+use OCA\CMSPico\Exceptions\AssetNotPermittedException;
 use OCA\CMSPico\Exceptions\EncryptedFilesystemException;
+use OCA\CMSPico\Exceptions\PageInvalidPathException;
+use OCA\CMSPico\Exceptions\PageNotFoundException;
+use OCA\CMSPico\Exceptions\PageNotPermittedException;
 use OCA\CMSPico\Exceptions\PicoRuntimeException;
+use OCA\CMSPico\Exceptions\ThemeNotFoundException;
 use OCA\CMSPico\Exceptions\WebsiteExistsException;
 use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
+use OCA\CMSPico\Exceptions\WebsiteNotPermittedException;
+use OCA\CMSPico\Model\PicoPage;
 use OCA\CMSPico\Model\Website;
+use OCP\Files\File;
 use OCP\IL10N;
+use OCP\ILogger;
 
 class WebsitesService
 {
@@ -55,6 +67,9 @@ class WebsitesService
 	/** @var PicoService */
 	private $picoService;
 
+	/** @var AssetService */
+	private $assetService;
+
 	/** @var MiscService */
 	private $miscService;
 
@@ -65,6 +80,7 @@ class WebsitesService
 	 * @param WebsitesRequest $websiteRequest
 	 * @param TemplatesService $templatesService
 	 * @param PicoService $picoService
+	 * @param AssetService $assetService
 	 * @param MiscService $miscService
 	 *
 	 * @internal param Manager $encryptionManager
@@ -74,6 +90,7 @@ class WebsitesService
 		WebsitesRequest $websiteRequest,
 		TemplatesService $templatesService,
 		PicoService $picoService,
+		AssetService $assetService,
 		MiscService $miscService
 	) {
 		$this->l10n = $l10n;
@@ -81,6 +98,7 @@ class WebsitesService
 		$this->websiteRequest = $websiteRequest;
 		$this->templatesService = $templatesService;
 		$this->picoService = $picoService;
+		$this->assetService = $assetService;
 		$this->miscService = $miscService;
 	}
 
@@ -177,82 +195,88 @@ class WebsitesService
 	}
 
 	/**
-	 * getWebsiteFromId();
-	 *
-	 * returns the website from its Id.
-	 *
 	 * @param int $siteId
 	 *
 	 * @return Website
+	 * @throws WebsiteNotFoundException
 	 */
-	public function getWebsiteFromId($siteId)
+	public function getWebsiteFromId($siteId) : Website
 	{
 		return $this->websiteRequest->getWebsiteFromId($siteId);
 	}
 
 	/**
-	 * getWebsitesFromUser();
+	 * @param string $site
 	 *
-	 * returns all website from a user.
-	 *
+	 * @return Website
+	 * @throws WebsiteNotFoundException
+	 */
+	public function getWebsiteFromSite($site) : Website
+	{
+		return $this->websiteRequest->getWebsiteFromSite($site);
+	}
+
+	/**
 	 * @param string $userId
 	 *
 	 * @return Website[]
 	 */
-	public function getWebsitesFromUser($userId)
+	public function getWebsitesFromUser($userId) : Website
 	{
-		$websites = $this->websiteRequest->getWebsitesFromUserId($userId);
-
-		return $websites;
+		return $this->websiteRequest->getWebsitesFromUserId($userId);
 	}
 
 	/**
-	 * getWebsiteFromSite();
-	 *
-	 * returns website regarding its keyword/site.
-	 *
-	 * @param string $site
-	 *
-	 * @return Website
-	 */
-	public function getWebsiteFromSite($site)
-	{
-		$website = $this->websiteRequest->getWebsiteFromSite($site);
-
-		return $website;
-	}
-
-	/**
-	 * getWebpageFromSite();
-	 *
-	 * Get the correct Page from Pico regarding its keyword/site.
-	 * We assign a viewer (current user) to manage private webpages.
-	 *
 	 * @param string $site
 	 * @param string $viewer
-	 * @param $page
+	 * @param string $page
 	 *
-	 * @return string
-	 * @throws Exception
+	 * @return PicoPage
+	 * @throws WebsiteNotFoundException
+	 * @throws WebsiteNotPermittedException
+	 * @throws EncryptedFilesystemException
+	 * @throws PageInvalidPathException
+	 * @throws PageNotFoundException
+	 * @throws PageNotPermittedException
+	 * @throws ThemeNotFoundException
 	 * @throws PicoRuntimeException
 	 */
-	public function getWebpageFromSite($site, $viewer, $page)
+	public function getPage(string $site, string $viewer, string $page) : PicoPage
 	{
-		try {
-			$website = $this->websiteRequest->getWebsiteFromSite($site);
-			$website->setViewer($viewer);
-			$website->setPage($page);
+		$website = $this->getWebsiteFromSite($site);
+		$website->setViewer($viewer);
+		$website->setPage($page);
 
-			if ($this->encryptionManager->isEnabled()) {
-				throw new EncryptedFilesystemException();
-			}
-
-			return $this->picoService->getContent($website);
-		} catch (PicoRuntimeException $e) {
-			$this->miscService->log('Webpage cannot be rendered - ' . $e->getMessage());
-			throw $e;
-		} catch (Exception $e) {
-			throw $e;
+		if ($this->encryptionManager->isEnabled()) {
+			throw new EncryptedFilesystemException();
 		}
+
+		return $this->picoService->getPage($website);
+	}
+
+	/**
+	 * @param string $site
+	 * @param string $viewer
+	 * @param string $asset
+	 *
+	 * @return File
+	 * @throws WebsiteNotFoundException
+	 * @throws WebsiteNotPermittedException
+	 * @throws EncryptedFilesystemException
+	 * @throws AssetInvalidPathException
+	 * @throws AssetNotFoundException
+	 * @throws AssetNotPermittedException
+	 */
+	public function getAsset(string $site, string $viewer, string $asset) : File
+	{
+		$website = $this->getWebsiteFromSite($site);
+		$website->setViewer($viewer);
+		$website->setPage($asset);
+
+		if ($this->encryptionManager->isEnabled()) {
+			throw new EncryptedFilesystemException();
+		}
+
+		return $this->assetService->getAsset($website);
 	}
 }
