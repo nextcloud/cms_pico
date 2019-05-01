@@ -112,9 +112,13 @@ class Website extends WebsiteCore
 	 */
 	public function getWebsiteUrl() : string
 	{
-		$route = Application::APP_NAME . '.Pico.getRoot';
-		$parameters = [ 'site' => $this->getSite() ];
-		return $this->URLGenerator->linkToRoute($route, $parameters);
+		if (!$this->getProxyRequest()) {
+			$route = Application::APP_NAME . '.Pico.getRoot';
+			$parameters = [ 'site' => $this->getSite() ];
+			return $this->URLGenerator->linkToRoute($route, $parameters);
+		} else {
+			return \OC::$WEBROOT . '/sites/' . urlencode($this->getSite()) . '/';
+		}
 	}
 
 	/**

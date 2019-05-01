@@ -55,8 +55,8 @@ style(Application::APP_NAME, 'admin');
 			</td>
 			<td class="right">
 <pre>
-ProxyPass /sites/ <?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico/
-ProxyPassReverse /sites/ <?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico/
+ProxyPass /sites/ <?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico_proxy/
+ProxyPassReverse /sites/ <?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico_proxy/
 	<?php if ($_['ssl_enabled']) {
 		echo 'SSLProxyEngine on';
 	} ?>
@@ -72,7 +72,7 @@ ProxyPassReverse /sites/ <?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico/
 			<td class="right">
 <pre>
 RewriteEngine On
-RewriteRule /sites/(.*) <?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico/$1 [QSA,L]
+RewriteRule ^sites/(.*)$ <?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico/$1 [QSA,L]
 </pre>
 			</td>
 		</tr>
@@ -85,7 +85,7 @@ RewriteRule /sites/(.*) <?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico/$
 			<td class="right">
 <pre>
 RewriteEngine On
-RewriteRule /sites/(.*) <?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico/$1 [P]
+RewriteRule ^sites/(.*)$ <?php p($_['nchost']); ?>/index.php/apps/cms_pico/pico_proxy/$1 [P]
 	<?php if ($_['ssl_enabled']) {
 		echo 'SSLProxyEngine on';
 	} ?>

@@ -70,6 +70,9 @@ class WebsiteCore implements \JsonSerializable {
 	/** @var string */
 	private $viewer;
 
+	/** @var bool */
+	private $proxyRequest;
+
 	/** @var string */
 	private $templateSource;
 
@@ -328,6 +331,25 @@ class WebsiteCore implements \JsonSerializable {
 	 */
 	public function getViewer() {
 		return $this->viewer;
+	}
+
+
+	/**
+	 * @param bool $proxyRequest
+	 *
+	 * @return $this
+	 */
+	public function setProxyRequest(bool $proxyRequest) {
+		$this->proxyRequest = $proxyRequest;
+
+		return $this;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function getProxyRequest() {
+		return $this->proxyRequest;
 	}
 
 

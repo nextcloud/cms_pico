@@ -114,18 +114,32 @@ class PicoController extends Controller
 	 * @NoCSRFRequired
 	 *
 	 * @param string $site
-	 * @param string $page
 	 *
 	 * @return Response
 	 */
-	public function getPage(string $site, string $page) : Response
+	public function getRootProxy(string $site) : Response
+	{
+		return $this->getPage($site, '', true);
+	}
+
+	/**
+	 * @PublicPage
+	 * @NoCSRFRequired
+	 *
+	 * @param string $site
+	 * @param string $page
+	 * @param bool   $proxyRequest
+	 *
+	 * @return Response
+	 */
+	public function getPage(string $site, string $page, bool $proxyRequest = false) : Response
 	{
 		if (strpos($page, PicoService::DIR_ASSETS . '/') === 0) {
 			return $this->getAsset($site, $page);
 		}
 
 		try {
-			$page = $this->websitesService->getPage($site, $this->userId, $page);
+			$page = $this->websitesService->getPage($site, $this->userId, $page, $proxyRequest);
 			return new PicoPageResponse($page);
 		} catch (WebsiteNotFoundException $e) {
 			return new NotFoundResponse('The requested website could not be found on the server. Maybe the website was deleted?');
@@ -144,6 +158,20 @@ class PicoController extends Controller
 		} catch (PicoRuntimeException $e) {
 			return new PicoErrorResponse('The requested website page could not be built, so that the server was unable to complete your request.', $e);
 		}
+	}
+
+	/**
+	 * @PublicPage
+	 * @NoCSRFRequired
+	 *
+	 * @param string $site
+	 * @param string $page
+	 *
+	 * @return Response
+	 */
+	public function getPageProxy(string $site, string $page) : Response
+	{
+		return $this->getPage($site, $page, true);
 	}
 
 	/**

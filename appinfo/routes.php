@@ -31,6 +31,13 @@ return [
 			'name' => 'Pico#getPage', 'url' => '/pico/{site}/{page}', 'verb' => 'GET',
 			'requirements' => array('page' => '.+')
 		],
+
+		[ 'name' => 'Pico#getRootProxy', 'url' => '/pico_proxy/{site}/', 'verb' => 'GET' ],
+		[
+			'name' => 'Pico#getPageProxy', 'url' => '/pico_proxy/{site}/{page}', 'verb' => 'GET',
+			'requirements' => array('page' => '.+'), 'defaults' => array('proxy' => '1')
+		],
+
 		[
 			'name' => 'Pico#getTheme', 'url' => '/themes/{file}', 'verb' => 'GET',
 			'requirements' => array('file' => '.+')
