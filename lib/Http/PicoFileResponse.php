@@ -109,12 +109,9 @@ class PicoFileResponse extends DownloadResponse
 	 */
 	public function noCache() : self
 	{
-		$this->addHeader('Cache-Control', 'no-cache, no-store');
+		$this->addHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
 		$this->addHeader('Pragma', null);
 		$this->addHeader('Expires', null);
-
-		$this->addHeader('ETag', null);
-		$this->addHeader('Last-Modified', null);
 
 		return $this;
 	}
