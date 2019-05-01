@@ -24,11 +24,12 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace OCA\CMSPico\Controller;
 
 use Exception;
 use OCA\CMSPico\AppInfo\Application;
-use OCA\CMSPico\Service\MiscService;
 use OCA\CMSPico\Http\NotModifiedResponse;
 use OCA\CMSPico\Http\NotPermittedResponse;
 use OCA\CMSPico\Http\PicoFileResponse;
@@ -47,10 +48,9 @@ use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 use OCP\IRequest;
 
-class PicoController extends Controller {
-
-
-	/** @var IRequest */
+class PicoController extends Controller
+{
+	/** @var string */
 	private $userId;
 
 	/** @var WebsitesService */
@@ -59,12 +59,8 @@ class PicoController extends Controller {
 	/** @var FileService */
 	private $fileService;
 
-	/** @var MiscService */
-	private $miscService;
-
 	/** @var IMimeTypeDetector */
 	private $mimeTypeDetector;
-
 
 	/**
 	 * PicoController constructor.
@@ -73,7 +69,6 @@ class PicoController extends Controller {
 	 * @param string            $userId
 	 * @param WebsitesService   $websitesService
 	 * @param FileService       $fileService
-	 * @param MiscService       $miscService
 	 * @param IMimeTypeDetector $mimeTypeDetector
 	 */
 	public function __construct(
@@ -81,7 +76,6 @@ class PicoController extends Controller {
 		string $userId,
 		WebsitesService $websitesService,
 		FileService $fileService,
-		MiscService $miscService,
 		IMimeTypeDetector $mimeTypeDetector
 	) {
 		parent::__construct(Application::APP_NAME, $request);
@@ -89,34 +83,33 @@ class PicoController extends Controller {
 		$this->userId = $userId;
 		$this->websitesService = $websitesService;
 		$this->fileService = $fileService;
-		$this->miscService = $miscService;
 		$this->mimeTypeDetector = $mimeTypeDetector;
 	}
 
-
 	/**
-	 * @param string $site
-	 *
 	 * @PublicPage
 	 * @NoCSRFRequired
 	 *
+	 * @param string $site
+	 *
 	 * @return Response
 	 */
-	public function getRoot($site) {
+	public function getRoot(string $site) : Response
+	{
 		return $this->getPage($site, '');
 	}
 
-
 	/**
-	 * @param string $site
-	 * @param $page
-	 *
 	 * @PublicPage
 	 * @NoCSRFRequired
 	 *
+	 * @param string $site
+	 * @param string $page
+	 *
 	 * @return Response
 	 */
-	public function getPage($site, $page) {
+	public function getPage(string $site, string $page) : Response
+	{
 		try {
 			$html = $this->websitesService->getWebpageFromSite($site, $this->userId, $page);
 
@@ -139,7 +132,8 @@ class PicoController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function getPlugin($file) : Response {
+	public function getPlugin($file) : Response
+	{
 		try {
 			$file = $this->fileService->getFile(PicoService::DIR_PLUGINS . '/' . $file);
 			return $this->createFileResponse($file);
@@ -156,7 +150,8 @@ class PicoController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function getTheme($file) : Response {
+	public function getTheme($file) : Response
+	{
 		try {
 			$file = $this->fileService->getFile(PicoService::DIR_THEMES . '/' . $file);
 			return $this->createFileResponse($file);

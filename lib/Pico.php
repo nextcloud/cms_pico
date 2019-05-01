@@ -23,27 +23,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace OCA\CMSPico;
 
 use HTMLPurifier;
 use HTMLPurifier_Config;
 use OCA\CMSPico\AppInfo\Application;
+use Symfony\Component\Yaml\Exception\ParseException;
 
-class Pico extends \Pico {
-
+class Pico extends \Pico
+{
 	/** @var HTMLPurifier */
 	protected $htmlPurifier;
 
-	/** @var string */
-	protected $requestedUrl;
-
 	/**
-	 * Loads the config.php from Pico::$configDir.
-	 *
-	 * We force enabled URL rewriting due to the support of Nextcloud's
-	 * `PATH_INFO`-based routing method ({@see self::evaluateRequestUrl()}).
+	 * {@inheritDoc}
 	 */
-	protected function loadConfig() {
+	protected function loadConfig()
+	{
 		parent::loadConfig();
 
 		$this->config['rewrite_url'] = true;
@@ -53,20 +51,29 @@ class Pico extends \Pico {
 		}
 	}
 
-
-	public function setRequestUrl($requestUrl) {
+	/**
+	 * Set's Pico's request URL.
+	 *
+	 * @param string $requestUrl request URL
+	 *
+	 * @return void
+	 */
+	public function setRequestUrl($requestUrl)
+	{
 		$this->requestUrl = $requestUrl;
 	}
 
-
 	/**
-	 * do not evaluate requested URL.
+	 * Don't let Pico evaluate the request URL.
 	 *
-	 * @see setRequestUrl
+	 * @see Pico::setRequestUrl()
+	 *
+	 * @return void
 	 */
-	protected function evaluateRequestUrl() {
+	protected function evaluateRequestUrl()
+	{
+		// do nothing
 	}
-
 
 	/**
 	 * Returns the parsed and purified file meta from raw file contents.
@@ -75,14 +82,13 @@ class Pico extends \Pico {
 	 * @param  string[] $headers
 	 *
 	 * @return array
-	 * @throws \Symfony\Component\Yaml\Exception\ParseException
+	 * @throws ParseException
 	 */
-	public function parseFileMeta($rawContent, array $headers) {
+	public function parseFileMeta($rawContent, array $headers)
+	{
 		$meta = parent::parseFileMeta($rawContent, $headers);
-
 		return $this->purifyFileMeta($meta);
 	}
-
 
 	/**
 	 * Purifies file meta.
@@ -91,20 +97,19 @@ class Pico extends \Pico {
 	 *
 	 * @return array
 	 */
-	protected function purifyFileMeta(array $meta) {
+	protected function purifyFileMeta(array $meta)
+	{
 		$newMeta = [];
 		foreach ($meta as $key => $value) {
 			if (is_array($value)) {
 				$newMeta[$key] = $this->purifyFileMeta($value);
 			} else {
-				$newMeta[$key] = $this->getHtmlPurifier()
-									  ->purify($value);
+				$newMeta[$key] = $this->getHtmlPurifier()->purify($value);
 			}
 		}
 
 		return $newMeta;
 	}
-
 
 	/**
 	 * Returns the parsed and purified contents of a page.
@@ -113,13 +118,11 @@ class Pico extends \Pico {
 	 *
 	 * @return string
 	 */
-	public function parseFileContent($markdown) {
+	public function parseFileContent($markdown)
+	{
 		$content = parent::parseFileContent($markdown);
-
-		return $this->getHtmlPurifier()
-					->purify($content);
+		return $this->getHtmlPurifier()->purify($content);
 	}
-
 
 	/**
 	 * Returns the variables passed to the template.
@@ -136,13 +139,13 @@ class Pico extends \Pico {
 		return $twigVariables;
 	}
 
-
 	/**
 	 * Returns the HTMLPurifier instance.
 	 *
 	 * @return HTMLPurifier
 	 */
-	public function getHtmlPurifier() {
+	public function getHtmlPurifier()
+	{
 		if ($this->htmlPurifier === null) {
 			$this->htmlPurifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
 		}

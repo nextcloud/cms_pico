@@ -24,13 +24,15 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace OCA\CMSPico\Service;
 
 use OCA\CMSPico\Exceptions\ThemeNotFoundException;
 use OCP\IL10N;
 
-class ThemesService {
-
+class ThemesService
+{
 	const THEMES = ['default'];
 
 	/** @var IL10N */
@@ -54,7 +56,10 @@ class ThemesService {
 	 * @param MiscService $miscService
 	 */
 	function __construct(
-		IL10N $l10n, ConfigService $configService, FileService $fileService, MiscService $miscService
+		IL10N $l10n,
+		ConfigService $configService,
+		FileService $fileService,
+		MiscService $miscService
 	) {
 		$this->l10n = $l10n;
 		$this->configService = $configService;

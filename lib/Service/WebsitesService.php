@@ -24,6 +24,8 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace OCA\CMSPico\Service;
 
 use Exception;
@@ -36,8 +38,8 @@ use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
 use OCA\CMSPico\Model\Website;
 use OCP\IL10N;
 
-class WebsitesService {
-
+class WebsitesService
+{
 	/** @var IL10N */
 	private $l10n;
 
@@ -68,10 +70,12 @@ class WebsitesService {
 	 * @internal param Manager $encryptionManager
 	 */
 	function __construct(
-		IL10N $l10n, WebsitesRequest $websiteRequest, TemplatesService $templatesService,
-		PicoService $picoService, MiscService $miscService
+		IL10N $l10n,
+		WebsitesRequest $websiteRequest,
+		TemplatesService $templatesService,
+		PicoService $picoService,
+		MiscService $miscService
 	) {
-
 		$this->l10n = $l10n;
 		$this->encryptionManager = \OC::$server->getEncryptionManager();
 		$this->websiteRequest = $websiteRequest;
@@ -79,7 +83,6 @@ class WebsitesService {
 		$this->picoService = $picoService;
 		$this->miscService = $miscService;
 	}
-
 
 	/**
 	 * createWebsite();
@@ -95,7 +98,8 @@ class WebsitesService {
 	 *
 	 * @throws WebsiteExistsException
 	 */
-	public function createWebsite($name, $userId, $site, $path, $template) {
+	public function createWebsite($name, $userId, $site, $path, $template)
+	{
 		$this->templatesService->templateHasToExist($template);
 
 		$website = new Website();
@@ -117,6 +121,17 @@ class WebsitesService {
 		$this->websiteRequest->create($website);
 	}
 
+	/**
+	 * updateWebsite();
+	 *
+	 * update a Website.
+	 *
+	 * @param Website $website
+	 */
+	public function updateWebsite(Website $website)
+	{
+		$this->websiteRequest->update($website);
+	}
 
 	/**
 	 * deleteWebsite();
@@ -126,14 +141,13 @@ class WebsitesService {
 	 * @param int $siteId
 	 * @param string $userId
 	 */
-	public function deleteWebsite($siteId, $userId) {
-
+	public function deleteWebsite($siteId, $userId)
+	{
 		$website = $this->getWebsiteFromId($siteId);
 		$website->hasToBeOwnedBy($userId);
 
 		$this->forceDeleteWebsite($website);
 	}
-
 
 	/**
 	 * forceDeleteWebsite();
@@ -145,10 +159,10 @@ class WebsitesService {
 	 *
 	 * @param Website $website
 	 */
-	public function forceDeleteWebsite(Website $website) {
+	public function forceDeleteWebsite(Website $website)
+	{
 		$this->websiteRequest->delete($website);
 	}
-
 
 	/**
 	 * Event onUserRemoved();
@@ -157,10 +171,10 @@ class WebsitesService {
 	 *
 	 * @param string $userId
 	 */
-	public function onUserRemoved($userId) {
+	public function onUserRemoved($userId)
+	{
 		$this->websiteRequest->deleteAllFromUser($userId);
 	}
-
 
 	/**
 	 * getWebsiteFromId();
@@ -171,21 +185,9 @@ class WebsitesService {
 	 *
 	 * @return Website
 	 */
-	public function getWebsiteFromId($siteId) {
+	public function getWebsiteFromId($siteId)
+	{
 		return $this->websiteRequest->getWebsiteFromId($siteId);
-	}
-
-
-	/**
-	 * updateWebsite();
-	 *
-	 * update a Website.
-	 *
-	 * @param Website $website
-	 */
-	public function updateWebsite(Website $website) {
-		$this->websiteRequest->update($website);
-
 	}
 
 	/**
@@ -197,12 +199,12 @@ class WebsitesService {
 	 *
 	 * @return Website[]
 	 */
-	public function getWebsitesFromUser($userId) {
+	public function getWebsitesFromUser($userId)
+	{
 		$websites = $this->websiteRequest->getWebsitesFromUserId($userId);
 
 		return $websites;
 	}
-
 
 	/**
 	 * getWebsiteFromSite();
@@ -213,13 +215,12 @@ class WebsitesService {
 	 *
 	 * @return Website
 	 */
-	public function getWebsiteFromSite($site) {
-
+	public function getWebsiteFromSite($site)
+	{
 		$website = $this->websiteRequest->getWebsiteFromSite($site);
 
 		return $website;
 	}
-
 
 	/**
 	 * getWebpageFromSite();
@@ -235,8 +236,8 @@ class WebsitesService {
 	 * @throws Exception
 	 * @throws PicoRuntimeException
 	 */
-	public function getWebpageFromSite($site, $viewer, $page) {
-
+	public function getWebpageFromSite($site, $viewer, $page)
+	{
 		try {
 			$website = $this->websiteRequest->getWebsiteFromSite($site);
 			$website->setViewer($viewer);
@@ -253,8 +254,5 @@ class WebsitesService {
 		} catch (Exception $e) {
 			throw $e;
 		}
-
 	}
-
-
 }

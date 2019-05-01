@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OCA\CMSPico\Http;
 
 use OCP\AppFramework\Http;
@@ -10,6 +12,11 @@ class NotModifiedResponse extends Response
 	/** @var Response */
 	private $originalResponse;
 
+	/**
+	 * NotModifiedResponse constructor.
+	 *
+	 * @param Response|null $originalResponse
+	 */
 	public function __construct(Response $originalResponse = null)
 	{
 		$this->originalResponse = $originalResponse;

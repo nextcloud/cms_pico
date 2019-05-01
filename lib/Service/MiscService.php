@@ -59,7 +59,6 @@ class MiscService {
 		$this->logger->log($level, $message, $data);
 	}
 
-
 	/**
 	 * @param string $path
 	 *
@@ -124,7 +123,7 @@ class MiscService {
 	 * @return DataResponse
 	 */
 	public function fail($data) {
-		$this->log(json_encode($data));
+		$this->logger->log(2, $data['message'] ?? '', [ 'app'   => Application::APP_NAME ]);
 
 		return new DataResponse(
 			array_merge($data, array('status' => 0)),
@@ -145,4 +144,3 @@ class MiscService {
 		);
 	}
 }
-

@@ -24,6 +24,8 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace OCA\CMSPico\Model;
 
 use Exception;
@@ -32,19 +34,18 @@ use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Exceptions\CheckCharsException;
 use OCA\CMSPico\Exceptions\ContentDirIsNotLocalException;
 use OCA\CMSPico\Exceptions\MinCharsException;
-use OCA\CMSPico\Exceptions\PathContainSpecificFoldersException;
-use OCA\CMSPico\Exceptions\UserIsNotOwnerException;
 use OCA\CMSPico\Exceptions\PageNotFoundException;
 use OCA\CMSPico\Exceptions\PageNotPermittedException;
+use OCA\CMSPico\Exceptions\PathContainSpecificFoldersException;
+use OCA\CMSPico\Exceptions\UserIsNotOwnerException;
 use OCA\CMSPico\Exceptions\WebsiteNotPermittedException;
 use OCA\CMSPico\Service\MiscService;
 use OCP\Files\IRootFolder;
 use OCP\Files\NotFoundException;
 use OCP\IL10N;
 
-class Website extends WebsiteCore {
-
-
+class Website extends WebsiteCore
+{
 	const TYPE_PUBLIC = 1;
 	const TYPE_PRIVATE = 2;
 
@@ -60,25 +61,24 @@ class Website extends WebsiteCore {
 	/** @var View */
 	private $ownerView;
 
-
 	/**
 	 * Website constructor.
 	 *
 	 * @param string $data
 	 */
-	public function __construct($data = '') {
+	public function __construct(string $data = '')
+	{
 		$this->l10n = \OC::$server->getL10N(Application::APP_NAME);
 		$this->rootFolder = \OC::$server->getRootFolder();
 
 		parent::__construct($data);
 	}
 
-
 	/**
 	 *
 	 */
-	private function initSiteOwnerView() {
-
+	private function initSiteOwnerView()
+	{
 		if ($this->ownerView !== null) {
 			return;
 		}
@@ -86,14 +86,14 @@ class Website extends WebsiteCore {
 		$this->ownerView = new View($this->getUserId() . '/files/');
 	}
 
-
 	/**
 	 * @param string $path
 	 * @param bool $end
 	 *
 	 * @return string
 	 */
-	public function getAbsolutePath($path = '', $end = true) {
+	public function getAbsolutePath($path = '', $end = true)
+	{
 		if ($path === '') {
 			$path = $this->getPath();
 		}
@@ -108,14 +108,13 @@ class Website extends WebsiteCore {
 		return MiscService::endSlash($path);
 	}
 
-
 	/**
 	 * @param string $local
 	 *
 	 * @throws PageNotPermittedException
 	 */
-	private function hasToBeReadableByViewer($local = '') {
-
+	private function hasToBeReadableByViewer($local = '')
+	{
 		$fileId = $this->getPageFileId($local);
 		$viewerFiles = $this->rootFolder->getUserFolder($this->getViewer())
 										->getById($fileId);
@@ -129,15 +128,14 @@ class Website extends WebsiteCore {
 		throw new PageNotPermittedException();
 	}
 
-
 	/**
 	 * @param string $local
 	 *
 	 * @return int
 	 * @throws PageNotFoundException
 	 */
-	public function getPageFileId($local = '') {
-
+	public function getPageFileId($local = '')
+	{
 		try {
 			$ownerFile = $this->rootFolder->getUserFolder($this->getUserId())
 										  ->get($this->getPath() . $local);
@@ -148,26 +146,25 @@ class Website extends WebsiteCore {
 		}
 	}
 
-
 	/**
 	 * @param string $userId
 	 *
 	 * @throws UserIsNotOwnerException
 	 */
-	public function hasToBeOwnedBy($userId) {
+	public function hasToBeOwnedBy($userId)
+	{
 		if ($this->getUserId() !== $userId) {
 			throw new UserIsNotOwnerException();
 		}
 	}
-
 
 	/**
 	 * @param string $path
 	 *
 	 * @throws ContentDirIsNotLocalException
 	 */
-	public function contentMustBeLocal($path) {
-
+	public function contentMustBeLocal($path)
+	{
 		try {
 			$this->pathCantContainSpecificFolders($path);
 			if (strpos($path, $this->getAbsolutePath()) !== 0) {
@@ -179,13 +176,13 @@ class Website extends WebsiteCore {
 		}
 	}
 
-
 	/**
 	 * @param string $path
 	 *
 	 * @return bool|string
 	 */
-	public function getRelativePath($path) {
+	public function getRelativePath($path)
+	{
 		if (substr($path, 0, 1) !== '/') {
 			return $path;
 		}
@@ -193,15 +190,14 @@ class Website extends WebsiteCore {
 		return substr($path, strlen($this->getAbsolutePath()));
 	}
 
-
 	/**
 	 * @param string $path
 	 * @param array $meta
 	 *
 	 * @throws WebsiteNotPermittedException
 	 */
-	public function viewerMustHaveAccess($path, $meta = []) {
-
+	public function viewerMustHaveAccess($path, $meta = [])
+	{
 		try {
 			if ($this->pageIsPublic($meta)) {
 				return;
@@ -218,14 +214,13 @@ class Website extends WebsiteCore {
 		}
 	}
 
-
 	/**
 	 * @param array $meta
 	 *
 	 * @return bool
 	 */
-	private function pageIsPublic($meta) {
-
+	private function pageIsPublic($meta)
+	{
 		if (key_exists('access', $meta) && strtolower($meta['access']) === 'private') {
 			return false;
 		}
@@ -237,14 +232,13 @@ class Website extends WebsiteCore {
 		return true;
 	}
 
-
 	/**
 	 * @throws CheckCharsException
 	 * @throws MinCharsException
 	 * @throws PathContainSpecificFoldersException
 	 */
-	public function hasToBeFilledWithValidEntries() {
-
+	public function hasToBeFilledWithValidEntries()
+	{
 		$this->hasToBeFilledWithNonEmptyValues();
 		$this->pathCantContainSpecificFolders();
 
@@ -255,11 +249,11 @@ class Website extends WebsiteCore {
 		}
 	}
 
-
 	/**
 	 * @throws MinCharsException
 	 */
-	private function hasToBeFilledWithNonEmptyValues() {
+	private function hasToBeFilledWithNonEmptyValues()
+	{
 		if (strlen($this->getSite()) < self::SITE_LENGTH_MIN) {
 			throw new MinCharsException($this->l10n->t('The address of the website must be longer'));
 		}
@@ -269,7 +263,6 @@ class Website extends WebsiteCore {
 		}
 	}
 
-
 	/**
 	 * this is overkill - NC does not allow to create directory outside of the users' filesystem
 	 * Not sure that there is a single use for this security check
@@ -278,7 +271,8 @@ class Website extends WebsiteCore {
 	 *
 	 * @throws PathContainSpecificFoldersException
 	 */
-	public function pathCantContainSpecificFolders($path = '') {
+	public function pathCantContainSpecificFolders($path = '')
+	{
 		if ($path === '') {
 			$path = $this->getPath();
 		}

@@ -24,6 +24,8 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace OCA\CMSPico\Service;
 
 use Exception;
@@ -37,8 +39,8 @@ use OCA\CMSPico\Pico;
 use OCP\Files\File;
 use OCP\Files\IRootFolder;
 
-class PicoService {
-
+class PicoService
+{
 	const DIR_TEMPLATES = 'templates';
 	const DIR_CONFIG = 'config';
 	const DIR_PLUGINS = 'plugins';
@@ -46,6 +48,7 @@ class PicoService {
 
 	const DIR_ASSETS = 'assets/';
 
+	/** @var string */
 	private $userId;
 
 	/** @var AppManager */
@@ -78,8 +81,12 @@ class PicoService {
 	 * @param MiscService $miscService
 	 */
 	function __construct(
-		$userId, AppManager $appManager, IRootFolder $rootFolder,
-		ConfigService $configService, FileService $fileService, ThemesService $themesService,
+		string $userId,
+		AppManager $appManager,
+		IRootFolder $rootFolder,
+		ConfigService $configService,
+		FileService $fileService,
+		ThemesService $themesService,
 		MiscService $miscService
 	) {
 		$this->userId = $userId;
@@ -91,7 +98,6 @@ class PicoService {
 		$this->miscService = $miscService;
 	}
 
-
 	/**
 	 * getContent();
 	 *
@@ -99,8 +105,8 @@ class PicoService {
 	 *
 	 * @return string
 	 */
-	public function getContent(Website $website) {
-
+	public function getContent(Website $website)
+	{
 		if (strpos($website->getPage(), self::DIR_ASSETS) === 0) {
 			return $this->getContentFromAssets(
 				$website, substr($website->getPage(), strlen(self::DIR_ASSETS))
@@ -110,7 +116,6 @@ class PicoService {
 		}
 	}
 
-
 	/**
 	 * @param Website $website
 	 * @param $asset
@@ -119,7 +124,8 @@ class PicoService {
 	 * @throws AssetNotFoundException
 	 * @throws WebsiteNotPermittedException
 	 */
-	public function getContentFromAssets(Website $website, $asset) {
+	public function getContentFromAssets(Website $website, $asset)
+	{
 		$website->pathCantContainSpecificFolders($asset);
 
 		try {
@@ -138,7 +144,6 @@ class PicoService {
 		}
 	}
 
-
 	/**
 	 * getContentFromPico();
 	 *
@@ -152,8 +157,8 @@ class PicoService {
 	 * @return string
 	 * @throws PicoRuntimeException
 	 */
-	public function getContentFromPico(Website $website) {
-
+	public function getContentFromPico(Website $website)
+	{
 		$pico = new Pico(
 			$website->getAbsolutePath(),
 			$this->fileService->getAppDataFolderPath(self::DIR_CONFIG, true),
@@ -176,12 +181,12 @@ class PicoService {
 		return $content;
 	}
 
-
 	/**
 	 * @param Pico $pico
 	 * @param Website $website
 	 */
-	private function setupPico(Pico $pico, Website $website) {
+	private function setupPico(Pico $pico, Website $website)
+	{
 		$pico->setRequestUrl($website->getPage());
 
 		$this->themesService->hasToBeAValidTheme($website->getTheme());
@@ -198,7 +203,6 @@ class PicoService {
 			]
 		);
 	}
-
 
 	/**
 	 * @param Pico $pico
