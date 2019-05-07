@@ -185,6 +185,8 @@ class Pico extends \Pico
 	{
 		if ($this->htmlPurifier === null) {
 			$this->htmlPurifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+
+			$this->triggerEvent('onHtmlPurifier', [ &$this->htmlPurifier ]);
 		}
 
 		return $this->htmlPurifier;
