@@ -35,7 +35,7 @@ return [
 		[ 'name' => 'Pico#getRootProxy', 'url' => '/pico_proxy/{site}/', 'verb' => 'GET' ],
 		[
 			'name' => 'Pico#getPageProxy', 'url' => '/pico_proxy/{site}/{page}', 'verb' => 'GET',
-			'requirements' => array('page' => '.+'), 'defaults' => array('proxy' => '1')
+			'requirements' => array('page' => '.+')
 		],
 
 		[

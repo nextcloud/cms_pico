@@ -262,7 +262,7 @@ class PicoController extends Controller
 		$response = new PicoFileResponse($file, $secureFileType);
 
 		$clientEtag = $this->request->getHeader('If-None-Match');
-		if ($etag && (preg_match('/^"?' . preg_quote($etag, '/') . '(?>"?$|-)/', $clientEtag) === 1)) {
+		if ($etag && $clientEtag && preg_match('/^"?' . preg_quote($etag, '/') . '(?>"?$|-)/', $clientEtag)) {
 			return new NotModifiedResponse($response);
 		}
 
