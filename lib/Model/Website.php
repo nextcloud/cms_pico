@@ -309,7 +309,7 @@ class Website extends WebsiteCore
 				return;
 			}
 
-			if ($this->groupManager->groupExists($groupAccess)) {
+			if ($this->getViewer() && $this->groupManager->groupExists($groupAccess)) {
 				if ($this->groupManager->isInGroup($this->getViewer(), $groupAccess)) {
 					return;
 				}
@@ -318,15 +318,17 @@ class Website extends WebsiteCore
 			$exceptionClass = NotPermittedException::class;
 		}
 
-		if ($this->getViewer() === $this->getUserId()) {
-			return;
-		}
-
-		$viewerUserFolder = $this->rootFolder->getUserFolder($this->getViewer());
-		$viewerFiles = $viewerUserFolder->getById($this->getPageFileId($path));
-		foreach ($viewerFiles as $file) {
-			if ($file->isReadable()) {
+		if ($this->getViewer()) {
+			if ($this->getViewer() === $this->getUserId()) {
 				return;
+			}
+
+			$viewerUserFolder = $this->rootFolder->getUserFolder($this->getViewer());
+			$viewerFiles = $viewerUserFolder->getById($this->getPageFileId($path));
+			foreach ($viewerFiles as $file) {
+				if ($file->isReadable()) {
+					return;
+				}
 			}
 		}
 

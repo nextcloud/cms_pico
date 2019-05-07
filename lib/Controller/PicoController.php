@@ -60,7 +60,7 @@ use OCP\IRequest;
 
 class PicoController extends Controller
 {
-	/** @var string */
+	/** @var string|null */
 	private $userId;
 
 	/** @var WebsitesService */
@@ -76,14 +76,14 @@ class PicoController extends Controller
 	 * PicoController constructor.
 	 *
 	 * @param IRequest          $request
-	 * @param string            $userId
+	 * @param string|null       $userId
 	 * @param WebsitesService   $websitesService
 	 * @param FileService       $fileService
 	 * @param IMimeTypeDetector $mimeTypeDetector
 	 */
 	public function __construct(
 		IRequest $request,
-		string $userId,
+		$userId,
 		WebsitesService $websitesService,
 		FileService $fileService,
 		IMimeTypeDetector $mimeTypeDetector
@@ -139,7 +139,7 @@ class PicoController extends Controller
 		}
 
 		try {
-			$page = $this->websitesService->getPage($site, $this->userId, $page, $proxyRequest);
+			$page = $this->websitesService->getPage($site, $page, $this->userId, $proxyRequest);
 			return new PicoPageResponse($page);
 		} catch (WebsiteNotFoundException $e) {
 			return new NotFoundResponse('The requested website could not be found on the server. Maybe the website was deleted?');

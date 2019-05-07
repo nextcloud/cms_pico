@@ -209,7 +209,7 @@ class WebsitesServiceTest extends \PHPUnit_Framework_TestCase {
 
 		// test normal website.
 		$content = $this->websitesService->getPage(
-			$website->getSite(), Env::ENV_TEST_USER1, ''
+			$website->getSite(), '', Env::ENV_TEST_USER1
 		)->getContent();
 
 		if (substr($content, 0, 15) !== '<!DOCTYPE html>') {
@@ -219,7 +219,7 @@ class WebsitesServiceTest extends \PHPUnit_Framework_TestCase {
 		// test random website
 		try {
 			$this->websitesService->getPage(
-				'random_website', Env::ENV_TEST_USER1, ''
+				'random_website', '', Env::ENV_TEST_USER1
 			);
 			$this->assertSame(true, false, 'Should return an exception');
 		} catch (WebsiteNotFoundException $e) {
@@ -231,7 +231,7 @@ class WebsitesServiceTest extends \PHPUnit_Framework_TestCase {
 		rename($website->getWebsitePath() . 'content', './content');
 		try {
 			$content =
-				$this->websitesService->getPage($website->getSite(), Env::ENV_TEST_USER1, '')
+				$this->websitesService->getPage($website->getSite(), '', Env::ENV_TEST_USER1)
 					->getContent();
 			$this->assertSame(true, false, 'Should return an exception');
 		} catch (PicoRuntimeException $e) {

@@ -54,7 +54,7 @@ class PicoService
 	const DIR_CONTENT = 'content';
 	const DIR_ASSETS = 'assets';
 
-	/** @var string */
+	/** @var string|null */
 	private $userId;
 
 	/** @var AppManager */
@@ -75,15 +75,15 @@ class PicoService
 	/**
 	 * PicoService constructor.
 	 *
-	 * @param string $userId
-	 * @param AppManager $appManager
-	 * @param ILogger $logger
-	 * @param FileService $fileService
-	 * @param ThemesService $themesService
+	 * @param string|null    $userId
+	 * @param AppManager     $appManager
+	 * @param ILogger        $logger
+	 * @param FileService    $fileService
+	 * @param ThemesService  $themesService
 	 * @param PluginsService $pluginsService
 	 */
 	function __construct(
-		string $userId,
+		$userId,
 		AppManager $appManager,
 		ILogger $logger,
 		FileService $fileService,

@@ -227,10 +227,10 @@ class WebsitesService
 	}
 
 	/**
-	 * @param string $site
-	 * @param string $viewer
-	 * @param string $page
-	 * @param bool   $proxyRequest
+	 * @param string      $site
+	 * @param string      $page
+	 * @param string|null $viewer
+	 * @param bool        $proxyRequest
 	 *
 	 * @return PicoPage
 	 * @throws WebsiteNotFoundException
@@ -242,7 +242,7 @@ class WebsitesService
 	 * @throws ThemeNotFoundException
 	 * @throws PicoRuntimeException
 	 */
-	public function getPage(string $site, string $viewer, string $page, bool $proxyRequest = false) : PicoPage
+	public function getPage(string $site, string $page, string $viewer = null, bool $proxyRequest = false) : PicoPage
 	{
 		$website = $this->getWebsiteFromSite($site);
 		$website->setProxyRequest($proxyRequest);
