@@ -3,7 +3,7 @@
 	  xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
 	<id>cms_pico</id>
 	<name>Pico CMS</name>
-	<summary>Integrate Pico and let your users manage their own websites</summary>
+	<summary>Create websites using Pico CMS for Nextcloud</summary>
 	<description><![CDATA[
 
 With **cms_pico** you can build your own website in Nextcloud!
@@ -25,6 +25,7 @@ Because Pico is using the **Markdown** format, you should consider enabling the 
 	<version>1.0.0</version>
 	<licence>agpl</licence>
 	<author>Maxence Lange</author>
+	<author>Daniel Rudolf</author>
 	<namespace>CMSPico</namespace>
 	<documentation>
 		<admin>https://github.com/nextcloud/cms_pico/wiki</admin>

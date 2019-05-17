@@ -1,12 +1,16 @@
 {
   "name": "nextcloud/cms_pico",
-  "description": "description_text",
+  "description": "Create websites using Pico CMS for Nextcloud",
   "minimum-stability": "stable",
   "license": "agpl",
   "authors": [
     {
       "name": "Maxence Lange",
       "email": "maxence@artificial-owl.com"
+    },
+    {
+      "name": "Daniel Rudolf",
+      "email": "picocms.org@daniel-rudolf.de"
     }
   ],
   "require": {
