@@ -7,7 +7,7 @@ OC.L10N.register(
     "It was not possible to update your theme on {name}" : "No s'ha pogut actualitzar el vostre tema a {name}",
     "This operation will delete the website {name} but its content will still be available in your files" : "Aquesta operació suprimirà el lloc web {name}, però el seu contingut encara estarà disponible als vostres fitxers",
     "Please confirm" : "Si us plau confirmeu",
-    "Please wait" : "Espereu",
+    "Please wait" : "Espereu si us plau",
     "Create a new website" : "Creeu un lloc web nou",
     "It was not possible to update your website" : "No s’ha pogut actualitzar el vostre lloc web",
     "It was not possible to create your website {name}" : "No s'ha pogut crear el vostre lloc web {name}",
