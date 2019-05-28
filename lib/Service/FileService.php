@@ -21,20 +21,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace OCA\CMSPico\Service;
 
-use DirectoryIterator;
 use OCA\CMSPico\AppInfo\Application;
+use OCA\CMSPico\Files\FolderInterface;
+use OCA\CMSPico\Files\LocalFolder;
+use OCA\CMSPico\Files\StorageFile;
+use OCA\CMSPico\Files\StorageFolder;
 use OCP\Files\File;
 use OCP\Files\Folder;
+use OCP\Files\InvalidPathException;
 use OCP\Files\IRootFolder;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 
-class FileService {
+class FileService
+{
+	/** @var string */
+	const APPDATA_PUBLIC = __DIR__ . '/../../appdata_public/';
 
-
-	const INSTALL_DIR = __DIR__ . '/../../Pico/';
+	/** @var string */
+	const APPDATA_SYSTEM = __DIR__ . '/../../appdata/';
 
 	/** @var IRootFolder */
 	private $rootFolder;
@@ -42,190 +51,121 @@ class FileService {
 	/** @var ConfigService */
 	private $configService;
 
-	/** @var MiscService */
-	private $miscService;
+	/** @var FolderInterface */
+	private $publicFolder;
 
-	/** @var Folder */
+	/** @var FolderInterface */
+	private $systemFolder;
+
+	/** @var FolderInterface */
 	private $appDataFolder;
 
 	/** @var string */
 	private $fileExtensionBlacklist = '/^ph(?:ar|p|ps|tml|p[0-9]+)$/';
 
-
 	/**
-	 * ConfigService constructor.
+	 * FileService constructor.
 	 *
 	 * @param IRootFolder $rootFolder
 	 * @param ConfigService $configService
-	 * @param MiscService $miscService
 	 */
-	public function __construct(
-		IRootFolder $rootFolder, ConfigService $configService, MiscService $miscService
-	) {
+	public function __construct(IRootFolder $rootFolder, ConfigService $configService)
+	{
 		$this->rootFolder = $rootFolder;
 		$this->configService = $configService;
-		$this->miscService = $miscService;
 	}
-
-
-//	public function getAppDataFolderContent($dir) {
-	public function getDirectoriesFromAppDataFolder($dir) {
-// do we still use DirectoryIterator as files are in DB ?
-		$all = [];
-
-		foreach (new DirectoryIterator($this->getAppDataFolderPath($dir, true)) as $file) {
-			if (!$file->isDir() || substr($file->getFilename(), 0, 1) === '.') {
-				continue;
-			}
-
-			$all[] = $file->getFilename();
-		}
-
-		return $all;
-	}
-
 
 	/**
-	 * @param string $base
-	 * @param string $dir
-	 *
-	 * @return string[]
+	 * @return FolderInterface
+	 * @throws InvalidPathException
+	 * @throws NotFoundException
 	 */
-	public function getSourceFiles($base, $dir = '') {
-
-		$base = MiscService::endSlash($base);
-		$dir = MiscService::endSlash($dir);
-
-		$files = [];
-		foreach (new DirectoryIterator($base . $dir) as $file) {
-
-			if (substr($file->getFilename(), 0, 1) === '.') {
-				continue;
-			}
-
-			if ($file->isDir()) {
-				$files[] = $dir . $file->getFilename() . '/';
-				$files = array_merge($files, $this->getSourceFiles($base, $dir . $file->getFilename()));
-				continue;
-			}
-
-			$files[] = $dir . $file->getFilename();
+	public function getPublicFolder(): FolderInterface
+	{
+		if ($this->publicFolder === null) {
+			$this->publicFolder = new LocalFolder('/', self::APPDATA_PUBLIC);
 		}
 
-		return $files;
+		return $this->publicFolder;
 	}
 
-
 	/**
-	 * // TODO: this function should use File from nc, not read on the filesystem
-	 *
-	 * @param string $base
-	 * @param string $dir
-	 *
-	 * @return string[]
+	 * @return FolderInterface
+	 * @throws InvalidPathException
+	 * @throws NotFoundException
 	 */
-	public function getAppDataFiles($base, $dir = '') {
-
-		$base = MiscService::endSlash($base);
-		$dir = MiscService::endSlash($dir);
-
-		$files = [];
-		foreach (new DirectoryIterator($base . $dir) as $file) {
-
-			if (substr($file->getFilename(), 0, 1) === '.') {
-				continue;
-			}
-
-			if ($file->isDir()) {
-				$files[] = $dir . $file->getFilename() . '/';
-				$files = array_merge($files, $this->getSourceFiles($base, $dir . $file->getFilename()));
-				continue;
-			}
-
-			$files[] = $dir . $file->getFilename();
+	public function getSystemFolder(): FolderInterface
+	{
+		if ($this->systemFolder === null) {
+			$this->systemFolder = new LocalFolder('/', self::APPDATA_SYSTEM);
 		}
 
-		return $files;
+		return $this->systemFolder;
 	}
 
+	/**
+	 * @return FolderInterface
+	 * @throws InvalidPathException
+	 * @throws NotFoundException
+	 */
+	public function getAppDataFolder(): FolderInterface
+	{
+		if ($this->appDataFolder === null) {
+			$baseAppDataFolderName = 'appdata_' . $this->configService->getSystemValue('instanceid', '');
+			$appDataFolderName = Application::APP_NAME;
+
+			try {
+				/** @var Folder $baseFolder */
+				$baseFolder = $this->rootFolder->get($baseAppDataFolderName);
+
+				if (!($baseFolder instanceof Folder)) {
+					throw new InvalidPathException();
+				}
+			} catch (NotFoundException $notFoundException) {
+				try {
+					$baseFolder = $this->rootFolder->newFolder($baseAppDataFolderName);
+				} catch (NotPermittedException $notPermittedException) {
+					throw $notFoundException;
+				}
+			}
+
+			try {
+				$appDataFolder = $baseFolder->get($appDataFolderName);
+
+				if (!($appDataFolder instanceof Folder)) {
+					throw new InvalidPathException();
+				}
+			} catch (NotFoundException $notFoundException) {
+				try {
+					$appDataFolder = $baseFolder->newFolder($appDataFolderName);
+				} catch (NotPermittedException $notPermittedException) {
+					throw $notFoundException;
+				}
+			}
+
+			$this->appDataFolder = new StorageFolder($appDataFolder);
+		}
+
+		return $this->appDataFolder;
+	}
 
 	/**
 	 * @param string $dir
-	 *
 	 * @param bool $absolute
 	 *
 	 * @return string
 	 */
-	public function getAppDataFolderPath($dir, $absolute = false) {
+	public function getAppDataFolderPath(string $dir, bool $absolute = false): string
+	{
+		$baseAppDataFolderName = 'appdata_' . $this->configService->getSystemValue('instanceid', '');
+		$appDataFolderName = Application::APP_NAME;
 
-		$appNode = $this->getAppDataFolder();
-
-		try {
-			$appNode->get($dir);
-		} catch (NotFoundException $e) {
-			$this->createAppDataFolder($appNode, $dir);
+		if (!$absolute) {
+			return $baseAppDataFolderName . '/' . $appDataFolderName . '/' . $dir . '/';
+		} else {
+			$dataFolderPath = rtrim($this->configService->getSystemValue('datadirectory', null), '/');
+			return $dataFolderPath . '/' . $baseAppDataFolderName . '/' . $appDataFolderName . '/' . $dir . '/';
 		}
-
-		$appPath = '';
-		if ($absolute) {
-			$dataDir = $this->configService->getSystemValue('datadirectory', null);
-			$appPath .= MiscService::endSlash($dataDir);
-		}
-
-		$appPath .= MiscService::endSlash($appNode->getInternalPath());
-		$appPath .= MiscService::endSlash($dir);
-
-		return $appPath;
-	}
-
-
-	/**
-	 * Create Appdata Subfolder and duplicate the content from apps/cms_pico/Pico/
-	 *
-	 * @param Folder $appNode
-	 * @param string $dir
-	 */
-	private function createAppDataFolder(Folder $appNode, $dir) {
-		$appFolder = $appNode->newFolder($dir);
-
-		$files = $this->getSourceFiles(self::INSTALL_DIR . $dir);
-		foreach ($files as $file) {
-			if (substr($file, -1) === '/') {
-				$appFolder->newFolder($file);
-			} else {
-				$newFile = $appFolder->newFile($file);
-				$newFile->putContent(file_get_contents(self::INSTALL_DIR . $dir . '/' . $file));
-			}
-		}
-	}
-
-
-	/**
-	 * Get AppData Folder for this app, create it otherwise.
-	 *
-	 * @return Folder
-	 */
-	private function getAppDataFolder() {
-		if ($this->appDataFolder === null) {
-
-			$instanceId = $this->configService->getSystemValue('instanceid', null);
-			$name = 'appdata_' . $instanceId;
-
-			/** @var Folder $globalAppDataFolder */
-			try {
-				$globalAppDataFolder = $this->rootFolder->get($name);
-			} catch (NotFoundException $e) {
-				$globalAppDataFolder = $this->rootFolder->newFolder($name);
-			}
-
-			try {
-				$this->appDataFolder = $globalAppDataFolder->get(Application::APP_NAME);
-			} catch (NotFoundException $e) {
-				$this->appDataFolder = $globalAppDataFolder->newFolder(Application::APP_NAME);
-			}
-		}
-
-		return $this->appDataFolder;
 	}
 
 	/**
@@ -235,12 +175,11 @@ class FileService {
 	 * @throws NotFoundException
 	 * @throws NotPermittedException
 	 */
-	public function getFile($file) : File
+	public function getFile(string $file): File
 	{
-		/** @var File $fileNode */
+		/** @var StorageFile $fileNode */
 		$fileNode = $this->getAppDataFolder()->get($file);
-
-		if (!($fileNode instanceof File)) {
+		if (!$fileNode->isFile()) {
 			throw new NotFoundException();
 		}
 
@@ -248,6 +187,8 @@ class FileService {
 			throw new NotPermittedException();
 		}
 
-		return $fileNode;
+		/** @var File $ocFileNode */
+		$ocFileNode = $fileNode->getOCNode();
+		return $ocFileNode;
 	}
 }

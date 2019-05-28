@@ -47,4 +47,12 @@ Because Pico is using the **Markdown** format, you should consider enabling the 
 		<personal-section>OCA\CMSPico\Settings\PersonalSection</personal-section>
 	</settings>
 
+	<repair-steps>
+		<install>
+			<step>OCA\CMSPico\Migration\AppDataRepairStep</step>
+		</install>
+		<post-migration>
+			<step>OCA\CMSPico\Migration\AppDataRepairStep</step>
+		</post-migration>
+	</repair-steps>
 </info>

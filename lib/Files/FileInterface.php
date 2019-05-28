@@ -22,40 +22,31 @@
 
 declare(strict_types=1);
 
-namespace OCA\CMSPico\Service;
+namespace OCA\CMSPico\Files;
 
-use OC\App\AppManager;
-use OCA\CMSPico\AppInfo\Application;
+use OCP\Files\GenericFileException;
+use OCP\Files\NotPermittedException;
 
-class PluginsService
+interface FileInterface extends NodeInterface
 {
-	/** @var AppManager */
-	private $appManager;
+	/**
+	 * @return string
+	 */
+	public function getExtension(): string;
 
 	/**
-	 * PluginsService constructor.
+	 * @return string
+	 * @throws NotPermittedException
+	 * @throws GenericFileException
+	 */
+	public function getContent(): string;
+
+	/**
+	 * @param string $data
 	 *
-	 * @param AppManager $appManager
+	 * @return void
+	 * @throws NotPermittedException
+	 * @throws GenericFileException
 	 */
-	function __construct(AppManager $appManager)
-	{
-		$this->appManager = $appManager;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getPluginsPath(): string
-	{
-		$appPath = $this->appManager->getAppPath(Application::APP_NAME);
-		return $appPath . '/appdata_public/' . PicoService::DIR_PLUGINS . '/';
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getPluginsUrl(): string
-	{
-		return \OC_App::getAppWebPath(Application::APP_NAME) . '/appdata_public/' . PicoService::DIR_PLUGINS . '/';
-	}
+	public function putContent(string $data);
 }

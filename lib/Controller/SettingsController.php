@@ -3,6 +3,7 @@
  * CMS Pico - Create websites using Pico CMS for Nextcloud.
  *
  * @copyright Copyright (c) 2017, Maxence Lange (<maxence@artificial-owl.com>)
+ * @copyright Copyright (c) 2019, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -35,8 +36,8 @@ use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IRequest;
 
-class SettingsController extends Controller {
-
+class SettingsController extends Controller
+{
 	/** @var string */
 	private $userId;
 
@@ -68,11 +69,16 @@ class SettingsController extends Controller {
 	 * @param MiscService $miscService
 	 */
 	function __construct(
-		IRequest $request, $userId, ConfigService $configService, TemplatesService $templatesService,
-		ThemesService $themesService, WebsitesService $websitesService,
+		IRequest $request,
+		$userId,
+		ConfigService $configService,
+		TemplatesService $templatesService,
+		ThemesService $themesService,
+		WebsitesService $websitesService,
 		MiscService $miscService
 	) {
 		parent::__construct(Application::APP_NAME, $request);
+
 		$this->userId = $userId;
 		$this->configService = $configService;
 		$this->templatesService = $templatesService;
@@ -199,7 +205,7 @@ class SettingsController extends Controller {
 
 			return $this->miscService->success(
 				[
-					'themes'   => $this->themesService->getThemesList(),
+					'themes'   => $this->themesService->getThemes(),
 					'websites' => $websites
 				]
 			);
@@ -216,8 +222,8 @@ class SettingsController extends Controller {
 		$data = [
 			'templates'     => $this->templatesService->getTemplatesList(true),
 			'templates_new' => $this->templatesService->getNewTemplatesList(),
-			'themes'        => $this->themesService->getThemesList(true),
-			'themes_new'    => $this->themesService->getNewThemesList()
+			'themes'        => $this->themesService->getCustomThemes(),
+			'themes_new'    => $this->themesService->getNewCustomThemes()
 		];
 
 		return new DataResponse($data, Http::STATUS_OK);
@@ -271,11 +277,14 @@ class SettingsController extends Controller {
 	 *
 	 * @return DataResponse
 	 */
-	public function addCustomTheme($theme) {
+	public function addCustomTheme(string $theme): DataResponse
+	{
+		$this->themesService->publishCustomTheme($theme);
 
-		$custom = $this->themesService->getThemesList(true);
-		array_push($custom, $theme);
-		$this->configService->setAppValue(ConfigService::CUSTOM_THEMES, json_encode($custom));
+		$customThemes = $this->themesService->getCustomThemes();
+		$customThemes[] = $theme;
+
+		$this->configService->setAppValue(ConfigService::CUSTOM_THEMES, json_encode($customThemes));
 
 		return $this->getSettingsAdmin();
 	}
@@ -285,16 +294,21 @@ class SettingsController extends Controller {
 	 *
 	 * @return DataResponse
 	 */
-	public function removeCustomTheme($theme) {
+	public function removeCustomTheme(string $theme): DataResponse
+	{
+		$customThemes = $this->themesService->getCustomThemes();
 
-		$custom = $this->themesService->getThemesList(true);
+		$newCustomThemes = [];
+		foreach ($customThemes as $customTheme) {
+			if ($customTheme === $theme) {
+				$this->themesService->depublishCustomTheme($theme);
+				continue;
+			}
 
-		$k = array_search($theme, $custom);
-		if ($k !== false) {
-			unset($custom[$k]);
+			$newCustomThemes[] = $customTheme;
 		}
 
-		$this->configService->setAppValue(ConfigService::CUSTOM_THEMES, json_encode($custom));
+		$this->configService->setAppValue(ConfigService::CUSTOM_THEMES, json_encode($newCustomThemes));
 
 		return $this->getSettingsAdmin();
 	}

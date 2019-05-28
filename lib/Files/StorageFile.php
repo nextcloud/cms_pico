@@ -22,40 +22,46 @@
 
 declare(strict_types=1);
 
-namespace OCA\CMSPico\Service;
+namespace OCA\CMSPico\Files;
 
-use OC\App\AppManager;
-use OCA\CMSPico\AppInfo\Application;
+use OCP\Files\File as OCFile;
 
-class PluginsService
+class StorageFile extends AbstractStorageNode implements FileInterface
 {
-	/** @var AppManager */
-	private $appManager;
+	/** @var OCFile */
+	protected $node;
 
 	/**
-	 * PluginsService constructor.
+	 * StorageFile constructor.
 	 *
-	 * @param AppManager $appManager
+	 * @param OCFile $file
 	 */
-	function __construct(AppManager $appManager)
+	public function __construct(OCFile $file)
 	{
-		$this->appManager = $appManager;
+		parent::__construct($file);
 	}
 
 	/**
-	 * @return string
+	 * {@inheritDoc}
 	 */
-	public function getPluginsPath(): string
+	public function getExtension(): string
 	{
-		$appPath = $this->appManager->getAppPath(Application::APP_NAME);
-		return $appPath . '/appdata_public/' . PicoService::DIR_PLUGINS . '/';
+		return $this->node->getExtension();
 	}
 
 	/**
-	 * @return string
+	 * {@inheritDoc}
 	 */
-	public function getPluginsUrl(): string
+	public function getContent(): string
 	{
-		return \OC_App::getAppWebPath(Application::APP_NAME) . '/appdata_public/' . PicoService::DIR_PLUGINS . '/';
+		return $this->node->getContent();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function putContent(string $data)
+	{
+		return $this->node->putContent($data);
 	}
 }

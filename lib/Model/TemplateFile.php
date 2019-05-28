@@ -3,6 +3,7 @@
  * CMS Pico - Create websites using Pico CMS for Nextcloud.
  *
  * @copyright Copyright (c) 2017, Maxence Lange (<maxence@artificial-owl.com>)
+ * @copyright Copyright (c) 2019, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -22,64 +23,24 @@
 
 namespace OCA\CMSPico\Model;
 
+use OCA\CMSPico\Files\MemoryFile;
 
-class TemplateFile {
-
-	/** @var string */
-	private $base;
-
-	/** @var string */
-	private $filename;
-
-	/** @var string */
-	private $content;
-
-
+class TemplateFile extends MemoryFile
+{
 	/**
-	 * TemplateFile constructor.
+	 * @param array<string,string> $data
 	 *
-	 * @param string $base
-	 * @param string $filename
+	 * @return void
 	 */
-	function __construct($base, $filename) {
-		$this->base = $base;
-		$this->filename = $filename;
-
-		// TODO: get the content from File
-		$this->content = file_get_contents($base . $filename);
-	}
-
-
-	/**
-	 * @return string
-	 */
-	public function getFilename() {
-		return $this->filename;
-	}
-
-
-	/**
-	 * @param string $content
-	 */
-	public function setContent($content) {
-		$this->content = $content;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getContent() {
-		return $this->content;
-	}
-
-
-	public function applyData($data) {
-		$ak = array_keys($data);
-		$temp = $this->getContent();
-		foreach ($ak as $k) {
-			$temp = str_replace('%%' . $k . '%%', $data[$k], $temp);
+	public function applyWebsiteData(array $data)
+	{
+		$variables = [];
+		foreach ($data as $key => $value) {
+			$variables['%%' . $key . '%%'] = $value;
 		}
 
-		$this->setContent($temp);
+		$content = $this->getContent();
+		$content = str_replace(array_keys($variables), $variables, $content);
+		$this->putContent($content);
 	}
 }

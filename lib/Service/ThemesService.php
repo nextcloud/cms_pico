@@ -28,17 +28,14 @@ namespace OCA\CMSPico\Service;
 use OC\App\AppManager;
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Exceptions\ThemeNotFoundException;
-use OCP\IL10N;
+use OCA\CMSPico\Files\FolderInterface;
+use OCP\Files\InvalidPathException;
+use OCP\Files\NotFoundException;
 
 class ThemesService
 {
-	const THEMES = ['default'];
-
 	/** @var AppManager */
 	private $appManager;
-
-	/** @var IL10N */
-	private $l10n;
 
 	/** @var ConfigService */
 	private $configService;
@@ -46,108 +43,132 @@ class ThemesService
 	/** @var FileService */
 	private $fileService;
 
-	/** @var MiscService */
-	private $miscService;
-
 	/**
 	 * ThemesService constructor.
 	 *
-	 * @param AppManager $appManager
-	 * @param IL10N $l10n
+	 * @param AppManager    $appManager
 	 * @param ConfigService $configService
-	 * @param FileService $fileService
-	 * @param MiscService $miscService
+	 * @param FileService   $fileService
 	 */
-	function __construct(
-		AppManager $appManager,
-		IL10N $l10n,
-		ConfigService $configService,
-		FileService $fileService,
-		MiscService $miscService
-	) {
+	function __construct(AppManager $appManager, ConfigService $configService, FileService $fileService)
+	{
 		$this->appManager = $appManager;
-		$this->l10n = $l10n;
 		$this->configService = $configService;
 		$this->fileService = $fileService;
-		$this->miscService = $miscService;
 	}
 
-
 	/**
-	 * getThemesList();
-	 *
-	 * returns all available themes.
-	 *
-	 * @param bool $customOnly
-	 *
-	 * @return array
-	 */
-	public function getThemesList($customOnly = false) {
-		$themes = [];
-		if ($customOnly !== true) {
-			$themes = self::THEMES;
-		}
-
-		$customs = json_decode($this->configService->getAppValue(ConfigService::CUSTOM_THEMES), true);
-		if ($customs !== null) {
-			$themes = array_merge($themes, $customs);
-		}
-
-		return $themes;
-	}
-
-
-	/**
-	 * Check if a theme exist.
-	 *
 	 * @param $theme
 	 *
-	 * @return void
 	 * @throws ThemeNotFoundException
 	 */
 	public function assertValidTheme($theme)
 	{
-		$themes = $this->getThemesList();
-		if (!in_array($theme, $themes)) {
+		if (!in_array($theme, $this->getSystemThemes()) && !in_array($theme, $this->getCustomThemes())) {
 			throw new ThemeNotFoundException();
 		}
 	}
 
+	/**
+	 * @return string[]
+	 */
+	public function getThemes(): array
+	{
+		return array_merge($this->getSystemThemes(), $this->getCustomThemes());
+	}
 
 	/**
-	 * returns theme from the Pico/themes/ dir that are not available yet to users.
-	 *
-	 * @return array
+	 * @return string[]
 	 */
-	public function getNewThemesList() {
+	public function getSystemThemes(): array
+	{
+		/** @var FolderInterface $systemThemesFolder */
+		$systemThemesFolder = $this->fileService->getSystemFolder()->get(PicoService::DIR_THEMES);
+		if (!$systemThemesFolder->isFolder()) {
+			throw new InvalidPathException();
+		}
 
-		$newThemes = [];
-		$currThemes = $this->getThemesList();
-		$allThemes = $this->fileService->getDirectoriesFromAppDataFolder(PicoService::DIR_THEMES);
-
-		foreach ($allThemes as $theme) {
-			if (!in_array($theme, $currThemes)) {
-				$newThemes[] = $theme;
+		$systemThemes = [];
+		foreach ($systemThemesFolder->listing() as $themeFolder) {
+			if ($themeFolder->isFolder()) {
+				$systemThemes[] = $themeFolder->getName();
 			}
 		}
 
-		return $newThemes;
+		return $systemThemes;
+	}
+
+	/**
+	 * @return string[]
+	 */
+	public function getCustomThemes(): array
+	{
+		$json = $this->configService->getAppValue(ConfigService::CUSTOM_THEMES);
+		return json_decode($json, true);
+	}
+
+	/**
+	 * @return string[]
+	 */
+	public function getNewCustomThemes(): array
+	{
+		/** @var FolderInterface $customThemesFolder */
+		$customThemesFolder = $this->fileService->getAppDataFolder()->get(PicoService::DIR_THEMES);
+		if (!$customThemesFolder->isFolder()) {
+			throw new InvalidPathException();
+		}
+
+		$currentThemes = $this->getThemes();
+
+		$newCustomThemes = [];
+		foreach ($customThemesFolder->listing() as $themeFolder) {
+			$theme = $themeFolder->getName();
+			if ($themeFolder->isFolder() && !in_array($theme, $currentThemes)) {
+				$newCustomThemes[] = $theme;
+			}
+		}
+
+		return $newCustomThemes;
+	}
+
+	/**
+	 * @param string $theme
+	 */
+	public function publishCustomTheme(string $theme)
+	{
+		$publicFolder = $this->fileService->getPublicFolder();
+		$publicThemesFolder = $publicFolder->get(PicoService::DIR_THEMES);
+
+		$appDataFolder = $this->fileService->getAppDataFolder();
+		$appDataFolder->get(PicoService::DIR_THEMES . '/' . $theme)->copy($publicThemesFolder);
+	}
+
+	/**
+	 * @param string $theme
+	 */
+	public function depublishCustomTheme(string $theme)
+	{
+		$publicFolder = $this->fileService->getPublicFolder();
+
+		try {
+			$publicFolder->get(PicoService::DIR_THEMES . '/' . $theme)->delete();
+		} catch (NotFoundException $e) {}
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getThemesPath() : string
+	public function getThemesPath(): string
 	{
 		$appPath = $this->appManager->getAppPath(Application::APP_NAME);
-		return $appPath . '/Pico/' . PicoService::DIR_THEMES . '/';
+		return $appPath . '/appdata_public/' . PicoService::DIR_THEMES . '/';
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getThemesUrl() : string
+	public function getThemesUrl(): string
 	{
-		return \OC_App::getAppWebPath(Application::APP_NAME) . '/Pico/' . PicoService::DIR_THEMES . '/';
+		return \OC_App::getAppWebPath(Application::APP_NAME) . '/appdata_public/' . PicoService::DIR_THEMES . '/';
 	}
 }

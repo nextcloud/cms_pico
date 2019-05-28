@@ -3,6 +3,7 @@
  * CMS Pico - Create websites using Pico CMS for Nextcloud.
  *
  * @copyright Copyright (c) 2017, Maxence Lange (<maxence@artificial-owl.com>)
+ * @copyright Copyright (c) 2019, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -25,13 +26,18 @@ namespace OCA\CMSPico\Service;
 use Exception;
 use OCA\CMSPico\Exceptions\TemplateNotFoundException;
 use OCA\CMSPico\Exceptions\WriteAccessException;
+use OCA\CMSPico\Files\FileInterface;
+use OCA\CMSPico\Files\FolderInterface;
+use OCA\CMSPico\Files\StorageFolder;
 use OCA\CMSPico\Model\TemplateFile;
 use OCA\CMSPico\Model\Website;
 use OCP\Files\Folder;
+use OCP\Files\InvalidPathException;
+use OCP\Files\NotFoundException;
 use OCP\IL10N;
 
-class TemplatesService {
-
+class TemplatesService
+{
 	const TEMPLATES = ['sample_pico', 'empty'];
 
 	/** @var IL10N */
@@ -46,9 +52,6 @@ class TemplatesService {
 	/** @var MiscService */
 	private $miscService;
 
-	/** @var Folder */
-	private $websiteFolder;
-
 	/**
 	 * TemplatesService constructor.
 	 *
@@ -58,7 +61,9 @@ class TemplatesService {
 	 * @param MiscService $miscService
 	 */
 	function __construct(
-		IL10N $l10n, ConfigService $configService, FileService $fileService,
+		IL10N $l10n,
+		ConfigService $configService,
+		FileService $fileService,
 		MiscService $miscService
 	) {
 		$this->l10n = $l10n;
@@ -105,17 +110,22 @@ class TemplatesService {
 
 
 	/**
-	 * returns theme from the Pico/templates/ dir that are not available yet to users.
-	 *
-	 * @return array
+	 * @return string[]
 	 */
-	public function getNewTemplatesList() {
+	public function getNewTemplatesList(): array
+	{
+		$currentTemplates = $this->getTemplatesList();
+
+		/** @var FolderInterface $appDataTemplatesFolder */
+		$appDataTemplatesFolder = $this->fileService->getAppDataFolder()->get(PicoService::DIR_TEMPLATES);
+		if (!$appDataTemplatesFolder->isFolder()) {
+			throw new InvalidPathException();
+		}
 
 		$newTemplates = [];
-		$currTemplates = $this->getTemplatesList();
-		$allTemplates = $this->fileService->getDirectoriesFromAppDataFolder(PicoService::DIR_TEMPLATES);
-		foreach ($allTemplates as $template) {
-			if (!in_array($template, $currTemplates)) {
+		foreach ($appDataTemplatesFolder->listing() as $templateFolder) {
+			$template = $templateFolder->getName();
+			if ($templateFolder->isFolder() && !in_array($template, $currentTemplates)) {
 				$newTemplates[] = $template;
 			}
 		}
@@ -123,89 +133,87 @@ class TemplatesService {
 		return $newTemplates;
 	}
 
-
 	/**
-	 * Install templates into a new website.
-	 * Templates will be parsed and formatted in the process.
-	 *
 	 * @param Website $website
+	 *
+	 * @throws TemplateNotFoundException
 	 */
-	public function installTemplates(Website $website) {
+	public function installTemplates(Website $website)
+	{
+		$filesIterator = function (FolderInterface $folder, string $basePath = '') use (&$filesIterator) {
+			$files = [];
+			foreach ($folder->listing() as $node) {
+				if ($node->isFolder()) {
+					/** @var FolderInterface $node */
+					$files += $filesIterator($node, $basePath . '/' . $node->getName());
+				} else {
+					/** @var FileInterface $node */
+					$files[$basePath . '/' . $node->getName()] = $node->getContent();
+				}
+			}
 
-		$dir = $this->fileService->getAppDataFolderPath(PicoService::DIR_TEMPLATES, true);
-		$dir .= MiscService::endSlash($website->getTemplateSource());
+			return $files;
+		};
 
-		$files = $this->fileService->getAppDataFiles($dir);
+		$websitePath = $website->getPath();
+		$templateFile = $website->getTemplateSource();
 
-		$this->initWebsiteFolder($website);
-		$data = $this->generateData($website);
-		foreach ($files as $file) {
+		$systemFolder = $this->fileService->getSystemFolder();
+		$appDataFolder = $this->fileService->getAppDataFolder();
+		$userFolder = new StorageFolder(\OC::$server->getUserFolder($website->getUserId()));
 
-			if (substr($file, -1) === '/') {
+		try {
+			/** @var FolderInterface $templateFolder */
+			$templateFolder = $systemFolder->get(PicoService::DIR_TEMPLATES . '/' . $templateFile);
+			if (!$templateFolder->isFolder()) {
+				throw new NotFoundException();
+			}
+		} catch (NotFoundException $e) {
+			try {
+				/** @var FolderInterface $templateFolder */
+				$templateFolder = $appDataFolder->get(PicoService::DIR_TEMPLATES . '/' . $templateFile);
+				if (!$templateFolder->isFolder()) {
+					throw new NotFoundException();
+				}
+			} catch (NotFoundException $e) {
+				throw new TemplateNotFoundException();
+			}
+		}
+
+		try {
+			$websiteFolder = $userFolder->get($websitePath);
+		} catch (NotFoundException $e) {
+			$websiteFolder = $userFolder->newFolder($websitePath);
+		}
+
+		$websiteData = $this->generateWebsiteData($website);
+		foreach ($filesIterator($templateFolder) as $templateFilePath => $templateData) {
+			$templateFile = new TemplateFile($templateFilePath, $templateData);
+
+			try {
+				$targetFolder = $websiteFolder->get($templateFile->getParent());
+			} catch (NotFoundException $e) {
+				$targetFolder = $websiteFolder->newFolder($templateFile->getParent());
+			}
+
+			if ($templateFile->getName() === 'empty') {
 				continue;
 			}
 
-			$template = new TemplateFile($dir, $file);
-			$template->applyData($data);
-			$this->generateFile($template, $website);
+			$templateFile->applyWebsiteData($websiteData);
+			$templateFile->copy($targetFolder);
 		}
 	}
-
-
-	/**
-	 * @param TemplateFile $file
-	 * @param Website $website
-	 *
-	 * @throws WriteAccessException
-	 */
-	private function generateFile(TemplateFile $file, Website $website) {
-		try {
-			$this->initFolder(pathinfo($website->getPath() . $file->getFilename(), PATHINFO_DIRNAME));
-
-			if (substr($file->getFilename(), -5) === 'empty') {
-				return;
-			}
-
-			$new = $this->websiteFolder->newFile($website->getPath() . $file->getFilename());
-			$new->putContent($file->getContent());
-		} catch (Exception $e) {
-			throw new WriteAccessException();
-		}
-
-	}
-
-
-	/**
-	 * @param Website $website
-	 */
-	private function initWebsiteFolder(Website $website) {
-		$this->websiteFolder = \OC::$server->getUserFolder($website->getUserId());
-		$this->initFolder($website->getPath());
-	}
-
 
 	/**
 	 * @param Website $website
 	 *
-	 * @return array
+	 * @return array<string,string>
 	 */
-	private function generateData(Website $website) {
+	private function generateWebsiteData(Website $website): array
+	{
 		return [
-			'site_title' => $website->getName(),
-			'base_url'   => \OC::$WEBROOT . $website->getSite()
+			'site_title' => $website->getName()
 		];
 	}
-
-
-	/**
-	 * @param $path
-	 */
-	private function initFolder($path) {
-
-		if (!$this->websiteFolder->nodeExists($path)) {
-			$this->websiteFolder->newFolder($path);
-		}
-	}
-
-
 }

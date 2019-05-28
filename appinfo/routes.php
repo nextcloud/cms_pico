@@ -36,10 +36,6 @@ return [
 		],
 
 		[
-			'name' => 'Pico#getTheme', 'url' => '/themes/{file}', 'verb' => 'GET',
-			'requirements' => array('file' => '.+')
-		],
-		[
 			'name' => 'Pico#getPlugin', 'url' => '/plugins/{file}', 'verb' => 'GET',
 			'requirements' => array('file' => '.+')
 		],

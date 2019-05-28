@@ -77,14 +77,14 @@ class ThemesServiceTest extends \PHPUnit_Framework_TestCase {
 	 */
 	public function testThemes() {
 
-		$this->assertCount(1, $this->themesService->getThemesList());
-		$this->assertCount(0, $this->themesService->getThemesList(true));
-		$this->assertCount(0, $this->themesService->getNewThemesList());
+		$this->assertCount(1, $this->themesService->getThemes());
+		$this->assertCount(0, $this->themesService->getCustomThemes());
+		$this->assertCount(0, $this->themesService->getNewCustomThemes());
 
 		mkdir($this->fileService->getAppDataFolderPath('themes', true) . 'this_is_a_test');
-		$this->assertCount(1, $this->themesService->getThemesList());
-		$this->assertCount(0, $this->themesService->getThemesList(true));
-		$this->assertCount(1, $this->themesService->getNewThemesList());
+		$this->assertCount(1, $this->themesService->getThemes());
+		$this->assertCount(0, $this->themesService->getCustomThemes());
+		$this->assertCount(1, $this->themesService->getNewCustomThemes());
 
 		try {
 			$this->themesService->assertValidTheme('this_is_a_test');
@@ -95,21 +95,21 @@ class ThemesServiceTest extends \PHPUnit_Framework_TestCase {
 		}
 
 		$this->settingsController->addCustomTheme('this_is_a_test');
-		$this->assertCount(2, $this->themesService->getThemesList());
-		$this->assertCount(1, $this->themesService->getThemesList(true));
-		$this->assertCount(0, $this->themesService->getNewThemesList());
+		$this->assertCount(2, $this->themesService->getThemes());
+		$this->assertCount(1, $this->themesService->getCustomThemes());
+		$this->assertCount(0, $this->themesService->getNewCustomThemes());
 
 		$this->themesService->assertValidTheme('this_is_a_test');
 
 		$this->settingsController->removeCustomTheme('this_is_a_test');
-		$this->assertCount(1, $this->themesService->getThemesList());
-		$this->assertCount(0, $this->themesService->getThemesList(true));
-		$this->assertCount(1, $this->themesService->getNewThemesList());
+		$this->assertCount(1, $this->themesService->getThemes());
+		$this->assertCount(0, $this->themesService->getCustomThemes());
+		$this->assertCount(1, $this->themesService->getNewCustomThemes());
 
 		rmdir($this->fileService->getAppDataFolderPath('themes', true) . 'this_is_a_test');
-		$this->assertCount(1, $this->themesService->getThemesList());
-		$this->assertCount(0, $this->themesService->getThemesList(true));
-		$this->assertCount(0, $this->themesService->getNewThemesList());
+		$this->assertCount(1, $this->themesService->getThemes());
+		$this->assertCount(0, $this->themesService->getCustomThemes());
+		$this->assertCount(0, $this->themesService->getNewCustomThemes());
 
 		try {
 			$this->themesService->assertValidTheme('this_is_a_test');

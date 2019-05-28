@@ -41,12 +41,16 @@ class AssetService
 	/** @var IRootFolder */
 	private $rootFolder;
 
+	/** @var MiscService */
+	private $miscService;
+
 	/**
 	 * @param IRootFolder $rootFolder
 	 */
-	function __construct(IRootFolder $rootFolder)
+	function __construct(IRootFolder $rootFolder, MiscService $miscService)
 	{
 		$this->rootFolder = $rootFolder;
+		$this->miscService = $miscService;
 	}
 
 	/**
@@ -59,11 +63,14 @@ class AssetService
 	 * @throws AssetNotFoundException
 	 * @throws AssetNotPermittedException
 	 */
-	public function getAsset(Website $website) : File
+	public function getAsset(Website $website): File
 	{
 		try {
 			$asset = $website->getPage();
-			$asset = $website->normalizePath($asset, PicoService::DIR_ASSETS);
+			$asset = $this->miscService->normalizePath($asset);
+			if (substr($asset, 0, strlen(PicoService::DIR_ASSETS . '/')) !== PicoService::DIR_ASSETS . '/') {
+				throw new InvalidPathException();
+			}
 
 			$website->assertViewerAccess($asset);
 

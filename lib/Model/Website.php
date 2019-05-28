@@ -192,44 +192,6 @@ class Website extends WebsiteCore
 	}
 
 	/**
-	 * @param string $path
-	 * @param string $basePath
-	 *
-	 * @return string
-	 * @throws InvalidPathException
-	 */
-	public function normalizePath(string $path, string $basePath = '') : string
-	{
-		$basePath = trim($basePath, '/');
-
-		$path = str_replace('\\', '/', $path);
-		$pathParts = explode('/', $path);
-
-		$resultParts = array();
-		foreach ($pathParts as $pathPart) {
-			if (($pathPart === '') || ($pathPart === '.')) {
-				continue;
-			} elseif ($pathPart === '..') {
-				if (!$resultParts) {
-					throw new InvalidPathException();
-				}
-
-				array_pop($resultParts);
-				continue;
-			}
-
-			$resultParts[] = $pathPart;
-		}
-
-		$path = implode('/', $resultParts);
-		if ($basePath && ($path !== $basePath) && (strpos($path, $basePath . '/') !== 0)) {
-			throw new InvalidPathException();
-		}
-
-		return $path;
-	}
-
-	/**
 	 * @param string|null $file
 	 *
 	 * @return string
@@ -270,8 +232,8 @@ class Website extends WebsiteCore
 
 			$file = substr($file, $appPathLength);
 
-			if (strpos($file, 'Pico/' . PicoService::DIR_THEMES . '/') !== 0) {
-				if (strpos($file, 'Pico/' . PicoService::DIR_PLUGINS . '/') !== 0) {
+			if (strpos($file, 'appdata_public/' . PicoService::DIR_THEMES . '/') !== 0) {
+				if (strpos($file, 'appdata_public/' . PicoService::DIR_PLUGINS . '/') !== 0) {
 					throw new PageInvalidPathException();
 				}
 			}

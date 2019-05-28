@@ -27,6 +27,7 @@ use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Exceptions\MissingKeyInArrayException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\Files\InvalidPathException;
 use OCP\ILogger;
 use OCP\Util;
 
@@ -127,5 +128,36 @@ class MiscService {
 			array_merge($data, array('status' => 1)),
 			Http::STATUS_CREATED
 		);
+	}
+
+
+	/**
+	 * @param string $path
+	 *
+	 * @return string
+	 * @throws InvalidPathException
+	 */
+	public function normalizePath(string $path): string
+	{
+		$path = str_replace('\\', '/', $path);
+		$pathParts = explode('/', $path);
+
+		$resultParts = [];
+		foreach ($pathParts as $pathPart) {
+			if (($pathPart === '') || ($pathPart === '.')) {
+				continue;
+			} elseif ($pathPart === '..') {
+				if (!$resultParts) {
+					throw new InvalidPathException();
+				}
+
+				array_pop($resultParts);
+				continue;
+			}
+
+			$resultParts[] = $pathPart;
+		}
+
+		return implode('/', $resultParts);
 	}
 }

@@ -69,6 +69,9 @@ class PicoService
 	/** @var PluginsService */
 	private $pluginsService;
 
+	/** @var MiscService */
+	private $miscService;
+
 	/**
 	 * PicoService constructor.
 	 *
@@ -78,6 +81,7 @@ class PicoService
 	 * @param FileService    $fileService
 	 * @param ThemesService  $themesService
 	 * @param PluginsService $pluginsService
+	 * @param MiscService    $miscService
 	 */
 	function __construct(
 		$userId,
@@ -85,7 +89,8 @@ class PicoService
 		ILogger $logger,
 		FileService $fileService,
 		ThemesService $themesService,
-		PluginsService $pluginsService
+		PluginsService $pluginsService,
+		MiscService $miscService
 	) {
 		$this->userId = $userId;
 		$this->appManager = $appManager;
@@ -93,6 +98,7 @@ class PicoService
 		$this->fileService = $fileService;
 		$this->themesService = $themesService;
 		$this->pluginsService = $pluginsService;
+		$this->miscService = $miscService;
 	}
 
 	/**
@@ -111,7 +117,7 @@ class PicoService
 	{
 		try {
 			$page = $website->getPage();
-			$page = $website->normalizePath($page);
+			$page = $this->miscService->normalizePath($page);
 
 			$website->assertViewerAccess($page);
 

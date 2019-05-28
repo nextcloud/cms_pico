@@ -223,24 +223,6 @@ class PicoController extends Controller
 	}
 
 	/**
-	 * @PublicPage
-	 * @NoCSRFRequired
-	 *
-	 * @return Response
-	 */
-	public function getTheme($file) : Response
-	{
-		try {
-			$file = $this->fileService->getFile(PicoService::DIR_THEMES . '/' . $file);
-			return $this->createFileResponse($file);
-		} catch (NotFoundException $e) {
-			return new NotFoundResponse();
-		} catch (NotPermittedException $e) {
-			return new NotPermittedResponse();
-		}
-	}
-
-	/**
 	 * @param File        $file
 	 * @param string|null $secureFileType
 	 *
