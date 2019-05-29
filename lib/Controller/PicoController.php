@@ -53,6 +53,7 @@ use OCP\Files\IMimeTypeDetector;
 use OCP\Files\InvalidPathException;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
+use OCP\IL10N;
 use OCP\IRequest;
 
 class PicoController extends Controller
@@ -66,6 +67,9 @@ class PicoController extends Controller
 	/** @var FileService */
 	private $fileService;
 
+	/** @var IL10N */
+	private $l10n;
+
 	/** @var IMimeTypeDetector */
 	private $mimeTypeDetector;
 
@@ -76,6 +80,7 @@ class PicoController extends Controller
 	 * @param string|null       $userId
 	 * @param WebsitesService   $websitesService
 	 * @param FileService       $fileService
+	 * @param IL10N             $l10n
 	 * @param IMimeTypeDetector $mimeTypeDetector
 	 */
 	public function __construct(
@@ -83,6 +88,7 @@ class PicoController extends Controller
 		$userId,
 		WebsitesService $websitesService,
 		FileService $fileService,
+		IL10N $l10n,
 		IMimeTypeDetector $mimeTypeDetector
 	) {
 		parent::__construct(Application::APP_NAME, $request);
@@ -90,6 +96,7 @@ class PicoController extends Controller
 		$this->userId = $userId;
 		$this->websitesService = $websitesService;
 		$this->fileService = $fileService;
+		$this->l10n = $l10n;
 		$this->mimeTypeDetector = $mimeTypeDetector;
 	}
 
@@ -139,21 +146,21 @@ class PicoController extends Controller
 			$page = $this->websitesService->getPage($site, $page, $this->userId, $proxyRequest);
 			return new PicoPageResponse($page);
 		} catch (WebsiteNotFoundException $e) {
-			return new NotFoundResponse('The requested website could not be found on the server. Maybe the website was deleted?');
+			return new NotFoundResponse($this->l10n->t('The requested website could not be found on the server. Maybe the website was deleted?'));
 		} catch (WebsiteNotPermittedException $e) {
-			return new NotPermittedResponse('You don\'t have access to this private website. Maybe the share was deleted or has expired?');
+			return new NotPermittedResponse($this->l10n->t('You don\'t have access to this private website. Maybe the share was deleted or has expired?'));
 		} catch (EncryptedFilesystemException $e) {
-			return new NotPermittedResponse('This website is hosted on a encrypted Nextcloud instance and thus could not be accessed.');
+			return new NotPermittedResponse($this->l10n->t('This website is hosted on a encrypted Nextcloud instance and thus could not be accessed.'));
 		} catch (ThemeNotFoundException $e) {
-			return new NotFoundResponse('This website uses a theme that could not be found on the server and thus could not be built.');
+			return new NotFoundResponse($this->l10n->t('This website uses a theme that could not be found on the server and thus could not be built.'));
 		} catch (PageInvalidPathException $e) {
-			return new NotFoundResponse('The requested website page could not be found on the server. Maybe the page was deleted?');
+			return new NotFoundResponse($this->l10n->t('The requested website page could not be found on the server. Maybe the page was deleted?'));
 		} catch (PageNotFoundException $e) {
-			return new NotFoundResponse('The requested website page could not be found on the server. Maybe the page was deleted?');
+			return new NotFoundResponse($this->l10n->t('The requested website page could not be found on the server. Maybe the page was deleted?'));
 		} catch (PageNotPermittedException $e) {
-			return new NotPermittedResponse('You don\'t have access to this website page. Maybe the share was deleted or has expired?');
+			return new NotPermittedResponse($this->l10n->t('You don\'t have access to this website page. Maybe the share was deleted or has expired?'));
 		} catch (PicoRuntimeException $e) {
-			return new PicoErrorResponse('The requested website page could not be built, so that the server was unable to complete your request.', $e);
+			return new PicoErrorResponse($this->l10n->t('The requested website page could not be built, so that the server was unable to complete your request.', $e));
 		}
 	}
 
@@ -190,17 +197,17 @@ class PicoController extends Controller
 				throw new AssetNotPermittedException($e);
 			}
 		} catch (WebsiteNotFoundException $e) {
-			return new NotFoundResponse('The requested website could not be found on the server. Maybe the website was deleted?');
+			return new NotFoundResponse($this->l10n->t('The requested website could not be found on the server. Maybe the website was deleted?'));
 		} catch (WebsiteNotPermittedException $e) {
-			return new NotPermittedResponse('You don\'t have access to this private website. Maybe the share was deleted or has expired?');
+			return new NotPermittedResponse($this->l10n->t('You don\'t have access to this private website. Maybe the share was deleted or has expired?'));
 		} catch (EncryptedFilesystemException $e) {
-			return new NotPermittedResponse('This website is hosted on a encrypted Nextcloud instance and thus could not be accessed.');
+			return new NotPermittedResponse($this->l10n->t('This website is hosted on a encrypted Nextcloud instance and thus could not be accessed.'));
 		} catch (AssetInvalidPathException $e) {
-			return new NotFoundResponse('The requested website asset could not be found on the server. Maybe the asset was deleted?');
+			return new NotFoundResponse($this->l10n->t('The requested website asset could not be found on the server. Maybe the asset was deleted?'));
 		} catch (AssetNotFoundException $e) {
-			return new NotFoundResponse('The requested website asset could not be found on the server. Maybe the asset was deleted?');
+			return new NotFoundResponse($this->l10n->t('The requested website asset could not be found on the server. Maybe the asset was deleted?'));
 		} catch (AssetNotPermittedException $e) {
-			return new NotPermittedResponse('You don\'t have access to this website asset. Maybe the share was deleted or has expired?');
+			return new NotPermittedResponse($this->l10n->t('You don\'t have access to this website asset. Maybe the share was deleted or has expired?'));
 		}
 	}
 
@@ -210,15 +217,15 @@ class PicoController extends Controller
 	 *
 	 * @return Response
 	 */
-	public function getPlugin($file) : Response
+	public function getPlugin($file): Response
 	{
 		try {
 			$file = $this->fileService->getFile(PicoService::DIR_PLUGINS . '/' . $file);
 			return $this->createFileResponse($file);
 		} catch (NotFoundException $e) {
-			return new NotFoundResponse();
+			return new NotFoundResponse($this->l10n->t('The requested website asset could not be found on the server. Maybe the asset was deleted?'));
 		} catch (NotPermittedException $e) {
-			return new NotPermittedResponse();
+			return new NotPermittedResponse($this->l10n->t('You don\'t have access to this website asset. Maybe the share was deleted or has expired?'));
 		}
 	}
 
