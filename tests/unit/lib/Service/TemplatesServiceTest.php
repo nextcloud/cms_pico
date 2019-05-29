@@ -81,14 +81,14 @@ class TemplatesServiceTest extends \PHPUnit_Framework_TestCase {
 			rmdir($this->fileService->getAppDataFolderPath('templates', true) . 'this_is_a_template');
 		}
 
-		$this->assertCount(2, $this->templatesService->getTemplatesList());
-		$this->assertCount(0, $this->templatesService->getTemplatesList(true));
-		$this->assertCount(0, $this->templatesService->getNewTemplatesList());
+		$this->assertCount(2, $this->templatesService->getTemplates());
+		$this->assertCount(0, $this->templatesService->getCustomTemplates());
+		$this->assertCount(0, $this->templatesService->getNewCustomTemplates());
 
 		mkdir($this->fileService->getAppDataFolderPath('templates', true) . 'this_is_a_template');
-		$this->assertCount(2, $this->templatesService->getTemplatesList());
-		$this->assertCount(0, $this->templatesService->getTemplatesList(true));
-		$this->assertCount(1, $this->templatesService->getNewTemplatesList());
+		$this->assertCount(2, $this->templatesService->getTemplates());
+		$this->assertCount(0, $this->templatesService->getCustomTemplates());
+		$this->assertCount(1, $this->templatesService->getNewCustomTemplates());
 
 		try {
 			$this->templatesService->assertValidTemplate('this_is_a_template');
@@ -99,21 +99,21 @@ class TemplatesServiceTest extends \PHPUnit_Framework_TestCase {
 		}
 
 		$this->settingsController->addCustomTemplate('this_is_a_template');
-		$this->assertCount(3, $this->templatesService->getTemplatesList());
-		$this->assertCount(1, $this->templatesService->getTemplatesList(true));
-		$this->assertCount(0, $this->templatesService->getNewTemplatesList());
+		$this->assertCount(3, $this->templatesService->getTemplates());
+		$this->assertCount(1, $this->templatesService->getCustomTemplates());
+		$this->assertCount(0, $this->templatesService->getNewCustomTemplates());
 
 		$this->templatesService->assertValidTemplate('this_is_a_template');
 
 		$this->settingsController->removeCustomTemplate('this_is_a_template');
-		$this->assertCount(2, $this->templatesService->getTemplatesList());
-		$this->assertCount(0, $this->templatesService->getTemplatesList(true));
-		$this->assertCount(1, $this->templatesService->getNewTemplatesList());
+		$this->assertCount(2, $this->templatesService->getTemplates());
+		$this->assertCount(0, $this->templatesService->getCustomTemplates());
+		$this->assertCount(1, $this->templatesService->getNewCustomTemplates());
 
 		rmdir($this->fileService->getAppDataFolderPath('templates', true) . 'this_is_a_template');
-		$this->assertCount(2, $this->templatesService->getTemplatesList());
-		$this->assertCount(0, $this->templatesService->getTemplatesList(true));
-		$this->assertCount(0, $this->templatesService->getNewTemplatesList());
+		$this->assertCount(2, $this->templatesService->getTemplates());
+		$this->assertCount(0, $this->templatesService->getCustomTemplates());
+		$this->assertCount(0, $this->templatesService->getNewCustomTemplates());
 
 		try {
 			$this->templatesService->assertValidTemplate('this_is_a_template');

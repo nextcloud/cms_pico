@@ -54,7 +54,7 @@ class Personal implements ISettings
 	public function getForm()
 	{
 		$data = [
-			'templates' => $this->templatesService->getTemplatesList()
+			'templates' => $this->templatesService->getTemplates()
 		];
 
 		return new TemplateResponse(Application::APP_NAME, 'settings.personal', $data);

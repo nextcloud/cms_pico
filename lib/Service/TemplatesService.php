@@ -77,39 +77,55 @@ class TemplatesService
 	 * @throws TemplateNotFoundException
 	 */
 	public function assertValidTemplate($template) {
-		if (!in_array($template, $this->getTemplatesList())) {
+		if (!in_array($template, $this->getTemplates())) {
 			throw new TemplateNotFoundException();
 		}
 	}
 
 	/**
-	 * returns all templates available to users.
-	 *
-	 * @param bool $customOnly
-	 *
-	 * @return array
+	 * @return string[]
 	 */
-	public function getTemplatesList($customOnly = false)
+	public function getTemplates(): array
 	{
-		$templates = [];
-		if ($customOnly !== true) {
-			$templates = self::TEMPLATES;
-		}
-
-		$customs = json_decode($this->configService->getAppValue(ConfigService::CUSTOM_TEMPLATES), true);
-		if ($customs !== null) {
-			$templates = array_merge($templates, $customs);
-		}
-
-		return $templates;
+		return array_merge($this->getSystemTemplates(), $this->getCustomTemplates());
 	}
 
 	/**
 	 * @return string[]
 	 */
-	public function getNewTemplatesList(): array
+	public function getSystemTemplates(): array
 	{
-		$currentTemplates = $this->getTemplatesList();
+		/** @var FolderInterface $systemTemplatesFolder */
+		$systemTemplatesFolder = $this->fileService->getSystemFolder()->get(PicoService::DIR_TEMPLATES);
+		if (!$systemTemplatesFolder->isFolder()) {
+			throw new InvalidPathException();
+		}
+
+		$systemTemplates = [];
+		foreach ($systemTemplatesFolder->listing() as $templateFolder) {
+			if ($templateFolder->isFolder()) {
+				$systemTemplates[] = $templateFolder->getName();
+			}
+		}
+
+		return $systemTemplates;
+	}
+
+	/**
+	 * @return string[]
+	 */
+	public function getCustomTemplates(): array
+	{
+		$json = $this->configService->getAppValue(ConfigService::CUSTOM_TEMPLATES);
+		return $json ? json_decode($json, true) : [];
+	}
+
+	/**
+	 * @return string[]
+	 */
+	public function getNewCustomTemplates(): array
+	{
+		$currentTemplates = $this->getTemplates();
 
 		/** @var FolderInterface $appDataTemplatesFolder */
 		$appDataTemplatesFolder = $this->fileService->getAppDataFolder()->get(PicoService::DIR_TEMPLATES);
