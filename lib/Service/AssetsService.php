@@ -36,7 +36,13 @@ use OCP\Files\IRootFolder;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 
-class AssetService
+/**
+ * @TODO In den "virtuellen" assets-Pfad sollte man optional den Etag des assets-Verzeichnisses (assets-<hash>)
+ *       einbauen können. Grundsätzlich gehen beide URLs, wenn der Etag aber im Verzeichnisnamen enthalten ist wird
+ *       bei der Antwort cacheFor() mit sehr großen Zahlen verwendet. Damit man die in Pico aber überhaupt nutzen kann
+ *       braucht's ein %asset_dir% und {{ asset_dir }}. Sollte auch zu Pico 2.0.5-6 backported werden...
+ */
+class AssetsService
 {
 	/** @var IRootFolder */
 	private $rootFolder;

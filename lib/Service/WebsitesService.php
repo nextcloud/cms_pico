@@ -64,8 +64,8 @@ class WebsitesService
 	/** @var PicoService */
 	private $picoService;
 
-	/** @var AssetService */
-	private $assetService;
+	/** @var AssetsService */
+	private $assetsService;
 
 	/** @var MiscService */
 	private $miscService;
@@ -73,12 +73,12 @@ class WebsitesService
 	/**
 	 * WebsitesService constructor.
 	 *
-	 * @param IL10N $l10n
-	 * @param WebsitesRequest $websiteRequest
+	 * @param IL10N            $l10n
+	 * @param WebsitesRequest  $websiteRequest
 	 * @param TemplatesService $templatesService
-	 * @param PicoService $picoService
-	 * @param AssetService $assetService
-	 * @param MiscService $miscService
+	 * @param PicoService      $picoService
+	 * @param AssetsService    $assetsService
+	 * @param MiscService      $miscService
 	 *
 	 * @internal param Manager $encryptionManager
 	 */
@@ -87,7 +87,7 @@ class WebsitesService
 		WebsitesRequest $websiteRequest,
 		TemplatesService $templatesService,
 		PicoService $picoService,
-		AssetService $assetService,
+		AssetsService $assetsService,
 		MiscService $miscService
 	) {
 		$this->l10n = $l10n;
@@ -95,7 +95,7 @@ class WebsitesService
 		$this->websiteRequest = $websiteRequest;
 		$this->templatesService = $templatesService;
 		$this->picoService = $picoService;
-		$this->assetService = $assetService;
+		$this->assetsService = $assetsService;
 		$this->miscService = $miscService;
 	}
 
@@ -276,6 +276,6 @@ class WebsitesService
 			throw new EncryptedFilesystemException();
 		}
 
-		return $this->assetService->getAsset($website);
+		return $this->assetsService->getAsset($website);
 	}
 }
