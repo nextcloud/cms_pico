@@ -104,7 +104,7 @@ class ThemesService
 	public function getCustomThemes(): array
 	{
 		$json = $this->configService->getAppValue(ConfigService::CUSTOM_THEMES);
-		return json_decode($json, true);
+		return $json ? json_decode($json, true) : [];
 	}
 
 	/**

@@ -34,12 +34,16 @@ use OCA\CMSPico\Service\WebsitesService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\ILogger;
 use OCP\IRequest;
 
 class SettingsController extends Controller
 {
 	/** @var string */
 	private $userId;
+
+	/** @var ILogger */
+	private $logger;
 
 	/** @var ConfigService */
 	private $configService;
@@ -61,6 +65,7 @@ class SettingsController extends Controller
 	 *
 	 * @param IRequest         $request
 	 * @param string           $userId
+	 * @param ILogger          $logger
 	 * @param ConfigService    $configService
 	 * @param TemplatesService $templatesService
 	 * @param ThemesService    $themesService
@@ -70,6 +75,7 @@ class SettingsController extends Controller
 	function __construct(
 		IRequest $request,
 		$userId,
+		ILogger $logger,
 		ConfigService $configService,
 		TemplatesService $templatesService,
 		ThemesService $themesService,
@@ -79,6 +85,7 @@ class SettingsController extends Controller
 		parent::__construct(Application::APP_NAME, $request);
 
 		$this->userId = $userId;
+		$this->logger = $logger;
 		$this->configService = $configService;
 		$this->templatesService = $templatesService;
 		$this->themesService = $themesService;
@@ -100,14 +107,12 @@ class SettingsController extends Controller
 				$data['name'], $this->userId, $data['website'], $data['path'], $data['template']
 			);
 
-			return $this->miscService->success(
-				[
-					'name' => $data['name'],
-					'websites' => $this->websitesService->getWebsitesFromUser($this->userId),
-				]
-			);
+			return $this->createSuccessResponse([
+				'name' => $data['name'],
+				'websites' => $this->websitesService->getWebsitesFromUser($this->userId),
+			]);
 		} catch (\Exception $e) {
-			return $this->miscService->fail(['name' => $data['name'], 'error' => $e->getMessage()]);
+			return $this->createErrorResponse([ 'name' => $data['name'], 'error' => $e->getMessage() ]);
 		}
 	}
 
@@ -123,14 +128,12 @@ class SettingsController extends Controller
 		try {
 			$this->websitesService->deleteWebsite($data['id'], $this->userId);
 
-			return $this->miscService->success(
-				[
-					'name' => $data['name'],
-					'websites' => $this->websitesService->getWebsitesFromUser($this->userId),
-				]
-			);
+			return $this->createSuccessResponse([
+				'name' => $data['name'],
+				'websites' => $this->websitesService->getWebsitesFromUser($this->userId),
+			]);
 		} catch (\Exception $e) {
-			return $this->miscService->fail(['name' => $data['name'], 'error' => $e->getMessage()]);
+			return $this->createErrorResponse(['name' => $data['name'], 'error' => $e->getMessage()]);
 		}
 	}
 
@@ -153,11 +156,11 @@ class SettingsController extends Controller
 			$this->themesService->assertValidTheme($theme);
 			$this->websitesService->updateWebsite($website);
 
-			return $this->miscService->success(
-				['websites' => $this->websitesService->getWebsitesFromUser($this->userId)]
-			);
+			return $this->createSuccessResponse([
+				'websites' => $this->websitesService->getWebsitesFromUser($this->userId)
+			]);
 		} catch (\Exception $e) {
-			return $this->miscService->fail(['error' => $e->getMessage()]);
+			return $this->createErrorResponse(['error' => $e->getMessage()]);
 		}
 	}
 
@@ -180,11 +183,11 @@ class SettingsController extends Controller
 
 			$this->websitesService->updateWebsite($website);
 
-			return $this->miscService->success(
-				['websites' => $this->websitesService->getWebsitesFromUser($this->userId)]
-			);
+			return $this->createSuccessResponse([
+				'websites' => $this->websitesService->getWebsitesFromUser($this->userId)
+			]);
 		} catch (\Exception $e) {
-			return $this->miscService->fail(['error' => $e->getMessage()]);
+			return $this->createErrorResponse(['error' => $e->getMessage()]);
 		}
 	}
 
@@ -198,14 +201,12 @@ class SettingsController extends Controller
 		try {
 			$websites = $this->websitesService->getWebsitesFromUser($this->userId);
 
-			return $this->miscService->success(
-				[
-					'themes' => $this->themesService->getThemes(),
-					'websites' => $websites,
-				]
-			);
+			return $this->createSuccessResponse([
+				'themes' => $this->themesService->getThemes(),
+				'websites' => $websites,
+			]);
 		} catch (\Exception $e) {
-			return $this->miscService->fail(['error' => $e->getMessage()]);
+			return $this->createErrorResponse(['error' => $e->getMessage()]);
 		}
 	}
 
@@ -301,5 +302,33 @@ class SettingsController extends Controller
 		$this->configService->setAppValue(ConfigService::CUSTOM_THEMES, json_encode($newCustomThemes));
 
 		return $this->getSettingsAdmin();
+	}
+
+	/**
+	 * @param array $data
+	 *
+	 * @return DataResponse
+	 */
+	private function createSuccessResponse(array $data): DataResponse
+	{
+		return new DataResponse(
+			array_merge($data, [ 'status' => 1 ]),
+			Http::STATUS_CREATED
+		);
+	}
+
+	/**
+	 * @param array $data
+	 *
+	 * @return DataResponse
+	 */
+	private function createErrorResponse(array $data): DataResponse
+	{
+		$this->logger->log(2, $data['message'] ?? '', [ 'app' => Application::APP_NAME ]);
+
+		return new DataResponse(
+			array_merge($data, [ 'status' => 0 ]),
+			Http::STATUS_NON_AUTHORATIVE_INFORMATION
+		);
 	}
 }

@@ -23,30 +23,13 @@
 
 namespace OCA\CMSPico\Service;
 
-use OCA\CMSPico\AppInfo\Application;
-use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\DataResponse;
 use OCP\Files\InvalidPathException;
-use OCP\ILogger;
 
 class MiscService
 {
 	const ALPHA = 'abcdefghijklmnopqrstuvwxyz';
 	const ALPHA_NUMERIC = 'abcdefghijklmnopqrstuvwxyz0123456789';
 	const ALPHA_NUMERIC_SCORES = 'abcdefghijklmnopqrstuvwxyz0123456789_-';
-
-	/** @var ILogger */
-	private $logger;
-
-	/**
-	 * MiscService constructor.
-	 *
-	 * @param ILogger $logger
-	 */
-	public function __construct(ILogger $logger)
-	{
-		$this->logger = $logger;
-	}
 
 	public static function checkChars($line, $chars)
 	{
@@ -57,34 +40,6 @@ class MiscService
 		}
 
 		return true;
-	}
-
-	/**
-	 * @param array $data
-	 *
-	 * @return DataResponse
-	 */
-	public function fail($data)
-	{
-		$this->logger->log(2, $data['message'] ?? '', [ 'app' => Application::APP_NAME ]);
-
-		return new DataResponse(
-			array_merge($data, [ 'status' => 0 ]),
-			Http::STATUS_NON_AUTHORATIVE_INFORMATION
-		);
-	}
-
-	/**
-	 * @param array $data
-	 *
-	 * @return DataResponse
-	 */
-	public function success($data)
-	{
-		return new DataResponse(
-			array_merge($data, [ 'status' => 1 ]),
-			Http::STATUS_CREATED
-		);
 	}
 
 	/**
