@@ -27,8 +27,8 @@ use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\Settings\IIconSection;
 
-class PersonalSection implements IIconSection {
-
+class PersonalSection implements IIconSection
+{
 	/** @var IL10N */
 	private $l10n;
 
@@ -36,11 +36,11 @@ class PersonalSection implements IIconSection {
 	private $urlGenerator;
 
 	/**
-	 * @param IL10N $l10n
+	 * @param IL10N         $l10n
 	 * @param IURLGenerator $urlGenerator
 	 */
-	public function __construct(IL10N $l10n,
-								IURLGenerator $urlGenerator) {
+	public function __construct(IL10N $l10n, IURLGenerator $urlGenerator)
+	{
 		$this->l10n = $l10n;
 		$this->urlGenerator = $urlGenerator;
 	}
@@ -48,28 +48,32 @@ class PersonalSection implements IIconSection {
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getID() {
+	public function getID()
+	{
 		return Application::APP_NAME;
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getName() {
+	public function getName()
+	{
 		return $this->l10n->t('Pico CMS');
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getPriority() {
+	public function getPriority()
+	{
 		return 75;
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getIcon() {
+	public function getIcon()
+	{
 		return $this->urlGenerator->imagePath(Application::APP_NAME, 'pico_cms.svg');
 	}
 }

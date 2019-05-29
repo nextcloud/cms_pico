@@ -22,31 +22,29 @@
 
 namespace OCA\CMSPico\Events;
 
-
-use OCA\CMSPico\Service\WebsitesService;
 use OCA\CMSPico\Service\MiscService;
+use OCA\CMSPico\Service\WebsitesService;
 
-class UserEvents {
-
+class UserEvents
+{
 	/** @var WebsitesService */
 	private $websitesService;
 
 	/** @var MiscService */
 	private $miscService;
 
-	public function __construct(WebsitesService $websitesService, MiscService $miscService) {
+	public function __construct(WebsitesService $websitesService, MiscService $miscService)
+	{
 		$this->websitesService = $websitesService;
 		$this->miscService = $miscService;
 	}
 
-
 	/**
 	 * @param array $params
 	 */
-	public function onUserDeleted(array $params) {
+	public function onUserDeleted(array $params)
+	{
 		$userId = $params['uid'];
 		$this->websitesService->onUserRemoved($userId);
 	}
-
 }
-

@@ -22,29 +22,28 @@
 
 namespace OCA\CMSPico\Db;
 
-
 use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
 use OCA\CMSPico\Model\Website;
 
-class WebsitesRequest extends WebsitesRequestBuilder {
-
-
+class WebsitesRequest extends WebsitesRequestBuilder
+{
 	/**
 	 * @param Website $website
 	 *
 	 * @return bool
 	 * @throws \Exception
 	 */
-	public function create(Website $website) {
+	public function create(Website $website)
+	{
 		try {
 			$qb = $this->getWebsitesInsertSql();
 			$qb->setValue('name', $qb->createNamedParameter($website->getName()))
-			   ->setValue('user_id', $qb->createNamedParameter($website->getUserId()))
-			   ->setValue('site', $qb->createNamedParameter($website->getSite()))
-			   ->setValue('theme', $qb->createNamedParameter($website->getTheme()))
-			   ->setValue('type', $qb->createNamedParameter($website->getType()))
-			   ->setValue('options', $qb->createNamedParameter($website->getOptions(true)))
-			   ->setValue('path', $qb->createNamedParameter($website->getPath()));
+				->setValue('user_id', $qb->createNamedParameter($website->getUserId()))
+				->setValue('site', $qb->createNamedParameter($website->getSite()))
+				->setValue('theme', $qb->createNamedParameter($website->getTheme()))
+				->setValue('type', $qb->createNamedParameter($website->getType()))
+				->setValue('options', $qb->createNamedParameter($website->getOptions(true)))
+				->setValue('path', $qb->createNamedParameter($website->getPath()));
 
 			$qb->execute();
 
@@ -54,12 +53,11 @@ class WebsitesRequest extends WebsitesRequestBuilder {
 		}
 	}
 
-
 	/**
 	 * @param Website $website
 	 */
-	public function update(Website $website) {
-
+	public function update(Website $website)
+	{
 		$qb = $this->getWebsitesUpdateSql();
 		$qb->set('name', $qb->createNamedParameter($website->getName()));
 		$qb->set('user_id', $qb->createNamedParameter($website->getUserId()));
@@ -74,30 +72,27 @@ class WebsitesRequest extends WebsitesRequestBuilder {
 		$qb->execute();
 	}
 
-
 	/**
 	 * @param Website $website
 	 */
-	public function delete(Website $website) {
-
+	public function delete(Website $website)
+	{
 		$qb = $this->getWebsitesDeleteSql();
 		$this->limitToId($qb, $website->getId());
 
 		$qb->execute();
 	}
 
-
 	/**
 	 * @param string $userId
 	 */
-	public function deleteAllFromUser($userId) {
-
+	public function deleteAllFromUser($userId)
+	{
 		$qb = $this->getWebsitesDeleteSql();
 		$this->limitToUserId($qb, $userId);
 
 		$qb->execute();
 	}
-
 
 	/**
 	 * return list of websites from a user.
@@ -106,7 +101,8 @@ class WebsitesRequest extends WebsitesRequestBuilder {
 	 *
 	 * @return Website[]
 	 */
-	public function getWebsitesFromUserId($userId) {
+	public function getWebsitesFromUserId($userId)
+	{
 		$qb = $this->getWebsitesSelectSql();
 		$this->limitToUserId($qb, $userId);
 
@@ -120,7 +116,6 @@ class WebsitesRequest extends WebsitesRequestBuilder {
 		return $websites;
 	}
 
-
 	/**
 	 * return the website corresponding to the Id
 	 *
@@ -129,7 +124,8 @@ class WebsitesRequest extends WebsitesRequestBuilder {
 	 * @return Website
 	 * @throws WebsiteNotFoundException
 	 */
-	public function getWebsiteFromId($siteId) {
+	public function getWebsiteFromId($siteId)
+	{
 		$qb = $this->getWebsitesSelectSql();
 		$this->limitToId($qb, $siteId);
 
@@ -144,7 +140,6 @@ class WebsitesRequest extends WebsitesRequestBuilder {
 		return $this->parseWebsitesSelectSql($data);
 	}
 
-
 	/**
 	 * return the website corresponding to the site/url
 	 *
@@ -153,7 +148,8 @@ class WebsitesRequest extends WebsitesRequestBuilder {
 	 * @return Website
 	 * @throws WebsiteNotFoundException
 	 */
-	public function getWebsiteFromSite($site) {
+	public function getWebsiteFromSite($site)
+	{
 		$qb = $this->getWebsitesSelectSql();
 		$this->limitToSite($qb, $site);
 
@@ -167,5 +163,4 @@ class WebsitesRequest extends WebsitesRequestBuilder {
 
 		return $this->parseWebsitesSelectSql($data);
 	}
-
 }

@@ -45,16 +45,6 @@ class Application extends App
 	}
 
 	/**
-	 * Register hooks.
-	 */
-	public function registerHooks()
-	{
-		Util::connectHook(
-			'OC_User', 'post_deleteUser', '\OCA\CMSPico\Hooks\UserHooks', 'onUserDeleted'
-		);
-	}
-
-	/**
 	 * Register autoloader.
 	 */
 	public function registerAutoloader()
@@ -63,6 +53,16 @@ class Application extends App
 		if (is_dir($composerDir) && file_exists($composerDir . 'autoload.php')) {
 			require_once($composerDir . 'autoload.php');
 		}
+	}
+
+	/**
+	 * Register hooks.
+	 */
+	public function registerHooks()
+	{
+		Util::connectHook(
+			'OC_User', 'post_deleteUser', '\OCA\CMSPico\Hooks\UserHooks', 'onUserDeleted'
+		);
 	}
 }
 

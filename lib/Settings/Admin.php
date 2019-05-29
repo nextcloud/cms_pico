@@ -29,8 +29,8 @@ use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\Settings\ISettings;
 
-class Admin implements ISettings {
-
+class Admin implements ISettings
+{
 	/** @var IL10N */
 	private $l10n;
 
@@ -40,23 +40,25 @@ class Admin implements ISettings {
 	/** @var FileService */
 	private $fileService;
 
-
 	/**
-	 * @param IL10N $l10n
+	 * Admin constructor.
+	 *
+	 * @param IL10N         $l10n
 	 * @param IURLGenerator $urlGenerator
-	 * @param FileService $fileService
+	 * @param FileService   $fileService
 	 */
-	public function __construct(IL10N $l10n, IURLGenerator $urlGenerator, FileService $fileService) {
+	public function __construct(IL10N $l10n, IURLGenerator $urlGenerator, FileService $fileService)
+	{
 		$this->l10n = $l10n;
 		$this->urlGenerator = $urlGenerator;
 		$this->fileService = $fileService;
 	}
 
-
 	/**
 	 * @return TemplateResponse
 	 */
-	public function getForm() {
+	public function getForm()
+	{
 		$data = [
 			'nchost'          => $this->urlGenerator->getBaseUrl(),
 			'ssl_enabled'     => (substr($this->urlGenerator->getBaseUrl(), 0, 5) === 'https'),
@@ -67,14 +69,13 @@ class Admin implements ISettings {
 		return new TemplateResponse(Application::APP_NAME, 'settings.admin', $data);
 	}
 
-
 	/**
 	 * @return string the section ID, e.g. 'sharing'
 	 */
-	public function getSection() {
+	public function getSection()
+	{
 		return Application::APP_NAME;
 	}
-
 
 	/**
 	 * @return int whether the form should be rather on the top or bottom of
@@ -83,8 +84,8 @@ class Admin implements ISettings {
 	 *
 	 * keep the server setting at the top, right after "server settings"
 	 */
-	public function getPriority() {
+	public function getPriority()
+	{
 		return 0;
 	}
-
 }

@@ -51,7 +51,10 @@ class AssetsService
 	private $miscService;
 
 	/**
+	 * AssetsService constructor.
+	 *
 	 * @param IRootFolder $rootFolder
+	 * @param MiscService $miscService
 	 */
 	function __construct(IRootFolder $rootFolder, MiscService $miscService)
 	{

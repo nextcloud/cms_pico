@@ -20,21 +20,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace OCA\CMSPico\Service;
 
 use OCA\CMSPico\AppInfo\Application;
 use OCP\IConfig;
-use OCP\Util;
 
-class ConfigService {
-
+class ConfigService
+{
+	/** @var string */
 	const CUSTOM_TEMPLATES = 'custom_templates';
 
+	/** @var string */
 	const CUSTOM_THEMES = 'custom_themes';
 
+	/** @var array<string,string> */
 	private $defaults = [
-		self::CUSTOM_THEMES    => '',
-		self::CUSTOM_TEMPLATES => ''
+		self::CUSTOM_THEMES => '',
+		self::CUSTOM_TEMPLATES => '',
 	];
 
 	/** @var IConfig */
@@ -49,127 +53,110 @@ class ConfigService {
 	/**
 	 * ConfigService constructor.
 	 *
-	 * @param IConfig $config
-	 * @param string $userId
+	 * @param IConfig     $config
+	 * @param string      $userId
 	 * @param MiscService $miscService
 	 */
-	public function __construct(IConfig $config, $userId, MiscService $miscService) {
+	public function __construct(IConfig $config, $userId, MiscService $miscService)
+	{
 		$this->config = $config;
 		$this->userId = $userId;
 		$this->miscService = $miscService;
 	}
 
-
 	/**
-	 * Get a value by key
-	 *
 	 * @param string $key
 	 *
 	 * @return string
 	 */
-	public function getAppValue($key) {
+	public function getAppValue(string $key): string
+	{
 		$defaultValue = $this->getDefaultValue($key);
-
 		return $this->config->getAppValue(Application::APP_NAME, $key, $defaultValue);
 	}
 
-
 	/**
-	 * Set a value by key
-	 *
 	 * @param string $key
 	 * @param string $value
-	 *
-	 * @return void
 	 */
-	public function setAppValue($key, $value) {
+	public function setAppValue(string $key, string $value)
+	{
 		$this->config->setAppValue(Application::APP_NAME, $key, $value);
 	}
 
-
 	/**
-	 * remove a key
-	 *
 	 * @param string $key
 	 *
 	 * @return string
 	 */
-	public function deleteAppValue($key) {
+	public function deleteAppValue(string $key): string
+	{
 		return $this->config->deleteAppValue(Application::APP_NAME, $key);
 	}
 
-
 	/**
-	 * Get a user value by key
-	 *
 	 * @param string $key
 	 *
 	 * @return string
 	 */
-	public function getUserValue($key) {
+	public function getUserValue(string $key): string
+	{
 		$defaultValue = $this->getDefaultValue($key);
-
-		return $this->config->getUserValue(
-			$this->userId, Application::APP_NAME, $key, $defaultValue
-		);
+		return $this->config->getUserValue($this->userId, Application::APP_NAME, $key, $defaultValue);
 	}
 
-
 	/**
-	 * Set a user value by key
-	 *
 	 * @param string $key
 	 * @param string $value
 	 *
 	 * @return string
 	 */
-	public function setUserValue($key, $value) {
+	public function setUserValue(string $key, string $value): string
+	{
 		return $this->config->setUserValue($this->userId, Application::APP_NAME, $key, $value);
 	}
 
-
 	/**
-	 * Get a user value by key and user
-	 *
 	 * @param string $userId
 	 * @param string $key
 	 *
 	 * @return string
 	 */
-	public function getValueForUser($userId, $key) {
+	public function getValueForUser(string $userId, string $key): string
+	{
 		return $this->config->getUserValue($userId, Application::APP_NAME, $key);
 	}
 
-
 	/**
-	 * Set a user value by key
-	 *
 	 * @param string $userId
 	 * @param string $key
 	 * @param string $value
 	 *
 	 * @return string
 	 */
-	public function setValueForUser($userId, $key, $value) {
+	public function setValueForUser(string $userId, string $key, string $value): string
+	{
 		return $this->config->setUserValue($userId, Application::APP_NAME, $key, $value);
 	}
-
 
 	/**
 	 * @param string $key
 	 *
 	 * @return string
 	 */
-	private function getDefaultValue($key) {
-		if (array_key_exists($key, $this->defaults)) {
-			return (string)$this->defaults[$key];
-		}
-
-		return '';
+	private function getDefaultValue(string $key): string
+	{
+		return $this->defaults[$key] ?? '';
 	}
 
-
-	public function getSystemValue($key, $default) {
+	/**
+	 * @param string $key
+	 * @param mixed $default
+	 *
+	 * @return mixed
+	 */
+	public function getSystemValue(string $key, $default)
+	{
 		return $this->config->getSystemValue($key, $default);
 	}
 

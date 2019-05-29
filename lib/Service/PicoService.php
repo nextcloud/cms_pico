@@ -44,11 +44,22 @@ use OCP\ILogger;
 
 class PicoService
 {
+	/** @var string */
 	const DIR_TEMPLATES = 'templates';
+
+	/** @var string */
 	const DIR_CONFIG = 'config';
+
+	/** @var string */
 	const DIR_PLUGINS = 'plugins';
+
+	/** @var string */
 	const DIR_THEMES = 'themes';
+
+	/** @var string */
 	const DIR_CONTENT = 'content';
+
+	/** @var string */
 	const DIR_ASSETS = 'assets';
 
 	/** @var string|null */
@@ -113,7 +124,7 @@ class PicoService
 	 * @throws PageNotPermittedException
 	 * @throws PicoRuntimeException
 	 */
-	public function getPage(Website $website) : PicoPage
+	public function getPage(Website $website): PicoPage
 	{
 		try {
 			$page = $website->getPage();

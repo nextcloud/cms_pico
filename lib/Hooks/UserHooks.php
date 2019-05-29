@@ -25,21 +25,19 @@ namespace OCA\CMSPico\Hooks;
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Events\UserEvents;
 
-
-class UserHooks {
-
-	static protected function getController() {
+class UserHooks
+{
+	static protected function getController()
+	{
 		$app = new Application();
 
 		return $app->getContainer()
-				   ->query(UserEvents::class);
+			->query(UserEvents::class);
 	}
 
-
-	public static function onUserDeleted($params) {
+	public static function onUserDeleted($params)
+	{
 		self::getController()
 			->onUserDeleted($params);
 	}
-
 }
-

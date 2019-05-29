@@ -108,7 +108,7 @@ class PicoController extends Controller
 	 *
 	 * @return Response
 	 */
-	public function getRoot(string $site) : Response
+	public function getRoot(string $site): Response
 	{
 		return $this->getPage($site, '');
 	}
@@ -121,7 +121,7 @@ class PicoController extends Controller
 	 *
 	 * @return Response
 	 */
-	public function getRootProxy(string $site) : Response
+	public function getRootProxy(string $site): Response
 	{
 		return $this->getPage($site, '', true);
 	}
@@ -136,7 +136,7 @@ class PicoController extends Controller
 	 *
 	 * @return Response
 	 */
-	public function getPage(string $site, string $page, bool $proxyRequest = false) : Response
+	public function getPage(string $site, string $page, bool $proxyRequest = false): Response
 	{
 		if (strpos($page, PicoService::DIR_ASSETS . '/') === 0) {
 			return $this->getAsset($site, $page);
@@ -173,7 +173,7 @@ class PicoController extends Controller
 	 *
 	 * @return Response
 	 */
-	public function getPageProxy(string $site, string $page) : Response
+	public function getPageProxy(string $site, string $page): Response
 	{
 		return $this->getPage($site, $page, true);
 	}
@@ -181,9 +181,10 @@ class PicoController extends Controller
 	/**
 	 * @param string $site
 	 * @param string $page
+	 *
 	 * @return Response
 	 */
-	private function getAsset(string $site, string $page) : Response
+	private function getAsset(string $site, string $page): Response
 	{
 		try {
 			$asset = $this->websitesService->getAsset($site, $this->userId, $page);
@@ -237,7 +238,7 @@ class PicoController extends Controller
 	 * @throws NotFoundException
 	 * @throws NotPermittedException
 	 */
-	private function createFileResponse(File $file, string $secureFileType = null) : Response
+	private function createFileResponse(File $file, string $secureFileType = null): Response
 	{
 		try {
 			$etag = $file->getEtag();

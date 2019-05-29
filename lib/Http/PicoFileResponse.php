@@ -104,7 +104,7 @@ class PicoFileResponse extends DownloadResponse
 	 *
 	 * @return $this
 	 */
-	public function setContentSecurityPolicy(EmptyContentSecurityPolicy $csp) : self
+	public function setContentSecurityPolicy(EmptyContentSecurityPolicy $csp): self
 	{
 		if (!($csp instanceof PicoContentSecurityPolicy)) {
 			// Pico really needs its own CSP...
@@ -120,7 +120,7 @@ class PicoFileResponse extends DownloadResponse
 	 *
 	 * @return $this
 	 */
-	public function cacheFor(int $cacheSeconds) : self
+	public function cacheFor(int $cacheSeconds): self
 	{
 		if($cacheSeconds > 0) {
 			$this->addHeader('Cache-Control', 'max-age=' . $cacheSeconds . ', public');
@@ -145,7 +145,7 @@ class PicoFileResponse extends DownloadResponse
 	/**
 	 * @return $this
 	 */
-	public function noCache() : self
+	public function noCache(): self
 	{
 		$this->addHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
 		$this->addHeader('Pragma', null);
@@ -157,7 +157,7 @@ class PicoFileResponse extends DownloadResponse
 	/**
 	 * @return string
 	 */
-	public function render() : string
+	public function render(): string
 	{
 		try {
 			return $this->file->getContent();

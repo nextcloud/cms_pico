@@ -22,7 +22,6 @@
 
 namespace OCA\CMSPico\Db;
 
-
 use OCA\CMSPico\Model\Website;
 use OCA\CMSPico\Service\ConfigService;
 use OCA\CMSPico\Service\MiscService;
@@ -30,9 +29,8 @@ use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 use OCP\IL10N;
 
-class WebsitesRequestBuilder extends CoreRequestBuilder {
-
-
+class WebsitesRequestBuilder extends CoreRequestBuilder
+{
 	/**
 	 * WebsitesRequestBuilder constructor.
 	 *
@@ -44,85 +42,82 @@ class WebsitesRequestBuilder extends CoreRequestBuilder {
 		parent::__construct($l10n, $connection, $configService, $miscService);
 	}
 
-
 	/**
 	 * Base of the Sql Insert request
 	 *
 	 * @return IQueryBuilder
 	 */
-	protected function getWebsitesInsertSql() {
+	protected function getWebsitesInsertSql()
+	{
 		$qb = $this->dbConnection->getQueryBuilder();
 		$qb->insert(self::TABLE_WEBSITES)
-		   ->setValue('creation', $qb->createFunction('NOW()'));
+			->setValue('creation', $qb->createFunction('NOW()'));
 
 		return $qb;
 	}
-
 
 	/**
 	 * Base of the Sql Update request
 	 *
 	 * @return IQueryBuilder
 	 */
-	protected function getWebsitesUpdateSql() {
+	protected function getWebsitesUpdateSql()
+	{
 		$qb = $this->dbConnection->getQueryBuilder();
 		$qb->update(self::TABLE_WEBSITES);
 
 		return $qb;
 	}
 
-
 	/**
 	 * Base of the Sql Select request for Shares
 	 *
 	 * @return IQueryBuilder
 	 */
-	protected function getWebsitesSelectSql() {
+	protected function getWebsitesSelectSql()
+	{
 		$qb = $this->dbConnection->getQueryBuilder();
 
 		/** @noinspection PhpMethodParametersCountMismatchInspection */
-		$qb->select(
-			'w.id', 'w.name', 'w.user_id', 'w.site', 'w.theme', 'w.type', 'w.options', 'w.path', 'w.creation'
-		)
-		   ->from(self::TABLE_WEBSITES, 'w');
+		$qb->select('w.id', 'w.name', 'w.user_id', 'w.site', 'w.theme', 'w.type', 'w.options', 'w.path', 'w.creation')
+			->from(self::TABLE_WEBSITES, 'w');
 
 		$this->defaultSelectAlias = 'w';
 
 		return $qb;
 	}
 
-
 	/**
 	 * Base of the Sql Delete request
 	 *
 	 * @return IQueryBuilder
 	 */
-	protected function getWebsitesDeleteSql() {
+	protected function getWebsitesDeleteSql()
+	{
 		$qb = $this->dbConnection->getQueryBuilder();
 		$qb->delete(self::TABLE_WEBSITES);
 
 		return $qb;
 	}
 
-
 	/**
 	 * @param array $data
 	 *
 	 * @return Website
 	 */
-	protected function parseWebsitesSelectSql($data) {
+	protected function parseWebsitesSelectSql($data)
+	{
 		$website = new Website();
 		$website->setId($data['id'])
-				->setName($data['name'])
-				->setUserId($data['user_id'])
-				->setSite($data['site'])
-				->setType($data['type'])
-				->setTheme($data['theme'])
-				->setOptions($data['options'])
-				->setPath($data['path'])
-				->setCreation($data['creation']);
+			->setName($data['name'])
+			->setUserId($data['user_id'])
+			->setSite($data['site'])
+			->setType($data['type'])
+			->setTheme($data['theme'])
+			->setOptions($data['options'])
+			->setPath($data['path'])
+			->setCreation($data['creation']);
 
 		return $website;
 	}
-
 }

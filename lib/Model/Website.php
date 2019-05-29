@@ -34,8 +34,8 @@ use OCA\CMSPico\Exceptions\PageNotFoundException;
 use OCA\CMSPico\Exceptions\PageNotPermittedException;
 use OCA\CMSPico\Exceptions\PathContainSpecificFoldersException;
 use OCA\CMSPico\Exceptions\UserIsNotOwnerException;
-use OCA\CMSPico\Exceptions\WebsiteNotPermittedException;
 use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
+use OCA\CMSPico\Exceptions\WebsiteNotPermittedException;
 use OCA\CMSPico\Service\MiscService;
 use OCA\CMSPico\Service\PicoService;
 use OCP\App\IAppManager;
@@ -98,7 +98,7 @@ class Website extends WebsiteCore
 	/**
 	 * @return string
 	 */
-	public function getTimeZone() : string
+	public function getTimeZone(): string
 	{
 		$serverTimeZone = date_default_timezone_get() ?: 'UTC';
 		return $this->config->getUserValue($this->getUserId(), 'core', 'timezone', $serverTimeZone);
@@ -107,7 +107,7 @@ class Website extends WebsiteCore
 	/**
 	 * @return string
 	 */
-	public function getWebsiteUrl() : string
+	public function getWebsiteUrl(): string
 	{
 		if (!$this->getProxyRequest()) {
 			$route = Application::APP_NAME . '.Pico.getRoot';
@@ -122,7 +122,7 @@ class Website extends WebsiteCore
 	 * @return string
 	 * @throws WebsiteNotFoundException
 	 */
-	public function getWebsitePath() : string
+	public function getWebsitePath(): string
 	{
 		$ownerView = $this->getOwnerView();
 		$localPath = $ownerView->getLocalFolder('');
@@ -136,13 +136,13 @@ class Website extends WebsiteCore
 
 	/**
 	 * @param string $path
-	 * @param bool $isFolder
+	 * @param bool   $isFolder
 	 *
 	 * @return string
 	 * @throws WebsiteNotFoundException
 	 * @throws NotFoundException
 	 */
-	public function getAbsolutePath(string $path = '', bool $isFolder = true) : string
+	public function getAbsolutePath(string $path = '', bool $isFolder = true): string
 	{
 		$ownerView = $this->getOwnerView();
 		$localPath = $isFolder ? $ownerView->getLocalFolder($path) : $ownerView->getLocalFile($path);
@@ -151,7 +151,7 @@ class Website extends WebsiteCore
 			throw new NotFoundException();
 		}
 
-		return $localPath . ($isFolder ?  '/' : '');
+		return $localPath . ($isFolder ? '/' : '');
 	}
 
 	/**
@@ -161,7 +161,7 @@ class Website extends WebsiteCore
 	 * @throws InvalidPathException
 	 * @throws NotFoundException
 	 */
-	public function getPageFileId(string $file = '') : int
+	public function getPageFileId(string $file = ''): int
 	{
 		$userFolder = $this->rootFolder->getUserFolder($this->getUserId());
 		$fileNode = $userFolder->get($this->getPath() . $file);
@@ -176,7 +176,7 @@ class Website extends WebsiteCore
 	 * @throws PageInvalidPathException
 	 * @throws PageNotFoundException
 	 */
-	public function getRelativePagePath(string $absolutePath) : string
+	public function getRelativePagePath(string $absolutePath): string
 	{
 		try {
 			$contentDir = $this->getAbsolutePath(PicoService::DIR_CONTENT);
@@ -200,7 +200,7 @@ class Website extends WebsiteCore
 	 * @throws PageNotFoundException
 	 * @throws PageNotPermittedException
 	 */
-	public function getFileContent(string $file = null) : string
+	public function getFileContent(string $file = null): string
 	{
 		try {
 			try {
@@ -251,7 +251,7 @@ class Website extends WebsiteCore
 
 	/**
 	 * @param string $path
-	 * @param array $meta
+	 * @param array  $meta
 	 *
 	 * @return void
 	 * @throws WebsiteNotPermittedException
@@ -298,7 +298,7 @@ class Website extends WebsiteCore
 	 * @return View
 	 * @throws WebsiteNotFoundException
 	 */
-	private function getOwnerView() : View
+	private function getOwnerView(): View
 	{
 		if ($this->ownerView === null) {
 			try {
@@ -357,7 +357,7 @@ class Website extends WebsiteCore
 			$path = $this->getPath();
 		}
 
-		$limit = ['.', '..'];
+		$limit = [ '.', '..' ];
 
 		$folders = explode('/', $path);
 		foreach ($folders as $folder) {

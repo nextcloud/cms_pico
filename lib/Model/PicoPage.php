@@ -49,7 +49,7 @@ class PicoPage
 	/**
 	 * @return string
 	 */
-	public function getAbsolutePath() : string
+	public function getAbsolutePath(): string
 	{
 		$absolutePath = $this->pico->getRequestFile();
 		if ($absolutePath) {
@@ -62,7 +62,7 @@ class PicoPage
 	/**
 	 * @return string
 	 */
-	public function getRelativePath() : string
+	public function getRelativePath(): string
 	{
 		$absolutePath = $this->pico->getRequestFile();
 		if ($absolutePath) {
@@ -79,7 +79,7 @@ class PicoPage
 	/**
 	 * @return string
 	 */
-	public function getRawContent() : string
+	public function getRawContent(): string
 	{
 		return $this->pico->getRawContent();
 	}
@@ -87,7 +87,7 @@ class PicoPage
 	/**
 	 * @return array
 	 */
-	public function getMeta() : array
+	public function getMeta(): array
 	{
 		return $this->pico->getFileMeta();
 	}
@@ -95,7 +95,7 @@ class PicoPage
 	/**
 	 * @return string
 	 */
-	public function getContent() : string
+	public function getContent(): string
 	{
 		return $this->pico->getFileContent();
 	}
@@ -103,7 +103,7 @@ class PicoPage
 	/**
 	 * @return string
 	 */
-	public function render() : string
+	public function render(): string
 	{
 		return $this->output;
 	}

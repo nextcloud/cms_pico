@@ -197,7 +197,7 @@ class WebsitesService
 	 * @return Website
 	 * @throws WebsiteNotFoundException
 	 */
-	public function getWebsiteFromId($siteId) : Website
+	public function getWebsiteFromId($siteId): Website
 	{
 		return $this->websiteRequest->getWebsiteFromId($siteId);
 	}
@@ -208,7 +208,7 @@ class WebsitesService
 	 * @return Website
 	 * @throws WebsiteNotFoundException
 	 */
-	public function getWebsiteFromSite($site) : Website
+	public function getWebsiteFromSite($site): Website
 	{
 		return $this->websiteRequest->getWebsiteFromSite($site);
 	}
@@ -218,7 +218,7 @@ class WebsitesService
 	 *
 	 * @return Website[]
 	 */
-	public function getWebsitesFromUser($userId) : Website
+	public function getWebsitesFromUser($userId): array
 	{
 		return $this->websiteRequest->getWebsitesFromUserId($userId);
 	}
@@ -239,7 +239,7 @@ class WebsitesService
 	 * @throws ThemeNotFoundException
 	 * @throws PicoRuntimeException
 	 */
-	public function getPage(string $site, string $page, string $viewer = null, bool $proxyRequest = false) : PicoPage
+	public function getPage(string $site, string $page, string $viewer = null, bool $proxyRequest = false): PicoPage
 	{
 		$website = $this->getWebsiteFromSite($site);
 		$website->setProxyRequest($proxyRequest);
@@ -266,7 +266,7 @@ class WebsitesService
 	 * @throws AssetNotFoundException
 	 * @throws AssetNotPermittedException
 	 */
-	public function getAsset(string $site, string $viewer, string $asset) : File
+	public function getAsset(string $site, string $viewer, string $asset): File
 	{
 		$website = $this->getWebsiteFromSite($site);
 		$website->setViewer($viewer);

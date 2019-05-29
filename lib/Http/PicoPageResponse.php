@@ -51,7 +51,7 @@ class PicoPageResponse extends Response
 	 *
 	 * @return $this
 	 */
-	public function setContentSecurityPolicy(EmptyContentSecurityPolicy $csp) : self
+	public function setContentSecurityPolicy(EmptyContentSecurityPolicy $csp): self
 	{
 		if (!($csp instanceof PicoContentSecurityPolicy)) {
 			// Pico really needs its own CSP...
@@ -65,7 +65,7 @@ class PicoPageResponse extends Response
 	/**
 	 * @return string
 	 */
-	public function render() : string
+	public function render(): string
 	{
 		return $this->page->render();
 	}

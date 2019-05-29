@@ -28,8 +28,8 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IL10N;
 use OCP\Settings\ISettings;
 
-class Personal implements ISettings {
-
+class Personal implements ISettings
+{
 	/** @var IL10N */
 	private $l10n;
 
@@ -37,10 +37,13 @@ class Personal implements ISettings {
 	private $templatesService;
 
 	/**
-	 * @param IL10N $l10n
+	 * Personal constructor.
+	 *
+	 * @param IL10N            $l10n
 	 * @param TemplatesService $templatesService
 	 */
-	public function __construct(IL10N $l10n, TemplatesService $templatesService) {
+	public function __construct(IL10N $l10n, TemplatesService $templatesService)
+	{
 		$this->l10n = $l10n;
 		$this->templatesService = $templatesService;
 	}
@@ -48,7 +51,8 @@ class Personal implements ISettings {
 	/**
 	 * @return TemplateResponse
 	 */
-	public function getForm() {
+	public function getForm()
+	{
 		$data = [
 			'templates' => $this->templatesService->getTemplatesList()
 		];
@@ -59,7 +63,8 @@ class Personal implements ISettings {
 	/**
 	 * @return string the section ID, e.g. 'sharing'
 	 */
-	public function getSection() {
+	public function getSection()
+	{
 		return Application::APP_NAME;
 	}
 
@@ -70,7 +75,8 @@ class Personal implements ISettings {
 	 *
 	 * keep the server setting at the top, right after "server settings"
 	 */
-	public function getPriority() {
+	public function getPriority()
+	{
 		return 0;
 	}
 

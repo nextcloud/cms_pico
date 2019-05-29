@@ -32,6 +32,7 @@ class PicoRuntimeException extends \Exception
 
 	/**
 	 * PicoRuntimeException constructor.
+	 *
 	 * @param \Exception $exception
 	 */
 	public function __construct(\Exception $exception)

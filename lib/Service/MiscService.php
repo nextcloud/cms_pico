@@ -29,10 +29,9 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\Files\InvalidPathException;
 use OCP\ILogger;
-use OCP\Util;
 
-class MiscService {
-
+class MiscService
+{
 	const ALPHA = 'abcdefghijklmnopqrstuvwxyz';
 	const ALPHA_NUMERIC = 'abcdefghijklmnopqrstuvwxyz0123456789';
 	const ALPHA_NUMERIC_SCORES = 'abcdefghijklmnopqrstuvwxyz0123456789_-';
@@ -40,17 +39,23 @@ class MiscService {
 	/** @var ILogger */
 	private $logger;
 
-	public function __construct(ILogger $logger) {
+	/**
+	 * MiscService constructor.
+	 *
+	 * @param ILogger $logger
+	 */
+	public function __construct(ILogger $logger)
+	{
 		$this->logger = $logger;
 	}
-
 
 	/**
 	 * @param string $path
 	 *
 	 * @return string
 	 */
-	public static function endSlash($path) {
+	public static function endSlash($path)
+	{
 		if ($path === '') {
 			return '';
 		}
@@ -62,16 +67,15 @@ class MiscService {
 		return $path;
 	}
 
-
 	/**
-	 * @param $arr
-	 * @param $k
-	 *
+	 * @param        $arr
+	 * @param        $k
 	 * @param string $default
 	 *
 	 * @return array|string|integer
 	 */
-	public static function get($arr, $k, $default = '') {
+	public static function get($arr, $k, $default = '')
+	{
 		if (!key_exists($k, $arr)) {
 			return $default;
 		}
@@ -79,10 +83,10 @@ class MiscService {
 		return $arr[$k];
 	}
 
-
-	public static function mustContains($data, $arr) {
+	public static function mustContains($data, $arr)
+	{
 		if (!is_array($arr)) {
-			$arr = [$arr];
+			$arr = [ $arr ];
 		}
 
 		foreach ($arr as $k) {
@@ -92,8 +96,8 @@ class MiscService {
 		}
 	}
 
-
-	public static function checkChars($line, $chars) {
+	public static function checkChars($line, $chars)
+	{
 		for ($i = 0; $i < strlen($line); $i++) {
 			if (strpos($chars, substr($line, $i, 1)) === false) {
 				return false;
@@ -108,28 +112,28 @@ class MiscService {
 	 *
 	 * @return DataResponse
 	 */
-	public function fail($data) {
-		$this->logger->log(2, $data['message'] ?? '', [ 'app'   => Application::APP_NAME ]);
+	public function fail($data)
+	{
+		$this->logger->log(2, $data['message'] ?? '', [ 'app' => Application::APP_NAME ]);
 
 		return new DataResponse(
-			array_merge($data, array('status' => 0)),
+			array_merge($data, [ 'status' => 0 ]),
 			Http::STATUS_NON_AUTHORATIVE_INFORMATION
 		);
 	}
-
 
 	/**
 	 * @param array $data
 	 *
 	 * @return DataResponse
 	 */
-	public function success($data) {
+	public function success($data)
+	{
 		return new DataResponse(
-			array_merge($data, array('status' => 1)),
+			array_merge($data, [ 'status' => 1 ]),
 			Http::STATUS_CREATED
 		);
 	}
-
 
 	/**
 	 * @param string $path

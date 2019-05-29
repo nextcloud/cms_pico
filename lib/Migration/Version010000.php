@@ -37,7 +37,7 @@ class Version010000 extends SimpleMigrationStep
 	 *
 	 * @return ISchemaWrapper
 	 */
-	public function changeSchema(IOutput $output, \Closure $schemaClosure, array $options) : ISchemaWrapper
+	public function changeSchema(IOutput $output, \Closure $schemaClosure, array $options): ISchemaWrapper
 	{
 		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();

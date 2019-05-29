@@ -21,9 +21,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace OCA\CMSPico\Controller;
 
-use Exception;
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Service\ConfigService;
 use OCA\CMSPico\Service\MiscService;
@@ -56,17 +57,16 @@ class SettingsController extends Controller
 	/** @var MiscService */
 	private $miscService;
 
-
 	/**
 	 * SettingsController constructor.
 	 *
-	 * @param IRequest $request
-	 * @param string $userId
-	 * @param ConfigService $configService
+	 * @param IRequest         $request
+	 * @param string           $userId
+	 * @param ConfigService    $configService
 	 * @param TemplatesService $templatesService
-	 * @param ThemesService $themesService
-	 * @param WebsitesService $websitesService
-	 * @param MiscService $miscService
+	 * @param ThemesService    $themesService
+	 * @param WebsitesService  $websitesService
+	 * @param MiscService      $miscService
 	 */
 	function __construct(
 		IRequest $request,
@@ -87,16 +87,15 @@ class SettingsController extends Controller
 		$this->miscService = $miscService;
 	}
 
-
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param array $data
+	 * @param array<string,string> $data
 	 *
 	 * @return DataResponse
 	 */
-	public function createPersonalWebsite($data) {
-
+	public function createPersonalWebsite(array $data): DataResponse
+	{
 		try {
 			$this->websitesService->createWebsite(
 				$data['name'], $this->userId, $data['website'], $data['path'], $data['template']
@@ -104,55 +103,53 @@ class SettingsController extends Controller
 
 			return $this->miscService->success(
 				[
-					'name'     => $data['name'],
-					'websites' => $this->websitesService->getWebsitesFromUser($this->userId)
+					'name' => $data['name'],
+					'websites' => $this->websitesService->getWebsitesFromUser($this->userId),
 				]
 			);
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			return $this->miscService->fail(['name' => $data['name'], 'error' => $e->getMessage()]);
 		}
 	}
 
-
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param $data
+	 * @param array<string,string> $data
 	 *
 	 * @return DataResponse
 	 */
-	public function removePersonalWebsite($data) {
-
+	public function removePersonalWebsite(array $data): DataResponse
+	{
 		try {
 			$this->websitesService->deleteWebsite($data['id'], $this->userId);
 
 			return $this->miscService->success(
 				[
-					'name'     => $data['name'],
-					'websites' => $this->websitesService->getWebsitesFromUser($this->userId)
+					'name' => $data['name'],
+					'websites' => $this->websitesService->getWebsitesFromUser($this->userId),
 				]
 			);
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			return $this->miscService->fail(['name' => $data['name'], 'error' => $e->getMessage()]);
 		}
 	}
 
-
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $siteId
+	 * @param int    $siteId
 	 * @param string $theme
 	 *
 	 * @return DataResponse
 	 */
-	public function updateWebsiteTheme($siteId, $theme) {
-
+	public function updateWebsiteTheme(int $siteId, string $theme): DataResponse
+	{
 		try {
 			$website = $this->websitesService->getWebsiteFromId($siteId);
 
 			$website->hasToBeOwnedBy($this->userId);
-			$website->setTheme((string)$theme);
+			$website->setTheme($theme);
 
 			$this->themesService->assertValidTheme($theme);
 			$this->websitesService->updateWebsite($website);
@@ -160,70 +157,69 @@ class SettingsController extends Controller
 			return $this->miscService->success(
 				['websites' => $this->websitesService->getWebsitesFromUser($this->userId)]
 			);
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			return $this->miscService->fail(['error' => $e->getMessage()]);
 		}
 	}
 
-
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $siteId
+	 * @param int    $siteId
 	 * @param string $option
 	 * @param string $value
 	 *
 	 * @return DataResponse
 	 */
-	public function editPersonalWebsiteOption($siteId, $option, $value) {
-
+	public function editPersonalWebsiteOption(int $siteId, string $option, string $value): DataResponse
+	{
 		try {
 			$website = $this->websitesService->getWebsiteFromId($siteId);
 
 			$website->hasToBeOwnedBy($this->userId);
-			$website->setOption((string)$option, (string)$value);
+			$website->setOption($option, $value);
 
 			$this->websitesService->updateWebsite($website);
 
 			return $this->miscService->success(
 				['websites' => $this->websitesService->getWebsitesFromUser($this->userId)]
 			);
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			return $this->miscService->fail(['error' => $e->getMessage()]);
 		}
 	}
-
 
 	/**
 	 * @NoAdminRequired
 	 *
 	 * @return DataResponse
 	 */
-	public function getPersonalWebsites() {
+	public function getPersonalWebsites(): DataResponse
+	{
 		try {
 			$websites = $this->websitesService->getWebsitesFromUser($this->userId);
 
 			return $this->miscService->success(
 				[
-					'themes'   => $this->themesService->getThemes(),
-					'websites' => $websites
+					'themes' => $this->themesService->getThemes(),
+					'websites' => $websites,
 				]
 			);
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			return $this->miscService->fail(['error' => $e->getMessage()]);
 		}
 	}
 
-
 	/**
 	 * @return DataResponse
 	 */
-	public function getSettingsAdmin() {
+	public function getSettingsAdmin(): DataResponse
+	{
 		$data = [
-			'templates'     => $this->templatesService->getTemplatesList(true),
+			'templates' => $this->templatesService->getTemplatesList(true),
 			'templates_new' => $this->templatesService->getNewTemplatesList(),
-			'themes'        => $this->themesService->getCustomThemes(),
-			'themes_new'    => $this->themesService->getNewCustomThemes()
+			'themes' => $this->themesService->getCustomThemes(),
+			'themes_new' => $this->themesService->getNewCustomThemes(),
 		];
 
 		return new DataResponse($data, Http::STATUS_OK);
@@ -243,8 +239,8 @@ class SettingsController extends Controller
 	 *
 	 * @return DataResponse
 	 */
-	public function addCustomTemplate($template) {
-
+	public function addCustomTemplate($template): DataResponse
+	{
 		$custom = $this->templatesService->getTemplatesList(true);
 		array_push($custom, $template);
 		$this->configService->setAppValue(ConfigService::CUSTOM_TEMPLATES, json_encode($custom));
@@ -257,8 +253,8 @@ class SettingsController extends Controller
 	 *
 	 * @return DataResponse
 	 */
-	public function removeCustomTemplate($template) {
-
+	public function removeCustomTemplate($template): DataResponse
+	{
 		$custom = $this->templatesService->getTemplatesList(true);
 
 		$k = array_search($template, $custom);
@@ -270,7 +266,6 @@ class SettingsController extends Controller
 
 		return $this->getSettingsAdmin();
 	}
-
 
 	/**
 	 * @param string $theme

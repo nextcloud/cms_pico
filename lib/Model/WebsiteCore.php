@@ -21,18 +21,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace OCA\CMSPico\Model;
 
 use OCA\CMSPico\Service\MiscService;
 
-class WebsiteCore implements \JsonSerializable {
-
+class WebsiteCore implements \JsonSerializable
+{
+	/** @var int */
 	const TYPE_PUBLIC = 1;
+
+	/** @var int */
 	const TYPE_PRIVATE = 2;
-
-	const SITE_LENGTH_MIN = 3;
-	const NAME_LENGTH_MIN = 5;
-
 
 	/** @var int */
 	private $id;
@@ -73,72 +74,75 @@ class WebsiteCore implements \JsonSerializable {
 	/** @var string */
 	private $templateSource;
 
-
-	public function __construct($data = '') {
-
+	/**
+	 * WebsiteCore constructor.
+	 *
+	 * @param array|string $data
+	 */
+	public function __construct($data = '')
+	{
 		if (is_array($data)) {
 			$this->fromArray($data);
-
 			return;
 		}
 
 		$this->fromJSON($data);
 	}
 
-
 	/**
 	 * @param int $id
 	 *
 	 * @return $this
 	 */
-	public function setId($id) {
-		$this->id = (int)$id;
-
+	public function setId($id): self
+	{
+		$this->id = $id;
 		return $this;
 	}
 
 	/**
 	 * @return int
 	 */
-	public function getId() {
+	public function getId()
+	{
 		return $this->id;
 	}
-
 
 	/**
 	 * @param string $name
 	 *
 	 * @return $this
 	 */
-	public function setName($name) {
+	public function setName($name): self
+	{
 		$this->name = $name;
-
 		return $this;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getName() {
+	public function getName()
+	{
 		return $this->name;
 	}
 
-
 	/**
-	 * @param $theme
+	 * @param string $theme
 	 *
 	 * @return $this
 	 */
-	public function setTheme($theme) {
+	public function setTheme($theme): self
+	{
 		$this->theme = $theme;
-
 		return $this;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getTheme() {
+	public function getTheme()
+	{
 		return $this->theme;
 	}
 
@@ -147,57 +151,57 @@ class WebsiteCore implements \JsonSerializable {
 	 *
 	 * @return $this
 	 */
-	public function setUserId($userId) {
+	public function setUserId($userId): self
+	{
 		$this->userId = $userId;
-
 		return $this;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getUserId() {
+	public function getUserId()
+	{
 		return $this->userId;
 	}
-
 
 	/**
 	 * @param string $site
 	 *
 	 * @return $this
 	 */
-	public function setSite($site) {
+	public function setSite($site): self
+	{
 		$this->site = $site;
-
 		return $this;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getSite() {
+	public function getSite()
+	{
 		return $this->site;
 	}
-
 
 	/**
 	 * @param int $type
 	 *
 	 * @return $this
 	 */
-	public function setType($type) {
+	public function setType($type): self
+	{
 		$this->type = $type;
-
 		return $this;
 	}
 
 	/**
 	 * @return int
 	 */
-	public function getType() {
+	public function getType()
+	{
 		return $this->type;
 	}
-
 
 	/**
 	 * @param string $key
@@ -205,9 +209,9 @@ class WebsiteCore implements \JsonSerializable {
 	 *
 	 * @return $this
 	 */
-	public function setOption($key, $value) {
+	public function setOption($key, $value): self
+	{
 		$this->options[$key] = $value;
-
 		return $this;
 	}
 
@@ -216,17 +220,18 @@ class WebsiteCore implements \JsonSerializable {
 	 *
 	 * @return string
 	 */
-	public function getOption($key) {
-		return (string)MiscService::get($this->options, $key, '');
+	public function getOption($key)
+	{
+		return MiscService::get($this->options, $key, '');
 	}
-
 
 	/**
 	 * @param array|string $options
 	 *
 	 * @return $this
 	 */
-	public function setOptions($options) {
+	public function setOptions($options): self
+	{
 		if (!is_array($options)) {
 			$options = json_decode($options, true);
 		}
@@ -236,17 +241,16 @@ class WebsiteCore implements \JsonSerializable {
 		}
 
 		$this->options = $options;
-
 		return $this;
 	}
-
 
 	/**
 	 * @param bool $json
 	 *
 	 * @return array
 	 */
-	public function getOptions($json = false) {
+	public function getOptions($json = false)
+	{
 		if ($json === true) {
 			return json_encode($this->options);
 		}
@@ -254,172 +258,173 @@ class WebsiteCore implements \JsonSerializable {
 		return $this->options;
 	}
 
-
 	/**
 	 * @param string $path
 	 *
 	 * @return $this
 	 */
-	public function setPath($path) {
+	public function setPath($path): self
+	{
 		$this->path = MiscService::endSlash($path);
-
 		return $this;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getPath() {
+	public function getPath()
+	{
 		return $this->path;
 	}
-
 
 	/**
 	 * @param string $page
 	 *
 	 * @return $this
 	 */
-	public function setPage($page) {
+	public function setPage($page): self
+	{
 		$this->page = $page;
-
 		return $this;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getPage() {
+	public function getPage()
+	{
 		return $this->page;
 	}
-
 
 	/**
 	 * @param int $creation
 	 *
 	 * @return $this
 	 */
-	public function setCreation($creation) {
+	public function setCreation($creation): self
+	{
 		$this->creation = $creation;
-
 		return $this;
 	}
 
 	/**
 	 * @return int
 	 */
-	public function getCreation() {
+	public function getCreation()
+	{
 		return $this->creation;
 	}
-
 
 	/**
 	 * @param string $viewer
 	 *
 	 * @return $this
 	 */
-	public function setViewer($viewer) {
+	public function setViewer($viewer): self
+	{
 		$this->viewer = $viewer;
-
 		return $this;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getViewer() {
+	public function getViewer()
+	{
 		return $this->viewer;
 	}
-
 
 	/**
 	 * @param bool $proxyRequest
 	 *
 	 * @return $this
 	 */
-	public function setProxyRequest(bool $proxyRequest) {
+	public function setProxyRequest($proxyRequest): self
+	{
 		$this->proxyRequest = $proxyRequest;
-
 		return $this;
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function getProxyRequest() {
+	public function getProxyRequest()
+	{
 		return $this->proxyRequest;
 	}
-
 
 	/**
 	 * @param string $source
 	 *
 	 * @return $this
 	 */
-	public function setTemplateSource($source) {
+	public function setTemplateSource($source): self
+	{
 		$this->templateSource = $source;
-
 		return $this;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getTemplateSource() {
+	public function getTemplateSource()
+	{
 		return $this->templateSource;
 	}
-
 
 	/**
 	 * @return array
 	 */
-	public function jsonSerialize() {
-		return array(
-			'id'       => $this->getId(),
-			'name'     => $this->getName(),
-			'user_id'  => $this->getUserId(),
-			'site'     => $this->getSite(),
-			'page'     => $this->getPage(),
-			'theme'    => $this->getTheme(),
-			'type'     => $this->getType(),
-			'options'  => $this->getOptions(),
-			'path'     => $this->getPath(),
-			'creation' => $this->getCreation()
-		);
+	public function jsonSerialize(): array
+	{
+		return [
+			'id' => $this->getId(),
+			'name' => $this->getName(),
+			'user_id' => $this->getUserId(),
+			'site' => $this->getSite(),
+			'page' => $this->getPage(),
+			'theme' => $this->getTheme(),
+			'type' => $this->getType(),
+			'options' => $this->getOptions(),
+			'path' => $this->getPath(),
+			'creation' => $this->getCreation(),
+		];
 	}
-
 
 	/**
 	 * @param array $arr
 	 *
 	 * @return bool
 	 */
-	public function fromArray($arr) {
+	public function fromArray($arr): bool
+	{
 		if (!is_array($arr)) {
 			return false;
 		}
 
-		MiscService::mustContains($arr, ['name', 'user_id', 'site', 'type', 'path']);
+		MiscService::mustContains($arr, [ 'name', 'user_id', 'site', 'type', 'path' ]);
 
 		$this->setId((int)MiscService::get($arr, 'id'))
-			 ->setName($arr['name'])
-			 ->setUserId($arr['user_id'])
-			 ->setSite($arr['site'])
-			 ->setPage(MiscService::get($arr, 'page'))
-			 ->setTheme(MiscService::get($arr, 'theme', 'default'))
-			 ->setType($arr['type'])
-			 ->setOptions(MiscService::get($arr, 'options'))
-			 ->setPath($arr['path'])
-			 ->setCreation((int)MiscService::get($arr, 'creation'));
+			->setName($arr['name'])
+			->setUserId($arr['user_id'])
+			->setSite($arr['site'])
+			->setPage(MiscService::get($arr, 'page'))
+			->setTheme(MiscService::get($arr, 'theme', 'default'))
+			->setType($arr['type'])
+			->setOptions(MiscService::get($arr, 'options'))
+			->setPath($arr['path'])
+			->setCreation((int)MiscService::get($arr, 'creation'));
 
 		return true;
 	}
 
-
 	/**
 	 * @param string $json
+	 *
+	 * @return bool
 	 */
-	public function fromJSON($json) {
-		$this->fromArray(json_decode($json, true));
+	public function fromJSON($json): bool
+	{
+		return $this->fromArray(json_decode($json, true));
 	}
-
 }

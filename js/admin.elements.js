@@ -63,7 +63,7 @@ var admin_pico_elements = {
 		});
 	},
 
-	
+
 	initTweaks: function () {
 		$.fn.emptyTable = function () {
 			this.children('tr').each(function () {

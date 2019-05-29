@@ -23,15 +23,12 @@
 
 namespace OCA\CMSPico\Service;
 
-use Exception;
 use OCA\CMSPico\Exceptions\TemplateNotFoundException;
-use OCA\CMSPico\Exceptions\WriteAccessException;
 use OCA\CMSPico\Files\FileInterface;
 use OCA\CMSPico\Files\FolderInterface;
 use OCA\CMSPico\Files\StorageFolder;
 use OCA\CMSPico\Model\TemplateFile;
 use OCA\CMSPico\Model\Website;
-use OCP\Files\Folder;
 use OCP\Files\InvalidPathException;
 use OCP\Files\NotFoundException;
 use OCP\IL10N;
@@ -72,7 +69,6 @@ class TemplatesService
 		$this->miscService = $miscService;
 	}
 
-
 	/**
 	 * check if template exist.
 	 *
@@ -86,7 +82,6 @@ class TemplatesService
 		}
 	}
 
-
 	/**
 	 * returns all templates available to users.
 	 *
@@ -94,7 +89,8 @@ class TemplatesService
 	 *
 	 * @return array
 	 */
-	public function getTemplatesList($customOnly = false) {
+	public function getTemplatesList($customOnly = false)
+	{
 		$templates = [];
 		if ($customOnly !== true) {
 			$templates = self::TEMPLATES;
@@ -107,7 +103,6 @@ class TemplatesService
 
 		return $templates;
 	}
-
 
 	/**
 	 * @return string[]

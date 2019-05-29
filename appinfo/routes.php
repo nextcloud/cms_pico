@@ -25,13 +25,17 @@ return [
 	'routes' => [
 		[ 'name' => 'Pico#getRoot', 'url' => '/pico/{site}/', 'verb' => 'GET' ],
 		[
-			'name' => 'Pico#getPage', 'url' => '/pico/{site}/{page}', 'verb' => 'GET',
+			'name' => 'Pico#getPage',
+			'url' => '/pico/{site}/{page}',
+			'verb' => 'GET',
 			'requirements' => array('page' => '.+')
 		],
 
 		[ 'name' => 'Pico#getRootProxy', 'url' => '/pico_proxy/{site}/', 'verb' => 'GET' ],
 		[
-			'name' => 'Pico#getPageProxy', 'url' => '/pico_proxy/{site}/{page}', 'verb' => 'GET',
+			'name' => 'Pico#getPageProxy',
+			'url' => '/pico_proxy/{site}/{page}',
+			'verb' => 'GET',
 			'requirements' => array('page' => '.+')
 		],
 
@@ -46,7 +50,8 @@ return [
 		['name' => 'Settings#updateWebsiteTheme', 'url' => '/personal/website/{siteId}/theme', 'verb' => 'PUT'],
 		[
 			'name' => 'Settings#editPersonalWebsiteOption',
-			'url'  => '/personal/website/{siteId}/option/{option}', 'verb' => 'POST'
+			'url'  => '/personal/website/{siteId}/option/{option}',
+			'verb' => 'POST'
 		],
 
 		['name' => 'Settings#getSettingsAdmin', 'url' => '/admin/settings', 'verb' => 'GET'],
