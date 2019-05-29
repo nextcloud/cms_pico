@@ -91,7 +91,7 @@ class TemplatesServiceTest extends \PHPUnit_Framework_TestCase {
 		$this->assertCount(1, $this->templatesService->getNewTemplatesList());
 
 		try {
-			$this->templatesService->templateHasToExist('this_is_a_template');
+			$this->templatesService->assertValidTemplate('this_is_a_template');
 			$this->assertSame(true, false, 'should return an exception');
 		} catch (TemplateNotFoundException $e) {
 		} catch (Exception $e) {
@@ -103,7 +103,7 @@ class TemplatesServiceTest extends \PHPUnit_Framework_TestCase {
 		$this->assertCount(1, $this->templatesService->getTemplatesList(true));
 		$this->assertCount(0, $this->templatesService->getNewTemplatesList());
 
-		$this->templatesService->templateHasToExist('this_is_a_template');
+		$this->templatesService->assertValidTemplate('this_is_a_template');
 
 		$this->settingsController->removeCustomTemplate('this_is_a_template');
 		$this->assertCount(2, $this->templatesService->getTemplatesList());
@@ -116,7 +116,7 @@ class TemplatesServiceTest extends \PHPUnit_Framework_TestCase {
 		$this->assertCount(0, $this->templatesService->getNewTemplatesList());
 
 		try {
-			$this->templatesService->templateHasToExist('this_is_a_template');
+			$this->templatesService->assertValidTemplate('this_is_a_template');
 			$this->assertSame(true, false, 'should return an exception');
 		} catch (TemplateNotFoundException $e) {
 		} catch (Exception $e) {

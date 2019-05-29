@@ -115,7 +115,7 @@ class WebsitesService
 	 */
 	public function createWebsite($name, $userId, $site, $path, $template)
 	{
-		$this->templatesService->templateHasToExist($template);
+		$this->templatesService->assertValidTemplate($template);
 
 		$website = new Website();
 		$website->setName($name)

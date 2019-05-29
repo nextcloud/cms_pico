@@ -76,7 +76,7 @@ class TemplatesService
 	 *
 	 * @throws TemplateNotFoundException
 	 */
-	public function templateHasToExist($template) {
+	public function assertValidTemplate($template) {
 		if (!in_array($template, $this->getTemplatesList())) {
 			throw new TemplateNotFoundException();
 		}
