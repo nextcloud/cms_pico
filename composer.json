@@ -13,6 +13,7 @@
     }
   ],
   "require": {
+    "php": ">=7.0.0",
     "ext-json": "*",
     "picocms/pico": "~2.0.0",
     "picocms/pico-theme": "~2.0.0",

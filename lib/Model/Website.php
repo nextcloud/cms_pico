@@ -51,10 +51,10 @@ use OCP\IURLGenerator;
 
 class Website extends WebsiteCore
 {
-	const TYPE_PUBLIC = 1;
-	const TYPE_PRIVATE = 2;
-
+	/** @var int */
 	const SITE_LENGTH_MIN = 3;
+
+	/** @var int */
 	const NAME_LENGTH_MIN = 3;
 
 	/** @var IConfig */
@@ -81,9 +81,9 @@ class Website extends WebsiteCore
 	/**
 	 * Website constructor.
 	 *
-	 * @param string $data
+	 * @param array|string|null $data
 	 */
-	public function __construct(string $data = '')
+	public function __construct($data = null)
 	{
 		$this->config = \OC::$server->getConfig();
 		$this->l10n = \OC::$server->getL10N(Application::APP_NAME);

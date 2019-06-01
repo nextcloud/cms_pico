@@ -25,8 +25,6 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Model;
 
-use OCA\CMSPico\Service\MiscService;
-
 class WebsiteCore implements \JsonSerializable
 {
 	/** @var int */
@@ -77,16 +75,15 @@ class WebsiteCore implements \JsonSerializable
 	/**
 	 * WebsiteCore constructor.
 	 *
-	 * @param array|string $data
+	 * @param array|string|null $data
 	 */
-	public function __construct($data = '')
+	public function __construct($data = null)
 	{
 		if (is_array($data)) {
 			$this->fromArray($data);
-			return;
+		} elseif ($data !== null) {
+			$this->fromJSON($data);
 		}
-
-		$this->fromJSON($data);
 	}
 
 	/**
@@ -94,7 +91,7 @@ class WebsiteCore implements \JsonSerializable
 	 *
 	 * @return $this
 	 */
-	public function setId($id): self
+	public function setId(int $id): self
 	{
 		$this->id = $id;
 		return $this;
@@ -103,47 +100,9 @@ class WebsiteCore implements \JsonSerializable
 	/**
 	 * @return int
 	 */
-	public function getId()
+	public function getId(): int
 	{
 		return $this->id;
-	}
-
-	/**
-	 * @param string $name
-	 *
-	 * @return $this
-	 */
-	public function setName($name): self
-	{
-		$this->name = $name;
-		return $this;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getName()
-	{
-		return $this->name;
-	}
-
-	/**
-	 * @param string $theme
-	 *
-	 * @return $this
-	 */
-	public function setTheme($theme): self
-	{
-		$this->theme = $theme;
-		return $this;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getTheme()
-	{
-		return $this->theme;
 	}
 
 	/**
@@ -151,7 +110,7 @@ class WebsiteCore implements \JsonSerializable
 	 *
 	 * @return $this
 	 */
-	public function setUserId($userId): self
+	public function setUserId(string $userId): self
 	{
 		$this->userId = $userId;
 		return $this;
@@ -160,9 +119,28 @@ class WebsiteCore implements \JsonSerializable
 	/**
 	 * @return string
 	 */
-	public function getUserId()
+	public function getUserId(): string
 	{
 		return $this->userId;
+	}
+
+	/**
+	 * @param string $name
+	 *
+	 * @return $this
+	 */
+	public function setName(string $name): self
+	{
+		$this->name = $name;
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getName(): string
+	{
+		return $this->name;
 	}
 
 	/**
@@ -170,7 +148,7 @@ class WebsiteCore implements \JsonSerializable
 	 *
 	 * @return $this
 	 */
-	public function setSite($site): self
+	public function setSite(string $site): self
 	{
 		$this->site = $site;
 		return $this;
@@ -179,9 +157,28 @@ class WebsiteCore implements \JsonSerializable
 	/**
 	 * @return string
 	 */
-	public function getSite()
+	public function getSite(): string
 	{
 		return $this->site;
+	}
+
+	/**
+	 * @param string $theme
+	 *
+	 * @return $this
+	 */
+	public function setTheme(string $theme): self
+	{
+		$this->theme = $theme;
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getTheme(): string
+	{
+		return $this->theme;
 	}
 
 	/**
@@ -189,7 +186,7 @@ class WebsiteCore implements \JsonSerializable
 	 *
 	 * @return $this
 	 */
-	public function setType($type): self
+	public function setType(int $type): self
 	{
 		$this->type = $type;
 		return $this;
@@ -198,7 +195,7 @@ class WebsiteCore implements \JsonSerializable
 	/**
 	 * @return int
 	 */
-	public function getType()
+	public function getType(): int
 	{
 		return $this->type;
 	}
@@ -209,7 +206,7 @@ class WebsiteCore implements \JsonSerializable
 	 *
 	 * @return $this
 	 */
-	public function setOption($key, $value): self
+	public function setOption(string $key, string $value): self
 	{
 		$this->options[$key] = $value;
 		return $this;
@@ -220,9 +217,9 @@ class WebsiteCore implements \JsonSerializable
 	 *
 	 * @return string
 	 */
-	public function getOption($key)
+	public function getOption($key): string
 	{
-		return MiscService::get($this->options, $key, '');
+		return $this->options[$key] ?? '';
 	}
 
 	/**
@@ -247,9 +244,9 @@ class WebsiteCore implements \JsonSerializable
 	/**
 	 * @param bool $json
 	 *
-	 * @return array
+	 * @return array|string
 	 */
-	public function getOptions($json = false)
+	public function getOptions(bool $json = false)
 	{
 		if ($json === true) {
 			return json_encode($this->options);
@@ -263,37 +260,18 @@ class WebsiteCore implements \JsonSerializable
 	 *
 	 * @return $this
 	 */
-	public function setPath($path): self
+	public function setPath(string $path): self
 	{
-		$this->path = MiscService::endSlash($path);
+		$this->path = $path ? rtrim($path, '/') . '/' : '';
 		return $this;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getPath()
+	public function getPath(): string
 	{
 		return $this->path;
-	}
-
-	/**
-	 * @param string $page
-	 *
-	 * @return $this
-	 */
-	public function setPage($page): self
-	{
-		$this->page = $page;
-		return $this;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getPage()
-	{
-		return $this->page;
 	}
 
 	/**
@@ -301,7 +279,7 @@ class WebsiteCore implements \JsonSerializable
 	 *
 	 * @return $this
 	 */
-	public function setCreation($creation): self
+	public function setCreation(int $creation): self
 	{
 		$this->creation = $creation;
 		return $this;
@@ -310,9 +288,47 @@ class WebsiteCore implements \JsonSerializable
 	/**
 	 * @return int
 	 */
-	public function getCreation()
+	public function getCreation(): int
 	{
 		return $this->creation;
+	}
+
+	/**
+	 * @param string $source
+	 *
+	 * @return $this
+	 */
+	public function setTemplateSource(string $source): self
+	{
+		$this->templateSource = $source;
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getTemplateSource(): string
+	{
+		return $this->templateSource;
+	}
+
+	/**
+	 * @param string $page
+	 *
+	 * @return $this
+	 */
+	public function setPage(string $page): self
+	{
+		$this->page = $page;
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getPage(): string
+	{
+		return $this->page;
 	}
 
 	/**
@@ -320,7 +336,7 @@ class WebsiteCore implements \JsonSerializable
 	 *
 	 * @return $this
 	 */
-	public function setViewer($viewer): self
+	public function setViewer(string $viewer): self
 	{
 		$this->viewer = $viewer;
 		return $this;
@@ -329,7 +345,7 @@ class WebsiteCore implements \JsonSerializable
 	/**
 	 * @return string
 	 */
-	public function getViewer()
+	public function getViewer(): string
 	{
 		return $this->viewer;
 	}
@@ -339,7 +355,7 @@ class WebsiteCore implements \JsonSerializable
 	 *
 	 * @return $this
 	 */
-	public function setProxyRequest($proxyRequest): self
+	public function setProxyRequest(bool $proxyRequest): self
 	{
 		$this->proxyRequest = $proxyRequest;
 		return $this;
@@ -348,28 +364,9 @@ class WebsiteCore implements \JsonSerializable
 	/**
 	 * @return bool
 	 */
-	public function getProxyRequest()
+	public function getProxyRequest(): bool
 	{
 		return $this->proxyRequest;
-	}
-
-	/**
-	 * @param string $source
-	 *
-	 * @return $this
-	 */
-	public function setTemplateSource($source): self
-	{
-		$this->templateSource = $source;
-		return $this;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getTemplateSource()
-	{
-		return $this->templateSource;
 	}
 
 	/**
@@ -379,52 +376,62 @@ class WebsiteCore implements \JsonSerializable
 	{
 		return [
 			'id' => $this->getId(),
-			'name' => $this->getName(),
 			'user_id' => $this->getUserId(),
+			'name' => $this->getName(),
 			'site' => $this->getSite(),
-			'page' => $this->getPage(),
 			'theme' => $this->getTheme(),
 			'type' => $this->getType(),
 			'options' => $this->getOptions(),
 			'path' => $this->getPath(),
 			'creation' => $this->getCreation(),
+			'templateSource' => $this->getTemplateSource(),
+			'page' => $this->getPage(),
 		];
 	}
 
 	/**
-	 * @param array $arr
+	 * @param array $data
 	 *
-	 * @return bool
+	 * @throws \UnexpectedValueException
 	 */
-	public function fromArray($arr): bool
+	public function fromArray(array $data)
 	{
-		if (!is_array($arr)) {
-			return false;
+		if (!isset($data['user_id']) || !isset($data['name']) || !isset($data['site']) || !isset($data['path'])) {
+			throw new \UnexpectedValueException();
 		}
 
-		MiscService::mustContains($arr, [ 'name', 'user_id', 'site', 'type', 'path' ]);
+		$options = [];
+		if (!empty($data['options'])) {
+			$options = is_array($data['options']) ? $data['options'] : json_decode($data['options'], true);
+		}
 
-		$this->setId((int)MiscService::get($arr, 'id'))
-			->setName($arr['name'])
-			->setUserId($arr['user_id'])
-			->setSite($arr['site'])
-			->setPage(MiscService::get($arr, 'page'))
-			->setTheme(MiscService::get($arr, 'theme', 'default'))
-			->setType($arr['type'])
-			->setOptions(MiscService::get($arr, 'options'))
-			->setPath($arr['path'])
-			->setCreation((int)MiscService::get($arr, 'creation'));
+		$creation = 0;
+		if (!empty($data['creation'])) {
+			$creation = is_numeric($data['creation']) ? (int) $data['creation'] : strtotime($data['creation']);
+		}
 
-		return true;
+		$this->setId((int) $data['id'] ?? 0)
+			->setUserId($data['user_id'])
+			->setName($data['name'])
+			->setSite($data['site'])
+			->setTheme($data['theme'] ?? 'default')
+			->setType((int) $data['type'] ?? self::TYPE_PUBLIC)
+			->setOptions($options)
+			->setPath($data['path'])
+			->setCreation($creation)
+			->setTemplateSource($data['templateSource'] ?? '')
+			->setPage($data['page'] ?? '')
+			->setViewer($data['viewer'] ?? '')
+			->setProxyRequest((bool) $data['proxyRequest'] ?? false);
 	}
 
 	/**
 	 * @param string $json
 	 *
-	 * @return bool
+	 * @throws \UnexpectedValueException
 	 */
-	public function fromJSON($json): bool
+	public function fromJSON(string $json)
 	{
-		return $this->fromArray(json_decode($json, true));
+		$this->fromArray(json_decode($json, true));
 	}
 }

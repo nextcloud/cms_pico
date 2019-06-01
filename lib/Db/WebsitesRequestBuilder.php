@@ -107,17 +107,6 @@ class WebsitesRequestBuilder extends CoreRequestBuilder
 	 */
 	protected function parseWebsitesSelectSql($data)
 	{
-		$website = new Website();
-		$website->setId($data['id'])
-			->setName($data['name'])
-			->setUserId($data['user_id'])
-			->setSite($data['site'])
-			->setType($data['type'])
-			->setTheme($data['theme'])
-			->setOptions($data['options'])
-			->setPath($data['path'])
-			->setCreation($data['creation']);
-
-		return $website;
+		return new Website($data);
 	}
 }
