@@ -136,10 +136,8 @@ class WebsitesServiceTest extends \PHPUnit_Framework_TestCase {
 		$this->assertCount(1, $websites);
 
 		$arr = json_decode(json_encode($websites[0]), true);
-		$path = self::INFOS_WEBSITE1['path'];
-		$path2 = $arr['path'];
-		$path = MiscService::endSlash($path);
-		$path2 = MiscService::endSlash($path2);
+		$path = rtrim(self::INFOS_WEBSITE1['path'], '/') . '/';
+		$path2 = rtrim($arr['path'], '/') . '/';
 
 		$this->assertSame(
 			[

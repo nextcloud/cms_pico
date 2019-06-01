@@ -24,7 +24,6 @@
 namespace OCA\CMSPico\Service;
 
 use OCA\CMSPico\AppInfo\Application;
-use OCA\CMSPico\Exceptions\MissingKeyInArrayException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\Files\InvalidPathException;
@@ -47,53 +46,6 @@ class MiscService
 	public function __construct(ILogger $logger)
 	{
 		$this->logger = $logger;
-	}
-
-	/**
-	 * @param string $path
-	 *
-	 * @return string
-	 */
-	public static function endSlash($path)
-	{
-		if ($path === '') {
-			return '';
-		}
-
-		if (substr($path, -1, 1) !== '/') {
-			$path .= '/';
-		}
-
-		return $path;
-	}
-
-	/**
-	 * @param        $arr
-	 * @param        $k
-	 * @param string $default
-	 *
-	 * @return array|string|integer
-	 */
-	public static function get($arr, $k, $default = '')
-	{
-		if (!key_exists($k, $arr)) {
-			return $default;
-		}
-
-		return $arr[$k];
-	}
-
-	public static function mustContains($data, $arr)
-	{
-		if (!is_array($arr)) {
-			$arr = [ $arr ];
-		}
-
-		foreach ($arr as $k) {
-			if (!key_exists($k, $data)) {
-				throw new MissingKeyInArrayException();
-			}
-		}
 	}
 
 	public static function checkChars($line, $chars)
