@@ -322,7 +322,7 @@ class Website extends WebsiteCore
 		$this->hasToBeFilledWithNonEmptyValues();
 		$this->pathCantContainSpecificFolders();
 
-		if (MiscService::checkChars($this->getSite(), MiscService::ALPHA_NUMERIC_SCORES) === false) {
+		if (preg_match('/^[a-z0-9_-]*$/', $this->getSite()) !== 1) {
 			throw new CheckCharsException(
 				$this->l10n->t('The address of the website can only contains alpha numeric chars')
 			);
