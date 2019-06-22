@@ -22,7 +22,6 @@
 
 namespace OCA\CMSPico\Events;
 
-use OCA\CMSPico\Service\MiscService;
 use OCA\CMSPico\Service\WebsitesService;
 
 class UserEvents
@@ -30,13 +29,9 @@ class UserEvents
 	/** @var WebsitesService */
 	private $websitesService;
 
-	/** @var MiscService */
-	private $miscService;
-
-	public function __construct(WebsitesService $websitesService, MiscService $miscService)
+	public function __construct(WebsitesService $websitesService)
 	{
 		$this->websitesService = $websitesService;
-		$this->miscService = $miscService;
 	}
 
 	/**

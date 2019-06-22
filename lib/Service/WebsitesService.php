@@ -182,10 +182,6 @@ class WebsitesService
 	}
 
 	/**
-	 * Event onUserRemoved();
-	 *
-	 * Delete all website from the removed user.
-	 *
 	 * @param string $userId
 	 */
 	public function onUserRemoved($userId)
