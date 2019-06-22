@@ -25,6 +25,8 @@ declare(strict_types=1);
 namespace OCA\CMSPico\Model;
 
 use OCA\CMSPico\Exceptions\PageInvalidPathException;
+use OCA\CMSPico\Exceptions\PageNotFoundException;
+use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
 use OCA\CMSPico\Service\PicoService;
 use Pico;
 
@@ -39,6 +41,13 @@ class PicoPage
 	/** @var string */
 	private $output;
 
+	/**
+	 * PicoPage constructor.
+	 *
+	 * @param Website $website
+	 * @param Pico    $pico
+	 * @param string  $output
+	 */
 	public function __construct(Website $website, Pico $pico, string $output)
 	{
 		$this->website = $website;
@@ -68,7 +77,11 @@ class PicoPage
 		if ($absolutePath) {
 			try {
 				return $this->website->getRelativePagePath($absolutePath);
+			} catch (WebsiteNotFoundException $e) {
+				// silently ignore this exception, proceed
 			} catch (PageInvalidPathException $e) {
+				// silently ignore this exception, proceed
+			} catch (PageNotFoundException $e) {
 				// silently ignore this exception, proceed
 			}
 		}
