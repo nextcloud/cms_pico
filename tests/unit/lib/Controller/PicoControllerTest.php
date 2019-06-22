@@ -137,21 +137,21 @@ class PicoControllerTest extends \PHPUnit_Framework_TestCase {
 	/**
 	 * @param array $data
 	 */
-	private function createWebsite($data) {
+	private function createWebsite($data)
+	{
 		$website = new Website($data);
-
-		$this->websitesService->createWebsite(
-			$website->getName(), $website->getUserId(), $website->getSite(), $website->getPath(), $data['template']
-		);
+		$this->websitesService->createWebsite($website);
 	}
 
 	/**
 	 * @param array $data
 	 */
-	private function deleteWebsite($data) {
+	private function deleteWebsite($data)
+	{
 		$website = $this->websitesService->getWebsiteFromSite($data['site']);
+		$website->assertOwnedBy($data['user_id']);
 
-		$this->websitesService->deleteWebsite($website->getId(), $data['user_id']);
+		$this->websitesService->deleteWebsite($website);
 	}
 
 

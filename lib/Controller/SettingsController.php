@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace OCA\CMSPico\Controller;
 
 use OCA\CMSPico\AppInfo\Application;
+use OCA\CMSPico\Model\Website;
 use OCA\CMSPico\Service\ConfigService;
 use OCA\CMSPico\Service\MiscService;
 use OCA\CMSPico\Service\TemplatesService;
@@ -103,9 +104,14 @@ class SettingsController extends Controller
 	public function createPersonalWebsite(array $data): DataResponse
 	{
 		try {
-			$this->websitesService->createWebsite(
-				$data['name'], $this->userId, $data['website'], $data['path'], $data['template']
-			);
+			$website = (new Website())
+				->setName($data['name'])
+				->setUserId($this->userId)
+				->setSite($data['website'])
+				->setPath($data['path'])
+				->setTemplateSource($data['template']);
+
+			$this->websitesService->createWebsite($website);
 
 			return $this->createSuccessResponse([
 				'name' => $data['name'],
@@ -126,14 +132,18 @@ class SettingsController extends Controller
 	public function removePersonalWebsite(array $data): DataResponse
 	{
 		try {
-			$this->websitesService->deleteWebsite($data['id'], $this->userId);
+			$website = $this->websitesService->getWebsiteFromId($data['id']);
+
+			$website->assertOwnedBy($this->userId);
+
+			$this->websitesService->deleteWebsite($website);
 
 			return $this->createSuccessResponse([
 				'name' => $data['name'],
 				'websites' => $this->websitesService->getWebsitesFromUser($this->userId),
 			]);
 		} catch (\Exception $e) {
-			return $this->createErrorResponse(['name' => $data['name'], 'error' => $e->getMessage()]);
+			return $this->createErrorResponse([ 'name' => $data['name'], 'error' => $e->getMessage() ]);
 		}
 	}
 
@@ -150,17 +160,16 @@ class SettingsController extends Controller
 		try {
 			$website = $this->websitesService->getWebsiteFromId($siteId);
 
-			$website->hasToBeOwnedBy($this->userId);
+			$website->assertOwnedBy($this->userId);
 			$website->setTheme($theme);
 
-			$this->themesService->assertValidTheme($theme);
 			$this->websitesService->updateWebsite($website);
 
 			return $this->createSuccessResponse([
 				'websites' => $this->websitesService->getWebsitesFromUser($this->userId)
 			]);
 		} catch (\Exception $e) {
-			return $this->createErrorResponse(['error' => $e->getMessage()]);
+			return $this->createErrorResponse([ 'error' => $e->getMessage() ]);
 		}
 	}
 
@@ -178,7 +187,7 @@ class SettingsController extends Controller
 		try {
 			$website = $this->websitesService->getWebsiteFromId($siteId);
 
-			$website->hasToBeOwnedBy($this->userId);
+			$website->assertOwnedBy($this->userId);
 			$website->setOption($option, $value);
 
 			$this->websitesService->updateWebsite($website);
@@ -187,7 +196,7 @@ class SettingsController extends Controller
 				'websites' => $this->websitesService->getWebsitesFromUser($this->userId)
 			]);
 		} catch (\Exception $e) {
-			return $this->createErrorResponse(['error' => $e->getMessage()]);
+			return $this->createErrorResponse([ 'error' => $e->getMessage() ]);
 		}
 	}
 
@@ -206,7 +215,7 @@ class SettingsController extends Controller
 				'websites' => $websites,
 			]);
 		} catch (\Exception $e) {
-			return $this->createErrorResponse(['error' => $e->getMessage()]);
+			return $this->createErrorResponse([ 'error' => $e->getMessage() ]);
 		}
 	}
 

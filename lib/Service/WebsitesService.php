@@ -25,9 +25,7 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Service;
 
-use Exception;
 use OC\Encryption\Manager;
-use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Db\WebsitesRequest;
 use OCA\CMSPico\Exceptions\AssetInvalidPathException;
 use OCA\CMSPico\Exceptions\AssetNotFoundException;
@@ -37,15 +35,16 @@ use OCA\CMSPico\Exceptions\PageInvalidPathException;
 use OCA\CMSPico\Exceptions\PageNotFoundException;
 use OCA\CMSPico\Exceptions\PageNotPermittedException;
 use OCA\CMSPico\Exceptions\PicoRuntimeException;
+use OCA\CMSPico\Exceptions\TemplateNotFoundException;
 use OCA\CMSPico\Exceptions\ThemeNotFoundException;
 use OCA\CMSPico\Exceptions\WebsiteExistsException;
+use OCA\CMSPico\Exceptions\WebsiteInvalidDataException;
 use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
 use OCA\CMSPico\Exceptions\WebsiteNotPermittedException;
 use OCA\CMSPico\Model\PicoPage;
 use OCA\CMSPico\Model\Website;
 use OCP\Files\File;
 use OCP\IL10N;
-use OCP\ILogger;
 
 class WebsitesService
 {
@@ -100,36 +99,26 @@ class WebsitesService
 	}
 
 	/**
-	 * createWebsite();
+	 * Creates a new website.
 	 *
-	 * create website using the templates file.
-	 * We check that the template exists and that the inputs are valid.
-	 *
-	 * @param string $name
-	 * @param string $userId
-	 * @param string $site
-	 * @param string $path
-	 * @param string $template
+	 * @param Website $website
 	 *
 	 * @throws WebsiteExistsException
+	 * @throws WebsiteInvalidDataException
+	 * @throws TemplateNotFoundException
 	 */
-	public function createWebsite($name, $userId, $site, $path, $template)
+	public function createWebsite(Website $website)
 	{
-		$this->templatesService->assertValidTemplate($template);
-
-		$website = new Website();
-		$website->setName($name)
-				->setUserId($userId)
-				->setSite($site)
-				->setPath($path)
-				->setTemplateSource($template);
+		$website->assertValidName();
+		$website->assertValidSite();
+		$website->assertValidPath();
+		$website->assertValidTemplate();
 
 		try {
-			$website->hasToBeFilledWithValidEntries();
 			$website = $this->websiteRequest->getWebsiteFromSite($website->getSite());
 			throw new WebsiteExistsException();
 		} catch (WebsiteNotFoundException $e) {
-			// In fact we want the website to not exist (yet).
+			// in fact we want the website not to exist yet
 		}
 
 		$this->templatesService->installTemplates($website);
@@ -137,45 +126,58 @@ class WebsitesService
 	}
 
 	/**
-	 * updateWebsite();
+	 * Updates a website.
 	 *
-	 * update a Website.
+	 * Warning: This method does not check the ownership of the website!
+	 * Please use {@see Website::assertOwnedBy()} beforehand.
 	 *
 	 * @param Website $website
+	 *
+	 * @throws WebsiteNotFoundException
+	 * @throws WebsiteInvalidDataException
+	 * @throws ThemeNotFoundException
+	 * @throws TemplateNotFoundException
 	 */
 	public function updateWebsite(Website $website)
 	{
+		$originalWebsite = $this->websiteRequest->getWebsiteFromId($website->getId());
+
+		if ($website->getName() !== $originalWebsite->getName()) {
+			$website->assertValidName();
+		}
+		if ($website->getSite() !== $originalWebsite->getSite()) {
+			$website->assertValidSite();
+		}
+		if ($website->getPath() !== $originalWebsite->getPath()) {
+			$website->assertValidPath();
+		}
+		if ($website->getTheme() !== $originalWebsite->getTheme()) {
+			$website->assertValidTheme();
+		}
+		if ($website->getTemplateSource()) {
+			if ($website->getTemplateSource() !== $originalWebsite->getTemplateSource()) {
+				$website->assertValidTemplate();
+			}
+		}
+
 		$this->websiteRequest->update($website);
 	}
 
 	/**
-	 * deleteWebsite();
+	 * Deletes a website.
 	 *
-	 * Delete a website regarding its Id and the userId
-	 *
-	 * @param int $siteId
-	 * @param string $userId
-	 */
-	public function deleteWebsite($siteId, $userId)
-	{
-		$website = $this->getWebsiteFromId($siteId);
-		$website->hasToBeOwnedBy($userId);
-
-		$this->forceDeleteWebsite($website);
-	}
-
-	/**
-	 * forceDeleteWebsite();
-	 *
-	 * delete a website.
-	 *
-	 * Warning: this method does not check the ownership of the website.
-	 * Please use deleteWebsite().
+	 * Warning: This method does not check the ownership of the website!
+	 * Please use {@see Website::assertOwnedBy()} beforehand.
 	 *
 	 * @param Website $website
+	 *
+	 * @throws WebsiteNotFoundException
 	 */
-	public function forceDeleteWebsite(Website $website)
+	public function deleteWebsite(Website $website)
 	{
+		// check whether website actually exists
+		$this->websiteRequest->getWebsiteFromId($website->getId());
+
 		$this->websiteRequest->delete($website);
 	}
 

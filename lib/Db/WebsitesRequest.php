@@ -29,28 +29,19 @@ class WebsitesRequest extends WebsitesRequestBuilder
 {
 	/**
 	 * @param Website $website
-	 *
-	 * @return bool
-	 * @throws \Exception
 	 */
 	public function create(Website $website)
 	{
-		try {
-			$qb = $this->getWebsitesInsertSql();
-			$qb->setValue('name', $qb->createNamedParameter($website->getName()))
-				->setValue('user_id', $qb->createNamedParameter($website->getUserId()))
-				->setValue('site', $qb->createNamedParameter($website->getSite()))
-				->setValue('theme', $qb->createNamedParameter($website->getTheme()))
-				->setValue('type', $qb->createNamedParameter($website->getType()))
-				->setValue('options', $qb->createNamedParameter($website->getOptions(true)))
-				->setValue('path', $qb->createNamedParameter($website->getPath()));
+		$qb = $this->getWebsitesInsertSql();
+		$qb->setValue('name', $qb->createNamedParameter($website->getName()))
+			->setValue('user_id', $qb->createNamedParameter($website->getUserId()))
+			->setValue('site', $qb->createNamedParameter($website->getSite()))
+			->setValue('theme', $qb->createNamedParameter($website->getTheme()))
+			->setValue('type', $qb->createNamedParameter($website->getType()))
+			->setValue('options', $qb->createNamedParameter($website->getOptions(true)))
+			->setValue('path', $qb->createNamedParameter($website->getPath()));
 
-			$qb->execute();
-
-			return true;
-		} catch (\Exception $e) {
-			throw $e;
-		}
+		$qb->execute();
 	}
 
 	/**
@@ -86,7 +77,7 @@ class WebsitesRequest extends WebsitesRequestBuilder
 	/**
 	 * @param string $userId
 	 */
-	public function deleteAllFromUser($userId)
+	public function deleteAllFromUser(string $userId)
 	{
 		$qb = $this->getWebsitesDeleteSql();
 		$this->limitToUserId($qb, $userId);
@@ -95,13 +86,11 @@ class WebsitesRequest extends WebsitesRequestBuilder
 	}
 
 	/**
-	 * return list of websites from a user.
-	 *
 	 * @param string $userId
 	 *
 	 * @return Website[]
 	 */
-	public function getWebsitesFromUserId($userId)
+	public function getWebsitesFromUserId(string $userId): array
 	{
 		$qb = $this->getWebsitesSelectSql();
 		$this->limitToUserId($qb, $userId);
@@ -117,14 +106,12 @@ class WebsitesRequest extends WebsitesRequestBuilder
 	}
 
 	/**
-	 * return the website corresponding to the Id
-	 *
 	 * @param int $siteId
 	 *
 	 * @return Website
 	 * @throws WebsiteNotFoundException
 	 */
-	public function getWebsiteFromId($siteId)
+	public function getWebsiteFromId(int $siteId): Website
 	{
 		$qb = $this->getWebsitesSelectSql();
 		$this->limitToId($qb, $siteId);
@@ -141,14 +128,12 @@ class WebsitesRequest extends WebsitesRequestBuilder
 	}
 
 	/**
-	 * return the website corresponding to the site/url
-	 *
 	 * @param string $site
 	 *
 	 * @return Website
 	 * @throws WebsiteNotFoundException
 	 */
-	public function getWebsiteFromSite($site)
+	public function getWebsiteFromSite(string $site): Website
 	{
 		$qb = $this->getWebsitesSelectSql();
 		$this->limitToSite($qb, $site);

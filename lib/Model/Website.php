@@ -27,17 +27,19 @@ namespace OCA\CMSPico\Model;
 
 use OC\Files\View;
 use OCA\CMSPico\AppInfo\Application;
-use OCA\CMSPico\Exceptions\CheckCharsException;
-use OCA\CMSPico\Exceptions\MinCharsException;
 use OCA\CMSPico\Exceptions\PageInvalidPathException;
 use OCA\CMSPico\Exceptions\PageNotFoundException;
 use OCA\CMSPico\Exceptions\PageNotPermittedException;
-use OCA\CMSPico\Exceptions\PathContainSpecificFoldersException;
-use OCA\CMSPico\Exceptions\UserIsNotOwnerException;
+use OCA\CMSPico\Exceptions\TemplateNotFoundException;
+use OCA\CMSPico\Exceptions\ThemeNotFoundException;
+use OCA\CMSPico\Exceptions\WebsiteForeignOwnerException;
+use OCA\CMSPico\Exceptions\WebsiteInvalidDataException;
 use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
 use OCA\CMSPico\Exceptions\WebsiteNotPermittedException;
 use OCA\CMSPico\Service\MiscService;
 use OCA\CMSPico\Service\PicoService;
+use OCA\CMSPico\Service\TemplatesService;
+use OCA\CMSPico\Service\ThemesService;
 use OCP\App\IAppManager;
 use OCP\Files\File;
 use OCP\Files\InvalidPathException;
@@ -78,6 +80,15 @@ class Website extends WebsiteCore
 	/** @var View */
 	private $ownerView;
 
+	/** @var ThemesService */
+	private $themesService;
+
+	/** @var TemplatesService */
+	private $templatesService;
+
+	/** @var MiscService */
+	private $miscService;
+
 	/**
 	 * Website constructor.
 	 *
@@ -91,6 +102,9 @@ class Website extends WebsiteCore
 		$this->groupManager = \OC::$server->getGroupManager();
 		$this->rootFolder = \OC::$server->getRootFolder();
 		$this->URLGenerator = \OC::$server->getURLGenerator();
+		$this->themesService = \OC::$server->query(ThemesService::class);
+		$this->templatesService = \OC::$server->query(TemplatesService::class);
+		$this->miscService = \OC::$server->query(MiscService::class);
 
 		parent::__construct($data);
 	}
@@ -295,6 +309,74 @@ class Website extends WebsiteCore
 	}
 
 	/**
+	 * @throws WebsiteInvalidDataException
+	 */
+	public function assertValidName()
+	{
+		if (strlen($this->getName()) < self::NAME_LENGTH_MIN) {
+			throw new WebsiteInvalidDataException($this->l10n->t('The name of the website must be longer'));
+		}
+	}
+
+	/**
+	 * @throws WebsiteInvalidDataException
+	 */
+	public function assertValidSite()
+	{
+		if (strlen($this->getSite()) < self::SITE_LENGTH_MIN) {
+			throw new WebsiteInvalidDataException($this->l10n->t('The address of the website must be longer'));
+		}
+
+		if (preg_match('/^[a-z0-9_-]*$/', $this->getSite()) !== 1) {
+			throw new WebsiteInvalidDataException(
+				$this->l10n->t('The address of the website can only contains alpha numeric chars')
+			);
+		}
+	}
+
+	/**
+	 * @throws WebsiteInvalidDataException
+	 */
+	public function assertValidPath()
+	{
+		try {
+			$this->miscService->normalizePath($this->getPath());
+		} catch (InvalidPathException $e) {
+			throw new WebsiteInvalidDataException(
+				$this->l10n->t('The path of the website is invalid')
+			);
+		}
+	}
+
+	/**
+	 * @throws ThemeNotFoundException
+	 */
+	public function assertValidTheme()
+	{
+		$this->themesService->assertValidTheme($this->getTheme());
+	}
+
+	/**
+	 * @throws TemplateNotFoundException
+	 */
+	public function assertValidTemplate()
+	{
+		$this->templatesService->assertValidTemplate($this->getTemplateSource());
+	}
+
+	/**
+	 * @param string $userId
+	 *
+	 * @throws WebsiteForeignOwnerException
+	 */
+	public function assertOwnedBy($userId)
+	{
+		if ($this->getUserId() !== $userId) {
+			throw new WebsiteForeignOwnerException();
+		}
+	}
+
+	/**
 	 * @return View
 	 * @throws WebsiteNotFoundException
 	 */
@@ -309,73 +391,5 @@ class Website extends WebsiteCore
 		}
 
 		return $this->ownerView;
-	}
-
-	/**
-	 * @return void
-	 * @throws CheckCharsException
-	 * @throws MinCharsException
-	 * @throws PathContainSpecificFoldersException
-	 */
-	public function hasToBeFilledWithValidEntries()
-	{
-		$this->hasToBeFilledWithNonEmptyValues();
-		$this->pathCantContainSpecificFolders();
-
-		if (preg_match('/^[a-z0-9_-]*$/', $this->getSite()) !== 1) {
-			throw new CheckCharsException(
-				$this->l10n->t('The address of the website can only contains alpha numeric chars')
-			);
-		}
-	}
-
-	/**
-	 * @throws MinCharsException
-	 */
-	private function hasToBeFilledWithNonEmptyValues()
-	{
-		if (strlen($this->getSite()) < self::SITE_LENGTH_MIN) {
-			throw new MinCharsException($this->l10n->t('The address of the website must be longer'));
-		}
-
-		if (strlen($this->getName()) < self::NAME_LENGTH_MIN) {
-			throw new MinCharsException($this->l10n->t('The name of the website must be longer'));
-		}
-	}
-
-	/**
-	 * this is overkill - NC does not allow to create directory outside of the users' filesystem
-	 * Not sure that there is a single use for this security check
-	 *
-	 * @param string $path
-	 *
-	 * @throws PathContainSpecificFoldersException
-	 */
-	public function pathCantContainSpecificFolders($path = '')
-	{
-		if ($path === '') {
-			$path = $this->getPath();
-		}
-
-		$limit = [ '.', '..' ];
-
-		$folders = explode('/', $path);
-		foreach ($folders as $folder) {
-			if (in_array($folder, $limit)) {
-				throw new PathContainSpecificFoldersException();
-			}
-		}
-	}
-
-	/**
-	 * @param string $userId
-	 *
-	 * @throws UserIsNotOwnerException
-	 */
-	public function hasToBeOwnedBy($userId)
-	{
-		if ($this->getUserId() !== $userId) {
-			throw new UserIsNotOwnerException();
-		}
 	}
 }

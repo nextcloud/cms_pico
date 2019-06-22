@@ -384,7 +384,7 @@ class WebsiteCore implements \JsonSerializable
 			'options' => $this->getOptions(),
 			'path' => $this->getPath(),
 			'creation' => $this->getCreation(),
-			'templateSource' => $this->getTemplateSource(),
+			'template' => $this->getTemplateSource(),
 			'page' => $this->getPage(),
 		];
 	}
@@ -419,7 +419,7 @@ class WebsiteCore implements \JsonSerializable
 			->setOptions($options)
 			->setPath($data['path'])
 			->setCreation($creation)
-			->setTemplateSource($data['templateSource'] ?? '')
+			->setTemplateSource($data['template'] ?? '')
 			->setPage($data['page'] ?? '')
 			->setViewer($data['viewer'] ?? '')
 			->setProxyRequest((bool) $data['proxyRequest'] ?? false);

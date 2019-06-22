@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Exceptions;
 
-class UserIsNotOwnerException extends \Exception
+class WebsiteForeignOwnerException extends \Exception
 {
 
 }

@@ -2,7 +2,7 @@
 /**
  * CMS Pico - Create websites using Pico CMS for Nextcloud.
  *
- * @copyright Copyright (c) 2017, Maxence Lange (<maxence@artificial-owl.com>)
+ * @copyright Copyright (c) 2019, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Exceptions;
 
-class CheckCharsException extends \Exception
+class WebsiteInvalidDataException extends \Exception
 {
 
 }

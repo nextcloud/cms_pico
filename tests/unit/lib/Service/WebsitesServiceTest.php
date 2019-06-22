@@ -25,7 +25,7 @@ namespace OCA\CMSPico\Tests\Service;
 use Exception;
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Exceptions\PicoRuntimeException;
-use OCA\CMSPico\Exceptions\UserIsNotOwnerException;
+use OCA\CMSPico\Exceptions\WebsiteForeignOwnerException;
 use OCA\CMSPico\Exceptions\WebsiteExistsException;
 use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
 use OCA\CMSPico\Model\Website;
@@ -249,7 +249,7 @@ class WebsitesServiceTest extends \PHPUnit_Framework_TestCase {
 		try {
 			$data['user_id'] = Env::ENV_TEST_USER2;
 			$this->deleteWebsite($data);
-		} catch (UserIsNotOwnerException $e) {
+		} catch (WebsiteForeignOwnerException $e) {
 		} catch (Exception $e) {
 			$this->assertSame(
 				true, false, 'should returns UserIsNotOwnerException - ' . $e->getMessage()
@@ -290,22 +290,21 @@ class WebsitesServiceTest extends \PHPUnit_Framework_TestCase {
 	/**
 	 * @param array $data
 	 */
-	private function createWebsite($data) {
+	private function createWebsite($data)
+	{
 		$website = new Website($data);
-
-		$this->websitesService->createWebsite(
-			$website->getName(), $website->getUserId(), $website->getSite(), $website->getPath(),
-			$data['template']
-		);
+		$this->websitesService->createWebsite($website);
 	}
 
 	/**
 	 * @param array $data
 	 */
-	private function deleteWebsite($data) {
+	private function deleteWebsite($data)
+	{
 		$website = $this->websitesService->getWebsiteFromSite($data['site']);
+		$website->assertOwnedBy($data['user_id']);
 
-		$this->websitesService->deleteWebsite($website->getId(), $data['user_id']);
+		$this->websitesService->deleteWebsite($website);
 	}
 
 }
