@@ -277,14 +277,20 @@ class Website extends WebsiteCore
 	{
 		$exceptionClass = WebsiteNotPermittedException::class;
 		if ($this->getOption('private') !== '1') {
-			$groupAccess = isset($meta['access']) ? strtolower($meta['access']) : 'public';
-			if ($groupAccess === 'public') {
+			if (empty($meta['access'])) {
 				return;
 			}
 
-			if ($this->getViewer() && $this->groupManager->groupExists($groupAccess)) {
-				if ($this->groupManager->isInGroup($this->getViewer(), $groupAccess)) {
+			$groupAccess = explode(',', strtolower($meta['access']));
+			foreach ($groupAccess as $group) {
+				if ($group === 'public') {
 					return;
+				}
+
+				if ($this->getViewer() && $this->groupManager->groupExists($group)) {
+					if ($this->groupManager->isInGroup($this->getViewer(), $group)) {
+						return;
+					}
 				}
 			}
 
