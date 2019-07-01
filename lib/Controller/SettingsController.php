@@ -327,6 +327,19 @@ class SettingsController extends Controller
 	}
 
 	/**
+	 * @param string $item
+	 *
+	 * @return DataResponse
+	 */
+	public function updateCustomTheme(string $item): DataResponse
+	{
+		$this->themesService->depublishCustomTheme($item);
+		$this->themesService->publishCustomTheme($item);
+
+		return $this->getThemes();
+	}
+
+	/**
 	 * @param array $data
 	 *
 	 * @return DataResponse

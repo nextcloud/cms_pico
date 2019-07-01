@@ -125,6 +125,11 @@
 	 */
 	function _setupItem(name, $item) {
 		var that = this;
+
+		$item.find(this.reloadItemButton).on('click.CMSPicoAdmin', function () {
+			_api.call(that, 'UPDATE', { item: name });
+		});
+
 		$item.find(this.deleteItemButton).on('click.CMSPicoAdmin', function () {
 			_api.call(that, 'DELETE', { item: name });
 		});

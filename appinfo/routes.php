@@ -59,7 +59,8 @@ return [
 		['name' => 'Settings#removeCustomTemplate', 'url' => '/admin/templates', 'verb' => 'DELETE'],
 		['name' => 'Settings#getThemes', 'url' => '/admin/themes', 'verb' => 'GET'],
 		['name' => 'Settings#addCustomTheme', 'url' => '/admin/themes', 'verb' => 'PUT'],
-		['name' => 'Settings#removeCustomTheme', 'url' => '/admin/themes', 'verb' => 'DELETE']
+		['name' => 'Settings#removeCustomTheme', 'url' => '/admin/themes', 'verb' => 'DELETE'],
+		['name' => 'Settings#updateCustomTheme', 'url' => '/admin/themes', 'verb' => 'UPDATE']
 	]
 ];
 

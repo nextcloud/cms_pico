@@ -63,6 +63,7 @@ style(Application::APP_NAME, 'admin');
 			data-new-button=".app-content-list-add button"
 			data-new-item=".app-content-list-add select"
 			data-reload-button=".app-content-list-add .icon-history"
+			data-reload-item-button=".icon-history"
 			data-delete-item-button=".icon-delete">
 		<div class="app-content-loading message">
 			<div class="icon loading"></div>
@@ -106,6 +107,8 @@ style(Application::APP_NAME, 'admin');
 				<p>{name}</p>
 				<p class="note"><?php p($l->t('Custom theme')); ?></p>
 			</div>
+			<div class="icon-history" data-toggle="tooltip" data-placement="left"
+					title="<?php p($l->t('Reload custom theme')); ?>"></div>
 			<div class="icon-delete" data-toggle="tooltip" data-placement="left"
 					title="<?php p($l->t('Delete custom theme')); ?>"></div>
 		</div>
