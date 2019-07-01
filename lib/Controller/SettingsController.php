@@ -118,7 +118,7 @@ class SettingsController extends Controller
 				'websites' => $this->websitesService->getWebsitesFromUser($this->userId),
 			]);
 		} catch (\Exception $e) {
-			return $this->createErrorResponse([ 'name' => $data['name'], 'error' => $e->getMessage() ]);
+			return $this->createErrorResponse($e, [ 'name' => $data['name'] ]);
 		}
 	}
 
@@ -143,7 +143,7 @@ class SettingsController extends Controller
 				'websites' => $this->websitesService->getWebsitesFromUser($this->userId),
 			]);
 		} catch (\Exception $e) {
-			return $this->createErrorResponse([ 'name' => $data['name'], 'error' => $e->getMessage() ]);
+			return $this->createErrorResponse($e, [ 'name' => $data['name'] ]);
 		}
 	}
 
@@ -169,7 +169,7 @@ class SettingsController extends Controller
 				'websites' => $this->websitesService->getWebsitesFromUser($this->userId)
 			]);
 		} catch (\Exception $e) {
-			return $this->createErrorResponse([ 'error' => $e->getMessage() ]);
+			return $this->createErrorResponse($e);
 		}
 	}
 
@@ -196,7 +196,7 @@ class SettingsController extends Controller
 				'websites' => $this->websitesService->getWebsitesFromUser($this->userId)
 			]);
 		} catch (\Exception $e) {
-			return $this->createErrorResponse([ 'error' => $e->getMessage() ]);
+			return $this->createErrorResponse($e);
 		}
 	}
 
@@ -215,7 +215,7 @@ class SettingsController extends Controller
 				'websites' => $websites,
 			]);
 		} catch (\Exception $e) {
-			return $this->createErrorResponse([ 'error' => $e->getMessage() ]);
+			return $this->createErrorResponse($e);
 		}
 	}
 
@@ -240,12 +240,16 @@ class SettingsController extends Controller
 	 */
 	public function addCustomTemplate(string $item): DataResponse
 	{
-		$customTemplates = $this->templatesService->getCustomTemplates();
-		$customTemplates[] = $item;
+		try {
+			$customTemplates = $this->templatesService->getCustomTemplates();
+			$customTemplates[] = $item;
 
-		$this->configService->setAppValue(ConfigService::CUSTOM_TEMPLATES, json_encode($customTemplates));
+			$this->configService->setAppValue(ConfigService::CUSTOM_TEMPLATES, json_encode($customTemplates));
 
-		return $this->getTemplates();
+			return $this->getTemplates();
+		} catch (\Exception $e) {
+			return $this->createErrorResponse($e);
+		}
 	}
 
 	/**
@@ -255,20 +259,24 @@ class SettingsController extends Controller
 	 */
 	public function removeCustomTemplate(string $item): DataResponse
 	{
-		$customTemplates = $this->templatesService->getCustomTemplates();
+		try {
+			$customTemplates = $this->templatesService->getCustomTemplates();
 
-		$newCustomTemplates = [];
-		foreach ($customTemplates as $customTemplate) {
-			if ($customTemplate === $item) {
-				continue;
+			$newCustomTemplates = [];
+			foreach ($customTemplates as $customTemplate) {
+				if ($customTemplate === $item) {
+					continue;
+				}
+
+				$newCustomTemplates[] = $customTemplate;
 			}
 
-			$newCustomTemplates[] = $customTemplate;
+			$this->configService->setAppValue(ConfigService::CUSTOM_TEMPLATES, json_encode($newCustomTemplates));
+
+			return $this->getTemplates();
+		} catch (\Exception $e) {
+			return $this->createErrorResponse($e);
 		}
-
-		$this->configService->setAppValue(ConfigService::CUSTOM_TEMPLATES, json_encode($newCustomTemplates));
-
-		return $this->getTemplates();
 	}
 
 	/**
@@ -292,14 +300,18 @@ class SettingsController extends Controller
 	 */
 	public function addCustomTheme(string $item): DataResponse
 	{
-		$this->themesService->publishCustomTheme($item);
+		try {
+			$this->themesService->publishCustomTheme($item);
 
-		$customThemes = $this->themesService->getCustomThemes();
-		$customThemes[] = $item;
+			$customThemes = $this->themesService->getCustomThemes();
+			$customThemes[] = $item;
 
-		$this->configService->setAppValue(ConfigService::CUSTOM_THEMES, json_encode($customThemes));
+			$this->configService->setAppValue(ConfigService::CUSTOM_THEMES, json_encode($customThemes));
 
-		return $this->getThemes();
+			return $this->getThemes();
+		} catch (\Exception $e) {
+			return $this->createErrorResponse($e);
+		}
 	}
 
 	/**
@@ -309,21 +321,25 @@ class SettingsController extends Controller
 	 */
 	public function removeCustomTheme(string $item): DataResponse
 	{
-		$customThemes = $this->themesService->getCustomThemes();
+		try {
+			$customThemes = $this->themesService->getCustomThemes();
 
-		$newCustomThemes = [];
-		foreach ($customThemes as $customTheme) {
-			if ($customTheme === $item) {
-				$this->themesService->depublishCustomTheme($item);
-				continue;
+			$newCustomThemes = [];
+			foreach ($customThemes as $customTheme) {
+				if ($customTheme === $item) {
+					$this->themesService->depublishCustomTheme($item);
+					continue;
+				}
+
+				$newCustomThemes[] = $customTheme;
 			}
 
-			$newCustomThemes[] = $customTheme;
+			$this->configService->setAppValue(ConfigService::CUSTOM_THEMES, json_encode($newCustomThemes));
+
+			return $this->getThemes();
+		} catch (\Exception $e) {
+			return $this->createErrorResponse($e);
 		}
-
-		$this->configService->setAppValue(ConfigService::CUSTOM_THEMES, json_encode($newCustomThemes));
-
-		return $this->getThemes();
 	}
 
 	/**
@@ -333,10 +349,14 @@ class SettingsController extends Controller
 	 */
 	public function updateCustomTheme(string $item): DataResponse
 	{
-		$this->themesService->depublishCustomTheme($item);
-		$this->themesService->publishCustomTheme($item);
+		try {
+			$this->themesService->depublishCustomTheme($item);
+			$this->themesService->publishCustomTheme($item);
 
-		return $this->getThemes();
+			return $this->getThemes();
+		} catch (\Exception $e) {
+			return $this->createErrorResponse($e);
+		}
 	}
 
 	/**
@@ -353,17 +373,22 @@ class SettingsController extends Controller
 	}
 
 	/**
-	 * @param array $data
+	 * @param \Exception $exception
+	 * @param array      $data
 	 *
 	 * @return DataResponse
 	 */
-	private function createErrorResponse(array $data): DataResponse
+	private function createErrorResponse(\Exception $exception, array $data = []): DataResponse
 	{
-		$this->logger->log(2, $data['message'] ?? '', [ 'app' => Application::APP_NAME ]);
+		$this->logger->logException($exception, [ 'app' => Application::APP_NAME, 'level' => 2 ]);
 
-		return new DataResponse(
-			array_merge($data, [ 'status' => 0 ]),
-			Http::STATUS_NON_AUTHORATIVE_INFORMATION
-		);
+		$data['status'] = 0;
+		if (\OC::$server->getSystemConfig()->getValue('debug', false)) {
+			$data['exception'] = get_class($exception);
+			$data['error'] = $exception->getMessage();
+			$data['code'] = $exception->getCode();
+		}
+
+		return new DataResponse($data, Http::STATUS_INTERNAL_SERVER_ERROR);
 	}
 }
