@@ -222,45 +222,44 @@ class SettingsController extends Controller
 	/**
 	 * @return DataResponse
 	 */
-	public function getSettingsAdmin(): DataResponse
+	public function getTemplates(): DataResponse
 	{
 		$data = [
-			'templates' => $this->templatesService->getCustomTemplates(),
-			'templates_new' => $this->templatesService->getNewCustomTemplates(),
-			'themes' => $this->themesService->getCustomThemes(),
-			'themes_new' => $this->themesService->getNewCustomThemes(),
+			'systemItems' => $this->templatesService->getSystemTemplates(),
+			'customItems' => $this->templatesService->getCustomTemplates(),
+			'newItems' => $this->templatesService->getNewCustomTemplates(),
 		];
 
 		return new DataResponse($data, Http::STATUS_OK);
 	}
 
 	/**
-	 * @param string $template
+	 * @param string $item
 	 *
 	 * @return DataResponse
 	 */
-	public function addCustomTemplate($template): DataResponse
+	public function addCustomTemplate(string $item): DataResponse
 	{
 		$customTemplates = $this->templatesService->getCustomTemplates();
-		$customTemplates[] = $template;
+		$customTemplates[] = $item;
 
 		$this->configService->setAppValue(ConfigService::CUSTOM_TEMPLATES, json_encode($customTemplates));
 
-		return $this->getSettingsAdmin();
+		return $this->getTemplates();
 	}
 
 	/**
-	 * @param string $template
+	 * @param string $item
 	 *
 	 * @return DataResponse
 	 */
-	public function removeCustomTemplate($template): DataResponse
+	public function removeCustomTemplate(string $item): DataResponse
 	{
 		$customTemplates = $this->templatesService->getCustomTemplates();
 
 		$newCustomTemplates = [];
 		foreach ($customTemplates as $customTemplate) {
-			if ($customTemplate === $template) {
+			if ($customTemplate === $item) {
 				continue;
 			}
 
@@ -269,39 +268,53 @@ class SettingsController extends Controller
 
 		$this->configService->setAppValue(ConfigService::CUSTOM_TEMPLATES, json_encode($newCustomTemplates));
 
-		return $this->getSettingsAdmin();
+		return $this->getTemplates();
 	}
 
 	/**
-	 * @param string $theme
+	 * @return DataResponse
+	 */
+	public function getThemes(): DataResponse
+	{
+		$data = [
+			'systemItems' => $this->themesService->getSystemThemes(),
+			'customItems' => $this->themesService->getCustomThemes(),
+			'newItems' => $this->themesService->getNewCustomThemes(),
+		];
+
+		return new DataResponse($data, Http::STATUS_OK);
+	}
+
+	/**
+	 * @param string $item
 	 *
 	 * @return DataResponse
 	 */
-	public function addCustomTheme(string $theme): DataResponse
+	public function addCustomTheme(string $item): DataResponse
 	{
-		$this->themesService->publishCustomTheme($theme);
+		$this->themesService->publishCustomTheme($item);
 
 		$customThemes = $this->themesService->getCustomThemes();
-		$customThemes[] = $theme;
+		$customThemes[] = $item;
 
 		$this->configService->setAppValue(ConfigService::CUSTOM_THEMES, json_encode($customThemes));
 
-		return $this->getSettingsAdmin();
+		return $this->getThemes();
 	}
 
 	/**
-	 * @param string $theme
+	 * @param string $item
 	 *
 	 * @return DataResponse
 	 */
-	public function removeCustomTheme(string $theme): DataResponse
+	public function removeCustomTheme(string $item): DataResponse
 	{
 		$customThemes = $this->themesService->getCustomThemes();
 
 		$newCustomThemes = [];
 		foreach ($customThemes as $customTheme) {
-			if ($customTheme === $theme) {
-				$this->themesService->depublishCustomTheme($theme);
+			if ($customTheme === $item) {
+				$this->themesService->depublishCustomTheme($item);
 				continue;
 			}
 
@@ -310,7 +323,7 @@ class SettingsController extends Controller
 
 		$this->configService->setAppValue(ConfigService::CUSTOM_THEMES, json_encode($newCustomThemes));
 
-		return $this->getSettingsAdmin();
+		return $this->getThemes();
 	}
 
 	/**

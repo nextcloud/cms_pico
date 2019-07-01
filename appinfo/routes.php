@@ -54,10 +54,10 @@ return [
 			'verb' => 'POST'
 		],
 
-		['name' => 'Settings#getSettingsAdmin', 'url' => '/admin/settings', 'verb' => 'GET'],
-		['name' => 'Settings#setSettingsAdmin', 'url' => '/admin/settings', 'verb' => 'POST'],
+		['name' => 'Settings#getTemplates', 'url' => '/admin/templates', 'verb' => 'GET'],
 		['name' => 'Settings#addCustomTemplate', 'url' => '/admin/templates', 'verb' => 'PUT'],
 		['name' => 'Settings#removeCustomTemplate', 'url' => '/admin/templates', 'verb' => 'DELETE'],
+		['name' => 'Settings#getThemes', 'url' => '/admin/themes', 'verb' => 'GET'],
 		['name' => 'Settings#addCustomTheme', 'url' => '/admin/themes', 'verb' => 'PUT'],
 		['name' => 'Settings#removeCustomTheme', 'url' => '/admin/themes', 'verb' => 'DELETE']
 	]

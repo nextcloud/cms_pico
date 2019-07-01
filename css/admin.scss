@@ -1,0 +1,185 @@
+/**
+ * CMS Pico - Create websites using Pico CMS for Nextcloud.
+ *
+ * @copyright Copyright (c) 2019, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
+ *
+ * @license GNU AGPL version 3 or any later version
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#app-content {
+	--margin: 1.875em;
+
+	article {
+		> .lane {
+			@media (min-width: 481px) {
+				display: flex;
+
+				> header {
+					flex: 0 0 auto;
+					width: 25%;
+					margin-right: var(--margin);
+
+					* {
+						text-align: right;
+					}
+				}
+
+				> section {
+					flex: 1 1 auto;
+				}
+			}
+
+			@media (max-width: 480px) {
+				> header {
+					margin-bottom: calc(var(--margin) * 0.75);
+				}
+			}
+
+			> header {
+				h3 {
+					font-size: inherit;
+					font-weight: bold;
+					color: var(--color-main-text);
+					margin: 0 0 calc(var(--margin) * 0.25) 0;
+				}
+
+				p {
+					color: var(--color-text-lighter);
+					margin-bottom: 0;
+				}
+			}
+
+			> section {
+				> :last-child,
+				> :last-child > :last-child,
+				> :last-child > :last-child > :last-child {
+					margin-bottom: 0;
+				}
+			}
+		}
+
+		> *:not(h2):not(.settings-hint) {
+			margin-top: calc(var(--margin) * 0.75);
+			margin-bottom: calc(var(--margin) * 1.5);
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+	}
+
+	.app-content-list {
+		position: static;
+		top: auto;
+		min-width: 0;
+		max-width: none;
+		min-height: 0;
+		max-height: none;
+		overflow: visible;
+		border: 1px solid var(--color-border);
+		border-top: 0 none;
+
+		.app-content-list-item {
+			height: auto;
+			min-height: 68px;
+			white-space: normal;
+
+			p {
+				margin-bottom: 0;
+			}
+		}
+
+		.app-content-list-add {
+			select {
+				width: 10em;
+				max-width: 100%;
+			}
+		}
+
+		.app-content-list-template-system,
+		.app-content-list-template-custom {
+			display: none;
+		}
+	}
+
+	.app-content-loading,
+	.app-content-error {
+		border: 1px solid var(--color-border);
+		padding: var(--margin);
+	}
+
+	.app-content-error {
+		color: var(--color-error);
+	}
+
+	p {
+		margin-bottom: calc(var(--margin) * 0.5);
+		text-align: justify;
+
+		&.followup {
+			margin-top: calc(var(--margin) * -0.5);
+		}
+
+		&.indent {
+			margin-left: 2em;
+		}
+	}
+
+	.note {
+		color: var(--color-text-lighter);
+	}
+
+	.code {
+		display: block;
+		border: 1px solid var(--color-border-dark);
+		border-radius: var(--border-radius);
+		background-color: var(--color-background-dark);
+		padding: calc(var(--margin) * 0.25) calc(var(--margin) * 0.5);
+		overflow-x: auto;
+		max-width: 100%;
+		text-align: left;
+	}
+
+	code {
+		font-size: 0.9167em;
+
+		&.inline {
+			border: 1px solid var(--color-border-dark);
+			border-radius: var(--border-radius);
+			background-color: var(--color-background-dark);
+			padding: calc(var(--margin) * 0.1) calc(var(--margin) * 0.2);
+		}
+	}
+
+	.message {
+		display: flex;
+
+		> .icon {
+			flex: 0 0 auto;
+			width: 4em;
+			margin-right: calc(var(--margin) * 0.5);
+			background-size: 50%;
+		}
+
+		> div {
+			flex: 1 1 auto;
+
+			> *:last-child {
+				margin-bottom: 0;
+			}
+		}
+	}
+}

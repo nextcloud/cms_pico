@@ -3,6 +3,7 @@
  * CMS Pico - Create websites using Pico CMS for Nextcloud.
  *
  * @copyright Copyright (c) 2017, Maxence Lange (<maxence@artificial-owl.com>)
+ * @copyright Copyright (c) 2019, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -24,6 +25,7 @@ namespace OCA\CMSPico\Settings;
 
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Service\FileService;
+use OCA\CMSPico\Service\PicoService;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IL10N;
 use OCP\IURLGenerator;
@@ -59,11 +61,25 @@ class Admin implements ISettings
 	 */
 	public function getForm()
 	{
+		$exampleSite = 'example_site';
+		$exampleProxyUrl = $this->urlGenerator->getBaseUrl() . '/sites/' . urlencode($exampleSite) . '/';
+		$exampleFullUrl = $this->urlGenerator->linkToRouteAbsolute(
+			Application::APP_NAME . '.Pico.getRoot',
+			[ 'site' => $exampleSite ]
+		);
+
+		$internalBaseUrl = $this->urlGenerator->getBaseUrl() . '/index.php/apps/' . Application::APP_NAME . '/';
+		$internalBasePath = \OC::$WEBROOT . '/';
+
 		$data = [
-			'nchost'          => $this->urlGenerator->getBaseUrl(),
-			'ssl_enabled'     => (substr($this->urlGenerator->getBaseUrl(), 0, 5) === 'https'),
-			'pathToThemes'    => $this->fileService->getAppDataFolderPath('themes', true),
-			'pathToTemplates' => $this->fileService->getAppDataFolderPath('templates', true)
+			'exampleProxyUrl'  => $exampleProxyUrl,
+			'exampleFullUrl'   => $exampleFullUrl,
+			'internalProxyUrl' => $internalBaseUrl . 'pico_proxy/',
+			'internalFullUrl'  => $internalBaseUrl . 'pico/',
+			'internalPath'     => $internalBasePath . 'sites/',
+			'themesPath'       => $this->fileService->getAppDataFolderPath(PicoService::DIR_THEMES, true),
+			'pluginsPath'      => $this->fileService->getAppDataFolderPath(PicoService::DIR_PLUGINS, true),
+			'templatesPath'    => $this->fileService->getAppDataFolderPath(PicoService::DIR_TEMPLATES, true)
 		];
 
 		return new TemplateResponse(Application::APP_NAME, 'settings.admin', $data);

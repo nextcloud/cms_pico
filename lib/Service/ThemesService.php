@@ -112,13 +112,14 @@ class ThemesService
 	 */
 	public function getNewCustomThemes(): array
 	{
+		$currentThemes = $this->getThemes();
+
 		/** @var FolderInterface $customThemesFolder */
 		$customThemesFolder = $this->fileService->getAppDataFolder()->get(PicoService::DIR_THEMES);
 		if (!$customThemesFolder->isFolder()) {
 			throw new InvalidPathException();
 		}
 
-		$currentThemes = $this->getThemes();
 
 		$newCustomThemes = [];
 		foreach ($customThemesFolder->listing() as $themeFolder) {

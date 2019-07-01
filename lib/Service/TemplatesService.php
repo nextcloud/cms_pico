@@ -35,8 +35,6 @@ use OCP\IL10N;
 
 class TemplatesService
 {
-	const TEMPLATES = ['sample_pico', 'empty'];
-
 	/** @var IL10N */
 	private $l10n;
 
@@ -52,17 +50,13 @@ class TemplatesService
 	/**
 	 * TemplatesService constructor.
 	 *
-	 * @param IL10N $l10n
+	 * @param IL10N         $l10n
 	 * @param ConfigService $configService
-	 * @param FileService $fileService
-	 * @param MiscService $miscService
+	 * @param FileService   $fileService
+	 * @param MiscService   $miscService
 	 */
-	function __construct(
-		IL10N $l10n,
-		ConfigService $configService,
-		FileService $fileService,
-		MiscService $miscService
-	) {
+	function __construct(IL10N $l10n, ConfigService $configService, FileService $fileService, MiscService $miscService)
+	{
 		$this->l10n = $l10n;
 		$this->configService = $configService;
 		$this->fileService = $fileService;
@@ -127,14 +121,14 @@ class TemplatesService
 	{
 		$currentTemplates = $this->getTemplates();
 
-		/** @var FolderInterface $appDataTemplatesFolder */
-		$appDataTemplatesFolder = $this->fileService->getAppDataFolder()->get(PicoService::DIR_TEMPLATES);
-		if (!$appDataTemplatesFolder->isFolder()) {
+		/** @var FolderInterface $customTemplatesFolder */
+		$customTemplatesFolder = $this->fileService->getAppDataFolder()->get(PicoService::DIR_TEMPLATES);
+		if (!$customTemplatesFolder->isFolder()) {
 			throw new InvalidPathException();
 		}
 
 		$newTemplates = [];
-		foreach ($appDataTemplatesFolder->listing() as $templateFolder) {
+		foreach ($customTemplatesFolder->listing() as $templateFolder) {
 			$template = $templateFolder->getName();
 			if ($templateFolder->isFolder() && !in_array($template, $currentTemplates)) {
 				$newTemplates[] = $template;
