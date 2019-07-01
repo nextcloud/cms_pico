@@ -24,14 +24,25 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Files;
 
+use OC\Files\Utils\Scanner;
+use OC\ForbiddenException;
 use OCP\Files\Folder as OCFolder;
 use OCP\Files\Node as OCNode;
 use OCP\Files\File as OCFile;
+use OCP\Files\NotPermittedException;
+use OCP\IDBConnection;
+use OCP\ILogger;
 
 class StorageFolder extends AbstractStorageNode implements FolderInterface
 {
 	/** @var OCFolder */
 	protected $node;
+
+	/** @var IDBConnection */
+	private $connection;
+
+	/** @var ILogger */
+	private $logger;
 
 	/**
 	 * StorageFolder constructor.
@@ -40,6 +51,9 @@ class StorageFolder extends AbstractStorageNode implements FolderInterface
 	 */
 	public function __construct(OCFolder $folder)
 	{
+		$this->connection = \OC::$server->query(IDBConnection::class);
+		$this->logger = \OC::$server->query(ILogger::class);
+
 		parent::__construct($folder);
 	}
 
@@ -86,6 +100,20 @@ class StorageFolder extends AbstractStorageNode implements FolderInterface
 	public function newFile(string $path): FileInterface
 	{
 		return new StorageFile($this->node->newFile($path));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function sync(bool $recursive = FolderInterface::SYNC_RECURSIVE)
+	{
+		$scanner = new Scanner(null, $this->connection, $this->logger);
+
+		try {
+			$scanner->scan($this->node->getPath(), $recursive);
+		} catch (ForbiddenException $e) {
+			throw new NotPermittedException();
+		}
 	}
 
 	/**

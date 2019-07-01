@@ -32,6 +32,12 @@ use OCP\Files\NotPermittedException;
 
 interface FolderInterface extends NodeInterface
 {
+	/** @var bool */
+	const SYNC_SHALLOW = false;
+
+	/** @var bool */
+	const SYNC_RECURSIVE = true;
+
 	/**
 	 * @return NodeInterface[]
 	 * @throws NotPermittedException
@@ -79,6 +85,14 @@ interface FolderInterface extends NodeInterface
 	 * @throws GenericFileException
 	 */
 	public function newFile(string $path): FileInterface;
+
+	/**
+	 * @param bool $recursive
+	 * @throws NotFoundException
+	 * @throws NotPermittedException
+	 * @throws GenericFileException
+	 */
+	public function sync(bool $recursive = self::SYNC_RECURSIVE);
 
 	/**
 	 * @return bool

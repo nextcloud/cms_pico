@@ -127,6 +127,8 @@ class TemplatesService
 			throw new InvalidPathException();
 		}
 
+		$customTemplatesFolder->sync(FolderInterface::SYNC_SHALLOW);
+
 		$newTemplates = [];
 		foreach ($customTemplatesFolder->listing() as $templateFolder) {
 			$template = $templateFolder->getName();
@@ -184,6 +186,8 @@ class TemplatesService
 				throw new TemplateNotFoundException();
 			}
 		}
+
+		$templateFolder->sync();
 
 		try {
 			$websiteFolder = $userFolder->get($websitePath);

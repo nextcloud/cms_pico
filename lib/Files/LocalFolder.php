@@ -193,6 +193,14 @@ class LocalFolder extends AbstractLocalNode implements FolderInterface
 	/**
 	 * {@inheritDoc}
 	 */
+	public function sync(bool $recursive = self::SYNC_RECURSIVE)
+	{
+		// nothing to do
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function isCreatable(): bool
 	{
 		return ($this->getPermissions() & Constants::PERMISSION_CREATE) === Constants::PERMISSION_CREATE;

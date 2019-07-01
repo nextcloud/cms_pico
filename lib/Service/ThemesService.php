@@ -120,6 +120,7 @@ class ThemesService
 			throw new InvalidPathException();
 		}
 
+		$customThemesFolder->sync(FolderInterface::SYNC_SHALLOW);
 
 		$newCustomThemes = [];
 		foreach ($customThemesFolder->listing() as $themeFolder) {
@@ -141,7 +142,12 @@ class ThemesService
 		$publicThemesFolder = $publicFolder->get(PicoService::DIR_THEMES);
 
 		$appDataFolder = $this->fileService->getAppDataFolder();
-		$appDataFolder->get(PicoService::DIR_THEMES . '/' . $theme)->copy($publicThemesFolder);
+
+		/** @var FolderInterface $appDataThemeFolder */
+		$appDataThemeFolder = $appDataFolder->get(PicoService::DIR_THEMES . '/' . $theme);
+		$appDataThemeFolder->sync();
+
+		$appDataThemeFolder->copy($publicThemesFolder);
 	}
 
 	/**
