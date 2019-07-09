@@ -34,7 +34,7 @@ OC.L10N.register(
     "Using MOD_REWRITE:" : "Usando MOD_REWRITE:",
     "Using MOD_REWRITE and MOD_PROXY:" : "Usando MOD_REWRITE e MOD_PROXY:",
     "Custom themes" : "Temas personalizados",
-    "To add a custom theme, you will need to create a new folder in the 'themes' directory:" : "Para adicionar um tema personalizado, você precisará criar uma nova pasta no diretório 'themes:",
+    "To add a custom theme, you will need to create a new folder in the 'themes' directory:" : "Para adicionar um tema personalizado, você precisará criar uma nova pasta no diretório 'themes':",
     "Current custom themes:" : "Temas personalizados atuais:",
     "Add a new custom theme:" : "Adicionar um novo tema personalizado:",
     "Add custom theme" : "Adicionar um tema personalizado",
