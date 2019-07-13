@@ -319,6 +319,23 @@ class SettingsController extends Controller
 	 *
 	 * @return DataResponse
 	 */
+	public function updateCustomTheme(string $item): DataResponse
+	{
+		try {
+			$this->themesService->depublishCustomTheme($item);
+			$this->themesService->publishCustomTheme($item);
+
+			return $this->getThemes();
+		} catch (\Exception $e) {
+			return $this->createErrorResponse($e);
+		}
+	}
+
+	/**
+	 * @param string $item
+	 *
+	 * @return DataResponse
+	 */
 	public function removeCustomTheme(string $item): DataResponse
 	{
 		try {
@@ -335,23 +352,6 @@ class SettingsController extends Controller
 			}
 
 			$this->configService->setAppValue(ConfigService::CUSTOM_THEMES, json_encode($newCustomThemes));
-
-			return $this->getThemes();
-		} catch (\Exception $e) {
-			return $this->createErrorResponse($e);
-		}
-	}
-
-	/**
-	 * @param string $item
-	 *
-	 * @return DataResponse
-	 */
-	public function updateCustomTheme(string $item): DataResponse
-	{
-		try {
-			$this->themesService->depublishCustomTheme($item);
-			$this->themesService->publishCustomTheme($item);
 
 			return $this->getThemes();
 		} catch (\Exception $e) {

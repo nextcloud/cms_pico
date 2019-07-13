@@ -23,8 +23,8 @@
 
 use OCA\CMSPico\AppInfo\Application;
 
-script(Application::APP_NAME, 'admin');
-style(Application::APP_NAME, 'admin');
+script(Application::APP_NAME, [ 'pico', 'admin' ]);
+style(Application::APP_NAME, 'pico');
 
 ?>
 
@@ -52,19 +52,14 @@ style(Application::APP_NAME, 'admin');
 		</div>
 	</div>
 
-	<section id="picocms-themes" class="picocms-admin"
+	<section id="picocms-themes" class="picocms-admin-list"
 			data-route="/apps/cms_pico/admin/themes"
 			data-template="#picocms-themes-template"
 			data-system-template="#picocms-themes-template-system-item"
 			data-custom-template="#picocms-themes-template-custom-item"
 			data-new-template="#picocms-themes-template-new-item"
 			data-loading-template="#picocms-themes-template-loading"
-			data-error-template="#picocms-themes-template-error"
-			data-new-button=".app-content-list-add button"
-			data-new-item=".app-content-list-add select"
-			data-reload-button=".app-content-list-add .icon-history"
-			data-reload-item-button=".icon-history"
-			data-delete-item-button=".icon-delete">
+			data-error-template="#picocms-themes-template-error">
 		<div class="app-content-loading message">
 			<div class="icon loading"></div>
 			<div>
@@ -78,14 +73,16 @@ style(Application::APP_NAME, 'admin');
 		<div class="app-content-list">
 			<div class="app-content-list-item app-content-list-add">
 				<div class="app-content-list-item-line-one">
-					<select></select>
-					<button data-toggle="tooltip" data-placement="bottom"
-							title="<?php p($l->t('Add custom theme')); ?>">
+					<select class="action-new-item"></select>
+					<button class="action-new has-tooltip" title="<?php p($l->t('Add custom theme')); ?>">
 						<span class="icon icon-add"></span>
+						<span class="hidden-visually"><?php p($l->t('Add custom theme')); ?></span>
 					</button>
 				</div>
-				<div class="icon-history" data-toggle="tooltip" data-placement="left"
-						title="<?php p($l->t('Reload themes list')); ?>"></div>
+				<div class="action-reload icon-redo-alt has-tooltip" data-placement="left"
+						title="<?php p($l->t('Reload themes list')); ?>">
+					<span class="hidden-visually"><?php p($l->t('Reload themes list')); ?></span>
+				</div>
 			</div>
 		</div>
 	</script>
@@ -107,10 +104,14 @@ style(Application::APP_NAME, 'admin');
 				<p>{name}</p>
 				<p class="note"><?php p($l->t('Custom theme')); ?></p>
 			</div>
-			<div class="icon-history" data-toggle="tooltip" data-placement="left"
-					title="<?php p($l->t('Reload custom theme')); ?>"></div>
-			<div class="icon-delete" data-toggle="tooltip" data-placement="left"
-					title="<?php p($l->t('Delete custom theme')); ?>"></div>
+			<div class="action-sync icon-sync-alt has-tooltip" data-placement="left"
+					title="<?php p($l->t('Reload custom theme')); ?>">
+				<span class="hidden-visually"><?php p($l->t('Reload custom theme')); ?></span>
+			</div>
+			<div class="action-delete icon-delete has-tooltip" data-placement="left"
+					title="<?php p($l->t('Delete custom theme')); ?>">
+				<span class="hidden-visually"><?php p($l->t('Delete custom theme')); ?></span>
+			</div>
 		</div>
 	</script>
 
@@ -166,18 +167,14 @@ style(Application::APP_NAME, 'admin');
 		</div>
 	</div>
 
-	<section id="picocms-templates" class="picocms-admin"
+	<section id="picocms-templates" class="picocms-admin-list"
 			data-route="/apps/cms_pico/admin/templates"
 			data-template="#picocms-templates-template"
 			data-system-template="#picocms-templates-template-system-item"
 			data-custom-template="#picocms-templates-template-custom-item"
 			data-new-template="#picocms-templates-template-new-item"
 			data-loading-template="#picocms-templates-template-loading"
-			data-error-template="#picocms-templates-template-error"
-			data-new-button=".app-content-list-add button"
-			data-new-item=".app-content-list-add select"
-			data-reload-button=".app-content-list-add .icon-history"
-			data-delete-item-button=".icon-delete">
+			data-error-template="#picocms-templates-template-error">
 		<div class="app-content-loading message">
 			<div class="icon loading"></div>
 			<div>
@@ -191,14 +188,16 @@ style(Application::APP_NAME, 'admin');
 		<div class="app-content-list">
 			<div class="app-content-list-item app-content-list-add">
 				<div class="app-content-list-item-line-one">
-					<select></select>
-					<button data-toggle="tooltip" data-placement="bottom"
-							title="<?php p($l->t('Add custom template')); ?>">
+					<select class="action-new-item"></select>
+					<button class="action-new has-tooltip" title="<?php p($l->t('Add custom template')); ?>">
 						<span class="icon icon-add"></span>
+						<span class="hidden-visually"><?php p($l->t('Add custom template')); ?></span>
 					</button>
 				</div>
-				<div class="icon-history" data-toggle="tooltip" data-placement="left"
-						title="<?php p($l->t('Reload templates list')); ?>"></div>
+				<div class="action-reload icon-redo-alt has-tooltip" data-placement="left"
+						title="<?php p($l->t('Reload templates list')); ?>">
+					<span class="hidden-visually"><?php p($l->t('Reload templates list')); ?></span>
+				</div>
 			</div>
 		</div>
 	</script>
@@ -220,8 +219,10 @@ style(Application::APP_NAME, 'admin');
 				<p>{name}</p>
 				<p class="note"><?php p($l->t('Custom template')); ?></p>
 			</div>
-			<div class="icon-delete" data-toggle="tooltip" data-placement="left"
-					title="<?php p($l->t('Delete custom template')); ?>"></div>
+			<div class="action-delete icon-delete has-tooltip" data-placement="left"
+					title="<?php p($l->t('Delete custom template')); ?>">
+				<span class="hidden-visually"><?php p($l->t('Delete custom template')); ?></span>
+			</div>
 		</div>
 	</script>
 

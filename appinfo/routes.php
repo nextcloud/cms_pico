@@ -54,13 +54,13 @@ return [
 			'verb' => 'POST'
 		],
 
-		['name' => 'Settings#getTemplates', 'url' => '/admin/templates', 'verb' => 'GET'],
-		['name' => 'Settings#addCustomTemplate', 'url' => '/admin/templates', 'verb' => 'PUT'],
-		['name' => 'Settings#removeCustomTemplate', 'url' => '/admin/templates', 'verb' => 'DELETE'],
-		['name' => 'Settings#getThemes', 'url' => '/admin/themes', 'verb' => 'GET'],
-		['name' => 'Settings#addCustomTheme', 'url' => '/admin/themes', 'verb' => 'PUT'],
-		['name' => 'Settings#removeCustomTheme', 'url' => '/admin/themes', 'verb' => 'DELETE'],
-		['name' => 'Settings#updateCustomTheme', 'url' => '/admin/themes', 'verb' => 'UPDATE']
+		[ 'name' => 'Settings#getTemplates', 'url' => '/admin/templates', 'verb' => 'GET' ],
+		[ 'name' => 'Settings#addCustomTemplate', 'url' => '/admin/templates', 'verb' => 'POST' ],
+		[ 'name' => 'Settings#removeCustomTemplate', 'url' => '/admin/templates/{item}', 'verb' => 'DELETE' ],
+		[ 'name' => 'Settings#getThemes', 'url' => '/admin/themes', 'verb' => 'GET' ],
+		[ 'name' => 'Settings#addCustomTheme', 'url' => '/admin/themes', 'verb' => 'POST' ],
+		[ 'name' => 'Settings#updateCustomTheme', 'url' => '/admin/themes/{item}', 'verb' => 'POST' ],
+		[ 'name' => 'Settings#removeCustomTheme', 'url' => '/admin/themes/{item}', 'verb' => 'DELETE' ]
 	]
 ];
 

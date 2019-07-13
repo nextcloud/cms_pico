@@ -1,0 +1,216 @@
+/**
+ * CMS Pico - Create websites using Pico CMS for Nextcloud.
+ *
+ * @copyright Copyright (c) 2019, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
+ *
+ * @license GNU AGPL version 3 or any later version
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#app-content {
+	--margin: 1.875em;
+
+	article {
+		> .lane {
+			@media (min-width: 481px) {
+				display: flex;
+
+				> header {
+					flex: 0 0 auto;
+					width: 25%;
+					margin-right: var(--margin);
+
+					* {
+						text-align: right;
+					}
+				}
+
+				> section {
+					flex: 1 1 auto;
+				}
+			}
+
+			@media (max-width: 480px) {
+				> header {
+					margin-bottom: calc(var(--margin) * 0.75);
+				}
+			}
+
+			> header {
+				h3 {
+					font-size: inherit;
+					font-weight: bold;
+					color: var(--color-main-text);
+					margin: 0 0 calc(var(--margin) * 0.25) 0;
+				}
+
+				p {
+					color: var(--color-text-lighter);
+					margin-bottom: 0;
+				}
+			}
+
+			> section {
+				> :last-child,
+				> :last-child > :last-child,
+				> :last-child > :last-child > :last-child {
+					margin-bottom: 0;
+				}
+			}
+		}
+
+		> *:not(h2):not(.settings-hint) {
+			margin-top: calc(var(--margin) * 0.75);
+			margin-bottom: calc(var(--margin) * 1.5);
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+	}
+
+	.app-content-list {
+		position: static;
+		top: auto;
+		min-width: 0;
+		max-width: none;
+		min-height: 0;
+		max-height: none;
+		flex-wrap: nowrap;
+		overflow: visible;
+		border: 1px solid var(--color-border);
+		border-top: 0 none;
+
+		.app-content-list-item {
+			height: auto;
+			min-height: 64px;
+			white-space: normal;
+
+			p {
+				margin-bottom: 0;
+				cursor: pointer;
+			}
+		}
+
+		.app-content-list-add {
+			select {
+				width: 10em;
+				max-width: 100%;
+			}
+		}
+
+		.app-content-list-template-system,
+		.app-content-list-template-custom {
+			display: none;
+		}
+	}
+
+	.app-content-loading,
+	.app-content-error {
+		border: 1px solid var(--color-border);
+		padding: var(--margin);
+	}
+
+	.app-content-error {
+		color: var(--color-error);
+	}
+
+	p {
+		margin-bottom: calc(var(--margin) * 0.5);
+		text-align: justify;
+
+		&.followup {
+			margin-top: calc(var(--margin) * -0.5);
+		}
+
+		&.indent {
+			margin-left: 2em;
+		}
+	}
+
+	.note,
+	.note a {
+		color: var(--color-text-lighter);
+	}
+
+	.code {
+		display: block;
+		border: 1px solid var(--color-border-dark);
+		border-radius: var(--border-radius);
+		background-color: var(--color-background-dark);
+		padding: calc(var(--margin) * 0.25) calc(var(--margin) * 0.5);
+		overflow-x: auto;
+		max-width: 100%;
+		text-align: left;
+	}
+
+	code {
+		font-size: 0.9167em;
+
+		&.inline {
+			border: 1px solid var(--color-border-dark);
+			border-radius: var(--border-radius);
+			background-color: var(--color-background-dark);
+			padding: calc(var(--margin) * 0.1) calc(var(--margin) * 0.2);
+		}
+	}
+
+	.message {
+		display: flex;
+
+		> .icon {
+			flex: 0 0 auto;
+			width: 4em;
+			margin-right: calc(var(--margin) * 0.5);
+			background-size: 50%;
+		}
+
+		> div {
+			flex: 1 1 auto;
+
+			> *:last-child {
+				margin-bottom: 0;
+			}
+		}
+	}
+}
+
+/**
+ * Font Awesome Free 5.9.0
+ *
+ * @copyright Copyright (c) 2019, @fontawesome (<https://fontawesome.com>)
+ *
+ * @license https://fontawesome.com/license/free
+ */
+:root {
+	--icon-redo-alt-000: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iMTMiIGhlaWdodD0iMTMiPjxwYXRoIGQ9Ik0yNTYuNDU1IDhjNjYuMjY5LjExOSAxMjYuNDM3IDI2LjIzMyAxNzAuODU5IDY4LjY4NWwzNS43MTUtMzUuNzE1QzQ3OC4xNDkgMjUuODUxIDUwNCAzNi41NTkgNTA0IDU3Ljk0MVYxOTJjMCAxMy4yNTUtMTAuNzQ1IDI0LTI0IDI0SDM0NS45NDFjLTIxLjM4MiAwLTMyLjA5LTI1Ljg1MS0xNi45NzEtNDAuOTcxbDQxLjc1LTQxLjc1Yy0zMC44NjQtMjguODk5LTcwLjgwMS00NC45MDctMTEzLjIzLTQ1LjI3My05Mi4zOTgtLjc5OC0xNzAuMjgzIDczLjk3Ny0xNjkuNDg0IDE2OS40NDJDODguNzY0IDM0OC4wMDkgMTYyLjE4NCA0MjQgMjU2IDQyNGM0MS4xMjcgMCA3OS45OTctMTQuNjc4IDExMC42MjktNDEuNTU2IDQuNzQzLTQuMTYxIDExLjkwNi0zLjkwOCAxNi4zNjguNTUzbDM5LjY2MiAzOS42NjJjNC44NzIgNC44NzIgNC42MzEgMTIuODE1LS40ODIgMTcuNDMzQzM3OC4yMDIgNDc5LjgxMyAzMTkuOTI2IDUwNCAyNTYgNTA0IDExOS4wMzQgNTA0IDguMDAxIDM5Mi45NjcgOCAyNTYuMDAyIDcuOTk5IDExOS4xOTMgMTE5LjY0NiA3Ljc1NSAyNTYuNDU1IDh6Ii8+PC9zdmc+);
+	--icon-redo-alt-fff: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iMTMiIGhlaWdodD0iMTMiPjxwYXRoIGQ9Ik0yNTYuNDU1IDhjNjYuMjY5LjExOSAxMjYuNDM3IDI2LjIzMyAxNzAuODU5IDY4LjY4NWwzNS43MTUtMzUuNzE1QzQ3OC4xNDkgMjUuODUxIDUwNCAzNi41NTkgNTA0IDU3Ljk0MVYxOTJjMCAxMy4yNTUtMTAuNzQ1IDI0LTI0IDI0SDM0NS45NDFjLTIxLjM4MiAwLTMyLjA5LTI1Ljg1MS0xNi45NzEtNDAuOTcxbDQxLjc1LTQxLjc1Yy0zMC44NjQtMjguODk5LTcwLjgwMS00NC45MDctMTEzLjIzLTQ1LjI3My05Mi4zOTgtLjc5OC0xNzAuMjgzIDczLjk3Ny0xNjkuNDg0IDE2OS40NDJDODguNzY0IDM0OC4wMDkgMTYyLjE4NCA0MjQgMjU2IDQyNGM0MS4xMjcgMCA3OS45OTctMTQuNjc4IDExMC42MjktNDEuNTU2IDQuNzQzLTQuMTYxIDExLjkwNi0zLjkwOCAxNi4zNjguNTUzbDM5LjY2MiAzOS42NjJjNC44NzIgNC44NzIgNC42MzEgMTIuODE1LS40ODIgMTcuNDMzQzM3OC4yMDIgNDc5LjgxMyAzMTkuOTI2IDUwNCAyNTYgNTA0IDExOS4wMzQgNTA0IDguMDAxIDM5Mi45NjcgOCAyNTYuMDAyIDcuOTk5IDExOS4xOTMgMTE5LjY0NiA3Ljc1NSAyNTYuNDU1IDh6IiBmaWxsPSIjZmZmIi8+PC9zdmc+);
+	--icon-sync-alt-000: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iMTMiIGhlaWdodD0iMTMiPjxwYXRoIGQ9Ik0zNzAuNzIgMTMzLjI4QzMzOS40NTggMTA0LjAwOCAyOTguODg4IDg3Ljk2MiAyNTUuODQ4IDg4Yy03Ny40NTguMDY4LTE0NC4zMjggNTMuMTc4LTE2Mi43OTEgMTI2Ljg1LTEuMzQ0IDUuMzYzLTYuMTIyIDkuMTUtMTEuNjUxIDkuMTVIMjQuMTAzYy03LjQ5OCAwLTEzLjE5NC02LjgwNy0xMS44MDctMTQuMTc2QzMzLjkzMyA5NC45MjQgMTM0LjgxMyA4IDI1NiA4YzY2LjQ0OCAwIDEyNi43OTEgMjYuMTM2IDE3MS4zMTUgNjguNjg1TDQ2My4wMyA0MC45N0M0NzguMTQ5IDI1Ljg1MSA1MDQgMzYuNTU5IDUwNCA1Ny45NDFWMTkyYzAgMTMuMjU1LTEwLjc0NSAyNC0yNCAyNEgzNDUuOTQxYy0yMS4zODIgMC0zMi4wOS0yNS44NTEtMTYuOTcxLTQwLjk3MWw0MS43NS00MS43NDl6TTMyIDI5NmgxMzQuMDU5YzIxLjM4MiAwIDMyLjA5IDI1Ljg1MSAxNi45NzEgNDAuOTcxbC00MS43NSA0MS43NWMzMS4yNjIgMjkuMjczIDcxLjgzNSA0NS4zMTkgMTE0Ljg3NiA0NS4yOCA3Ny40MTgtLjA3IDE0NC4zMTUtNTMuMTQ0IDE2Mi43ODctMTI2Ljg0OSAxLjM0NC01LjM2MyA2LjEyMi05LjE1IDExLjY1MS05LjE1aDU3LjMwNGM3LjQ5OCAwIDEzLjE5NCA2LjgwNyAxMS44MDcgMTQuMTc2QzQ3OC4wNjcgNDE3LjA3NiAzNzcuMTg3IDUwNCAyNTYgNTA0Yy02Ni40NDggMC0xMjYuNzkxLTI2LjEzNi0xNzEuMzE1LTY4LjY4NUw0OC45NyA0NzEuMDNDMzMuODUxIDQ4Ni4xNDkgOCA0NzUuNDQxIDggNDU0LjA1OVYzMjBjMC0xMy4yNTUgMTAuNzQ1LTI0IDI0LTI0eiIvPjwvc3ZnPg==);
+	--icon-sync-alt-fff: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iMTMiIGhlaWdodD0iMTMiPjxwYXRoIGQ9Ik0zNzAuNzIgMTMzLjI4QzMzOS40NTggMTA0LjAwOCAyOTguODg4IDg3Ljk2MiAyNTUuODQ4IDg4Yy03Ny40NTguMDY4LTE0NC4zMjggNTMuMTc4LTE2Mi43OTEgMTI2Ljg1LTEuMzQ0IDUuMzYzLTYuMTIyIDkuMTUtMTEuNjUxIDkuMTVIMjQuMTAzYy03LjQ5OCAwLTEzLjE5NC02LjgwNy0xMS44MDctMTQuMTc2QzMzLjkzMyA5NC45MjQgMTM0LjgxMyA4IDI1NiA4YzY2LjQ0OCAwIDEyNi43OTEgMjYuMTM2IDE3MS4zMTUgNjguNjg1TDQ2My4wMyA0MC45N0M0NzguMTQ5IDI1Ljg1MSA1MDQgMzYuNTU5IDUwNCA1Ny45NDFWMTkyYzAgMTMuMjU1LTEwLjc0NSAyNC0yNCAyNEgzNDUuOTQxYy0yMS4zODIgMC0zMi4wOS0yNS44NTEtMTYuOTcxLTQwLjk3MWw0MS43NS00MS43NDl6TTMyIDI5NmgxMzQuMDU5YzIxLjM4MiAwIDMyLjA5IDI1Ljg1MSAxNi45NzEgNDAuOTcxbC00MS43NSA0MS43NWMzMS4yNjIgMjkuMjczIDcxLjgzNSA0NS4zMTkgMTE0Ljg3NiA0NS4yOCA3Ny40MTgtLjA3IDE0NC4zMTUtNTMuMTQ0IDE2Mi43ODctMTI2Ljg0OSAxLjM0NC01LjM2MyA2LjEyMi05LjE1IDExLjY1MS05LjE1aDU3LjMwNGM3LjQ5OCAwIDEzLjE5NCA2LjgwNyAxMS44MDcgMTQuMTc2QzQ3OC4wNjcgNDE3LjA3NiAzNzcuMTg3IDUwNCAyNTYgNTA0Yy02Ni40NDggMC0xMjYuNzkxLTI2LjEzNi0xNzEuMzE1LTY4LjY4NUw0OC45NyA0NzEuMDNDMzMuODUxIDQ4Ni4xNDkgOCA0NzUuNDQxIDggNDU0LjA1OVYzMjBjMC0xMy4yNTUgMTAuNzQ1LTI0IDI0LTI0eiIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg==);
+}
+
+.icon-redo-alt {
+	background-image: var(--icon-redo-alt-000);
+}
+.icon-redo-alt-white, .icon-redo-alt.icon-white {
+	background-image: var(--icon-redo-alt-fff);
+}
+
+.icon-sync-alt {
+	background-image: var(--icon-sync-alt-000);
+}
+.icon-sync-alt-white, .icon-sync-alt.icon-white {
+	background-image: var(--icon-sync-alt-fff);
+}
