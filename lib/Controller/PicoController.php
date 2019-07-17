@@ -187,7 +187,7 @@ class PicoController extends Controller
 	private function getAsset(string $site, string $page): Response
 	{
 		try {
-			$asset = $this->websitesService->getAsset($site, $this->userId, $page);
+			$asset = $this->websitesService->getAsset($site, $page, $this->userId);
 
 			try {
 				$secureMimeType = $this->mimeTypeDetector->getSecureMimeType($asset->getMimetype());

@@ -243,7 +243,7 @@ class WebsitesService
 	{
 		$website = $this->getWebsiteFromSite($site);
 		$website->setProxyRequest($proxyRequest);
-		$website->setViewer($viewer);
+		$website->setViewer($viewer ?: '');
 		$website->setPage($page);
 
 		if ($this->encryptionManager->isEnabled()) {
@@ -254,9 +254,9 @@ class WebsitesService
 	}
 
 	/**
-	 * @param string $site
-	 * @param string $viewer
-	 * @param string $asset
+	 * @param string      $site
+	 * @param string      $asset
+	 * @param string|null $viewer
 	 *
 	 * @return File
 	 * @throws WebsiteNotFoundException
@@ -266,10 +266,10 @@ class WebsitesService
 	 * @throws AssetNotFoundException
 	 * @throws AssetNotPermittedException
 	 */
-	public function getAsset(string $site, string $viewer, string $asset): File
+	public function getAsset(string $site, string $asset, string $viewer = null): File
 	{
 		$website = $this->getWebsiteFromSite($site);
-		$website->setViewer($viewer);
+		$website->setViewer($viewer ?: '');
 		$website->setPage($asset);
 
 		if ($this->encryptionManager->isEnabled()) {
