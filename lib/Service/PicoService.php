@@ -187,12 +187,16 @@ class PicoService
 				'site_title'     => $website->getName(),
 				'base_url'       => $website->getWebsiteUrl(),
 				'rewrite_url'    => true,
+				'debug'          => \OC::$server->getConfig()->getSystemValue('debug', false),
 				'timezone'       => $website->getTimeZone(),
 				'theme'          => $website->getTheme(),
-				'theme_url'      => $this->themesService->getThemesUrl(),
+				'themes_url'     => $this->themesService->getThemesUrl(),
 				'content_dir'    => self::DIR_CONTENT,
 				'content_ext'    => '.md',
-				'nextcloud_site' => $website->getSite()
+				'assets_dir'     => self::DIR_ASSETS,
+				'assets_url'     => $website->getWebsiteUrl() . self::DIR_ASSETS,
+				'plugins_url'    => $this->pluginsService->getPluginsUrl(),
+				'nextcloud_site' => $website->getSite(),
 			]
 		);
 	}

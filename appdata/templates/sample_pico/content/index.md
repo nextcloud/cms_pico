@@ -5,7 +5,7 @@ Description: Pico is a stupidly simple, blazing fast, flat file CMS.
 
 ## Welcome to Pico
 
-![Nextcloud Logo](%base_url%/assets/image.png)
+![Nextcloud Logo](%assets_url%/image.png)
 
 Congratulations, you have successfully installed [Pico CMS for Nextcloud][App],
 utilizing [Pico][] %version%. %meta.description% <!-- replaced by the above Description header -->

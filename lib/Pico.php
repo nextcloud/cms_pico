@@ -55,24 +55,6 @@ class Pico extends \Pico
 	}
 
 	/**
-	 * {@inheritDoc}
-	 */
-	protected function loadConfig()
-	{
-		$themeUrl = $this->config['theme_url'] ?? null;
-
-		parent::loadConfig();
-
-		if ($themeUrl && ($themeUrl[0] === '/')) {
-			$this->config['theme_url'] = $themeUrl;
-		}
-
-		if (empty($this->config['nextcloud_site'])) {
-			$this->config['nextcloud_site'] = 'default';
-		}
-	}
-
-	/**
 	 * Set's Nextcloud's website instance.
 	 *
 	 * @param Website $website Nextcloud's website instance
@@ -128,8 +110,8 @@ class Pico extends \Pico
 	/**
 	 * Returns the parsed and purified file meta from raw file contents.
 	 *
-	 * @param  string $rawContent
-	 * @param  string[] $headers
+	 * @param string $rawContent
+	 * @param string[] $headers
 	 *
 	 * @return array
 	 * @throws ParseException
@@ -164,13 +146,25 @@ class Pico extends \Pico
 	/**
 	 * Returns the parsed and purified contents of a page.
 	 *
-	 * @param  string $markdown
+	 * @param string $markdown
 	 *
 	 * @return string
 	 */
 	public function parseFileContent($markdown)
 	{
 		$content = parent::parseFileContent($markdown);
+		return $this->purifyFileContent($content);
+	}
+
+	/**
+	 * Purifies file content.
+	 *
+	 * @param string $content
+	 *
+	 * @return string
+	 */
+	protected function purifyFileContent(string $content)
+	{
 		return $this->getHtmlPurifier()->purify($content);
 	}
 

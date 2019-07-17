@@ -15,13 +15,15 @@
   "require": {
     "php": ">=7.0.0",
     "ext-json": "*",
-    "picocms/pico": "~2.0.0",
-    "picocms/pico-theme": "~2.0.0",
+    "picocms/pico": "~2.1.0@dev",
+    "picocms/pico-theme": "~2.1.0@dev",
     "picocms/composer-installer": "^1.0",
     "ezyang/htmlpurifier": "^4.10"
   },
   "extra": {
     "pico-theme-dir": "appdata/themes/",
     "pico-plugin-dir": "appdata/plugins/"
-  }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }
