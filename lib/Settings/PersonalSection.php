@@ -36,6 +36,8 @@ class PersonalSection implements IIconSection
 	private $urlGenerator;
 
 	/**
+	 * PersonalSection constructor.
+	 *
 	 * @param IL10N         $l10n
 	 * @param IURLGenerator $urlGenerator
 	 */
@@ -48,7 +50,7 @@ class PersonalSection implements IIconSection
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getID()
+	public function getID(): string
 	{
 		return Application::APP_NAME;
 	}
@@ -56,7 +58,7 @@ class PersonalSection implements IIconSection
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getName()
+	public function getName(): string
 	{
 		return $this->l10n->t('Pico CMS');
 	}
@@ -64,7 +66,7 @@ class PersonalSection implements IIconSection
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getPriority()
+	public function getPriority(): int
 	{
 		return 75;
 	}
@@ -72,7 +74,7 @@ class PersonalSection implements IIconSection
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getIcon()
+	public function getIcon(): string
 	{
 		return $this->urlGenerator->imagePath(Application::APP_NAME, 'pico_cms.svg');
 	}

@@ -42,6 +42,7 @@ use OCA\CMSPico\Service\TemplatesService;
 use OCA\CMSPico\Service\ThemesService;
 use OCP\App\IAppManager;
 use OCP\Files\File;
+use OCP\Files\Folder;
 use OCP\Files\InvalidPathException;
 use OCP\Files\IRootFolder;
 use OCP\Files\NotFoundException;
@@ -57,7 +58,16 @@ class Website extends WebsiteCore
 	const SITE_LENGTH_MIN = 3;
 
 	/** @var int */
+	const SITE_LENGTH_MAX = 255;
+
+	/** @var string */
+	const SITE_REGEX = '^[a-z][a-z0-9_-]+[a-z0-9]$';
+
+	/** @var int */
 	const NAME_LENGTH_MIN = 3;
+
+	/** @var int */
+	const NAME_LENGTH_MAX = 255;
 
 	/** @var IConfig */
 	private $config;
@@ -75,7 +85,7 @@ class Website extends WebsiteCore
 	private $rootFolder;
 
 	/** @var IURLGenerator */
-	private $URLGenerator;
+	private $urlGenerator;
 
 	/** @var View */
 	private $ownerView;
@@ -101,7 +111,7 @@ class Website extends WebsiteCore
 		$this->appManager = \OC::$server->getAppManager();
 		$this->groupManager = \OC::$server->getGroupManager();
 		$this->rootFolder = \OC::$server->getRootFolder();
-		$this->URLGenerator = \OC::$server->getURLGenerator();
+		$this->urlGenerator = \OC::$server->getURLGenerator();
 		$this->themesService = \OC::$server->query(ThemesService::class);
 		$this->templatesService = \OC::$server->query(TemplatesService::class);
 		$this->miscService = \OC::$server->query(MiscService::class);
@@ -126,7 +136,7 @@ class Website extends WebsiteCore
 		if (!$this->getProxyRequest()) {
 			$route = Application::APP_NAME . '.Pico.getRoot';
 			$parameters = [ 'site' => $this->getSite() ];
-			return $this->URLGenerator->linkToRoute($route, $parameters);
+			return $this->urlGenerator->linkToRoute($route, $parameters);
 		} else {
 			return \OC::$WEBROOT . '/sites/' . urlencode($this->getSite()) . '/';
 		}
@@ -320,7 +330,10 @@ class Website extends WebsiteCore
 	public function assertValidName()
 	{
 		if (strlen($this->getName()) < self::NAME_LENGTH_MIN) {
-			throw new WebsiteInvalidDataException($this->l10n->t('The name of the website must be longer'));
+			throw new WebsiteInvalidDataException('name', $this->l10n->t('The name of the website must be longer'));
+		}
+		if (strlen($this->getName()) > self::NAME_LENGTH_MAX) {
+			throw new WebsiteInvalidDataException('name', $this->l10n->t('The name of the website is too long'));
 		}
 	}
 
@@ -330,11 +343,15 @@ class Website extends WebsiteCore
 	public function assertValidSite()
 	{
 		if (strlen($this->getSite()) < self::SITE_LENGTH_MIN) {
-			throw new WebsiteInvalidDataException($this->l10n->t('The address of the website must be longer'));
+			throw new WebsiteInvalidDataException('site', $this->l10n->t('The address of the website must be longer'));
+		}
+		if (strlen($this->getSite()) > self::SITE_LENGTH_MAX) {
+			throw new WebsiteInvalidDataException('site', $this->l10n->t('The address of the website is too long'));
 		}
 
-		if (preg_match('/^[a-z0-9_-]*$/', $this->getSite()) !== 1) {
+		if (preg_match('/' . self::SITE_REGEX . '/', $this->getSite()) !== 1) {
 			throw new WebsiteInvalidDataException(
+				'site',
 				$this->l10n->t('The address of the website can only contains alpha numeric chars')
 			);
 		}
@@ -349,7 +366,23 @@ class Website extends WebsiteCore
 			$this->miscService->normalizePath($this->getPath());
 		} catch (InvalidPathException $e) {
 			throw new WebsiteInvalidDataException(
+				'path',
 				$this->l10n->t('The path of the website is invalid')
+			);
+		}
+
+		try {
+			$userFolder = $this->rootFolder->getUserFolder($this->getUserId());
+
+			/** @var Folder $node */
+			$node = $userFolder->get(dirname($this->getPath()));
+			if (!($node instanceof Folder)) {
+				throw new NotFoundException();
+			}
+		} catch (NotFoundException $e) {
+			throw new WebsiteInvalidDataException(
+				'path',
+				$this->l10n->t('Parent folder of the website\'s path not found')
 			);
 		}
 	}

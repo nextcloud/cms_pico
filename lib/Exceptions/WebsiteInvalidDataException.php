@@ -26,5 +26,28 @@ namespace OCA\CMSPico\Exceptions;
 
 class WebsiteInvalidDataException extends \Exception
 {
+	/** @var string */
+	private $field;
 
+	/**
+	 * WebsiteInvalidDataException constructor.
+	 *
+	 * @param string          $field
+	 * @param string          $message
+	 * @param \Throwable|null $previous
+	 */
+	public function __construct(string $field = '', string $message = '', \Throwable $previous = null)
+	{
+		$this->field = $field;
+
+		parent::__construct($message, 0, $previous);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getField(): string
+	{
+		return $this->field;
+	}
 }

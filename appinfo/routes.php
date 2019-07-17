@@ -44,15 +44,10 @@ return [
 			'requirements' => array('file' => '.+')
 		],
 
-		['name' => 'Settings#getPersonalWebsites', 'url' => '/personal/websites', 'verb' => 'GET'],
-		['name' => 'Settings#createPersonalWebsite', 'url' => '/personal/website', 'verb' => 'PUT'],
-		['name' => 'Settings#removePersonalWebsite', 'url' => '/personal/website', 'verb' => 'DELETE'],
-		['name' => 'Settings#updateWebsiteTheme', 'url' => '/personal/website/{siteId}/theme', 'verb' => 'PUT'],
-		[
-			'name' => 'Settings#editPersonalWebsiteOption',
-			'url'  => '/personal/website/{siteId}/option/{option}',
-			'verb' => 'POST'
-		],
+		[ 'name' => 'Settings#getPersonalWebsites', 'url' => '/personal/websites', 'verb' => 'GET' ],
+		[ 'name' => 'Settings#createPersonalWebsite', 'url' => '/personal/websites', 'verb' => 'POST' ],
+		[ 'name' => 'Settings#updatePersonalWebsite', 'url' => '/personal/websites/{siteId}', 'verb' => 'POST' ],
+		[ 'name' => 'Settings#removePersonalWebsite', 'url' => '/personal/websites/{siteId}', 'verb' => 'DELETE' ],
 
 		[ 'name' => 'Settings#getTemplates', 'url' => '/admin/templates', 'verb' => 'GET' ],
 		[ 'name' => 'Settings#addCustomTemplate', 'url' => '/admin/templates', 'verb' => 'POST' ],

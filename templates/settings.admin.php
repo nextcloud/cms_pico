@@ -34,7 +34,7 @@ style(Application::APP_NAME, 'pico');
 		'Add custom themes for greater individuality and style.'
 	)); ?></p>
 
-	<div class="message">
+	<div class="message large">
 		<div class="icon icon-info"></div>
 		<div>
 			<p><?php p($l->t(
@@ -60,7 +60,7 @@ style(Application::APP_NAME, 'pico');
 			data-new-template="#picocms-themes-template-new-item"
 			data-loading-template="#picocms-themes-template-loading"
 			data-error-template="#picocms-themes-template-error">
-		<div class="app-content-loading message">
+		<div class="app-content-loading message large">
 			<div class="icon loading"></div>
 			<div>
 				<p><?php p($l->t('Loading themes…')); ?></p>
@@ -122,7 +122,7 @@ style(Application::APP_NAME, 'pico');
 
 	<script id="picocms-themes-template-loading" type="text/template"
 			data-replaces="#picocms-themes">
-		<div class="app-content-loading message">
+		<div class="app-content-loading message large">
 			<div class="icon loading"></div>
 			<div>
 				<p><?php p($l->t('Loading themes…')); ?></p>
@@ -132,7 +132,7 @@ style(Application::APP_NAME, 'pico');
 
 	<script id="picocms-themes-template-error" type="text/template"
 			data-replaces="#picocms-themes">
-		<div class="app-content-error message">
+		<div class="app-content-error message large">
 			<div class="icon icon-error-color"></div>
 			<div>
 				<p><?php p($l->t(
@@ -149,7 +149,7 @@ style(Application::APP_NAME, 'pico');
 		'Make it easier for users to create new websites.'
 	)); ?></p>
 
-	<div class="message">
+	<div class="message large">
 		<div class="icon icon-info"></div>
 		<div>
 			<p><?php p($l->t(
@@ -175,7 +175,7 @@ style(Application::APP_NAME, 'pico');
 			data-new-template="#picocms-templates-template-new-item"
 			data-loading-template="#picocms-templates-template-loading"
 			data-error-template="#picocms-templates-template-error">
-		<div class="app-content-loading message">
+		<div class="app-content-loading message large">
 			<div class="icon loading"></div>
 			<div>
 				<p><?php p($l->t('Loading templates…')); ?></p>
@@ -233,7 +233,7 @@ style(Application::APP_NAME, 'pico');
 
 	<script id="picocms-templates-template-loading" type="text/template"
 			data-replaces="#picocms-templates">
-		<div class="app-content-loading message">
+		<div class="app-content-loading message large">
 			<div class="icon loading"></div>
 			<div>
 				<p><?php p($l->t('Loading templates…')); ?></p>
@@ -243,7 +243,7 @@ style(Application::APP_NAME, 'pico');
 
 	<script id="picocms-templates-template-error" type="text/template"
 			data-replaces="#picocms-templates">
-		<div class="app-content-error message">
+		<div class="app-content-error message large">
 			<div class="icon icon-error-color"></div>
 			<div>
 				<p><?php p($l->t(
@@ -260,7 +260,7 @@ style(Application::APP_NAME, 'pico');
 		'Enable Pico CMS for Nextcloud\'s full potential by configuring your webserver appropriately.'
 	)); ?></p>
 
-	<div class="message">
+	<div class="message large">
 		<div class="icon icon-info"></div>
 		<div>
 			<p><?php p($l->t(

@@ -26,6 +26,12 @@ declare(strict_types=1);
 namespace OCA\CMSPico\Controller;
 
 use OCA\CMSPico\AppInfo\Application;
+use OCA\CMSPico\Exceptions\TemplateNotFoundException;
+use OCA\CMSPico\Exceptions\ThemeNotFoundException;
+use OCA\CMSPico\Exceptions\WebsiteExistsException;
+use OCA\CMSPico\Exceptions\WebsiteForeignOwnerException;
+use OCA\CMSPico\Exceptions\WebsiteInvalidDataException;
+use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
 use OCA\CMSPico\Model\Website;
 use OCA\CMSPico\Service\ConfigService;
 use OCA\CMSPico\Service\MiscService;
@@ -35,6 +41,7 @@ use OCA\CMSPico\Service\WebsitesService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\IL10N;
 use OCP\ILogger;
 use OCP\IRequest;
 
@@ -42,6 +49,9 @@ class SettingsController extends Controller
 {
 	/** @var string */
 	private $userId;
+
+	/** @var IL10N */
+	private $l10n;
 
 	/** @var ILogger */
 	private $logger;
@@ -66,6 +76,7 @@ class SettingsController extends Controller
 	 *
 	 * @param IRequest         $request
 	 * @param string           $userId
+	 * @param IL10N            $l10n
 	 * @param ILogger          $logger
 	 * @param ConfigService    $configService
 	 * @param TemplatesService $templatesService
@@ -76,6 +87,7 @@ class SettingsController extends Controller
 	function __construct(
 		IRequest $request,
 		$userId,
+		IL10N $l10n,
 		ILogger $logger,
 		ConfigService $configService,
 		TemplatesService $templatesService,
@@ -86,12 +98,24 @@ class SettingsController extends Controller
 		parent::__construct(Application::APP_NAME, $request);
 
 		$this->userId = $userId;
+		$this->l10n = $l10n;
 		$this->logger = $logger;
 		$this->configService = $configService;
 		$this->templatesService = $templatesService;
 		$this->themesService = $themesService;
 		$this->websitesService = $websitesService;
 		$this->miscService = $miscService;
+	}
+
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @return DataResponse
+	 */
+	public function getPersonalWebsites(): DataResponse
+	{
+		$data = [ 'websites' => $this->websitesService->getWebsitesFromUser($this->userId) ];
+		return new DataResponse($data, Http::STATUS_OK);
 	}
 
 	/**
@@ -107,113 +131,98 @@ class SettingsController extends Controller
 			$website = (new Website())
 				->setName($data['name'])
 				->setUserId($this->userId)
-				->setSite($data['website'])
+				->setSite($data['site'])
+				->setTheme($data['theme'])
 				->setPath($data['path'])
 				->setTemplateSource($data['template']);
 
 			$this->websitesService->createWebsite($website);
 
-			return $this->createSuccessResponse([
-				'name' => $data['name'],
-				'websites' => $this->websitesService->getWebsitesFromUser($this->userId),
-			]);
+			return $this->getPersonalWebsites();
 		} catch (\Exception $e) {
-			return $this->createErrorResponse($e, [ 'name' => $data['name'] ]);
+			$data = [];
+			if ($e instanceof WebsiteExistsException) {
+				$data['form_error'] = [ 'field' => 'site', 'message' => $this->l10n->t('Website exists') ];
+			} elseif (($e instanceof WebsiteInvalidDataException) && $e->getField()) {
+				$data['form_error'] = [ 'field' => $e->getField(), 'message' => $e->getMessage() ];
+			} elseif ($e instanceof ThemeNotFoundException) {
+				$data['form_error'] = [ 'field' => 'theme', 'message' => $this->l10n->t('Theme not found') ];
+			} elseif ($e instanceof TemplateNotFoundException) {
+				$data['form_error'] = [ 'field' => 'template', 'message' => $this->l10n->t('Template not found') ];
+			}
+
+			return $this->createErrorResponse($e, $data);
 		}
 	}
 
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param array<string,string> $data
+	 * @param int     $siteId
+	 * @param mixed[] $data
 	 *
 	 * @return DataResponse
 	 */
-	public function removePersonalWebsite(array $data): DataResponse
+	public function updatePersonalWebsite(int $siteId, array $data): DataResponse
 	{
 		try {
-			$website = $this->websitesService->getWebsiteFromId($data['id']);
+			$website = $this->websitesService->getWebsiteFromId($siteId);
+
+			$website->assertOwnedBy($this->userId);
+
+			foreach ($data as $key => $value) {
+				switch ($key) {
+					case 'theme':
+						$website->setTheme($value);
+						break;
+
+					case 'options':
+						foreach ($value as $optionKey => $optionValue) {
+							$website->setOption($optionKey, (string) $optionValue);
+						}
+						break;
+
+					default:
+						throw new WebsiteInvalidDataException();
+				}
+			}
+
+			$this->websitesService->updateWebsite($website);
+
+			return $this->getPersonalWebsites();
+		} catch (\Exception $e) {
+			$data = [];
+			if (($e instanceof WebsiteNotFoundException) || ($e instanceof WebsiteForeignOwnerException)) {
+				$data['form_error'] = [ 'field' => 'identifier', 'message' => $this->l10n->t('Website not found') ];
+			} elseif ($e instanceof WebsiteInvalidDataException) {
+				$data['form_error'] = [ 'field' => $e->getField(), 'message' => $e->getMessage() ];
+			} elseif ($e instanceof ThemeNotFoundException) {
+				$data['form_error'] = [ 'field' => 'theme', 'message' => $this->l10n->t('Theme not found') ];
+			} elseif ($e instanceof TemplateNotFoundException) {
+				$data['form_error'] = [ 'field' => 'template', 'message' => $this->l10n->t('Template not found') ];
+			}
+
+			return $this->createErrorResponse($e, $data);
+		}
+	}
+
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @param int $siteId
+	 *
+	 * @return DataResponse
+	 */
+	public function removePersonalWebsite(int $siteId): DataResponse
+	{
+		try {
+			$website = $this->websitesService->getWebsiteFromId($siteId);
 
 			$website->assertOwnedBy($this->userId);
 
 			$this->websitesService->deleteWebsite($website);
 
-			return $this->createSuccessResponse([
-				'name' => $data['name'],
-				'websites' => $this->websitesService->getWebsitesFromUser($this->userId),
-			]);
-		} catch (\Exception $e) {
-			return $this->createErrorResponse($e, [ 'name' => $data['name'] ]);
-		}
-	}
-
-	/**
-	 * @NoAdminRequired
-	 *
-	 * @param int    $siteId
-	 * @param string $theme
-	 *
-	 * @return DataResponse
-	 */
-	public function updateWebsiteTheme(int $siteId, string $theme): DataResponse
-	{
-		try {
-			$website = $this->websitesService->getWebsiteFromId($siteId);
-
-			$website->assertOwnedBy($this->userId);
-			$website->setTheme($theme);
-
-			$this->websitesService->updateWebsite($website);
-
-			return $this->createSuccessResponse([
-				'websites' => $this->websitesService->getWebsitesFromUser($this->userId)
-			]);
-		} catch (\Exception $e) {
-			return $this->createErrorResponse($e);
-		}
-	}
-
-	/**
-	 * @NoAdminRequired
-	 *
-	 * @param int    $siteId
-	 * @param string $option
-	 * @param string $value
-	 *
-	 * @return DataResponse
-	 */
-	public function editPersonalWebsiteOption(int $siteId, string $option, string $value): DataResponse
-	{
-		try {
-			$website = $this->websitesService->getWebsiteFromId($siteId);
-
-			$website->assertOwnedBy($this->userId);
-			$website->setOption($option, $value);
-
-			$this->websitesService->updateWebsite($website);
-
-			return $this->createSuccessResponse([
-				'websites' => $this->websitesService->getWebsitesFromUser($this->userId)
-			]);
-		} catch (\Exception $e) {
-			return $this->createErrorResponse($e);
-		}
-	}
-
-	/**
-	 * @NoAdminRequired
-	 *
-	 * @return DataResponse
-	 */
-	public function getPersonalWebsites(): DataResponse
-	{
-		try {
-			$websites = $this->websitesService->getWebsitesFromUser($this->userId);
-
-			return $this->createSuccessResponse([
-				'themes' => $this->themesService->getThemes(),
-				'websites' => $websites,
-			]);
+			return $this->getPersonalWebsites();
 		} catch (\Exception $e) {
 			return $this->createErrorResponse($e);
 		}

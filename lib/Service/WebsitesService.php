@@ -105,6 +105,7 @@ class WebsitesService
 	 *
 	 * @throws WebsiteExistsException
 	 * @throws WebsiteInvalidDataException
+	 * @throws ThemeNotFoundException
 	 * @throws TemplateNotFoundException
 	 */
 	public function createWebsite(Website $website)
@@ -112,6 +113,7 @@ class WebsitesService
 		$website->assertValidName();
 		$website->assertValidSite();
 		$website->assertValidPath();
+		$website->assertValidTheme();
 		$website->assertValidTemplate();
 
 		try {

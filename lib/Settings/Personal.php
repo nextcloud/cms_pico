@@ -3,6 +3,7 @@
  * CMS Pico - Create websites using Pico CMS for Nextcloud.
  *
  * @copyright Copyright (c) 2017, Maxence Lange (<maxence@artificial-owl.com>)
+ * @copyright Copyright (c) 2019, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -23,15 +24,24 @@
 namespace OCA\CMSPico\Settings;
 
 use OCA\CMSPico\AppInfo\Application;
+use OCA\CMSPico\Model\Website;
 use OCA\CMSPico\Service\TemplatesService;
+use OCA\CMSPico\Service\ThemesService;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IL10N;
+use OCP\IURLGenerator;
 use OCP\Settings\ISettings;
 
 class Personal implements ISettings
 {
 	/** @var IL10N */
 	private $l10n;
+
+	/** @var IURLGenerator */
+	private $urlGenerator;
+
+	/** @var ThemesService */
+	private $themesService;
 
 	/** @var TemplatesService */
 	private $templatesService;
@@ -40,20 +50,46 @@ class Personal implements ISettings
 	 * Personal constructor.
 	 *
 	 * @param IL10N            $l10n
+	 * @param IURLGenerator    $urlGenerator
+	 * @param ThemesService    $themesService
 	 * @param TemplatesService $templatesService
 	 */
-	public function __construct(IL10N $l10n, TemplatesService $templatesService)
-	{
+	public function __construct(
+		IL10N $l10n,
+		IURLGenerator $urlGenerator,
+		ThemesService $themesService,
+		TemplatesService $templatesService
+	) {
 		$this->l10n = $l10n;
+		$this->urlGenerator = $urlGenerator;
+		$this->themesService = $themesService;
 		$this->templatesService = $templatesService;
 	}
 
 	/**
 	 * @return TemplateResponse
 	 */
-	public function getForm()
+	public function getForm(): TemplateResponse
 	{
+		$exampleSite = 'example_site';
+		$exampleProxyUrl = $this->urlGenerator->getBaseUrl() . '/sites/' . urlencode($exampleSite) . '/';
+		$exampleFullUrl = $this->urlGenerator->linkToRouteAbsolute(
+			Application::APP_NAME . '.Pico.getRoot',
+			[ 'site' => $exampleSite ]
+		);
+
+		$baseUrl = $this->urlGenerator->getBaseUrl() . '/index.php/apps/' . Application::APP_NAME . '/pico/';
+
 		$data = [
+			'exampleProxyUrl'  => $exampleProxyUrl,
+			'exampleFullUrl'   => $exampleFullUrl,
+			'baseUrl' => $baseUrl,
+			'nameLengthMin' => Website::NAME_LENGTH_MIN,
+			'nameLengthMax' => Website::NAME_LENGTH_MAX,
+			'siteLengthMin' => Website::SITE_LENGTH_MIN,
+			'siteLengthMax' => Website::SITE_LENGTH_MAX,
+			'siteRegex' => Website::SITE_REGEX,
+			'themes' => $this->themesService->getThemes(),
 			'templates' => $this->templatesService->getTemplates()
 		];
 
@@ -63,7 +99,7 @@ class Personal implements ISettings
 	/**
 	 * @return string the section ID, e.g. 'sharing'
 	 */
-	public function getSection()
+	public function getSection(): string
 	{
 		return Application::APP_NAME;
 	}
@@ -75,9 +111,8 @@ class Personal implements ISettings
 	 *
 	 * keep the server setting at the top, right after "server settings"
 	 */
-	public function getPriority()
+	public function getPriority(): int
 	{
 		return 0;
 	}
-
 }

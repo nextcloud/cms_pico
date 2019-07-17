@@ -187,13 +187,17 @@ class TemplatesService
 			}
 		}
 
-		$templateFolder->sync();
-
 		try {
-			$websiteFolder = $userFolder->get($websitePath);
+			$userFolder->get($websitePath);
+
+			// website folder exists, we don't want to mess around
+			// with a user's files, thus we (silently) bail out
+			return;
 		} catch (NotFoundException $e) {
 			$websiteFolder = $userFolder->newFolder($websitePath);
 		}
+
+		$templateFolder->sync();
 
 		$websiteData = $this->generateWebsiteData($website);
 		foreach ($filesIterator($templateFolder) as $templateFilePath => $templateData) {
