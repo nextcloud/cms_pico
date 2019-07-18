@@ -3,6 +3,7 @@
  * CMS Pico - Create websites using Pico CMS for Nextcloud.
  *
  * @copyright Copyright (c) 2017, Maxence Lange (<maxence@artificial-owl.com>)
+ * @copyright Copyright (c) 2019, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -35,7 +36,7 @@ class ConfigService
 	/** @var string */
 	const CUSTOM_THEMES = 'custom_themes';
 
-	/** @var array<string,string> */
+	/** @var array<string,mixed> */
 	private $defaults = [
 		self::CUSTOM_THEMES => '',
 		self::CUSTOM_TEMPLATES => '',
@@ -47,29 +48,24 @@ class ConfigService
 	/** @var string */
 	private $userId;
 
-	/** @var MiscService */
-	private $miscService;
-
 	/**
 	 * ConfigService constructor.
 	 *
 	 * @param IConfig     $config
 	 * @param string      $userId
-	 * @param MiscService $miscService
 	 */
-	public function __construct(IConfig $config, $userId, MiscService $miscService)
+	public function __construct(IConfig $config, $userId)
 	{
 		$this->config = $config;
 		$this->userId = $userId;
-		$this->miscService = $miscService;
 	}
 
 	/**
 	 * @param string $key
 	 *
-	 * @return string
+	 * @return mixed
 	 */
-	public function getAppValue(string $key): string
+	public function getAppValue(string $key)
 	{
 		$defaultValue = $this->getDefaultValue($key);
 		return $this->config->getAppValue(Application::APP_NAME, $key, $defaultValue);
@@ -77,86 +73,70 @@ class ConfigService
 
 	/**
 	 * @param string $key
-	 * @param string $value
+	 * @param mixed $value
 	 */
-	public function setAppValue(string $key, string $value)
+	public function setAppValue(string $key, $value)
 	{
 		$this->config->setAppValue(Application::APP_NAME, $key, $value);
 	}
 
 	/**
 	 * @param string $key
-	 *
-	 * @return string
 	 */
-	public function deleteAppValue(string $key): string
+	public function deleteAppValue(string $key)
 	{
-		return $this->config->deleteAppValue(Application::APP_NAME, $key);
+		$this->config->deleteAppValue(Application::APP_NAME, $key);
 	}
 
 	/**
-	 * @param string $key
-	 *
-	 * @return string
-	 */
-	public function getUserValue(string $key): string
-	{
-		$defaultValue = $this->getDefaultValue($key);
-		return $this->config->getUserValue($this->userId, Application::APP_NAME, $key, $defaultValue);
-	}
-
-	/**
-	 * @param string $key
-	 * @param string $value
-	 *
-	 * @return string
-	 */
-	public function setUserValue(string $key, string $value): string
-	{
-		return $this->config->setUserValue($this->userId, Application::APP_NAME, $key, $value);
-	}
-
-	/**
-	 * @param string $userId
-	 * @param string $key
-	 *
-	 * @return string
-	 */
-	public function getValueForUser(string $userId, string $key): string
-	{
-		return $this->config->getUserValue($userId, Application::APP_NAME, $key);
-	}
-
-	/**
-	 * @param string $userId
-	 * @param string $key
-	 * @param string $value
-	 *
-	 * @return string
-	 */
-	public function setValueForUser(string $userId, string $key, string $value): string
-	{
-		return $this->config->setUserValue($userId, Application::APP_NAME, $key, $value);
-	}
-
-	/**
-	 * @param string $key
-	 *
-	 * @return string
-	 */
-	private function getDefaultValue(string $key): string
-	{
-		return $this->defaults[$key] ?? '';
-	}
-
-	/**
-	 * @param string $key
-	 * @param mixed $default
+	 * @param string      $key
+	 * @param string|null $userId
 	 *
 	 * @return mixed
 	 */
-	public function getSystemValue(string $key, $default)
+	public function getUserValue(string $key, string $userId = null)
 	{
-		return $this->config->getSystemValue($key, $default);
+		$defaultValue = $this->getDefaultValue($key);
+		return $this->config->getUserValue($userId ?? $this->userId, Application::APP_NAME, $key, $defaultValue);
+	}
+
+	/**
+	 * @param string      $key
+	 * @param mixed       $value
+	 * @param string|null $userId
+	 */
+	public function setUserValue(string $key, $value, string $userId = null)
+	{
+		$this->config->setUserValue($userId ?? $this->userId, Application::APP_NAME, $key, $value);
+	}
+
+	/**
+	 * @param string      $key
+	 * @param string|null $userId
+	 */
+	public function deleteUserValue(string $key, string $userId = null)
+	{
+		$this->config->deleteUserValue($userId ?? $this->userId, Application::APP_NAME, $key);
+	}
+
+	/**
+	 * @param string $key
+	 * @param mixed  $defaultValue
+	 *
+	 * @return mixed
+	 */
+	public function getSystemValue(string $key, $defaultValue)
+	{
+		return $this->config->getSystemValue($key, $defaultValue);
+	}
+
+	/**
+	 * @param string $key
+	 *
+	 * @return mixed
+	 */
+	private function getDefaultValue(string $key)
+	{
+		return $this->defaults[$key] ?? '';
 	}
 }
