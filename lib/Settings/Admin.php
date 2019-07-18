@@ -27,15 +27,11 @@ use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Service\FileService;
 use OCA\CMSPico\Service\PicoService;
 use OCP\AppFramework\Http\TemplateResponse;
-use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\Settings\ISettings;
 
 class Admin implements ISettings
 {
-	/** @var IL10N */
-	private $l10n;
-
 	/** @var IURLGenerator */
 	private $urlGenerator;
 
@@ -45,13 +41,11 @@ class Admin implements ISettings
 	/**
 	 * Admin constructor.
 	 *
-	 * @param IL10N         $l10n
 	 * @param IURLGenerator $urlGenerator
 	 * @param FileService   $fileService
 	 */
-	public function __construct(IL10N $l10n, IURLGenerator $urlGenerator, FileService $fileService)
+	public function __construct(IURLGenerator $urlGenerator, FileService $fileService)
 	{
-		$this->l10n = $l10n;
 		$this->urlGenerator = $urlGenerator;
 		$this->fileService = $fileService;
 	}

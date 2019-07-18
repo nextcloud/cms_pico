@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Service;
 
-use OC\App\AppManager;
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Exceptions\PageInvalidPathException;
 use OCA\CMSPico\Exceptions\PageNotFoundException;
@@ -62,12 +61,6 @@ class PicoService
 	/** @var string */
 	const DIR_ASSETS = 'assets';
 
-	/** @var string|null */
-	private $userId;
-
-	/** @var AppManager */
-	private $appManager;
-
 	/** @var ILogger */
 	private $logger;
 
@@ -86,25 +79,19 @@ class PicoService
 	/**
 	 * PicoService constructor.
 	 *
-	 * @param string|null    $userId
-	 * @param AppManager     $appManager
 	 * @param ILogger        $logger
 	 * @param FileService    $fileService
 	 * @param ThemesService  $themesService
 	 * @param PluginsService $pluginsService
 	 * @param MiscService    $miscService
 	 */
-	function __construct(
-		$userId,
-		AppManager $appManager,
+	public function __construct(
 		ILogger $logger,
 		FileService $fileService,
 		ThemesService $themesService,
 		PluginsService $pluginsService,
 		MiscService $miscService
 	) {
-		$this->userId = $userId;
-		$this->appManager = $appManager;
 		$this->logger = $logger;
 		$this->fileService = $fileService;
 		$this->themesService = $themesService;

@@ -31,36 +31,25 @@ use OCA\CMSPico\Model\TemplateFile;
 use OCA\CMSPico\Model\Website;
 use OCP\Files\InvalidPathException;
 use OCP\Files\NotFoundException;
-use OCP\IL10N;
 
 class TemplatesService
 {
-	/** @var IL10N */
-	private $l10n;
-
 	/** @var ConfigService */
 	private $configService;
 
 	/** @var FileService */
 	private $fileService;
 
-	/** @var MiscService */
-	private $miscService;
-
 	/**
 	 * TemplatesService constructor.
 	 *
-	 * @param IL10N         $l10n
 	 * @param ConfigService $configService
 	 * @param FileService   $fileService
-	 * @param MiscService   $miscService
 	 */
-	function __construct(IL10N $l10n, ConfigService $configService, FileService $fileService, MiscService $miscService)
+	public function __construct(ConfigService $configService, FileService $fileService)
 	{
-		$this->l10n = $l10n;
 		$this->configService = $configService;
 		$this->fileService = $fileService;
-		$this->miscService = $miscService;
 	}
 
 	/**

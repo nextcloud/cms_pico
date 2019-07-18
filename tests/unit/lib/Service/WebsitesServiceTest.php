@@ -29,8 +29,6 @@ use OCA\CMSPico\Exceptions\WebsiteForeignOwnerException;
 use OCA\CMSPico\Exceptions\WebsiteExistsException;
 use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
 use OCA\CMSPico\Model\Website;
-use OCA\CMSPico\Service\FileService;
-use OCA\CMSPico\Service\MiscService;
 use OCA\CMSPico\Service\WebsitesService;
 use OCA\CMSPico\Tests\Env;
 

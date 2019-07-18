@@ -3,6 +3,7 @@
  * CMS Pico - Create websites using Pico CMS for Nextcloud.
  *
  * @copyright Copyright (c) 2017, Maxence Lange (<maxence@artificial-owl.com>)
+ * @copyright Copyright (c) 2019, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -23,25 +24,10 @@
 namespace OCA\CMSPico\Db;
 
 use OCA\CMSPico\Model\Website;
-use OCA\CMSPico\Service\ConfigService;
-use OCA\CMSPico\Service\MiscService;
 use OCP\DB\QueryBuilder\IQueryBuilder;
-use OCP\IDBConnection;
-use OCP\IL10N;
 
 class WebsitesRequestBuilder extends CoreRequestBuilder
 {
-	/**
-	 * WebsitesRequestBuilder constructor.
-	 *
-	 * {@inheritdoc}
-	 */
-	public function __construct(
-		IL10N $l10n, IDBConnection $connection, ConfigService $configService, MiscService $miscService
-	) {
-		parent::__construct($l10n, $connection, $configService, $miscService);
-	}
-
 	/**
 	 * Base of the Sql Insert request
 	 *

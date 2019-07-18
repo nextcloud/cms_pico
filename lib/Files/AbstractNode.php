@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Files;
 
-use OCA\CMSPico\Exceptions\UnknownFileTypeException;
 use OCP\Constants;
 
 abstract class AbstractNode implements NodeInterface

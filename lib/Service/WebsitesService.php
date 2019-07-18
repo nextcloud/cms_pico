@@ -44,13 +44,9 @@ use OCA\CMSPico\Exceptions\WebsiteNotPermittedException;
 use OCA\CMSPico\Model\PicoPage;
 use OCA\CMSPico\Model\Website;
 use OCP\Files\File;
-use OCP\IL10N;
 
 class WebsitesService
 {
-	/** @var IL10N */
-	private $l10n;
-
 	/** @var Manager */
 	private $encryptionManager;
 
@@ -66,36 +62,27 @@ class WebsitesService
 	/** @var AssetsService */
 	private $assetsService;
 
-	/** @var MiscService */
-	private $miscService;
-
 	/**
 	 * WebsitesService constructor.
 	 *
-	 * @param IL10N            $l10n
 	 * @param WebsitesRequest  $websiteRequest
 	 * @param TemplatesService $templatesService
 	 * @param PicoService      $picoService
 	 * @param AssetsService    $assetsService
-	 * @param MiscService      $miscService
 	 *
 	 * @internal param Manager $encryptionManager
 	 */
-	function __construct(
-		IL10N $l10n,
+	public function __construct(
 		WebsitesRequest $websiteRequest,
 		TemplatesService $templatesService,
 		PicoService $picoService,
-		AssetsService $assetsService,
-		MiscService $miscService
+		AssetsService $assetsService
 	) {
-		$this->l10n = $l10n;
 		$this->encryptionManager = \OC::$server->getEncryptionManager();
 		$this->websiteRequest = $websiteRequest;
 		$this->templatesService = $templatesService;
 		$this->picoService = $picoService;
 		$this->assetsService = $assetsService;
-		$this->miscService = $miscService;
 	}
 
 	/**

@@ -28,7 +28,6 @@ use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Files\FolderInterface;
 use OCA\CMSPico\Service\FileService;
 use OCA\CMSPico\Service\PicoService;
-use OCA\CMSPico\Service\TemplatesService;
 use OCA\CMSPico\Service\ThemesService;
 use OCP\Files\InvalidPathException;
 use OCP\Files\NotFoundException;
@@ -41,9 +40,6 @@ class AppDataRepairStep implements IRepairStep
 	/** @var ILogger */
 	private $logger;
 
-	/** @var TemplatesService */
-	private $templatesService;
-
 	/** @var ThemesService */
 	private $themesService;
 
@@ -54,18 +50,12 @@ class AppDataRepairStep implements IRepairStep
 	 * AppDataRepairStep constructor.
 	 *
 	 * @param ILogger          $logger
-	 * @param TemplatesService $templatesService
 	 * @param ThemesService    $themesService
 	 * @param FileService      $fileService
 	 */
-	public function __construct(
-		ILogger $logger,
-		TemplatesService $templatesService,
-		ThemesService $themesService,
-		FileService $fileService
-	) {
+	public function __construct(ILogger $logger, ThemesService $themesService, FileService $fileService)
+	{
 		$this->logger = $logger;
-		$this->templatesService = $templatesService;
 		$this->themesService = $themesService;
 		$this->fileService = $fileService;
 	}

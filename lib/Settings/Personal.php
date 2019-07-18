@@ -28,15 +28,11 @@ use OCA\CMSPico\Model\Website;
 use OCA\CMSPico\Service\TemplatesService;
 use OCA\CMSPico\Service\ThemesService;
 use OCP\AppFramework\Http\TemplateResponse;
-use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\Settings\ISettings;
 
 class Personal implements ISettings
 {
-	/** @var IL10N */
-	private $l10n;
-
 	/** @var IURLGenerator */
 	private $urlGenerator;
 
@@ -49,18 +45,15 @@ class Personal implements ISettings
 	/**
 	 * Personal constructor.
 	 *
-	 * @param IL10N            $l10n
 	 * @param IURLGenerator    $urlGenerator
 	 * @param ThemesService    $themesService
 	 * @param TemplatesService $templatesService
 	 */
 	public function __construct(
-		IL10N $l10n,
 		IURLGenerator $urlGenerator,
 		ThemesService $themesService,
 		TemplatesService $templatesService
 	) {
-		$this->l10n = $l10n;
 		$this->urlGenerator = $urlGenerator;
 		$this->themesService = $themesService;
 		$this->templatesService = $templatesService;

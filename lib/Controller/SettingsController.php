@@ -68,9 +68,6 @@ class SettingsController extends Controller
 	/** @var WebsitesService */
 	private $websitesService;
 
-	/** @var MiscService */
-	private $miscService;
-
 	/**
 	 * SettingsController constructor.
 	 *
@@ -82,9 +79,8 @@ class SettingsController extends Controller
 	 * @param TemplatesService $templatesService
 	 * @param ThemesService    $themesService
 	 * @param WebsitesService  $websitesService
-	 * @param MiscService      $miscService
 	 */
-	function __construct(
+	public function __construct(
 		IRequest $request,
 		$userId,
 		IL10N $l10n,
@@ -92,8 +88,7 @@ class SettingsController extends Controller
 		ConfigService $configService,
 		TemplatesService $templatesService,
 		ThemesService $themesService,
-		WebsitesService $websitesService,
-		MiscService $miscService
+		WebsitesService $websitesService
 	) {
 		parent::__construct(Application::APP_NAME, $request);
 
@@ -104,7 +99,6 @@ class SettingsController extends Controller
 		$this->templatesService = $templatesService;
 		$this->themesService = $themesService;
 		$this->websitesService = $websitesService;
-		$this->miscService = $miscService;
 	}
 
 	/**
@@ -366,19 +360,6 @@ class SettingsController extends Controller
 		} catch (\Exception $e) {
 			return $this->createErrorResponse($e);
 		}
-	}
-
-	/**
-	 * @param array $data
-	 *
-	 * @return DataResponse
-	 */
-	private function createSuccessResponse(array $data): DataResponse
-	{
-		return new DataResponse(
-			array_merge($data, [ 'status' => 1 ]),
-			Http::STATUS_CREATED
-		);
 	}
 
 	/**

@@ -3,6 +3,7 @@
  * CMS Pico - Create websites using Pico CMS for Nextcloud.
  *
  * @copyright Copyright (c) 2017, Maxence Lange (<maxence@artificial-owl.com>)
+ * @copyright Copyright (c) 2019, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -23,31 +24,16 @@
 namespace OCA\CMSPico\Db;
 
 use Doctrine\DBAL\Query\QueryBuilder;
-use OCA\CMSPico\Service\ConfigService;
-use OCA\CMSPico\Service\MiscService;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
-use OCP\IL10N;
 
 class CoreRequestBuilder
 {
 	/** @var string */
 	const TABLE_WEBSITES = 'cms_pico_websites';
 
-	/** @var string */
-	const NC_TABLE_GROUP_USER = 'group_user';
-
 	/** @var IDBConnection */
 	protected $dbConnection;
-
-	/** @var IL10N */
-	protected $l10n;
-
-	/** @var ConfigService */
-	protected $configService;
-
-	/** @var MiscService */
-	protected $miscService;
 
 	/** @var string */
 	protected $defaultSelectAlias;
@@ -55,18 +41,10 @@ class CoreRequestBuilder
 	/**
 	 * CoreRequestBuilder constructor.
 	 *
-	 * @param IL10N         $l10n
 	 * @param IDBConnection $connection
-	 * @param ConfigService $configService
-	 * @param MiscService   $miscService
 	 */
-	public function __construct(
-		IL10N $l10n, IDBConnection $connection, ConfigService $configService, MiscService $miscService
-	) {
-		$this->l10n = $l10n;
+	public function __construct(IDBConnection $connection) {
 		$this->dbConnection = $connection;
-		$this->configService = $configService;
-		$this->miscService = $miscService;
 	}
 
 	/**
@@ -92,17 +70,6 @@ class CoreRequestBuilder
 	}
 
 	/**
-	 * Limit to the path
-	 *
-	 * @param IQueryBuilder $qb
-	 * @param string        $userId
-	 */
-	protected function limitToPath(IQueryBuilder &$qb, $userId)
-	{
-		$this->limitToDBField($qb, 'path', $userId);
-	}
-
-	/**
 	 * Limit to the site
 	 *
 	 * @param IQueryBuilder $qb
@@ -111,17 +78,6 @@ class CoreRequestBuilder
 	protected function limitToSite(IQueryBuilder &$qb, $userId)
 	{
 		$this->limitToDBField($qb, 'site', $userId);
-	}
-
-	/**
-	 * Limit the request to the Group by its Id.
-	 *
-	 * @param IQueryBuilder $qb
-	 * @param int           $groupId
-	 */
-	protected function limitToGroupId(IQueryBuilder &$qb, $groupId)
-	{
-		$this->limitToDBField($qb, 'group_id', $groupId);
 	}
 
 	/**
