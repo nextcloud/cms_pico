@@ -34,7 +34,6 @@ interface NodeInterface
 	/**
 	 * @param FolderInterface $targetPath
 	 *
-	 * @return void
 	 * @throws AlreadyExistsException
 	 * @throws NotPermittedException
 	 * @throws GenericFileException
@@ -44,7 +43,6 @@ interface NodeInterface
 	/**
 	 * @param FolderInterface $targetPath
 	 *
-	 * @return void
 	 * @throws AlreadyExistsException
 	 * @throws NotPermittedException
 	 * @throws GenericFileException
@@ -52,7 +50,6 @@ interface NodeInterface
 	public function move(FolderInterface $targetPath);
 
 	/**
-	 * @return void
 	 * @throws NotPermittedException
 	 * @throws GenericFileException
 	 */

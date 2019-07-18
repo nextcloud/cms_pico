@@ -56,7 +56,7 @@ class AssetsService
 	 * @param IRootFolder $rootFolder
 	 * @param MiscService $miscService
 	 */
-	function __construct(IRootFolder $rootFolder, MiscService $miscService)
+	public function __construct(IRootFolder $rootFolder, MiscService $miscService)
 	{
 		$this->rootFolder = $rootFolder;
 		$this->miscService = $miscService;

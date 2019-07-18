@@ -277,7 +277,6 @@ class Website extends WebsiteCore
 	 * @param string $path
 	 * @param array  $meta
 	 *
-	 * @return void
 	 * @throws WebsiteNotPermittedException
 	 * @throws InvalidPathException
 	 * @throws NotFoundException

@@ -44,7 +44,6 @@ interface FileInterface extends NodeInterface
 	/**
 	 * @param string $data
 	 *
-	 * @return void
 	 * @throws NotPermittedException
 	 * @throws GenericFileException
 	 */

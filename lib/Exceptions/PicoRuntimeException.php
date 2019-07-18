@@ -38,6 +38,7 @@ class PicoRuntimeException extends \Exception
 	public function __construct(\Exception $exception)
 	{
 		$this->exception = $exception;
+
 		parent::__construct($exception->getMessage(), $exception->getCode(), $exception->getPrevious());
 	}
 }

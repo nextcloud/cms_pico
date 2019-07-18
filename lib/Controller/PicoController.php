@@ -216,9 +216,11 @@ class PicoController extends Controller
 	 * @PublicPage
 	 * @NoCSRFRequired
 	 *
+	 * @param string $file
+	 *
 	 * @return Response
 	 */
-	public function getPlugin($file): Response
+	public function getPlugin(string $file): Response
 	{
 		try {
 			$file = $this->fileService->getFile(PicoService::DIR_PLUGINS . '/' . $file);

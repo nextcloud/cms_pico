@@ -45,6 +45,7 @@ class Pico extends \Pico
 	/**
 	 * {@inheritDoc}
 	 *
+	 * @return string
 	 * @throws PageInvalidPathException
 	 * @throws PageNotFoundException
 	 * @throws PageNotPermittedException
@@ -96,7 +97,6 @@ class Pico extends \Pico
 	 * @param string $file file path
 	 *
 	 * @return string raw contents of the file
-	 *
 	 * @throws WebsiteNotFoundException
 	 * @throws PageInvalidPathException
 	 * @throws PageNotFoundException

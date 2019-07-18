@@ -37,7 +37,7 @@ class PluginsService
 	 *
 	 * @param AppManager $appManager
 	 */
-	function __construct(AppManager $appManager)
+	public function __construct(AppManager $appManager)
 	{
 		$this->appManager = $appManager;
 	}

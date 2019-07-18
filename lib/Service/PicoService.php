@@ -161,8 +161,6 @@ class PicoService
 	 * @param Website $website
 	 * @param Pico $pico
 	 * @param string $page
-	 *
-	 * @return void
 	 */
 	private function setupPico(Website $website, Pico $pico, string $page)
 	{

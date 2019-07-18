@@ -60,9 +60,7 @@ class Application extends App
 	 */
 	public function registerHooks()
 	{
-		Util::connectHook(
-			'OC_User', 'post_deleteUser', '\OCA\CMSPico\Hooks\UserHooks', 'onUserDeleted'
-		);
+		Util::connectHook('OC_User', 'post_deleteUser', '\OCA\CMSPico\Hooks\UserHooks', 'onUserDeleted');
 	}
 }
 

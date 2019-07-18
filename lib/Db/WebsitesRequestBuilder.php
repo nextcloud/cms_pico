@@ -21,6 +21,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace OCA\CMSPico\Db;
 
 use OCA\CMSPico\Model\Website;
@@ -33,7 +35,7 @@ class WebsitesRequestBuilder extends CoreRequestBuilder
 	 *
 	 * @return IQueryBuilder
 	 */
-	protected function getWebsitesInsertSql()
+	protected function getWebsitesInsertSql(): IQueryBuilder
 	{
 		$qb = $this->dbConnection->getQueryBuilder();
 		$qb->insert(self::TABLE_WEBSITES)
@@ -47,7 +49,7 @@ class WebsitesRequestBuilder extends CoreRequestBuilder
 	 *
 	 * @return IQueryBuilder
 	 */
-	protected function getWebsitesUpdateSql()
+	protected function getWebsitesUpdateSql(): IQueryBuilder
 	{
 		$qb = $this->dbConnection->getQueryBuilder();
 		$qb->update(self::TABLE_WEBSITES);
@@ -60,7 +62,7 @@ class WebsitesRequestBuilder extends CoreRequestBuilder
 	 *
 	 * @return IQueryBuilder
 	 */
-	protected function getWebsitesSelectSql()
+	protected function getWebsitesSelectSql(): IQueryBuilder
 	{
 		$qb = $this->dbConnection->getQueryBuilder();
 
@@ -78,7 +80,7 @@ class WebsitesRequestBuilder extends CoreRequestBuilder
 	 *
 	 * @return IQueryBuilder
 	 */
-	protected function getWebsitesDeleteSql()
+	protected function getWebsitesDeleteSql(): IQueryBuilder
 	{
 		$qb = $this->dbConnection->getQueryBuilder();
 		$qb->delete(self::TABLE_WEBSITES);
@@ -91,7 +93,7 @@ class WebsitesRequestBuilder extends CoreRequestBuilder
 	 *
 	 * @return Website
 	 */
-	protected function parseWebsitesSelectSql($data)
+	protected function parseWebsitesSelectSql(array $data): Website
 	{
 		return new Website($data);
 	}

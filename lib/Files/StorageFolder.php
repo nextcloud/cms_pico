@@ -26,9 +26,9 @@ namespace OCA\CMSPico\Files;
 
 use OC\Files\Utils\Scanner;
 use OC\ForbiddenException;
+use OCP\Files\File as OCFile;
 use OCP\Files\Folder as OCFolder;
 use OCP\Files\Node as OCNode;
-use OCP\Files\File as OCFile;
 use OCP\Files\NotPermittedException;
 use OCP\IDBConnection;
 use OCP\ILogger;

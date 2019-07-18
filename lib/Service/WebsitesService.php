@@ -184,7 +184,7 @@ class WebsitesService
 	 * @return Website
 	 * @throws WebsiteNotFoundException
 	 */
-	public function getWebsiteFromId($siteId): Website
+	public function getWebsiteFromId(int $siteId): Website
 	{
 		return $this->websiteRequest->getWebsiteFromId($siteId);
 	}
@@ -195,7 +195,7 @@ class WebsitesService
 	 * @return Website
 	 * @throws WebsiteNotFoundException
 	 */
-	public function getWebsiteFromSite($site): Website
+	public function getWebsiteFromSite(string $site): Website
 	{
 		return $this->websiteRequest->getWebsiteFromSite($site);
 	}
@@ -205,7 +205,7 @@ class WebsitesService
 	 *
 	 * @return Website[]
 	 */
-	public function getWebsitesFromUser($userId): array
+	public function getWebsitesFromUser(string $userId): array
 	{
 		return $this->websiteRequest->getWebsitesFromUserId($userId);
 	}

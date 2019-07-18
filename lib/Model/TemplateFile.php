@@ -31,8 +31,6 @@ class TemplateFile extends MemoryFile
 {
 	/**
 	 * @param array<string,string> $data
-	 *
-	 * @return void
 	 */
 	public function applyWebsiteData(array $data)
 	{

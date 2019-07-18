@@ -50,7 +50,7 @@ class ThemesService
 	 * @param ConfigService $configService
 	 * @param FileService   $fileService
 	 */
-	function __construct(AppManager $appManager, ConfigService $configService, FileService $fileService)
+	public function __construct(AppManager $appManager, ConfigService $configService, FileService $fileService)
 	{
 		$this->appManager = $appManager;
 		$this->configService = $configService;

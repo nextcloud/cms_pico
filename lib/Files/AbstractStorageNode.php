@@ -24,9 +24,9 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Files;
 
+use OCP\Files\File as OCFile;
 use OCP\Files\Folder as OCFolder;
 use OCP\Files\Node as OCNode;
-use OCP\Files\File as OCFile;
 
 abstract class AbstractStorageNode extends AbstractNode implements NodeInterface
 {

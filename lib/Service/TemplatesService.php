@@ -21,6 +21,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace OCA\CMSPico\Service;
 
 use OCA\CMSPico\Exceptions\TemplateNotFoundException;
@@ -59,7 +61,8 @@ class TemplatesService
 	 *
 	 * @throws TemplateNotFoundException
 	 */
-	public function assertValidTemplate($template) {
+	public function assertValidTemplate($template)
+	{
 		if (!in_array($template, $this->getTemplates())) {
 			throw new TemplateNotFoundException();
 		}

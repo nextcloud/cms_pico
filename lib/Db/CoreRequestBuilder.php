@@ -21,6 +21,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace OCA\CMSPico\Db;
 
 use Doctrine\DBAL\Query\QueryBuilder;
@@ -53,7 +55,7 @@ class CoreRequestBuilder
 	 * @param IQueryBuilder $qb
 	 * @param int           $id
 	 */
-	protected function limitToId(IQueryBuilder &$qb, $id)
+	protected function limitToId(IQueryBuilder $qb, int $id)
 	{
 		$this->limitToDBField($qb, 'id', $id);
 	}
@@ -64,7 +66,7 @@ class CoreRequestBuilder
 	 * @param IQueryBuilder $qb
 	 * @param string        $userId
 	 */
-	protected function limitToUserId(IQueryBuilder &$qb, $userId)
+	protected function limitToUserId(IQueryBuilder $qb, string $userId)
 	{
 		$this->limitToDBField($qb, 'user_id', $userId);
 	}
@@ -75,17 +77,17 @@ class CoreRequestBuilder
 	 * @param IQueryBuilder $qb
 	 * @param string        $userId
 	 */
-	protected function limitToSite(IQueryBuilder &$qb, $userId)
+	protected function limitToSite(IQueryBuilder $qb, string $userId)
 	{
 		$this->limitToDBField($qb, 'site', $userId);
 	}
 
 	/**
-	 * @param IQueryBuilder  $qb
-	 * @param string         $field
-	 * @param string|integer $value
+	 * @param IQueryBuilder $qb
+	 * @param string        $field
+	 * @param mixed         $value
 	 */
-	private function limitToDBField(IQueryBuilder &$qb, $field, $value)
+	private function limitToDBField(IQueryBuilder $qb, string $field, $value)
 	{
 		$expr = $qb->expr();
 		$pf = ($qb->getType() === QueryBuilder::SELECT) ? $this->defaultSelectAlias . '.' : '';
