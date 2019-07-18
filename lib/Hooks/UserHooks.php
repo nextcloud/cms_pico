@@ -3,6 +3,7 @@
  * CMS Pico - Create websites using Pico CMS for Nextcloud.
  *
  * @copyright Copyright (c) 2017, Maxence Lange (<maxence@artificial-owl.com>)
+ * @copyright Copyright (c) 2019, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -20,14 +21,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace OCA\CMSPico\Hooks;
 
 use OCA\CMSPico\Events\UserEvents;
 
 class UserHooks
 {
-	public static function onUserDeleted($params)
+	/**
+	 * @param array $params
+	 */
+	public static function onUserDeleted(array $params)
 	{
-		\OC::$server->query(UserEvents::class)->onUserDeleted($params);
+		/** @var UserEvents $userEvents */
+		$userEvents = \OC::$server->query(UserEvents::class);
+		$userEvents->onUserDeleted($params);
 	}
 }
