@@ -138,8 +138,6 @@
 		 * @protected
 		 */
 		_setup: function () {
-			var that = this;
-
 			this.$element.find('.has-tooltip').tooltip();
 
 			this.$element.find('.live-relative-timestamp').each(function() {
@@ -313,23 +311,18 @@
 		 */
 		prepare: function () {
 			var that = this,
-				$form = this.$element.find('form');
+				$form = this.$element.find('form'),
+				$site = $form.find('.input-site'),
+				$path = $form.find('.input-path');
 
-			$form.find('.input-site').on('input.CMSPicoWebsiteForm', function (event) {
-				var $site = $(this),
-					$address = $form.find('.input-address'),
-					$path = $form.find('.input-path'),
-					value = that._val($site);
+			this._inputSite($site);
 
-				that._val($address, OC.dirname(that._val($address)) + '/' + value);
-				that._val($path, OC.dirname(that._val($path)) + '/' + value);
+			$site.on('input.CMSPicoWebsiteForm', function (event) {
+				that._inputSite($(this));
 			});
 
-			$form.find('.input-path').on('click.CMSPicoWebsiteForm', function (event) {
+			$path.on('click.CMSPicoWebsiteForm', function (event) {
 				event.preventDefault();
-
-				var $site = $form.find('.input-site'),
-					$path = $(this);
 
 				OC.dialogs.filepicker(
 					t('cms_pico', 'Choose website directory'),
@@ -381,7 +374,7 @@
 				that._success(data);
 			}).fail(function (jqXHR, textStatus, errorThrown) {
 				that._error(jqXHR.responseJSON || {});
-			}).always(function () {
+
 				$submitButton.show();
 				$loadingButton.hide();
 			});
@@ -401,6 +394,21 @@
 			} else {
 				return $element.is(':input') ? $element.val(value) : $element.text(value);
 			}
+		},
+
+		/**
+		 * @private
+		 *
+		 * @param {jQuery} $site
+		 */
+		_inputSite: function ($site) {
+			var $form = this.$element.find('form'),
+				$address = $form.find('.input-address'),
+				$path = $form.find('.input-path'),
+				value = this._val($site);
+
+			this._val($address, OC.dirname(this._val($address)) + '/' + value);
+			this._val($path, OC.dirname(this._val($path)) + '/' + value);
 		},
 
 		/**

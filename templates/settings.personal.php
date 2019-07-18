@@ -23,6 +23,8 @@
 
 use OCA\CMSPico\AppInfo\Application;
 
+/** @var $_ array */
+/** @var $l \OCP\IL10N */
 script(Application::APP_NAME, [ 'pico', 'personal' ]);
 style(Application::APP_NAME, 'pico');
 
