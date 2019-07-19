@@ -97,7 +97,7 @@ class AppDataRepairStep implements IRepairStep
 		}
 
 		/** @var FolderInterface $systemConfigFolder */
-		$systemConfigFolder = $this->fileService->getSystemFolder()->get(PicoService::DIR_TEMPLATES);
+		$systemConfigFolder = $this->fileService->getSystemFolder()->get(PicoService::DIR_CONFIG);
 		if (!$systemConfigFolder->isFolder()) {
 			throw new InvalidPathException();
 		}
@@ -105,9 +105,13 @@ class AppDataRepairStep implements IRepairStep
 		foreach ($systemConfigFolder->listing() as $configFile) {
 			$configFileName = $configFile->getName();
 
-			if ($appDataConfigFolder->exists($configFileName)) {
-				$appDataConfigFolder->get($configFileName)->delete();
+			if (!$configFile->isFile()) {
+				continue;
 			}
+
+			try {
+				$appDataConfigFolder->get($configFileName)->delete();
+			} catch (NotFoundException $e) {}
 
 			$configFile->copy($appDataConfigFolder);
 		}
@@ -139,9 +143,9 @@ class AppDataRepairStep implements IRepairStep
 				continue;
 			}
 
-			if (!$appDataTemplatesFolder->exists($template)) {
+			try {
 				$appDataTemplatesFolder->get($template)->delete();
-			}
+			} catch (NotFoundException $e) {}
 
 			$templateFolder->copy($appDataTemplatesFolder);
 		}
