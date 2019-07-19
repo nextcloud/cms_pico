@@ -51,21 +51,21 @@ if(!isset($_)) {//standalone  page is not supported anymore - redirect to /
 	</a></p>
 </div>
 
-<?php if($_['debugMode']): ?>
+<?php if ($_['debugMode'] && $_['errorClass']) { ?>
 	<div class="error error-wide">
 		<h2><?php p($l->t('Technical details')) ?></h2>
 		<ul>
-			<li><?php p($l->t('Remote Address: %s', [$_['remoteAddr']])) ?></li>
-			<li><?php p($l->t('Request ID: %s', [$_['requestID']])) ?></li>
-			<li><?php p($l->t('Type: %s', [$_['errorClass']])) ?></li>
-			<li><?php p($l->t('Code: %s', [$_['errorCode']])) ?></li>
-			<li><?php p($l->t('Message: %s', [$_['errorMsg']])) ?></li>
-			<li><?php p($l->t('File: %s', [$_['errorFile']])) ?></li>
-			<li><?php p($l->t('Line: %s', [$_['errorLine']])) ?></li>
+			<li><?php p($l->t('Remote Address: %s', [ $_['remoteAddr'] ])) ?></li>
+			<li><?php p($l->t('Request ID: %s', [ $_['requestID'] ])) ?></li>
+			<li><?php p($l->t('Type: %s', [ $_['errorClass'] ])) ?></li>
+			<li><?php p($l->t('Code: %s', [ $_['errorCode'] ])) ?></li>
+			<li><?php p($l->t('Message: %s', [ $_['errorMsg'] ])) ?></li>
+			<li><?php p($l->t('File: %s', [ $_['errorFile'] ])) ?></li>
+			<li><?php p($l->t('Line: %s', [ $_['errorLine'] ])) ?></li>
 		</ul>
 
 		<br />
 		<h2><?php p($l->t('Trace')) ?></h2>
 		<pre><?php p($_['errorTrace']) ?></pre>
 	</div>
-<?php endif; ?>
+<?php } ?>

@@ -160,7 +160,7 @@ class PicoController extends Controller
 		} catch (PageNotPermittedException $e) {
 			return new NotPermittedResponse($this->l10n->t('You don\'t have access to this website page. Maybe the share was deleted or has expired?'));
 		} catch (PicoRuntimeException $e) {
-			return new PicoErrorResponse($this->l10n->t('The requested website page could not be built, so that the server was unable to complete your request.', $e));
+			return new PicoErrorResponse($this->l10n->t('The requested website page could not be built, so that the server was unable to complete your request.'), $e);
 		}
 	}
 

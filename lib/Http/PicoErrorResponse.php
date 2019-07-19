@@ -45,16 +45,19 @@ class PicoErrorResponse extends TemplateResponse
 
 		$params = [
 			'message' => $message,
-			'errorClass' => get_class($this->exception),
-			'errorMsg' => $this->exception->getMessage(),
-			'errorCode' => $this->exception->getCode(),
-			'errorFile' => $this->exception->getFile(),
-			'errorLine' => $this->exception->getLine(),
-			'errorTrace' => $this->exception->getTraceAsString(),
 			'debugMode' => \OC::$server->getSystemConfig()->getValue('debug', false),
 			'remoteAddr' => \OC::$server->getRequest()->getRemoteAddress(),
 			'requestID' => \OC::$server->getRequest()->getId(),
 		];
+
+		if ($this->exception !== null) {
+			$params['errorClass'] = get_class($this->exception);
+			$params['errorMsg'] = $this->exception->getMessage();
+			$params['errorCode'] = $this->exception->getCode();
+			$params['errorFile'] = $this->exception->getFile();
+			$params['errorLine'] = $this->exception->getLine();
+			$params['errorTrace'] = $this->exception->getTraceAsString();
+		}
 
 		parent::__construct(Application::APP_NAME, '500', $params, 'guest');
 		$this->setStatus(Http::STATUS_INTERNAL_SERVER_ERROR);
