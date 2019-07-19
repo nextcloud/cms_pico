@@ -76,6 +76,7 @@ class Personal implements ISettings
 		$baseUrl = $this->urlGenerator->getBaseUrl() . '/index.php/apps/' . Application::APP_NAME . '/pico/';
 
 		$data = [
+			'exampleSite' => $exampleSite,
 			'exampleProxyUrl'  => $exampleProxyUrl,
 			'exampleFullUrl'   => $exampleFullUrl,
 			'baseUrl' => $baseUrl,

@@ -136,13 +136,13 @@ class SettingsController extends Controller
 		} catch (\Exception $e) {
 			$data = [];
 			if ($e instanceof WebsiteExistsException) {
-				$data['form_error'] = [ 'field' => 'site', 'message' => $this->l10n->t('Website exists') ];
+				$data['form_error'] = [ 'field' => 'site', 'message' => $this->l10n->t('Website exists.') ];
 			} elseif (($e instanceof WebsiteInvalidDataException) && $e->getField()) {
 				$data['form_error'] = [ 'field' => $e->getField(), 'message' => $e->getMessage() ];
 			} elseif ($e instanceof ThemeNotFoundException) {
-				$data['form_error'] = [ 'field' => 'theme', 'message' => $this->l10n->t('Theme not found') ];
+				$data['form_error'] = [ 'field' => 'theme', 'message' => $this->l10n->t('Theme not found.') ];
 			} elseif ($e instanceof TemplateNotFoundException) {
-				$data['form_error'] = [ 'field' => 'template', 'message' => $this->l10n->t('Template not found') ];
+				$data['form_error'] = [ 'field' => 'template', 'message' => $this->l10n->t('Template not found.') ];
 			}
 
 			return $this->createErrorResponse($e, $data);
@@ -187,13 +187,13 @@ class SettingsController extends Controller
 		} catch (\Exception $e) {
 			$data = [];
 			if (($e instanceof WebsiteNotFoundException) || ($e instanceof WebsiteForeignOwnerException)) {
-				$data['form_error'] = [ 'field' => 'identifier', 'message' => $this->l10n->t('Website not found') ];
+				$data['form_error'] = [ 'field' => 'identifier', 'message' => $this->l10n->t('Website not found.') ];
 			} elseif ($e instanceof WebsiteInvalidDataException) {
 				$data['form_error'] = [ 'field' => $e->getField(), 'message' => $e->getMessage() ];
 			} elseif ($e instanceof ThemeNotFoundException) {
-				$data['form_error'] = [ 'field' => 'theme', 'message' => $this->l10n->t('Theme not found') ];
+				$data['form_error'] = [ 'field' => 'theme', 'message' => $this->l10n->t('Theme not found.') ];
 			} elseif ($e instanceof TemplateNotFoundException) {
-				$data['form_error'] = [ 'field' => 'template', 'message' => $this->l10n->t('Template not found') ];
+				$data['form_error'] = [ 'field' => 'template', 'message' => $this->l10n->t('Template not found.') ];
 			}
 
 			return $this->createErrorResponse($e, $data);

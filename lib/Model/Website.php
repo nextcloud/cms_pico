@@ -329,10 +329,10 @@ class Website extends WebsiteCore
 	public function assertValidName()
 	{
 		if (strlen($this->getName()) < self::NAME_LENGTH_MIN) {
-			throw new WebsiteInvalidDataException('name', $this->l10n->t('The name of the website must be longer'));
+			throw new WebsiteInvalidDataException('name', $this->l10n->t('The name of the website must be longer.'));
 		}
 		if (strlen($this->getName()) > self::NAME_LENGTH_MAX) {
-			throw new WebsiteInvalidDataException('name', $this->l10n->t('The name of the website is too long'));
+			throw new WebsiteInvalidDataException('name', $this->l10n->t('The name of the website is too long.'));
 		}
 	}
 
@@ -342,16 +342,16 @@ class Website extends WebsiteCore
 	public function assertValidSite()
 	{
 		if (strlen($this->getSite()) < self::SITE_LENGTH_MIN) {
-			throw new WebsiteInvalidDataException('site', $this->l10n->t('The address of the website must be longer'));
+			throw new WebsiteInvalidDataException('site', $this->l10n->t('The identifier of the website must be longer.'));
 		}
 		if (strlen($this->getSite()) > self::SITE_LENGTH_MAX) {
-			throw new WebsiteInvalidDataException('site', $this->l10n->t('The address of the website is too long'));
+			throw new WebsiteInvalidDataException('site', $this->l10n->t('The identifier of the website is too long.'));
 		}
 
 		if (preg_match('/' . self::SITE_REGEX . '/', $this->getSite()) !== 1) {
 			throw new WebsiteInvalidDataException(
 				'site',
-				$this->l10n->t('The address of the website can only contains alpha numeric chars')
+				$this->l10n->t('The identifier of the website can only contains alpha numeric chars.')
 			);
 		}
 	}
@@ -366,7 +366,7 @@ class Website extends WebsiteCore
 		} catch (InvalidPathException $e) {
 			throw new WebsiteInvalidDataException(
 				'path',
-				$this->l10n->t('The path of the website is invalid')
+				$this->l10n->t('The path of the website is invalid.')
 			);
 		}
 
@@ -381,7 +381,7 @@ class Website extends WebsiteCore
 		} catch (NotFoundException $e) {
 			throw new WebsiteInvalidDataException(
 				'path',
-				$this->l10n->t('Parent folder of the website\'s path not found')
+				$this->l10n->t('Parent folder of the website\'s path not found.')
 			);
 		}
 	}

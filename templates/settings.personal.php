@@ -40,7 +40,7 @@ style(Application::APP_NAME, 'pico');
 		<div class="icon icon-info"></div>
 		<div>
 			<p><?php p($l->t(
-				'Pico CMS for Nextcloud allows you to … TODO bla blubb'
+				'Pico CMS for Nextcloud allows you to …'
 			)); ?></p>
 
 			<p><?php p($l->t('You will be able to access your websites using URLs like the following:')); ?>
@@ -242,7 +242,7 @@ style(Application::APP_NAME, 'pico');
 				</div>
 				<div class="content">
 					<input id="picocms-website-new-site" class="input input-site" type="text" name="site" value=""
-							placeholder="<?php p($l->t('example_site')); ?>"
+							placeholder="<?php p($_['exampleSite']); ?>"
 							minlength="<?php p($_['siteLengthMin']); ?>"
 							maxlength="<?php p($_['siteLengthMax']); ?>"
 							pattern="<?php p($_['siteRegex']); ?>" />
@@ -367,7 +367,7 @@ style(Application::APP_NAME, 'pico');
 					<input class="form-submit" type="submit"
 							value="<?php p($l->t('Create new website')); ?>" />
 					<button class="form-submit-loading icon-loading" disabled="disabled">
-						<?php p($l->t('Loading...')); ?>
+						<?php p($l->t('Loading…')); ?>
 					</button>
 				</div>
 			</fieldset>

@@ -158,8 +158,8 @@ style(Application::APP_NAME, 'pico');
 				'Creating new websites can be hard - where to even start? Custom templates act as a starting '
 				. 'point for users to create a new website using Pico CMS for Nextcloud. Before adding a new custom '
 				. 'template using the "Add custom template" button below, you must upload all of the template\'s '
-				. 'files to the data folder of your Nextcloud instance. After uploading the plugin it will show up in '
-				. 'the form below to actually add it to "Create website" form of your users.'
+				. 'files to the data folder of your Nextcloud instance. After uploading the template it will show up '
+				. 'in the form below to actually add it to the "Create a new website" form of your users.'
 			)); ?></p>
 			<p><?php p($l->t(
 				'Before adding a new custom template, upload all of the template\'s files to a new folder in the '
