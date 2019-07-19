@@ -21,27 +21,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace OCA\CMSPico\Tests\Service;
 
-use Exception;
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Controller\PicoController;
 use OCA\CMSPico\Model\Website;
+use OCA\CMSPico\Model\WebsiteCore;
 use OCA\CMSPico\Service\WebsitesService;
 use OCA\CMSPico\Tests\Env;
+use PHPUnit\Framework\TestCase;
 
-
-class PicoControllerTest extends \PHPUnit_Framework_TestCase {
-
+class PicoControllerTest extends TestCase
+{
 	const INFOS_WEBSITE1 = [
 		'name'     => 'pico 1',
-		'path'     => '/pico1',
-		'type'     => '1',
 		'site'     => 'pico',
+		'path'     => '/pico1',
+		'theme'    => 'default',
 		'template' => 'sample_pico',
-		'private'  => '0'
+		'type'     => WebsiteCore::TYPE_PUBLIC
 	];
-
 
 	/** @var PicoController */
 	private $picoController;
@@ -49,12 +50,8 @@ class PicoControllerTest extends \PHPUnit_Framework_TestCase {
 	/** @var WebsitesService */
 	private $websitesService;
 
-	/**
-	 * setUp() is initiated before each test.
-	 *
-	 * @throws Exception
-	 */
-	protected function setUp() {
+	protected function setUp(): void
+	{
 		Env::setUser(Env::ENV_TEST_USER1);
 		Env::logout();
 
@@ -65,72 +62,55 @@ class PicoControllerTest extends \PHPUnit_Framework_TestCase {
 		$this->websitesService = $container->query(WebsitesService::class);
 	}
 
-
-	/**
-	 * tearDown() is initiated after each test.
-	 *
-	 * @throws Exception
-	 */
-	protected function tearDown() {
+	protected function tearDown(): void
+	{
 		Env::setUser(Env::ENV_TEST_USER1);
 		Env::logout();
 	}
 
-
-	/**
-	 *
-	 */
-	public function testWebsiteCreation() {
+	public function testWebsiteCreation()
+	{
 		$data = self::INFOS_WEBSITE1;
 		$data['user_id'] = Env::ENV_TEST_USER1;
 
 		try {
 			$this->createWebsite($data);
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			$this->assertSame(true, false, 'should not returns Exception - ' . $e->getMessage());
 		}
 	}
 
-
-	/**
-	 *
-	 */
-	public function testGetPage() {
+	public function testGetPage()
+	{
 		$result = $this->picoController->getPage(self::INFOS_WEBSITE1['site'], '');
-		$content = $result->getData();
+		$content = $result->render();
 		if (substr($content, 0, 15) !== '<!DOCTYPE html>') {
 			$this->assertSame(true, false, 'Unexpected content');
 		}
 	}
 
-
-	/**
-	 *
-	 */
-	public function testGetRoot() {
+	public function testGetRoot()
+	{
 		$result = $this->picoController->getRoot(self::INFOS_WEBSITE1['site']);
-		$content = $result->getData();
+		$content = $result->render();
 		if (substr($content, 0, 15) !== '<!DOCTYPE html>') {
 			$this->assertSame(true, false, 'Unexpected content');
 		}
 
 		try {
-
 			$this->picoController->getRoot('random_website');
 			$this->assertSame(true, false, 'Should return Exception');
-		} catch (Exception $e) {
-		}
-
+		} catch (\Exception $e) {}
 	}
 
-
-	public function testWebsiteDeletion() {
+	public function testWebsiteDeletion()
+	{
 		$data = self::INFOS_WEBSITE1;
 		$data['user_id'] = Env::ENV_TEST_USER1;
 
 		try {
 			$this->deleteWebsite($data);
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			$this->assertSame(true, false, 'should not returns Exception - ' . $e->getMessage());
 		}
 	}
@@ -138,7 +118,7 @@ class PicoControllerTest extends \PHPUnit_Framework_TestCase {
 	/**
 	 * @param array $data
 	 */
-	private function createWebsite($data)
+	private function createWebsite(array $data)
 	{
 		$website = new Website($data);
 		$this->websitesService->createWebsite($website);
@@ -147,13 +127,11 @@ class PicoControllerTest extends \PHPUnit_Framework_TestCase {
 	/**
 	 * @param array $data
 	 */
-	private function deleteWebsite($data)
+	private function deleteWebsite(array $data)
 	{
 		$website = $this->websitesService->getWebsiteFromSite($data['site']);
 		$website->assertOwnedBy($data['user_id']);
 
 		$this->websitesService->deleteWebsite($website);
 	}
-
-
 }

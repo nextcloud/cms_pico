@@ -3,6 +3,7 @@
  * CMS Pico - Create websites using Pico CMS for Nextcloud.
  *
  * @copyright Copyright (c) 2017, Maxence Lange (<maxence@artificial-owl.com>)
+ * @copyright Copyright (c) 2019, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -20,11 +21,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace OCA\CMSPico\Tests;
 
+use PHPUnit\Framework\AssertionFailedError;
+use PHPUnit\Framework\Test;
+use PHPUnit\Framework\TestListener;
+use PHPUnit\Framework\TestSuite;
+use PHPUnit\Framework\Warning;
 
-class Env implements \PHPUnit_Framework_TestListener {
-
+class Env implements TestListener
+{
 	const ENV_TEST_USER1 = 'testpico1';
 	const ENV_TEST_USER2 = 'testpico2';
 	const ENV_TEST_USER3 = 'testpico3';
@@ -32,89 +40,76 @@ class Env implements \PHPUnit_Framework_TestListener {
 	/** @var array<string> */
 	private $users;
 
-	public function addError(\PHPUnit_Framework_Test $test, \Exception $e, $time) {
-	}
+	public function addError(Test $test, \Throwable $t, float $time): void {}
 
-	public function addFailure(
-		\PHPUnit_Framework_Test $test, \PHPUnit_Framework_AssertionFailedError $e, $time
-	) {
-	}
+	public function addWarning(Test $test, Warning $e, float $time): void {}
 
-	public function addIncompleteTest(\PHPUnit_Framework_Test $test, \Exception $e, $time) {
-	}
+	public function addFailure(Test $test, AssertionFailedError $e, float $time): void {}
 
-	public function addRiskyTest(\PHPUnit_Framework_Test $test, \Exception $e, $time) {
-	}
+	public function addIncompleteTest(Test $test, \Throwable $t, float $time): void {}
 
-	public function addSkippedTest(\PHPUnit_Framework_Test $test, \Exception $e, $time) {
-	}
+	public function addRiskyTest(Test $test, \Throwable $t, float $time): void {}
 
-	public function startTest(\PHPUnit_Framework_Test $test) {
-	}
+	public function addSkippedTest(Test $test, \Throwable $t, float $time): void {}
 
-	public function endTest(\PHPUnit_Framework_Test $test, $time) {
-	}
-
-	public function startTestSuite(\PHPUnit_Framework_TestSuite $suite) {
+	public function startTestSuite(TestSuite $suite): void
+	{
 		$userManager = \OC::$server->getUserManager();
 		$this->users = self::listUsers();
 
-		foreach ($this->users AS $UID) {
-			if ($userManager->userExists($UID) === false) {
-				$userManager->createUser($UID, $UID);
+		foreach ($this->users AS $uid) {
+			if ($userManager->userExists($uid) === false) {
+				$userManager->createUser($uid, $uid);
 			}
 		}
 	}
 
-	public function endTestSuite(\PHPUnit_Framework_TestSuite $suite) {
+	public function endTestSuite(TestSuite $suite): void
+	{
 		if ($suite->getName() !== '.') {
 			return;
 		}
 
-		foreach ($this->users AS $UID) {
-			$user = \OC::$server->getUserManager()
-								->get($UID);
+		foreach ($this->users AS $uid) {
+			$user = \OC::$server->getUserManager()->get($uid);
 			if ($user !== null) {
 				$user->delete();
 			}
 		}
 	}
 
-	public function addWarning(\PHPUnit_Framework_Test $test, \PHPUnit_Framework_Warning $e, $time
-	) {
-	}
+	public function startTest(Test $test): void {}
 
-	public static function setUser($which) {
+	public function endTest(Test $test, float $time): void {}
+
+	public static function setUser($which)
+	{
+		$user = \OC::$server->getUserManager()->get($which);
 
 		$userSession = \OC::$server->getUserSession();
-		$userSession->setUser(
-			\OC::$server->getUserManager()
-						->get($which)
-		);
+		$userSession->setUser($user);
 
-		return $userSession->getUser()
-						   ->getUID();
+		return $user->getUID();
 	}
 
-	public static function currentUser() {
+	public static function currentUser()
+	{
 		$userSession = \OC::$server->getUserSession();
-		return $userSession->getUser()
-					->getUID();
+		return $userSession->getUser()->getUID();
 	}
 
-	public static function logout() {
+	public static function logout()
+	{
 		$userSession = \OC::$server->getUserSession();
 		$userSession->setUser(null);
 	}
 
-	public static function listUsers() {
+	public static function listUsers()
+	{
 		return [
 			self::ENV_TEST_USER1,
 			self::ENV_TEST_USER2,
 			self::ENV_TEST_USER3
 		];
 	}
-
 }
-
-

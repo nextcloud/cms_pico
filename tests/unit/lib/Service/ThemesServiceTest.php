@@ -3,6 +3,7 @@
  * CMS Pico - Create websites using Pico CMS for Nextcloud.
  *
  * @copyright Copyright (c) 2017, Maxence Lange (<maxence@artificial-owl.com>)
+ * @copyright Copyright (c) 2019, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -20,19 +21,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace OCA\CMSPico\Tests\Service;
 
-use Exception;
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Controller\SettingsController;
 use OCA\CMSPico\Exceptions\ThemeNotFoundException;
 use OCA\CMSPico\Service\FileService;
 use OCA\CMSPico\Service\ThemesService;
 use OCA\CMSPico\Tests\Env;
+use PHPUnit\Framework\TestCase;
 
-
-class ThemesServiceTest extends \PHPUnit_Framework_TestCase {
-
+class ThemesServiceTest extends TestCase
+{
 	/** @var FileService */
 	private $fileService;
 
@@ -42,13 +44,8 @@ class ThemesServiceTest extends \PHPUnit_Framework_TestCase {
 	/** @var ThemesService */
 	private $themesService;
 
-
-	/**
-	 * setUp() is initiated before each test.
-	 *
-	 * @throws Exception
-	 */
-	protected function setUp() {
+	protected function setUp(): void
+	{
 		Env::setUser(Env::ENV_TEST_USER1);
 		Env::logout();
 
@@ -60,23 +57,14 @@ class ThemesServiceTest extends \PHPUnit_Framework_TestCase {
 		$this->settingsController = $container->query(SettingsController::class);
 	}
 
-
-	/**
-	 * tearDown() is initiated after each test.
-	 *
-	 * @throws Exception
-	 */
-	protected function tearDown() {
+	protected function tearDown(): void
+	{
 		Env::setUser(Env::ENV_TEST_USER1);
 		Env::logout();
 	}
 
-
-	/**
-	 *
-	 */
-	public function testThemes() {
-
+	public function testThemes()
+	{
 		$this->assertCount(1, $this->themesService->getThemes());
 		$this->assertCount(0, $this->themesService->getCustomThemes());
 		$this->assertCount(0, $this->themesService->getNewCustomThemes());
@@ -90,7 +78,7 @@ class ThemesServiceTest extends \PHPUnit_Framework_TestCase {
 			$this->themesService->assertValidTheme('this_is_a_test');
 			$this->assertSame(true, false, 'should return an exception');
 		} catch (ThemeNotFoundException $e) {
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			$this->assertSame(true, false, 'should return ThemeDoesNotExistException');
 		}
 
@@ -115,10 +103,8 @@ class ThemesServiceTest extends \PHPUnit_Framework_TestCase {
 			$this->themesService->assertValidTheme('this_is_a_test');
 			$this->assertSame(true, false, 'should return an exception');
 		} catch (ThemeNotFoundException $e) {
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			$this->assertSame(true, false, 'should return ThemeDoesNotExistException');
 		}
-
 	}
-
 }

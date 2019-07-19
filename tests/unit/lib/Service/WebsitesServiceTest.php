@@ -21,49 +21,44 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace OCA\CMSPico\Tests\Service;
 
-use Exception;
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Exceptions\PicoRuntimeException;
-use OCA\CMSPico\Exceptions\WebsiteForeignOwnerException;
 use OCA\CMSPico\Exceptions\WebsiteExistsException;
+use OCA\CMSPico\Exceptions\WebsiteForeignOwnerException;
 use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
 use OCA\CMSPico\Model\Website;
+use OCA\CMSPico\Model\WebsiteCore;
 use OCA\CMSPico\Service\WebsitesService;
 use OCA\CMSPico\Tests\Env;
+use PHPUnit\Framework\TestCase;
 
-
-class WebsitesServiceTest extends \PHPUnit_Framework_TestCase {
-
+class WebsitesServiceTest extends TestCase
+{
 	const INFOS_WEBSITE1 = [
 		'name'     => 'website1',
 		'path'     => '/website1',
-		'type'     => '1',
+		'type'     => 1,
 		'site'     => 'website1',
-		'template' => 'sample_pico',
-		'private'  => '0'
+		'template' => 'sample_pico'
 	];
 
 	const INFOS_WEBSITE2 = [
 		'name'     => 'website2',
 		'path'     => '/website2',
-		'type'     => '1',
+		'type'     => 1,
 		'site'     => 'website2',
-		'template' => 'sample_pico',
-		'private'  => '0'
+		'template' => 'sample_pico'
 	];
-
 
 	/** @var WebsitesService */
 	private $websitesService;
 
-	/**
-	 * setUp() is initiated before each test.
-	 *
-	 * @throws Exception
-	 */
-	protected function setUp() {
+	protected function setUp(): void
+	{
 		Env::setUser(Env::ENV_TEST_USER1);
 		Env::logout();
 
@@ -73,28 +68,20 @@ class WebsitesServiceTest extends \PHPUnit_Framework_TestCase {
 		$this->websitesService = $container->query(WebsitesService::class);
 	}
 
-
-	/**
-	 * tearDown() is initiated after each test.
-	 *
-	 * @throws Exception
-	 */
-	protected function tearDown() {
+	protected function tearDown(): void
+	{
 		Env::setUser(Env::ENV_TEST_USER1);
 		Env::logout();
 	}
 
-
-	/**
-	 *
-	 */
-	public function testWebsiteCreation() {
+	public function testWebsiteCreation()
+	{
 		$data = self::INFOS_WEBSITE1;
 		$data['user_id'] = Env::ENV_TEST_USER1;
 
 		try {
 			$this->createWebsite($data);
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			$this->assertSame(true, false, 'should not returns Exception - ' . $e->getMessage());
 		}
 
@@ -102,32 +89,25 @@ class WebsitesServiceTest extends \PHPUnit_Framework_TestCase {
 			$this->createWebsite($data);
 			$this->assertSame(true, false, 'should return an exception');
 		} catch (WebsiteExistsException $e) {
-		} catch (Exception $e) {
-			$this->assertSame(true, false, 'should return WebsiteAlreadyExistException');
+		} catch (\Exception $e) {
+			$this->assertSame(true, false, 'should return WebsiteExistsException');
 		}
-
 	}
 
-
-	/**
-	 *
-	 */
-	public function testWebsite2Creation() {
+	public function testWebsite2Creation()
+	{
 		$data = self::INFOS_WEBSITE2;
 		$data['user_id'] = Env::ENV_TEST_USER2;
 
 		try {
 			$this->createWebsite($data);
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			$this->assertSame(true, false, 'should not returns Exception - ' . $e->getMessage());
 		}
 	}
 
-
-	/**
-	 *
-	 */
-	public function testWebsitesListing() {
+	public function testWebsitesListing()
+	{
 		$this->assertCount(1, $this->websitesService->getWebsitesFromUser(Env::ENV_TEST_USER2));
 		$this->assertCount(0, $this->websitesService->getWebsitesFromUser(Env::ENV_TEST_USER3));
 
@@ -154,20 +134,19 @@ class WebsitesServiceTest extends \PHPUnit_Framework_TestCase {
 				'type'    => $arr['type']
 			]
 		);
-
 	}
 
-
-	public function testWebsiteUpdate() {
+	public function testWebsiteUpdate()
+	{
 		$websites = $this->websitesService->getWebsitesFromUser(Env::ENV_TEST_USER1);
 		$this->assertCount(1, $websites);
 
 		$website = array_shift($websites);
 		$websiteCopyData = json_encode($website);
 		$website->setName('name2');
-		$website->setTheme('theme2');
+		$website->setTheme('default');
 		$website->setSite('site2');
-		$website->setOption('private', '1');
+		$website->setType(WebsiteCore::TYPE_PRIVATE);
 
 		$this->websitesService->updateWebsite($website);
 
@@ -177,16 +156,16 @@ class WebsitesServiceTest extends \PHPUnit_Framework_TestCase {
 
 		$this->assertSame(
 			[
-				'name'    => 'name2',
-				'theme'   => 'theme2',
-				'site'    => 'site2',
-				'private' => '1'
+				'name'  => 'name2',
+				'theme' => 'default',
+				'site'  => 'site2',
+				'type'  => WebsiteCore::TYPE_PRIVATE
 			],
 			[
-				'name'    => $website2->getName(),
-				'theme'   => $website2->getTheme(),
-				'site'    => $website2->getSite(),
-				'private' => $website2->getOption('private')
+				'name'  => $website2->getName(),
+				'theme' => $website2->getTheme(),
+				'site'  => $website2->getSite(),
+				'type'  => $website2->getType()
 			]
 		);
 
@@ -194,16 +173,15 @@ class WebsitesServiceTest extends \PHPUnit_Framework_TestCase {
 		$this->websitesService->updateWebsite($websiteCopy);
 	}
 
-
-	public function testWebpage() {
-
+	public function testWebpage()
+	{
 		$websites = $this->websitesService->getWebsitesFromUser(Env::ENV_TEST_USER1);
 		$website = array_shift($websites);
 
 		// test normal website.
 		$content = $this->websitesService->getPage(
 			$website->getSite(), '', Env::ENV_TEST_USER1
-		)->getContent();
+		)->render();
 
 		if (substr($content, 0, 15) !== '<!DOCTYPE html>') {
 			$this->assertSame(true, false, 'Unexpected content');
@@ -216,51 +194,43 @@ class WebsitesServiceTest extends \PHPUnit_Framework_TestCase {
 			);
 			$this->assertSame(true, false, 'Should return an exception');
 		} catch (WebsiteNotFoundException $e) {
-		} catch (Exception $e) {
-			$this->assertSame(true, false, 'Should return WebsiteDoesNotExistException');
+		} catch (\Exception $e) {
+			$this->assertSame(true, false, 'Should return WebsiteNotFoundException');
 		}
 
 		// test website with no content
 		rename($website->getWebsitePath() . 'content', './content');
 		try {
-			$content =
-				$this->websitesService->getPage($website->getSite(), '', Env::ENV_TEST_USER1)
-					->getContent();
+			$this->websitesService->getPage($website->getSite(), '', Env::ENV_TEST_USER1)
+				->render();
 			$this->assertSame(true, false, 'Should return an exception');
 		} catch (PicoRuntimeException $e) {
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			$this->assertSame(true, false, 'Should return PicoRuntimeException' . $e->getMessage());
 		}
 
 		rename('./content', $website->getAbsolutePath() . 'content');
-
-
 	}
 
-
-	/**
-	 *
-	 */
-	public function testWebsiteDeletion() {
+	public function testWebsiteDeletion()
+	{
 		$data = self::INFOS_WEBSITE1;
-
 
 		try {
 			$data['user_id'] = Env::ENV_TEST_USER2;
 			$this->deleteWebsite($data);
 		} catch (WebsiteForeignOwnerException $e) {
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			$this->assertSame(
-				true, false, 'should returns UserIsNotOwnerException - ' . $e->getMessage()
+				true, false, 'should returns WebsiteForeignOwnerException - ' . $e->getMessage()
 			);
 		}
-
 
 		$data['user_id'] = Env::ENV_TEST_USER1;
 
 		try {
 			$this->deleteWebsite($data);
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			$this->assertSame(true, false, 'should not returns Exception - ' . $e->getMessage());
 		}
 
@@ -268,14 +238,13 @@ class WebsitesServiceTest extends \PHPUnit_Framework_TestCase {
 			$this->deleteWebsite($data);
 			$this->assertSame(true, false, 'should return an exception');
 		} catch (WebsiteNotFoundException $e) {
-		} catch (Exception $e) {
-			$this->assertSame(true, false, 'should return WebsiteDoesNotExistException');
+		} catch (\Exception $e) {
+			$this->assertSame(true, false, 'should return WebsiteNotFoundException');
 		}
-
 	}
 
-
-	public function testUserRemoved() {
+	public function testUserRemoved()
+	{
 		$websites = $this->websitesService->getWebsitesFromUser(Env::ENV_TEST_USER2);
 		$this->assertCount(1, $websites);
 
@@ -285,11 +254,10 @@ class WebsitesServiceTest extends \PHPUnit_Framework_TestCase {
 		$this->assertCount(0, $websites);
 	}
 
-
 	/**
 	 * @param array $data
 	 */
-	private function createWebsite($data)
+	private function createWebsite(array $data)
 	{
 		$website = new Website($data);
 		$this->websitesService->createWebsite($website);
@@ -298,12 +266,11 @@ class WebsitesServiceTest extends \PHPUnit_Framework_TestCase {
 	/**
 	 * @param array $data
 	 */
-	private function deleteWebsite($data)
+	private function deleteWebsite(array $data)
 	{
 		$website = $this->websitesService->getWebsiteFromSite($data['site']);
 		$website->assertOwnedBy($data['user_id']);
 
 		$this->websitesService->deleteWebsite($website);
 	}
-
 }

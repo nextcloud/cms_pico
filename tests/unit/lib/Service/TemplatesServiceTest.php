@@ -3,6 +3,7 @@
  * CMS Pico - Create websites using Pico CMS for Nextcloud.
  *
  * @copyright Copyright (c) 2017, Maxence Lange (<maxence@artificial-owl.com>)
+ * @copyright Copyright (c) 2019, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -20,19 +21,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace OCA\CMSPico\Tests\Service;
 
-use Exception;
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Controller\SettingsController;
 use OCA\CMSPico\Exceptions\TemplateNotFoundException;
 use OCA\CMSPico\Service\FileService;
 use OCA\CMSPico\Service\TemplatesService;
 use OCA\CMSPico\Tests\Env;
+use PHPUnit\Framework\TestCase;
 
-
-class TemplatesServiceTest extends \PHPUnit_Framework_TestCase {
-
+class TemplatesServiceTest extends TestCase
+{
 	/** @var FileService */
 	private $fileService;
 
@@ -42,13 +44,8 @@ class TemplatesServiceTest extends \PHPUnit_Framework_TestCase {
 	/** @var TemplatesService */
 	private $templatesService;
 
-
-	/**
-	 * setUp() is initiated before each test.
-	 *
-	 * @throws Exception
-	 */
-	protected function setUp() {
+	protected function setUp(): void
+	{
 		Env::setUser(Env::ENV_TEST_USER1);
 		Env::logout();
 
@@ -60,23 +57,14 @@ class TemplatesServiceTest extends \PHPUnit_Framework_TestCase {
 		$this->settingsController = $container->query(SettingsController::class);
 	}
 
-
-	/**
-	 * tearDown() is initiated after each test.
-	 *
-	 * @throws Exception
-	 */
-	protected function tearDown() {
+	protected function tearDown(): void
+	{
 		Env::setUser(Env::ENV_TEST_USER1);
 		Env::logout();
 	}
 
-
-	/**
-	 *
-	 */
-	public function testTemplates() {
-
+	public function testTemplates()
+	{
 		if (file_exists($this->fileService->getAppDataFolderPath('templates', true) . 'this_is_a_template')) {
 			rmdir($this->fileService->getAppDataFolderPath('templates', true) . 'this_is_a_template');
 		}
@@ -94,7 +82,7 @@ class TemplatesServiceTest extends \PHPUnit_Framework_TestCase {
 			$this->templatesService->assertValidTemplate('this_is_a_template');
 			$this->assertSame(true, false, 'should return an exception');
 		} catch (TemplateNotFoundException $e) {
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			$this->assertSame(true, false, 'should return TemplateDoesNotExistException');
 		}
 
@@ -119,10 +107,8 @@ class TemplatesServiceTest extends \PHPUnit_Framework_TestCase {
 			$this->templatesService->assertValidTemplate('this_is_a_template');
 			$this->assertSame(true, false, 'should return an exception');
 		} catch (TemplateNotFoundException $e) {
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			$this->assertSame(true, false, 'should return TemplateDoesNotExistException');
 		}
-
 	}
-
 }
