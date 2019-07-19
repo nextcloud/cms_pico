@@ -173,5 +173,9 @@ class AppDataRepairStep implements IRepairStep
 		foreach ($this->themesService->getCustomThemes() as $theme) {
 			$appDataFolder->get(PicoService::DIR_THEMES . '/' . $theme)->copy($publicThemesFolder);
 		}
+
+		if (!$appDataFolder->exists(PicoService::DIR_THEMES)) {
+			$appDataFolder->newFolder(PicoService::DIR_THEMES);
+		}
 	}
 }
