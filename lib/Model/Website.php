@@ -290,7 +290,11 @@ class Website extends WebsiteCore
 				return;
 			}
 
-			$groupAccess = explode(',', strtolower($meta['access']));
+			$groupAccess = $meta['access'];
+			if (!is_array($groupAccess)) {
+				$groupAccess = explode(',', strtolower($groupAccess));
+			}
+
 			foreach ($groupAccess as $group) {
 				if ($group === 'public') {
 					return;
