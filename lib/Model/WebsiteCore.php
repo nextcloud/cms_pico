@@ -414,7 +414,7 @@ class WebsiteCore implements \JsonSerializable
 			$creation = is_numeric($data['creation']) ? (int) $data['creation'] : strtotime($data['creation']);
 		}
 
-		$this->setId((int) $data['id'] ?? 0)
+		$this->setId(isset($data['id']) ? (int) $data['id'] : 0)
 			->setUserId($data['user_id'])
 			->setName($data['name'])
 			->setSite($data['site'])
@@ -426,7 +426,7 @@ class WebsiteCore implements \JsonSerializable
 			->setTemplateSource($data['template'] ?? '')
 			->setPage($data['page'] ?? '')
 			->setViewer($data['viewer'] ?? '')
-			->setProxyRequest((bool) $data['proxyRequest'] ?? false);
+			->setProxyRequest(!empty($data['proxyRequest']));
 	}
 
 	/**
