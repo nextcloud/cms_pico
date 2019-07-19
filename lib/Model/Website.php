@@ -285,7 +285,7 @@ class Website extends WebsiteCore
 	public function assertViewerAccess(string $path, array $meta = [])
 	{
 		$exceptionClass = WebsiteNotPermittedException::class;
-		if ($this->getOption('private') !== '1') {
+		if ($this->getType() === WebsiteCore::TYPE_PUBLIC) {
 			if (empty($meta['access'])) {
 				return;
 			}

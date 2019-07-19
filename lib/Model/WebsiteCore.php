@@ -188,6 +188,10 @@ class WebsiteCore implements \JsonSerializable
 	 */
 	public function setType(int $type): self
 	{
+		if (!in_array($type, [ self::TYPE_PUBLIC, self::TYPE_PRIVATE ], true)) {
+			throw new \UnexpectedValueException();
+		}
+
 		$this->type = $type;
 		return $this;
 	}
@@ -415,7 +419,7 @@ class WebsiteCore implements \JsonSerializable
 			->setName($data['name'])
 			->setSite($data['site'])
 			->setTheme($data['theme'] ?? 'default')
-			->setType((int) $data['type'] ?? self::TYPE_PUBLIC)
+			->setType(isset($data['type']) ? (int) $data['type'] : self::TYPE_PUBLIC)
 			->setOptions($options)
 			->setPath($data['path'])
 			->setCreation($creation)

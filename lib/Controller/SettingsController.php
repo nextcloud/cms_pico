@@ -166,14 +166,12 @@ class SettingsController extends Controller
 
 			foreach ($data as $key => $value) {
 				switch ($key) {
-					case 'theme':
-						$website->setTheme($value);
+					case 'type':
+						$website->setType((int) $value);
 						break;
 
-					case 'options':
-						foreach ($value as $optionKey => $optionValue) {
-							$website->setOption($optionKey, (string) $optionValue);
-						}
+					case 'theme':
+						$website->setTheme($value);
 						break;
 
 					default:

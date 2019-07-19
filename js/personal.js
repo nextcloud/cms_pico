@@ -27,6 +27,12 @@
 (function (document, $, OC, OCA) {
 	'use strict';
 
+	/** @constant {number} */
+	var WEBSITE_TYPE_PUBLIC = 1;
+
+	/** @constant {number} */
+	var WEBSITE_TYPE_PRIVATE = 2;
+
 	/**
 	 * @class
 	 * @extends OCA.CMSPico.List
@@ -183,7 +189,7 @@
 			$website.find('.action-private').each(function () {
 				var $this = $(this),
 					$icon = $this.find('[class^="icon-"], [class*=" icon-"]'),
-					value = (websiteData.options.private === '1');
+					value = (websiteData.type === WEBSITE_TYPE_PRIVATE);
 
 				$icon
 					.addClass(value ? 'icon-lock' : 'icon-lock-open')
@@ -193,7 +199,9 @@
 
 				$this.on('click.CMSPicoWebsiteList', function (event) {
 					event.preventDefault();
-					that._updateItem(websiteData.id, { options: { private: $(this).data('value') ? '0' : '1' } });
+
+					var websiteType = $(this).data('value') ? WEBSITE_TYPE_PUBLIC : WEBSITE_TYPE_PRIVATE;
+					that._updateItem(websiteData.id, { type: websiteType });
 				});
 			});
 
