@@ -39,11 +39,6 @@ return [
 			'requirements' => array('page' => '.+')
 		],
 
-		[
-			'name' => 'Pico#getPlugin', 'url' => '/plugins/{file}', 'verb' => 'GET',
-			'requirements' => array('file' => '.+')
-		],
-
 		[ 'name' => 'Settings#getPersonalWebsites', 'url' => '/personal/websites', 'verb' => 'GET' ],
 		[ 'name' => 'Settings#createPersonalWebsite', 'url' => '/personal/websites', 'verb' => 'POST' ],
 		[ 'name' => 'Settings#updatePersonalWebsite', 'url' => '/personal/websites/{siteId}', 'verb' => 'POST' ],
@@ -52,10 +47,16 @@ return [
 		[ 'name' => 'Settings#getTemplates', 'url' => '/admin/templates', 'verb' => 'GET' ],
 		[ 'name' => 'Settings#addCustomTemplate', 'url' => '/admin/templates', 'verb' => 'POST' ],
 		[ 'name' => 'Settings#removeCustomTemplate', 'url' => '/admin/templates/{item}', 'verb' => 'DELETE' ],
+
 		[ 'name' => 'Settings#getThemes', 'url' => '/admin/themes', 'verb' => 'GET' ],
 		[ 'name' => 'Settings#addCustomTheme', 'url' => '/admin/themes', 'verb' => 'POST' ],
 		[ 'name' => 'Settings#updateCustomTheme', 'url' => '/admin/themes/{item}', 'verb' => 'POST' ],
-		[ 'name' => 'Settings#removeCustomTheme', 'url' => '/admin/themes/{item}', 'verb' => 'DELETE' ]
+		[ 'name' => 'Settings#removeCustomTheme', 'url' => '/admin/themes/{item}', 'verb' => 'DELETE' ],
+
+		[ 'name' => 'Settings#getPlugins', 'url' => '/admin/plugins', 'verb' => 'GET' ],
+		[ 'name' => 'Settings#addCustomPlugin', 'url' => '/admin/plugins', 'verb' => 'POST' ],
+		[ 'name' => 'Settings#updateCustomPlugin', 'url' => '/admin/plugins/{item}', 'verb' => 'POST' ],
+		[ 'name' => 'Settings#removeCustomPlugin', 'url' => '/admin/plugins/{item}', 'verb' => 'DELETE' ],
 	]
 ];
 

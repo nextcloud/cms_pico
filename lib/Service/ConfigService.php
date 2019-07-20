@@ -36,10 +36,14 @@ class ConfigService
 	/** @var string */
 	const CUSTOM_THEMES = 'custom_themes';
 
+	/** @var string */
+	const CUSTOM_PLUGINS = 'custom_plugins';
+
 	/** @var array<string,mixed> */
 	private $defaults = [
-		self::CUSTOM_THEMES => '',
 		self::CUSTOM_TEMPLATES => '',
+		self::CUSTOM_THEMES => '',
+		self::CUSTOM_PLUGINS => '',
 	];
 
 	/** @var IConfig */

@@ -213,26 +213,6 @@ class PicoController extends Controller
 	}
 
 	/**
-	 * @PublicPage
-	 * @NoCSRFRequired
-	 *
-	 * @param string $file
-	 *
-	 * @return Response
-	 */
-	public function getPlugin(string $file): Response
-	{
-		try {
-			$file = $this->fileService->getFile(PicoService::DIR_PLUGINS . '/' . $file);
-			return $this->createFileResponse($file);
-		} catch (NotFoundException $e) {
-			return new NotFoundResponse($this->l10n->t('The requested website asset could not be found on the server. Maybe the asset was deleted?'));
-		} catch (NotPermittedException $e) {
-			return new NotPermittedResponse($this->l10n->t('You don\'t have access to this website asset. Maybe the share was deleted or has expired?'));
-		}
-	}
-
-	/**
 	 * @param File        $file
 	 * @param string|null $secureFileType
 	 *

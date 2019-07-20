@@ -26,20 +26,126 @@ namespace OCA\CMSPico\Service;
 
 use OC\App\AppManager;
 use OCA\CMSPico\AppInfo\Application;
+use OCA\CMSPico\Files\FolderInterface;
+use OCP\Files\InvalidPathException;
+use OCP\Files\NotFoundException;
 
 class PluginsService
 {
 	/** @var AppManager */
 	private $appManager;
 
+	/** @var ConfigService */
+	private $configService;
+
+	/** @var FileService */
+	private $fileService;
+
 	/**
 	 * PluginsService constructor.
 	 *
-	 * @param AppManager $appManager
+	 * @param AppManager    $appManager
+	 * @param ConfigService $configService
+	 * @param FileService   $fileService
 	 */
-	public function __construct(AppManager $appManager)
+	public function __construct(AppManager $appManager, ConfigService $configService, FileService $fileService)
 	{
 		$this->appManager = $appManager;
+		$this->configService = $configService;
+		$this->fileService = $fileService;
+	}
+
+	/**
+	 * @return string[]
+	 */
+	public function getPlugins(): array
+	{
+		return array_merge($this->getSystemPlugins(), $this->getCustomPlugins());
+	}
+
+	/**
+	 * @return string[]
+	 */
+	public function getSystemPlugins(): array
+	{
+		/** @var FolderInterface $systemPluginsFolder */
+		$systemPluginsFolder = $this->fileService->getSystemFolder()->get(PicoService::DIR_PLUGINS);
+		if (!$systemPluginsFolder->isFolder()) {
+			throw new InvalidPathException();
+		}
+
+		$systemPlugins = [];
+		foreach ($systemPluginsFolder->listing() as $pluginFolder) {
+			if ($pluginFolder->isFolder()) {
+				$systemPlugins[] = $pluginFolder->getName();
+			}
+		}
+
+		return $systemPlugins;
+	}
+
+	/**
+	 * @return string[]
+	 */
+	public function getCustomPlugins(): array
+	{
+		$json = $this->configService->getAppValue(ConfigService::CUSTOM_PLUGINS);
+		return $json ? json_decode($json, true) : [];
+	}
+
+	/**
+	 * @return string[]
+	 */
+	public function getNewCustomPlugins(): array
+	{
+		$currentPlugins = $this->getPlugins();
+
+		/** @var FolderInterface $customPluginsFolder */
+		$customPluginsFolder = $this->fileService->getAppDataFolder()->get(PicoService::DIR_PLUGINS);
+		if (!$customPluginsFolder->isFolder()) {
+			throw new InvalidPathException();
+		}
+
+		$customPluginsFolder->sync(FolderInterface::SYNC_SHALLOW);
+
+		$newCustomPlugins = [];
+		foreach ($customPluginsFolder->listing() as $pluginFolder) {
+			$plugin = $pluginFolder->getName();
+			if ($pluginFolder->isFolder() && !in_array($plugin, $currentPlugins)) {
+				$newCustomPlugins[] = $plugin;
+			}
+		}
+
+		return $newCustomPlugins;
+	}
+
+	/**
+	 * @param string $plugin
+	 */
+	public function publishCustomPlugin(string $plugin)
+	{
+		$publicFolder = $this->fileService->getPublicFolder();
+		$publicPluginsFolder = $publicFolder->get(PicoService::DIR_PLUGINS);
+
+		$appDataFolder = $this->fileService->getAppDataFolder();
+
+		/** @var FolderInterface $appDataPluginFolder */
+		$appDataPluginFolder = $appDataFolder->get(PicoService::DIR_PLUGINS . '/' . $plugin);
+		$appDataPluginFolder->sync();
+
+		$appDataPluginFolder->copy($publicPluginsFolder);
+	}
+
+	/**
+	 * @param string $plugin
+	 */
+	public function depublishCustomPlugin(string $plugin)
+	{
+		$publicFolder = $this->fileService->getPublicFolder();
+
+		try {
+			$publicFolder->get(PicoService::DIR_PLUGINS . '/' . $plugin)->delete();
+		} catch (NotFoundException $e) {}
 	}
 
 	/**

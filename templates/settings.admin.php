@@ -146,6 +146,122 @@ style(Application::APP_NAME, 'pico');
 </article>
 
 <article class="section">
+	<h2><?php p($l->t('Custom plugins')); ?></h2>
+	<p class="settings-hint"><?php p($l->t(
+		'Add custom plugins to reach for Pico\'s full potential.'
+	)); ?></p>
+
+	<div class="message large">
+		<div class="icon icon-info"></div>
+		<div>
+			<p><?php p($l->t(
+				'Pico CMS for Nextcloud allows you to add custom plugins to really utilize all of Pico\'s '
+				. 'power. Plugins work on a global basis, i.e. adding a custom plugin will enable it for all of '
+				. 'your users\' websites. Before adding a new custom plugin using the "Add custom plugin" button '
+				. 'below, you must upload all of the plugin\'s files to the data folder of your Nextcloud instance. '
+				. 'After uploading the plugin it will show up in the form below to actually enable it.'
+			)); ?></p>
+			<p><?php p($l->t(
+				'Before adding a new custom plugin, upload all of the plugin\'s files to a new folder in the '
+				. 'following directory. Please note that the name of this new folder must strictly match the name of '
+				. 'the plugin, otherwise Pico will refuse to enable the plugin.'
+			)); ?>
+			<p class="followup indent"><code><?php p($_['pluginsPath']); ?></code></p>
+		</div>
+	</div>
+
+	<section id="picocms-plugins" class="picocms-admin-list"
+			data-route="/apps/cms_pico/admin/plugins"
+			data-template="#picocms-plugins-template"
+			data-system-template="#picocms-plugins-template-system-item"
+			data-custom-template="#picocms-plugins-template-custom-item"
+			data-new-template="#picocms-plugins-template-new-item"
+			data-loading-template="#picocms-plugins-template-loading"
+			data-error-template="#picocms-plugins-template-error">
+		<div class="app-content-loading message large">
+			<div class="icon loading"></div>
+			<div>
+				<p><?php p($l->t('Loading plugins…')); ?></p>
+			</div>
+		</div>
+	</section>
+
+	<script id="picocms-plugins-template" type="text/template"
+			data-replaces="#picocms-plugins">
+		<div class="app-content-list">
+			<div class="app-content-list-item app-content-list-add">
+				<div class="app-content-list-item-line-one">
+					<select class="action-new-item"></select>
+					<button class="action-new has-tooltip" title="<?php p($l->t('Add custom plugin')); ?>">
+						<span class="icon icon-add"></span>
+						<span class="hidden-visually"><?php p($l->t('Add custom plugin')); ?></span>
+					</button>
+				</div>
+				<div class="action-reload icon-redo-alt has-tooltip" data-placement="left"
+						title="<?php p($l->t('Reload plugins list')); ?>">
+					<span class="hidden-visually"><?php p($l->t('Reload plugins list')); ?></span>
+				</div>
+			</div>
+		</div>
+	</script>
+
+	<script id="picocms-plugins-template-system-item" type="text/template"
+			data-append-to="#picocms-plugins > .app-content-list">
+		<div class="app-content-list-item">
+			<div class="app-content-list-item-line-one">
+				<p>{name}</p>
+				<p class="note"><?php p($l->t('System plugin')); ?></p>
+			</div>
+		</div>
+	</script>
+
+	<script id="picocms-plugins-template-custom-item" type="text/template"
+			data-append-to="#picocms-plugins > .app-content-list">
+		<div class="app-content-list-item">
+			<div class="app-content-list-item-line-one">
+				<p>{name}</p>
+				<p class="note"><?php p($l->t('Custom plugin')); ?></p>
+			</div>
+			<div class="action-sync icon-sync-alt has-tooltip" data-placement="left"
+					title="<?php p($l->t('Reload custom plugin')); ?>">
+				<span class="hidden-visually"><?php p($l->t('Reload custom plugin')); ?></span>
+			</div>
+			<div class="action-delete icon-delete has-tooltip" data-placement="left"
+					title="<?php p($l->t('Delete custom plugin')); ?>">
+				<span class="hidden-visually"><?php p($l->t('Delete custom plugin')); ?></span>
+			</div>
+		</div>
+	</script>
+
+	<script id="picocms-plugins-template-new-item" type="text/template"
+			data-append-to="#picocms-plugins > .app-content-list > .app-content-list-add select">
+		<option name="{name}">{name}</option>
+	</script>
+
+	<script id="picocms-plugins-template-loading" type="text/template"
+			data-replaces="#picocms-plugins">
+		<div class="app-content-loading message large">
+			<div class="icon loading"></div>
+			<div>
+				<p><?php p($l->t('Loading plugins…')); ?></p>
+			</div>
+		</div>
+	</script>
+
+	<script id="picocms-plugins-template-error" type="text/template"
+			data-replaces="#picocms-plugins">
+		<div class="app-content-error message large">
+			<div class="icon icon-error-color"></div>
+			<div>
+				<p><?php p($l->t(
+					'A unexpected error occured while performing this action. Please check Nextcloud\'s logs.'
+				)); ?></p>
+			</div>
+		</div>
+	</script>
+</article>
+
+<article class="section">
 	<h2><?php p($l->t('Custom templates')); ?></h2>
 	<p class="settings-hint"><?php p($l->t(
 		'Make it easier for users to create new websites.'

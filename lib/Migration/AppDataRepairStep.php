@@ -28,6 +28,7 @@ use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Files\FolderInterface;
 use OCA\CMSPico\Service\FileService;
 use OCA\CMSPico\Service\PicoService;
+use OCA\CMSPico\Service\PluginsService;
 use OCA\CMSPico\Service\ThemesService;
 use OCP\Files\InvalidPathException;
 use OCP\Files\NotFoundException;
@@ -43,20 +44,29 @@ class AppDataRepairStep implements IRepairStep
 	/** @var ThemesService */
 	private $themesService;
 
+	/** @var PluginsService */
+	private $pluginsService;
+
 	/** @var FileService */
 	private $fileService;
 
 	/**
 	 * AppDataRepairStep constructor.
 	 *
-	 * @param ILogger          $logger
-	 * @param ThemesService    $themesService
-	 * @param FileService      $fileService
+	 * @param ILogger        $logger
+	 * @param ThemesService  $themesService
+	 * @param PluginsService $pluginsService
+	 * @param FileService    $fileService
 	 */
-	public function __construct(ILogger $logger, ThemesService $themesService, FileService $fileService)
-	{
+	public function __construct(
+		ILogger $logger,
+		ThemesService $themesService,
+		PluginsService $pluginsService,
+		FileService $fileService
+	) {
 		$this->logger = $logger;
 		$this->themesService = $themesService;
+		$this->pluginsService = $pluginsService;
 		$this->fileService = $fileService;
 	}
 
@@ -73,14 +83,17 @@ class AppDataRepairStep implements IRepairStep
 	 */
 	public function run(IOutput $output)
 	{
-		$this->logger->debug('Copying Pico CMS config…', [ 'app' => Application::APP_NAME ]);
+		$this->logger->debug('Copying Pico CMS config …', [ 'app' => Application::APP_NAME ]);
 		$this->copyConfig();
 
-		$this->logger->debug('Copying Pico CMS templates…', [ 'app' => Application::APP_NAME ]);
+		$this->logger->debug('Copying Pico CMS templates …', [ 'app' => Application::APP_NAME ]);
 		$this->copyTemplates();
 
-		$this->logger->debug('Publishing Pico CMS themes…', [ 'app' => Application::APP_NAME ]);
+		$this->logger->debug('Publishing Pico CMS themes …', [ 'app' => Application::APP_NAME ]);
 		$this->publishThemes();
+
+		$this->logger->debug('Publishing Pico CMS plugins …', [ 'app' => Application::APP_NAME ]);
+		$this->publishPlugins();
 	}
 
 	/**
@@ -176,6 +189,34 @@ class AppDataRepairStep implements IRepairStep
 
 		if (!$appDataFolder->exists(PicoService::DIR_THEMES)) {
 			$appDataFolder->newFolder(PicoService::DIR_THEMES);
+		}
+	}
+
+	/**
+	 * @return void
+	 */
+	private function publishPlugins()
+	{
+		$publicFolder = $this->fileService->getPublicFolder();
+
+		try {
+			$publicFolder->get(PicoService::DIR_PLUGINS)->delete();
+		} catch (NotFoundException $e) {}
+
+		$publicPluginsFolder = $publicFolder->newFolder(PicoService::DIR_PLUGINS);
+
+		$systemFolder = $this->fileService->getSystemFolder();
+		foreach ($this->pluginsService->getSystemPlugins() as $plugin) {
+			$systemFolder->get(PicoService::DIR_PLUGINS . '/' . $plugin)->copy($publicPluginsFolder);
+		}
+
+		$appDataFolder = $this->fileService->getAppDataFolder();
+		foreach ($this->pluginsService->getCustomPlugins() as $plugin) {
+			$appDataFolder->get(PicoService::DIR_PLUGINS . '/' . $plugin)->copy($publicPluginsFolder);
+		}
+
+		if (!$appDataFolder->exists(PicoService::DIR_PLUGINS)) {
+			$appDataFolder->newFolder(PicoService::DIR_PLUGINS);
 		}
 	}
 }

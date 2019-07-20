@@ -34,7 +34,7 @@ use OCA\CMSPico\Exceptions\WebsiteInvalidDataException;
 use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
 use OCA\CMSPico\Model\Website;
 use OCA\CMSPico\Service\ConfigService;
-use OCA\CMSPico\Service\MiscService;
+use OCA\CMSPico\Service\PluginsService;
 use OCA\CMSPico\Service\TemplatesService;
 use OCA\CMSPico\Service\ThemesService;
 use OCA\CMSPico\Service\WebsitesService;
@@ -65,6 +65,9 @@ class SettingsController extends Controller
 	/** @var ThemesService */
 	private $themesService;
 
+	/** @var PluginsService */
+	private $pluginsService;
+
 	/** @var WebsitesService */
 	private $websitesService;
 
@@ -78,6 +81,7 @@ class SettingsController extends Controller
 	 * @param ConfigService    $configService
 	 * @param TemplatesService $templatesService
 	 * @param ThemesService    $themesService
+	 * @param PluginsService   $pluginsService
 	 * @param WebsitesService  $websitesService
 	 */
 	public function __construct(
@@ -88,6 +92,7 @@ class SettingsController extends Controller
 		ConfigService $configService,
 		TemplatesService $templatesService,
 		ThemesService $themesService,
+		PluginsService $pluginsService,
 		WebsitesService $websitesService
 	) {
 		parent::__construct(Application::APP_NAME, $request);
@@ -98,6 +103,7 @@ class SettingsController extends Controller
 		$this->configService = $configService;
 		$this->templatesService = $templatesService;
 		$this->themesService = $themesService;
+		$this->pluginsService = $pluginsService;
 		$this->websitesService = $websitesService;
 	}
 
@@ -355,6 +361,86 @@ class SettingsController extends Controller
 			$this->configService->setAppValue(ConfigService::CUSTOM_THEMES, json_encode($newCustomThemes));
 
 			return $this->getThemes();
+		} catch (\Exception $e) {
+			return $this->createErrorResponse($e);
+		}
+	}
+
+	/**
+	 * @return DataResponse
+	 */
+	public function getPlugins(): DataResponse
+	{
+		$data = [
+			'systemItems' => $this->pluginsService->getSystemPlugins(),
+			'customItems' => $this->pluginsService->getCustomPlugins(),
+			'newItems' => $this->pluginsService->getNewCustomPlugins(),
+		];
+
+		return new DataResponse($data, Http::STATUS_OK);
+	}
+
+	/**
+	 * @param string $item
+	 *
+	 * @return DataResponse
+	 */
+	public function addCustomPlugin(string $item): DataResponse
+	{
+		try {
+			$this->pluginsService->publishCustomPlugin($item);
+
+			$customPlugins = $this->pluginsService->getCustomPlugins();
+			$customPlugins[] = $item;
+
+			$this->configService->setAppValue(ConfigService::CUSTOM_PLUGINS, json_encode($customPlugins));
+
+			return $this->getPlugins();
+		} catch (\Exception $e) {
+			return $this->createErrorResponse($e);
+		}
+	}
+
+	/**
+	 * @param string $item
+	 *
+	 * @return DataResponse
+	 */
+	public function updateCustomPlugin(string $item): DataResponse
+	{
+		try {
+			$this->pluginsService->depublishCustomPlugin($item);
+			$this->pluginsService->publishCustomPlugin($item);
+
+			return $this->getPlugins();
+		} catch (\Exception $e) {
+			return $this->createErrorResponse($e);
+		}
+	}
+
+	/**
+	 * @param string $item
+	 *
+	 * @return DataResponse
+	 */
+	public function removeCustomPlugin(string $item): DataResponse
+	{
+		try {
+			$customPlugins = $this->pluginsService->getCustomPlugins();
+
+			$newCustomPlugins = [];
+			foreach ($customPlugins as $customPlugin) {
+				if ($customPlugin === $item) {
+					$this->pluginsService->depublishCustomPlugin($item);
+					continue;
+				}
+
+				$newCustomPlugins[] = $customPlugin;
+			}
+
+			$this->configService->setAppValue(ConfigService::CUSTOM_PLUGINS, json_encode($newCustomPlugins));
+
+			return $this->getPlugins();
 		} catch (\Exception $e) {
 			return $this->createErrorResponse($e);
 		}
