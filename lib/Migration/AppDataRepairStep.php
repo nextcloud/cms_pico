@@ -82,16 +82,16 @@ class AppDataRepairStep implements IRepairStep
 	 */
 	public function run(IOutput $output)
 	{
-		$this->logger->debug('Copying Pico CMS config …', [ 'app' => Application::APP_NAME ]);
+		$this->log('Copying Pico CMS config …');
 		$this->copyConfig();
 
-		$this->logger->debug('Copying Pico CMS templates …', [ 'app' => Application::APP_NAME ]);
+		$this->log('Copying Pico CMS templates …');
 		$this->copyTemplates();
 
-		$this->logger->debug('Publishing Pico CMS themes …', [ 'app' => Application::APP_NAME ]);
+		$this->log('Publishing Pico CMS themes …');
 		$this->publishThemes();
 
-		$this->logger->debug('Publishing Pico CMS plugins …', [ 'app' => Application::APP_NAME ]);
+		$this->log('Publishing Pico CMS plugins …');
 		$this->publishPlugins();
 	}
 
@@ -112,7 +112,10 @@ class AppDataRepairStep implements IRepairStep
 
 			try {
 				$appDataConfigFolder->get($configFileName)->delete();
-			} catch (NotFoundException $e) {}
+				$this->log(sprintf('Replacing %s "%s"', 'config file', $configFileName), ILogger::WARN);
+			} catch (NotFoundException $e) {
+				$this->log(sprintf('Adding %s "%s"', 'config file', $configFileName));
+			}
 
 			$configFile->copy($appDataConfigFolder);
 		}
@@ -127,15 +130,18 @@ class AppDataRepairStep implements IRepairStep
 		$systemTemplatesFolder = $this->fileService->getSystemFolder(PicoService::DIR_TEMPLATES);
 
 		foreach ($systemTemplatesFolder->listing() as $templateFolder) {
-			$template = $templateFolder->getName();
+			$templateFileName = $templateFolder->getName();
 
 			if (!$templateFolder->isFolder()) {
 				continue;
 			}
 
 			try {
-				$appDataTemplatesFolder->get($template)->delete();
-			} catch (NotFoundException $e) {}
+				$appDataTemplatesFolder->get($templateFileName)->delete();
+				$this->log(sprintf('Replacing %s "%s"', 'template', $templateFileName), ILogger::WARN);
+			} catch (NotFoundException $e) {
+				$this->log(sprintf('Adding %s "%s"', 'template', $templateFileName));
+			}
 
 			$templateFolder->copy($appDataTemplatesFolder);
 		}
@@ -177,5 +183,14 @@ class AppDataRepairStep implements IRepairStep
 		foreach ($this->pluginsService->getCustomPlugins() as $pluginName) {
 			$appDataPluginsFolder->get($pluginName)->copy($publicPluginsFolder);
 		}
+	}
+
+	/**
+	 * @param string $message
+	 * @param int    $level
+	 */
+	private function log(string $message, int $level = ILogger::DEBUG)
+	{
+		$this->logger->log($level, $message, [ 'app' => Application::APP_NAME ]);
 	}
 }
