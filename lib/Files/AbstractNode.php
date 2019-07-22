@@ -31,43 +31,58 @@ abstract class AbstractNode implements NodeInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function copy(FolderInterface $targetPath)
+	public function copy(FolderInterface $targetPath): NodeInterface
 	{
 		if ($this->isFolder()) {
-			/** @var FolderInterface $sourceFolder */
-			$sourceFolder = $this;
-			$targetFolder = $targetPath->newFolder($sourceFolder->getName());
-			foreach ($sourceFolder->listing() as $sourceNode) {
-				$sourceNode->copy($targetFolder);
+			/** @var FolderInterface $this */
+			$target = $targetPath->newFolder($this->getName());
+			foreach ($this->listing() as $child) {
+				$child->copy($target);
 			}
 		} else {
-			/** @var FileInterface $sourceFile */
-			$sourceFile = $this;
-			$targetFile = $targetPath->newFile($sourceFile->getName());
-			$targetFile->putContent($sourceFile->getContent());
+			/** @var FileInterface $this */
+			$target = $targetPath->newFile($this->getName());
+			$target->putContent($this->getContent());
 		}
+
+		return $target;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function move(FolderInterface $targetPath)
+	public function move(FolderInterface $targetPath): NodeInterface
 	{
 		if ($this->isFolder()) {
-			/** @var FolderInterface $sourceFolder */
-			$sourceFolder = $this;
-			$targetFolder = $targetPath->newFolder($sourceFolder->getName());
-			foreach ($sourceFolder->listing() as $sourceNode) {
-				$sourceNode->move($targetFolder);
+			/** @var FolderInterface $this */
+			$target = $targetPath->newFolder($this->getName());
+			foreach ($this->listing() as $child) {
+				$child->move($target);
 			}
 		} else {
-			/** @var FileInterface $sourceFile */
-			$sourceFile = $this;
-			$targetFile = $targetPath->newFile($sourceFile->getName());
-			$targetFile->putContent($sourceFile->getContent());
+			/** @var FileInterface $this */
+			$target = $targetPath->newFile($this->getName());
+			$target->putContent($this->getContent());
 		}
 
 		$this->delete();
+		return $target;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function empty()
+	{
+		if ($this->isFolder()) {
+			/** @var FolderInterface $this */
+			foreach ($this->listing() as $child) {
+				$child->delete();
+			}
+		} else {
+			/** @var FileInterface $this */
+			$this->putContent('');
+		}
 	}
 
 	/**

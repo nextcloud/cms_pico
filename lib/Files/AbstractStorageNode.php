@@ -49,24 +49,28 @@ abstract class AbstractStorageNode extends AbstractNode implements NodeInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function copy(FolderInterface $targetPath)
+	public function copy(FolderInterface $targetPath): NodeInterface
 	{
 		if ($targetPath instanceof StorageFolder) {
-			$this->node->copy($targetPath->getPath());
+			/** @var OCFolder $ocNode */
+			$ocNode = $this->node->copy($targetPath->getPath());
+			return new StorageFolder($ocNode);
 		} else {
-			parent::copy($targetPath);
+			return parent::copy($targetPath);
 		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function move(FolderInterface $targetPath)
+	public function move(FolderInterface $targetPath): NodeInterface
 	{
 		if ($targetPath instanceof StorageFolder) {
-			$this->node->move($targetPath->getPath());
+			/** @var OCFolder $ocNode */
+			$ocNode = $this->node->move($targetPath->getPath());
+			return new StorageFolder($ocNode);
 		} else {
-			parent::move($targetPath);
+			return parent::move($targetPath);
 		}
 	}
 

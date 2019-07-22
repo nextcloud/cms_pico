@@ -34,20 +34,28 @@ interface NodeInterface
 	/**
 	 * @param FolderInterface $targetPath
 	 *
+	 * @return NodeInterface
 	 * @throws AlreadyExistsException
 	 * @throws NotPermittedException
 	 * @throws GenericFileException
 	 */
-	public function copy(FolderInterface $targetPath);
+	public function copy(FolderInterface $targetPath): NodeInterface;
 
 	/**
 	 * @param FolderInterface $targetPath
 	 *
+	 * @return NodeInterface
 	 * @throws AlreadyExistsException
 	 * @throws NotPermittedException
 	 * @throws GenericFileException
 	 */
-	public function move(FolderInterface $targetPath);
+	public function move(FolderInterface $targetPath): NodeInterface;
+
+	/**
+	 * @throws NotPermittedException
+	 * @throws GenericFileException
+	 */
+	public function empty();
 
 	/**
 	 * @throws NotPermittedException

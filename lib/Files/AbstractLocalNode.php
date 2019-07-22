@@ -73,7 +73,7 @@ abstract class AbstractLocalNode extends AbstractNode implements NodeInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function copy(FolderInterface $targetPath)
+	public function copy(FolderInterface $targetPath): NodeInterface
 	{
 		if (($targetPath instanceof LocalFolder) && $this->isFile()) {
 			if ($targetPath->exists($this->getName())) {
@@ -86,15 +86,17 @@ abstract class AbstractLocalNode extends AbstractNode implements NodeInterface
 			if (!@copy($this->getLocalPath(), $targetPath->getLocalPath() . '/' . $this->getName())) {
 				throw new GenericFileException();
 			}
+
+			return new LocalFile($targetPath->getPath() . '/' . $this->getName(), $this->basePath);
 		} else {
-			parent::copy($targetPath);
+			return parent::copy($targetPath);
 		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function move(FolderInterface $targetPath)
+	public function move(FolderInterface $targetPath): NodeInterface
 	{
 		if (($targetPath instanceof LocalFolder) && $this->isFile()) {
 			if ($targetPath->exists($this->getName())) {
@@ -107,8 +109,10 @@ abstract class AbstractLocalNode extends AbstractNode implements NodeInterface
 			if (!@rename($this->getLocalPath(), $targetPath->getLocalPath() . '/' . $this->getName())) {
 				throw new GenericFileException();
 			}
+
+			return new LocalFile($targetPath->getPath() . '/' . $this->getName(), $targetPath->getBasePath());
 		} else {
-			parent::move($targetPath);
+			return parent::move($targetPath);
 		}
 	}
 
@@ -132,6 +136,14 @@ abstract class AbstractLocalNode extends AbstractNode implements NodeInterface
 	public function getPath(): string
 	{
 		return $this->path;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getBasePath(): string
+	{
+		return $this->basePath;
 	}
 
 	/**
