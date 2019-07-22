@@ -30,7 +30,6 @@ use OCA\CMSPico\Service\FileService;
 use OCA\CMSPico\Service\PicoService;
 use OCA\CMSPico\Service\PluginsService;
 use OCA\CMSPico\Service\ThemesService;
-use OCP\Files\InvalidPathException;
 use OCP\Files\NotFoundException;
 use OCP\ILogger;
 use OCP\Migration\IOutput;
@@ -101,19 +100,8 @@ class AppDataRepairStep implements IRepairStep
 	 */
 	private function copyConfig()
 	{
-		$appDataFolder = $this->fileService->getAppDataFolder();
-
-		try {
-			$appDataConfigFolder = $appDataFolder->get(PicoService::DIR_CONFIG);
-		} catch (NotFoundException $e) {
-			$appDataConfigFolder = $appDataFolder->newFolder(PicoService::DIR_CONFIG);
-		}
-
-		/** @var FolderInterface $systemConfigFolder */
-		$systemConfigFolder = $this->fileService->getSystemFolder()->get(PicoService::DIR_CONFIG);
-		if (!$systemConfigFolder->isFolder()) {
-			throw new InvalidPathException();
-		}
+		$appDataConfigFolder = $this->fileService->getAppDataFolder(PicoService::DIR_CONFIG);
+		$systemConfigFolder = $this->fileService->getSystemFolder(PicoService::DIR_CONFIG);
 
 		foreach ($systemConfigFolder->listing() as $configFile) {
 			$configFileName = $configFile->getName();
@@ -135,19 +123,8 @@ class AppDataRepairStep implements IRepairStep
 	 */
 	private function copyTemplates()
 	{
-		$appDataFolder = $this->fileService->getAppDataFolder();
-
-		try {
-			$appDataTemplatesFolder = $appDataFolder->get(PicoService::DIR_TEMPLATES);
-		} catch (NotFoundException $e) {
-			$appDataTemplatesFolder = $appDataFolder->newFolder(PicoService::DIR_TEMPLATES);
-		}
-
-		/** @var FolderInterface $systemTemplatesFolder */
-		$systemTemplatesFolder = $this->fileService->getSystemFolder()->get(PicoService::DIR_TEMPLATES);
-		if (!$systemTemplatesFolder->isFolder()) {
-			throw new InvalidPathException();
-		}
+		$appDataTemplatesFolder = $this->fileService->getAppDataFolder(PicoService::DIR_TEMPLATES);
+		$systemTemplatesFolder = $this->fileService->getSystemFolder(PicoService::DIR_TEMPLATES);
 
 		foreach ($systemTemplatesFolder->listing() as $templateFolder) {
 			$template = $templateFolder->getName();
@@ -169,26 +146,17 @@ class AppDataRepairStep implements IRepairStep
 	 */
 	private function publishThemes()
 	{
-		$publicFolder = $this->fileService->getPublicFolder();
+		$publicThemesFolder = $this->fileService->getPublicFolder(PicoService::DIR_THEMES);
+		$publicThemesFolder->empty();
 
-		try {
-			$publicFolder->get(PicoService::DIR_THEMES)->delete();
-		} catch (NotFoundException $e) {}
-
-		$publicThemesFolder = $publicFolder->newFolder(PicoService::DIR_THEMES);
-
-		$systemFolder = $this->fileService->getSystemFolder();
-		foreach ($this->themesService->getSystemThemes() as $theme) {
-			$systemFolder->get(PicoService::DIR_THEMES . '/' . $theme)->copy($publicThemesFolder);
+		$systemThemesFolder = $this->fileService->getSystemFolder(PicoService::DIR_THEMES);
+		foreach ($this->themesService->getSystemThemes() as $themeName) {
+			$systemThemesFolder->get($themeName)->copy($publicThemesFolder);
 		}
 
-		$appDataFolder = $this->fileService->getAppDataFolder();
-		foreach ($this->themesService->getCustomThemes() as $theme) {
-			$appDataFolder->get(PicoService::DIR_THEMES . '/' . $theme)->copy($publicThemesFolder);
-		}
-
-		if (!$appDataFolder->exists(PicoService::DIR_THEMES)) {
-			$appDataFolder->newFolder(PicoService::DIR_THEMES);
+		$appDataThemesFolder = $this->fileService->getAppDataFolder(PicoService::DIR_THEMES);
+		foreach ($this->themesService->getCustomThemes() as $themeName) {
+			$appDataThemesFolder->get($themeName)->copy($publicThemesFolder);
 		}
 	}
 
@@ -197,26 +165,17 @@ class AppDataRepairStep implements IRepairStep
 	 */
 	private function publishPlugins()
 	{
-		$publicFolder = $this->fileService->getPublicFolder();
+		$publicPluginsFolder = $this->fileService->getPublicFolder(PicoService::DIR_PLUGINS);
+		$publicPluginsFolder->empty();
 
-		try {
-			$publicFolder->get(PicoService::DIR_PLUGINS)->delete();
-		} catch (NotFoundException $e) {}
-
-		$publicPluginsFolder = $publicFolder->newFolder(PicoService::DIR_PLUGINS);
-
-		$systemFolder = $this->fileService->getSystemFolder();
-		foreach ($this->pluginsService->getSystemPlugins() as $plugin) {
-			$systemFolder->get(PicoService::DIR_PLUGINS . '/' . $plugin)->copy($publicPluginsFolder);
+		$systemPluginsFolder = $this->fileService->getSystemFolder(PicoService::DIR_PLUGINS);
+		foreach ($this->pluginsService->getSystemPlugins() as $pluginName) {
+			$systemPluginsFolder->get($pluginName)->copy($publicPluginsFolder);
 		}
 
-		$appDataFolder = $this->fileService->getAppDataFolder();
-		foreach ($this->pluginsService->getCustomPlugins() as $plugin) {
-			$appDataFolder->get(PicoService::DIR_PLUGINS . '/' . $plugin)->copy($publicPluginsFolder);
-		}
-
-		if (!$appDataFolder->exists(PicoService::DIR_PLUGINS)) {
-			$appDataFolder->newFolder(PicoService::DIR_PLUGINS);
+		$appDataPluginsFolder = $this->fileService->getAppDataFolder(PicoService::DIR_PLUGINS);
+		foreach ($this->pluginsService->getCustomPlugins() as $pluginName) {
+			$appDataPluginsFolder->get($pluginName)->copy($publicPluginsFolder);
 		}
 	}
 }

@@ -82,11 +82,8 @@ class ThemesService
 	 */
 	public function getSystemThemes(): array
 	{
-		/** @var FolderInterface $systemThemesFolder */
-		$systemThemesFolder = $this->fileService->getSystemFolder()->get(PicoService::DIR_THEMES);
-		if (!$systemThemesFolder->isFolder()) {
-			throw new InvalidPathException();
-		}
+		$systemThemesFolder = $this->fileService->getSystemFolder(PicoService::DIR_THEMES);
+		$systemThemesFolder->sync(FolderInterface::SYNC_SHALLOW);
 
 		$systemThemes = [];
 		foreach ($systemThemesFolder->listing() as $themeFolder) {
@@ -114,12 +111,7 @@ class ThemesService
 	{
 		$currentThemes = $this->getThemes();
 
-		/** @var FolderInterface $customThemesFolder */
-		$customThemesFolder = $this->fileService->getAppDataFolder()->get(PicoService::DIR_THEMES);
-		if (!$customThemesFolder->isFolder()) {
-			throw new InvalidPathException();
-		}
-
+		$customThemesFolder = $this->fileService->getAppDataFolder(PicoService::DIR_THEMES);
 		$customThemesFolder->sync(FolderInterface::SYNC_SHALLOW);
 
 		$newCustomThemes = [];
@@ -138,13 +130,13 @@ class ThemesService
 	 */
 	public function publishCustomTheme(string $theme)
 	{
-		$publicFolder = $this->fileService->getPublicFolder();
-		$publicThemesFolder = $publicFolder->get(PicoService::DIR_THEMES);
+		$publicThemesFolder = $this->fileService->getPublicFolder(PicoService::DIR_THEMES);
 
-		$appDataFolder = $this->fileService->getAppDataFolder();
+		$appDataThemesFolder = $this->fileService->getAppDataFolder(PicoService::DIR_THEMES);
+		$appDataThemesFolder->sync(FolderInterface::SYNC_SHALLOW);
 
 		/** @var FolderInterface $appDataThemeFolder */
-		$appDataThemeFolder = $appDataFolder->get(PicoService::DIR_THEMES . '/' . $theme);
+		$appDataThemeFolder = $appDataThemesFolder->get($theme);
 		$appDataThemeFolder->sync();
 
 		$appDataThemeFolder->copy($publicThemesFolder);
@@ -155,10 +147,10 @@ class ThemesService
 	 */
 	public function depublishCustomTheme(string $theme)
 	{
-		$publicFolder = $this->fileService->getPublicFolder();
+		$publicThemesFolder = $this->fileService->getPublicFolder(PicoService::DIR_THEMES);
 
 		try {
-			$publicFolder->get(PicoService::DIR_THEMES . '/' . $theme)->delete();
+			$publicThemesFolder->get($theme)->delete();
 		} catch (NotFoundException $e) {}
 	}
 

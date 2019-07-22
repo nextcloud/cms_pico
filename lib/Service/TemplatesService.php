@@ -81,11 +81,8 @@ class TemplatesService
 	 */
 	public function getSystemTemplates(): array
 	{
-		/** @var FolderInterface $systemTemplatesFolder */
-		$systemTemplatesFolder = $this->fileService->getSystemFolder()->get(PicoService::DIR_TEMPLATES);
-		if (!$systemTemplatesFolder->isFolder()) {
-			throw new InvalidPathException();
-		}
+		$systemTemplatesFolder = $this->fileService->getSystemFolder(PicoService::DIR_TEMPLATES);
+		$systemTemplatesFolder->sync(FolderInterface::SYNC_SHALLOW);
 
 		$systemTemplates = [];
 		foreach ($systemTemplatesFolder->listing() as $templateFolder) {
@@ -113,12 +110,7 @@ class TemplatesService
 	{
 		$currentTemplates = $this->getTemplates();
 
-		/** @var FolderInterface $customTemplatesFolder */
-		$customTemplatesFolder = $this->fileService->getAppDataFolder()->get(PicoService::DIR_TEMPLATES);
-		if (!$customTemplatesFolder->isFolder()) {
-			throw new InvalidPathException();
-		}
-
+		$customTemplatesFolder = $this->fileService->getAppDataFolder(PicoService::DIR_TEMPLATES);
 		$customTemplatesFolder->sync(FolderInterface::SYNC_SHALLOW);
 
 		$newTemplates = [];

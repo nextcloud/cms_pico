@@ -68,11 +68,7 @@ class PluginsService
 	 */
 	public function getSystemPlugins(): array
 	{
-		/** @var FolderInterface $systemPluginsFolder */
-		$systemPluginsFolder = $this->fileService->getSystemFolder()->get(PicoService::DIR_PLUGINS);
-		if (!$systemPluginsFolder->isFolder()) {
-			throw new InvalidPathException();
-		}
+		$systemPluginsFolder = $this->fileService->getSystemFolder(PicoService::DIR_PLUGINS);
 
 		$systemPlugins = [];
 		foreach ($systemPluginsFolder->listing() as $pluginFolder) {
@@ -98,21 +94,16 @@ class PluginsService
 	 */
 	public function getNewCustomPlugins(): array
 	{
+		$appDataPluginsFolder = $this->fileService->getAppDataFolder(PicoService::DIR_PLUGINS);
+		$appDataPluginsFolder->sync(FolderInterface::SYNC_SHALLOW);
+
 		$currentPlugins = $this->getPlugins();
 
-		/** @var FolderInterface $customPluginsFolder */
-		$customPluginsFolder = $this->fileService->getAppDataFolder()->get(PicoService::DIR_PLUGINS);
-		if (!$customPluginsFolder->isFolder()) {
-			throw new InvalidPathException();
-		}
-
-		$customPluginsFolder->sync(FolderInterface::SYNC_SHALLOW);
-
 		$newCustomPlugins = [];
-		foreach ($customPluginsFolder->listing() as $pluginFolder) {
-			$plugin = $pluginFolder->getName();
+		foreach ($appDataPluginsFolder->listing() as $pluginFolder) {
+			$pluginName = $pluginFolder->getName();
 			if ($pluginFolder->isFolder() && !in_array($plugin, $currentPlugins)) {
-				$newCustomPlugins[] = $plugin;
+				$newCustomPlugins[] = $pluginName;
 			}
 		}
 
@@ -120,17 +111,16 @@ class PluginsService
 	}
 
 	/**
-	 * @param string $plugin
+	 * @param string $pluginName
 	 */
-	public function publishCustomPlugin(string $plugin)
+	public function publishCustomPlugin(string $pluginName)
 	{
-		$publicFolder = $this->fileService->getPublicFolder();
-		$publicPluginsFolder = $publicFolder->get(PicoService::DIR_PLUGINS);
+		$publicPluginsFolder = $this->fileService->getPublicFolder(PicoService::DIR_PLUGINS);
 
-		$appDataFolder = $this->fileService->getAppDataFolder();
+		$appDataPluginsFolder = $this->fileService->getAppDataFolder(PicoService::DIR_PLUGINS);
+		$appDataPluginsFolder->sync(FolderInterface::SYNC_SHALLOW);
 
-		/** @var FolderInterface $appDataPluginFolder */
-		$appDataPluginFolder = $appDataFolder->get(PicoService::DIR_PLUGINS . '/' . $plugin);
+		$appDataPluginFolder = $appDataPluginsFolder->get($pluginName);
 		$appDataPluginFolder->sync();
 
 		$appDataPluginFolder->copy($publicPluginsFolder);
@@ -141,10 +131,10 @@ class PluginsService
 	 */
 	public function depublishCustomPlugin(string $plugin)
 	{
-		$publicFolder = $this->fileService->getPublicFolder();
+		$publicPluginsFolder = $this->fileService->getPublicFolder(PicoService::DIR_PLUGINS);
 
 		try {
-			$publicFolder->get(PicoService::DIR_PLUGINS . '/' . $plugin)->delete();
+			$publicPluginsFolder->get($plugin)->delete();
 		} catch (NotFoundException $e) {}
 	}
 

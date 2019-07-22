@@ -76,39 +76,73 @@ class FileService
 	}
 
 	/**
+	 * @param string|null $folderName
+	 *
 	 * @return FolderInterface
 	 * @throws InvalidPathException
-	 * @throws NotFoundException
+	 * @throws NotPermittedException
 	 */
-	public function getPublicFolder(): FolderInterface
+	public function getPublicFolder(string $folderName = null): FolderInterface
 	{
 		if ($this->publicFolder === null) {
 			$this->publicFolder = new LocalFolder('/', self::APPDATA_PUBLIC);
+		}
+
+		if ($folderName) {
+			try {
+				/** @var FolderInterface $folder */
+				$folder = $this->publicFolder->get($folderName);
+				if (!$folder->isFolder()) {
+					throw new InvalidPathException();
+				}
+
+				return $folder;
+			} catch (NotFoundException $e) {
+				return $this->publicFolder->newFolder($folderName);
+			}
 		}
 
 		return $this->publicFolder;
 	}
 
 	/**
+	 * @param string|null $folderName
+	 *
 	 * @return FolderInterface
 	 * @throws InvalidPathException
-	 * @throws NotFoundException
+	 * @throws NotPermittedException
 	 */
-	public function getSystemFolder(): FolderInterface
+	public function getSystemFolder(string $folderName = null): FolderInterface
 	{
 		if ($this->systemFolder === null) {
 			$this->systemFolder = new LocalFolder('/', self::APPDATA_SYSTEM);
+		}
+
+		if ($folderName) {
+			try {
+				/** @var FolderInterface $folder */
+				$folder = $this->systemFolder->get($folderName);
+				if (!$folder->isFolder()) {
+					throw new InvalidPathException();
+				}
+
+				return $folder;
+			} catch (NotFoundException $e) {
+				return $this->systemFolder->newFolder($folderName);
+			}
 		}
 
 		return $this->systemFolder;
 	}
 
 	/**
+	 * @param string|null $folderName
+	 *
 	 * @return FolderInterface
 	 * @throws InvalidPathException
-	 * @throws NotFoundException
+	 * @throws NotPermittedException
 	 */
-	public function getAppDataFolder(): FolderInterface
+	public function getAppDataFolder(string $folderName = null): FolderInterface
 	{
 		if ($this->appDataFolder === null) {
 			$baseAppDataFolderName = 'appdata_' . $this->configService->getSystemValue('instanceid', '');
@@ -117,54 +151,58 @@ class FileService
 			try {
 				/** @var Folder $baseFolder */
 				$baseFolder = $this->rootFolder->get($baseAppDataFolderName);
-
 				if (!($baseFolder instanceof Folder)) {
 					throw new InvalidPathException();
 				}
-			} catch (NotFoundException $notFoundException) {
-				try {
-					$baseFolder = $this->rootFolder->newFolder($baseAppDataFolderName);
-				} catch (NotPermittedException $notPermittedException) {
-					throw $notFoundException;
-				}
+			} catch (NotFoundException $e) {
+				$baseFolder = $this->rootFolder->newFolder($baseAppDataFolderName);
 			}
 
 			try {
 				$appDataFolder = $baseFolder->get($appDataFolderName);
-
 				if (!($appDataFolder instanceof Folder)) {
 					throw new InvalidPathException();
 				}
-			} catch (NotFoundException $notFoundException) {
-				try {
-					$appDataFolder = $baseFolder->newFolder($appDataFolderName);
-				} catch (NotPermittedException $notPermittedException) {
-					throw $notFoundException;
-				}
+			} catch (NotFoundException $e) {
+				$appDataFolder = $baseFolder->newFolder($appDataFolderName);
 			}
 
 			$this->appDataFolder = new StorageFolder($appDataFolder);
+		}
+
+		if ($folderName) {
+			try {
+				/** @var FolderInterface $folder */
+				$folder = $this->appDataFolder->get($folderName);
+				if (!$folder->isFolder()) {
+					throw new InvalidPathException();
+				}
+
+				return $folder;
+			} catch (NotFoundException $e) {
+				return $this->appDataFolder->newFolder($folderName);
+			}
 		}
 
 		return $this->appDataFolder;
 	}
 
 	/**
-	 * @param string $dir
-	 * @param bool $absolute
+	 * @param string|null $folderName
+	 * @param bool        $absolute
 	 *
 	 * @return string
 	 */
-	public function getAppDataFolderPath(string $dir, bool $absolute = false): string
+	public function getAppDataFolderPath(string $folderName = null, bool $absolute = false): string
 	{
 		$baseAppDataFolderName = 'appdata_' . $this->configService->getSystemValue('instanceid', '');
-		$appDataFolderName = Application::APP_NAME;
+		$appDataFolderName = Application::APP_NAME . ($folderName ? '/' . $folderName : '');
 
 		if (!$absolute) {
-			return $baseAppDataFolderName . '/' . $appDataFolderName . '/' . $dir . '/';
+			return $baseAppDataFolderName . '/' . $appDataFolderName . '/';
 		} else {
 			$dataFolderPath = rtrim($this->configService->getSystemValue('datadirectory', null), '/');
-			return $dataFolderPath . '/' . $baseAppDataFolderName . '/' . $appDataFolderName . '/' . $dir . '/';
+			return $dataFolderPath . '/' . $baseAppDataFolderName . '/' . $appDataFolderName . '/';
 		}
 	}
 
