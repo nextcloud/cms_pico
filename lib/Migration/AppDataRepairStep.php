@@ -26,6 +26,7 @@ namespace OCA\CMSPico\Migration;
 
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Files\FolderInterface;
+use OCA\CMSPico\Service\ConfigService;
 use OCA\CMSPico\Service\FileService;
 use OCA\CMSPico\Service\PicoService;
 use OCA\CMSPico\Service\PluginsService;
@@ -40,6 +41,9 @@ class AppDataRepairStep implements IRepairStep
 	/** @var ILogger */
 	private $logger;
 
+	/** @var ConfigService */
+	private $configService;
+
 	/** @var ThemesService */
 	private $themesService;
 
@@ -53,17 +57,20 @@ class AppDataRepairStep implements IRepairStep
 	 * AppDataRepairStep constructor.
 	 *
 	 * @param ILogger        $logger
+	 * @param ConfigService  $configService
 	 * @param ThemesService  $themesService
 	 * @param PluginsService $pluginsService
 	 * @param FileService    $fileService
 	 */
 	public function __construct(
 		ILogger $logger,
+		ConfigService $configService,
 		ThemesService $themesService,
 		PluginsService $pluginsService,
 		FileService $fileService
 	) {
 		$this->logger = $logger;
+		$this->configService = $configService;
 		$this->themesService = $themesService;
 		$this->pluginsService = $pluginsService;
 		$this->fileService = $fileService;
@@ -174,15 +181,54 @@ class AppDataRepairStep implements IRepairStep
 		$publicPluginsFolder = $this->fileService->getPublicFolder(PicoService::DIR_PLUGINS);
 		$publicPluginsFolder->empty();
 
+		$this->publishSystemPlugins();
+		$this->publishCustomPlugins();
+	}
+
+	/**
+	 * @return void
+	 */
+	private function publishSystemPlugins()
+	{
 		$systemPluginsFolder = $this->fileService->getSystemFolder(PicoService::DIR_PLUGINS);
-		foreach ($this->pluginsService->getSystemPlugins() as $pluginName) {
-			$systemPluginsFolder->get($pluginName)->copy($publicPluginsFolder);
+
+		$oldSystemPlugins = $this->pluginsService->getSystemPlugins();
+		$this->configService->deleteAppValue(ConfigService::SYSTEM_PLUGINS);
+
+		foreach ($systemPluginsFolder->listing() as $pluginFolder) {
+			$pluginName = $pluginFolder->getName();
+			if ($pluginFolder->isFolder()) {
+				$this->pluginsService->publishSystemPlugin($pluginName);
+			}
 		}
 
+		$newSystemPlugins = $this->pluginsService->getSystemPlugins();
+		$this->logChanges('system plugin', array_keys($newSystemPlugins), array_keys($oldSystemPlugins));
+	}
+
+	/**
+	 * @return void
+	 */
+	private function publishCustomPlugins()
+	{
 		$appDataPluginsFolder = $this->fileService->getAppDataFolder(PicoService::DIR_PLUGINS);
-		foreach ($this->pluginsService->getCustomPlugins() as $pluginName) {
-			$appDataPluginsFolder->get($pluginName)->copy($publicPluginsFolder);
+		$appDataPluginsFolder->sync(FolderInterface::SYNC_SHALLOW);
+
+		$oldCustomPlugins = $this->pluginsService->getCustomPlugins();
+		$this->configService->deleteAppValue(ConfigService::CUSTOM_PLUGINS);
+
+		$systemPlugins = $this->pluginsService->getSystemPlugins();
+		foreach ($appDataPluginsFolder->listing() as $pluginFolder) {
+			$pluginName = $pluginFolder->getName();
+			if ($pluginFolder->isFolder()) {
+				if (isset($oldCustomPlugins[$pluginName]) && !isset($systemPlugins[$pluginName])) {
+					$this->pluginsService->publishCustomPlugin($pluginName);
+				}
+			}
 		}
+
+		$newCustomPlugins = $this->pluginsService->getCustomPlugins();
+		$this->logChanges('custom plugin', array_keys($newCustomPlugins), array_keys($oldCustomPlugins));
 	}
 
 	/**
@@ -192,5 +238,28 @@ class AppDataRepairStep implements IRepairStep
 	private function log(string $message, int $level = ILogger::DEBUG)
 	{
 		$this->logger->log($level, $message, [ 'app' => Application::APP_NAME ]);
+	}
+
+	/**
+	 * @param string $title
+	 * @param array  $newItems
+	 * @param array  $oldItems
+	 */
+	private function logChanges(string $title, array $newItems, array $oldItems)
+	{
+		$addedItems = array_diff($newItems, $oldItems);
+		foreach ($addedItems as $item) {
+			$this->log(sprintf('Adding %s "%s"', $title, $item));
+		}
+
+		$updatedItems = array_intersect($newItems, $oldItems);
+		foreach ($updatedItems as $item) {
+			$this->log(sprintf('Replacing %s "%s"', $title, $item), ILogger::WARN);
+		}
+
+		$removedItems = array_diff($oldItems, $newItems);
+		foreach ($removedItems as $item) {
+			$this->log(sprintf('Removing %s "%s"', $title, $item), ILogger::WARN);
+		}
 	}
 }

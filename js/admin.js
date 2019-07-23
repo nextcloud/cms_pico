@@ -93,28 +93,33 @@
 		/**
 		 * @public
 		 *
-		 * @param {Object}   data
-		 * @param {string[]} data.systemItems
-		 * @param {string[]} data.customItems
-		 * @param {string[]} data.newItems
+		 * @param {Object}            data
+		 * @param {Object[]|string[]} data.systemItems
+		 * @param {Object[]|string[]} data.customItems
+		 * @param {Object[]|string[]} data.newItems
 		 */
 		update: function (data) {
+			var that = this;
+
 			this._content(this.$template);
 
-			for (var i = 0, $systemItem; i < data.systemItems.length; i++) {
-				$systemItem = this._content(this.$systemTemplate, { name: data.systemItems[i] });
-				this._setupItem(data.systemItems[i], $systemItem);
-			}
+			$.each(data.systemItems, function (_, value) {
+				var itemData = (typeof value === 'object') ? value : { name: value },
+					$item = that._content(that.$systemTemplate, itemData);
+				that._setupItem($item, itemData);
+			});
 
-			for (var j = 0, $customItem; j < data.customItems.length; j++) {
-				$customItem = this._content(this.$customTemplate, { name: data.customItems[j] });
-				this._setupItem(data.customItems[j], $customItem);
-			}
+			$.each(data.customItems, function (_, value) {
+				var itemData = (typeof value === 'object') ? value : { name: value },
+					$item = that._content(that.$customTemplate, itemData);
+				that._setupItem($item, itemData);
+			});
 
-			for (var k = 0, $newItem; k < data.newItems.length; k++) {
-				$newItem = this._content(this.$newTemplate, { name: data.newItems[k] });
-				this._setupItem(data.newItems[k], $newItem);
-			}
+			$.each(data.newItems, function (_, value) {
+				var itemData = (typeof value === 'object') ? value : { name: value },
+					$item = that._content(that.$newTemplate, itemData);
+				that._setupItem($item, itemData);
+			});
 
 			this._setup();
 		},
@@ -141,20 +146,47 @@
 		/**
 		 * @protected
 		 *
-		 * @param {string} name
-		 * @param {jQuery} $item
+		 * @param {jQuery}  $item
+		 * @param {Object}  itemData
+		 * @param {string}  itemData.name
+		 * @param {boolean} [itemData.compat]
+		 * @param {string}  [itemData.compatReason]
+		 * @param {Object}  [itemData.compatReasonData]
 		 */
-		_setupItem: function (name, $item) {
+		_setupItem: function ($item, itemData) {
 			var that = this;
+
+			$item.find('.info-compat').each(function () {
+				var $this = $(this),
+					$icon = $this.find('[class^="icon-"], [class*=" icon-"]'),
+					compat = !!itemData.compat;
+
+				$this.data('value', compat);
+
+				$icon
+					.addClass(compat ? 'icon-checkmark' : 'icon-error-color')
+					.removeClass(compat ? 'icon-error-color' : 'icon-checkmark');
+
+				if ($icon.hasClass('has-tooltip')) {
+					var compatReason = $icon.prop('title') || '';
+					if (itemData.compatReason) {
+						compatReason = t('cms_pico', itemData.compatReason, itemData.compatReasonData);
+					}
+
+					$icon
+						.prop('title', compatReason)
+						.tooltip();
+				}
+			});
 
 			$item.find('.action-sync').on('click.CMSPicoAdminList', function (event) {
 				event.preventDefault();
-				that._api('POST', name);
+				that._api('POST', itemData.name);
 			});
 
 			$item.find('.action-delete').on('click.CMSPicoAdminList', function (event) {
 				event.preventDefault();
-				that._api('DELETE', name);
+				that._api('DELETE', itemData.name);
 			});
 		}
 	});

@@ -125,12 +125,14 @@ class PicoService
 				$website->getWebsitePath(),
 				$this->fileService->getAppDataFolderPath(self::DIR_CONFIG, true),
 				$this->pluginsService->getPluginsPath(),
-				$this->themesService->getThemesPath()
+				$this->themesService->getThemesPath(),
+				false
 			);
 
-			$this->setupPico($website, $pico, $page);
-
 			try {
+				$this->setupPico($website, $pico, $page);
+				$this->loadPicoPlugins($pico);
+
 				$output = $pico->run();
 			} catch (PageInvalidPathException $e) {
 				throw $e;
@@ -184,5 +186,25 @@ class PicoService
 				'nextcloud_site' => $website->getSite(),
 			]
 		);
+	}
+
+	/**
+	 * @param Pico $pico
+	 */
+	private function loadPicoPlugins(Pico $pico)
+	{
+		$includeClosure = \Closure::bind(function (string $pluginFile) {
+			require($pluginFile);
+		}, null);
+
+		$plugins = $this->pluginsService->getPlugins();
+		foreach ($plugins as $pluginData) {
+			if ($pluginData['compat']) {
+				$pluginFile = $pluginData['name'] . '/' . $pluginData['name'] . '.php';
+				$includeClosure($this->pluginsService->getPluginsPath() . '/' . $pluginFile);
+
+				$pico->loadPlugin($pluginData['name']);
+			}
+		}
 	}
 }

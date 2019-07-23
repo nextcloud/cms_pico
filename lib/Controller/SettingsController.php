@@ -390,11 +390,6 @@ class SettingsController extends Controller
 		try {
 			$this->pluginsService->publishCustomPlugin($item);
 
-			$customPlugins = $this->pluginsService->getCustomPlugins();
-			$customPlugins[] = $item;
-
-			$this->configService->setAppValue(ConfigService::CUSTOM_PLUGINS, json_encode($customPlugins));
-
 			return $this->getPlugins();
 		} catch (\Exception $e) {
 			return $this->createErrorResponse($e);
@@ -426,19 +421,7 @@ class SettingsController extends Controller
 	public function removeCustomPlugin(string $item): DataResponse
 	{
 		try {
-			$customPlugins = $this->pluginsService->getCustomPlugins();
-
-			$newCustomPlugins = [];
-			foreach ($customPlugins as $customPlugin) {
-				if ($customPlugin === $item) {
-					$this->pluginsService->depublishCustomPlugin($item);
-					continue;
-				}
-
-				$newCustomPlugins[] = $customPlugin;
-			}
-
-			$this->configService->setAppValue(ConfigService::CUSTOM_PLUGINS, json_encode($newCustomPlugins));
+			$this->pluginsService->depublishCustomPlugin($item);
 
 			return $this->getPlugins();
 		} catch (\Exception $e) {
