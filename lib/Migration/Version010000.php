@@ -24,16 +24,30 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Migration;
 
+use OCA\CMSPico\Model\Plugin;
+use OCA\CMSPico\Service\ConfigService;
 use OCP\DB\ISchemaWrapper;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
 class Version010000 extends SimpleMigrationStep
 {
+	/** @var ConfigService */
+	private $configService;
+
 	/**
-	 * @param IOutput $output
-	 * @param \Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
-	 * @param array   $options
+	 * Version010000 constructor.
+	 *
+	 * @param ConfigService $configService
+	 */
+	public function __construct(ConfigService $configService) {
+		$this->configService = $configService;
+	}
+
+	/**
+	 * @param IOutput  $output
+	 * @param \Closure $schemaClosure
+	 * @param array    $options
 	 *
 	 * @return ISchemaWrapper
 	 */
@@ -88,5 +102,34 @@ class Version010000 extends SimpleMigrationStep
 		}
 
 		return $schema;
+	}
+
+	/**
+	 * @param IOutput  $output
+	 * @param \Closure $schemaClosure
+	 * @param array    $options
+	 */
+	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options)
+	{
+		$this->migrateCustomPlugins();
+	}
+
+	/**
+	 * @return void
+	 */
+	private function migrateCustomPlugins()
+	{
+		$customPlugins = $this->configService->getAppValue(ConfigService::CUSTOM_PLUGINS);
+
+		$newCustomPlugins = [];
+		foreach ($customPlugins as $pluginName) {
+			$newCustomPlugins[$pluginName] = [
+				'name' => $pluginName,
+				'type' => Plugin::PLUGIN_TYPE_CUSTOM,
+				'compat' => true
+			];
+		}
+
+		$this->configService->setAppValue(ConfigService::CUSTOM_PLUGINS, json_encode($newCustomPlugins));
 	}
 }
