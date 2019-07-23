@@ -91,40 +91,13 @@
 		},
 
 		/**
-		 * @public
-		 *
-		 * @param {Object}   data
-		 * @param {Object[]} data.websites
-		 * @param {int}      data.websites[].id
-		 * @param {string}   data.websites[].user_id
-		 * @param {string}   data.websites[].name
-		 * @param {string}   data.websites[].site
-		 * @param {string}   data.websites[].theme
-		 * @param {int}      data.websites[].type
-		 * @param {Object}   data.websites[].options
-		 * @param {string}   [data.websites[].options.private]
-		 * @param {string}   data.websites[].path
-		 * @param {int}      data.websites[].creation
-		 */
-		update: function (data) {
-			this._content(this.$template);
-
-			for (var i = 0, $website; i < data.websites.length; i++) {
-				$website = this._content(this.$itemTemplate, data.websites[i]);
-				this._setupItem($website, data.websites[i]);
-			}
-
-			this._setup();
-		},
-
-		/**
 		 * @private
 		 */
 		_init: function () {
 			var that = this;
 			$(document).on('click.CMSPicoWebsiteList', function (event) {
 				var $target = $(event.target),
-						$menu;
+					$menu;
 
 				if ($target.is('.icon-more')) {
 					$menu = $target.nextAll('.popovermenu');
@@ -138,6 +111,32 @@
 
 				that.$element.find('.popovermenu.open').not($menu).removeClass('open');
 			});
+		},
+
+		/**
+		 * @public
+		 *
+		 * @param {Object}   data
+		 * @param {Object[]} data.websites
+		 * @param {int}      data.websites[].id
+		 * @param {string}   data.websites[].user_id
+		 * @param {string}   data.websites[].name
+		 * @param {string}   data.websites[].site
+		 * @param {string}   data.websites[].theme
+		 * @param {int}      data.websites[].type
+		 * @param {Object}   data.websites[].options
+		 * @param {string}   data.websites[].path
+		 * @param {int}      data.websites[].creation
+		 */
+		update: function (data) {
+			this._content(this.$template);
+
+			for (var i = 0, $website; i < data.websites.length; i++) {
+				$website = this._content(this.$itemTemplate, data.websites[i]);
+				this._setupItem($website, data.websites[i]);
+			}
+
+			this._setup();
 		},
 
 		/**
@@ -170,7 +169,6 @@
 		 * @param {string} websiteData.theme
 		 * @param {int}    websiteData.type
 		 * @param {Object} websiteData.options
-		 * @param {string} [websiteData.options.private]
 		 * @param {string} websiteData.path
 		 * @param {int}    websiteData.creation
 		 */

@@ -192,6 +192,7 @@
 				display: block;
 
 				&:hover {
+					.icon,
 					[class^="icon-"],
 					[class*=" icon-"] {
 						opacity: 0.7;
@@ -246,6 +247,7 @@
 			}
 		}
 
+		.action .icon,
 		.action [class^="icon-"],
 		.action [class*=" icon-"],
 		.more .icon-more {
@@ -406,14 +408,16 @@
 		display: flex;
 		min-height: 24px;
 
-		> .icon {
+		> .icon,
+		> [class^="icon-"],
+		> [class*=" icon-"] {
 			flex: 0 0 auto;
 			width: 2em;
 			margin: 0 calc(var(--margin) * 0.25) 0 0;
 			padding: 0;
 		}
 
-		> div:not(.icon) {
+		> div:not(.icon):not([class^="icon-"]):not([class*=" icon-"]) {
 			flex: 1 1 auto;
 			align-self: center;
 

@@ -140,8 +140,8 @@
 		/**
 		 * @protected
 		 *
-		 * @param {jQuery} $template
-		 * @param {object} [vars]
+		 * @param {jQuery}  $template
+		 * @param {object}  [vars]
 		 * @param {boolean} [replaceContent]
 		 *
 		 * @returns {jQuery}
