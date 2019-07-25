@@ -2,7 +2,7 @@
     "test" : "test",
     "It was not possible to retrieve the complete list of your websites" : "Det er ikke muligt at modtage hele listen over din hjemmeside",
     "no error message" : "Ingen fejlbesked",
-    "It was not possible to update your theme on {name}" : "Det var ikke muligt at opdaterer dit tema på {name}",
+    "It was not possible to update your theme on {name}" : "Det var ikke muligt at opdatere dit tema på {name}",
     "This operation will delete the website {name} but its content will still be available in your files" : "Dette vil slette din hjemmeside {name} men indholdet vil stadig være tilgængeligt i dine filer",
     "Please confirm" : "Bekræft venligst",
     "Please wait" : "Vent venligst...",

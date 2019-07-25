@@ -30,6 +30,7 @@
     "Using MOD_REWRITE:" : "Använder MOD_REWRITE:",
     "Using MOD_REWRITE and MOD_PROXY:" : "Använder MOD_REWRITE och MOD_PROXY:",
     "Custom themes" : "Anpassade teman",
+    "To add a custom theme, you will need to create a new folder in the 'themes' directory:" : "För att lägga till ett anpassat tema måste du skapa en ny mapp i katalogen \"teman\":",
     "Current custom themes:" : "Nuvarande anpassade teman:",
     "Add a new custom theme:" : "Lägg till ett nytt anpassat tema:",
     "Add custom theme" : "Lägg till anpassat tema",

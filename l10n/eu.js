@@ -1,7 +1,7 @@
 OC.L10N.register(
     "cms_pico",
     {
-    "test" : "Proba",
+    "test" : "proba",
     "It was not possible to retrieve the complete list of your websites" : "Ezin da zure webguneen zerrenda osoa jaso ",
     "no error message" : "Errore mezurik ez",
     "This operation will delete the website {name} but its content will still be available in your files" : "Eragiketa horrek {name} webgunea ezabatuko du baina bere edukia segituko du eskuragarri zure fitxategietan",
@@ -28,6 +28,7 @@ OC.L10N.register(
     "Using MOD_REWRITE:" : "MOD_REWRITE erabiltzen:",
     "Using MOD_REWRITE and MOD_PROXY:" : "MOD_REWRITE eta MOD_PROXY erabiltzen:",
     "Custom templates" : "Txantiloi pertsonalizatuak",
+    "To add a custom template, you will need to create a new folder in the 'templates' directory:" : "Txantiloi pertsonalizatu bat gehitzeko, 'txantiloiak' direktorioan karpeta berri bat sortu beharko duzu:",
     "Current custom templates:" : "Uneko txantiloi pertsonalizatuak:",
     "Add a new custom template:" : "Gehitu txantiloi pertsonalizatu berria:",
     "Add custom template" : "Gehitu txantiloi  pertsonalizatua",
@@ -37,6 +38,7 @@ OC.L10N.register(
     "Address" : "Helbidea",
     "Local directory" : "Direktorio lokala",
     "Private" : "Pribatua",
+    "My new site" : "Nire gune berria",
     "my_site" : "my_site",
     "Local directory:" : "Direktorio lokala:",
     "The place to store the website files on your cloud" : "Zure webguneko fitxategiak lainoan gordetzeko lekua",

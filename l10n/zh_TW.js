@@ -19,6 +19,8 @@ OC.L10N.register(
     "Website already exist." : "網站已經存在",
     "Pico CMS" : "Pico CMS",
     "Your Apache configuration" : "您的 Apache 設定",
-    "Theme" : "佈景主題"
+    "Local directory" : "當地目錄",
+    "Theme" : "佈景主題",
+    "Local directory:" : "當地目錄"
 },
 "nplurals=1; plural=0;");

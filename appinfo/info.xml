@@ -18,7 +18,7 @@ The app uses [Pico](https://picocms.org/) to allow your users to create and mana
 
 ]]>
 	</description>
-	<version>0.9.7</version>
+	<version>0.9.8</version>
 	<licence>agpl</licence>
 	<author>Maxence Lange, Viktar Dubiniuk</author>
 	<namespace>CMSPico</namespace>
@@ -31,6 +31,7 @@ The app uses [Pico](https://picocms.org/) to allow your users to create and mana
 	<screenshot>https://raw.githubusercontent.com/VicDeo/cms_pico/master/screenshots/list_websites.png</screenshot>
 	<dependencies>
 		<owncloud min-version="10.0.6" max-version="10.1" />
+		<nextcloud min-version="12" max-version="16"/>
 	</dependencies>
 
 	<settings>
