@@ -5,7 +5,11 @@ build_dir=$(CURDIR)/build/artifacts
 appstore_dir=$(build_dir)/appstore
 package_name=$(app_name)
 cert_dir=$(HOME)/.owncloud/certificates
-version+=0.9.7
+version+=0.9.8
+codecov_token_dir=$(HOME)/.owncloud/codecov_token
+github_account=VicDeo
+branch=master
+
 appstore_package_name=$(appstore_dir)/$(app_name)
 
 COMPOSER_BIN=$(build_dir)/composer.phar
@@ -28,7 +32,7 @@ endif
 endif
 
 
-all: appstore
+all: appstore github-release github-upload
 
 #
 # Basic required tools
@@ -40,13 +44,21 @@ $(COMPOSER_BIN):
 
 release: appstore create-tag
 
-create-tag:
-	git tag -s -a v$(version) -m "Tagging the $(version) release."
-	git push origin v$(version)
+github-release:
+	github-release release \
+		--user $(github_account) \
+		--repo $(app_name) \
+		--target $(branch) \
+		--tag v$(version) \
+		--name "$(app_name) v$(version)"
 
-clean:
-	rm -rf $(build_dir)
-	rm -rf node_modules
+github-upload:
+	github-release upload \
+		--user $(github_account) \
+		--repo $(app_name) \
+		--tag v$(version) \
+		--name "$(app_name)-$(version).tar.gz" \
+		--file $(build_dir)/$(app_name)-$(version).tar.gz
 
 composer: $(COMPOSER_BIN)
 	cd $(project_dir) && php $(COMPOSER_BIN) install
@@ -57,6 +69,13 @@ test: composer
 
 appstore: clean composer
 	mkdir -p $(appstore_dir)
+
+clean:
+	rm -rf $(build_dir)
+	rm -rf node_modules
+
+appstore: composer clean
+	mkdir -p $(sign_dir)
 	rsync -a \
 	--exclude=/build \
 	--exclude=/docs \
@@ -86,3 +105,4 @@ appstore: clean composer
 	    @echo $(sign_skip_msg)
     endif
 	tar --format=gnu -czf $(appstore_package_name).tar.gz -C $(appstore_package_name)/../ $(app_name)
+
