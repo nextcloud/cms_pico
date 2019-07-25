@@ -30,7 +30,7 @@ The app uses [Pico](https://picocms.org/) to allow your users to create and mana
 	<repository>https://github.com/VicDeo/cms_pico.git</repository>
 	<screenshot>https://raw.githubusercontent.com/VicDeo/cms_pico/master/screenshots/list_websites.png</screenshot>
 	<dependencies>
-		<owncloud min-version="10.0.6" max-version="10.1" />
+		<owncloud min-version="10.0.6" max-version="10" />
 		<nextcloud min-version="12" max-version="16"/>
 	</dependencies>
 
