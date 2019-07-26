@@ -67,15 +67,12 @@ test: SHELL:=/bin/bash
 test: composer
 	phpunit --coverage-clover=coverage.xml --configuration=tests/phpunit.xml tests
 
-appstore: clean composer
-	mkdir -p $(appstore_dir)
-
 clean:
 	rm -rf $(build_dir)
 	rm -rf node_modules
-
-appstore: composer clean
-	mkdir -p $(sign_dir)
+	
+appstore: clean composer
+	mkdir -p $(appstore_dir)
 	rsync -a \
 	--exclude=/build \
 	--exclude=/docs \
