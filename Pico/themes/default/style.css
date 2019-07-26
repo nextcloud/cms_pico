@@ -226,8 +226,8 @@ dd {
 
 #header {
     background: #2EAE9B;
-    padding: 60px 0;
-    margin-bottom: 80px;
+    padding: 20px 0 50px;
+    margin-bottom: 50px;
     color: #afe1da;
 }
 #header a {
@@ -277,6 +277,10 @@ dd {
 
 /* Misc Styles
 /*---------------------------------------------*/
+.logo img {
+    height: 30px;
+}
+
 .clearfix:before,
 .clearfix:after {
     content: " ";

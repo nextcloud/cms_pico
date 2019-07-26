@@ -10,10 +10,6 @@ social:
       icon: chat
 ---
 
-## cms_pico 
-
-![Image Title](%base_url%/assets/image.png)
-
 ## Welcome to Pico
 
 Congratulations, you have successfully installed [Pico](http://picocms.org/).
