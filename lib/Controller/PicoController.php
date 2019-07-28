@@ -29,7 +29,7 @@ use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Exceptions\AssetInvalidPathException;
 use OCA\CMSPico\Exceptions\AssetNotFoundException;
 use OCA\CMSPico\Exceptions\AssetNotPermittedException;
-use OCA\CMSPico\Exceptions\EncryptedFilesystemException;
+use OCA\CMSPico\Exceptions\FilesystemEncryptedException;
 use OCA\CMSPico\Exceptions\PageInvalidPathException;
 use OCA\CMSPico\Exceptions\PageNotFoundException;
 use OCA\CMSPico\Exceptions\PageNotPermittedException;
@@ -149,7 +149,7 @@ class PicoController extends Controller
 			return new NotFoundResponse($this->l10n->t('The requested website could not be found on the server. Maybe the website was deleted?'));
 		} catch (WebsiteNotPermittedException $e) {
 			return new NotPermittedResponse($this->l10n->t('You don\'t have access to this private website. Maybe the share was deleted or has expired?'));
-		} catch (EncryptedFilesystemException $e) {
+		} catch (FilesystemEncryptedException $e) {
 			return new NotPermittedResponse($this->l10n->t('This website is hosted on a encrypted Nextcloud instance and thus could not be accessed.'));
 		} catch (ThemeNotFoundException $e) {
 			return new NotFoundResponse($this->l10n->t('This website uses a theme that could not be found on the server and thus could not be built.'));
@@ -201,7 +201,7 @@ class PicoController extends Controller
 			return new NotFoundResponse($this->l10n->t('The requested website could not be found on the server. Maybe the website was deleted?'));
 		} catch (WebsiteNotPermittedException $e) {
 			return new NotPermittedResponse($this->l10n->t('You don\'t have access to this private website. Maybe the share was deleted or has expired?'));
-		} catch (EncryptedFilesystemException $e) {
+		} catch (FilesystemEncryptedException $e) {
 			return new NotPermittedResponse($this->l10n->t('This website is hosted on a encrypted Nextcloud instance and thus could not be accessed.'));
 		} catch (AssetInvalidPathException $e) {
 			return new NotFoundResponse($this->l10n->t('The requested website asset could not be found on the server. Maybe the asset was deleted?'));

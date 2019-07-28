@@ -25,12 +25,12 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Service;
 
-use OC\Encryption\Manager;
+use OC\Encryption\Manager as EncryptionManager;
 use OCA\CMSPico\Db\WebsitesRequest;
 use OCA\CMSPico\Exceptions\AssetInvalidPathException;
 use OCA\CMSPico\Exceptions\AssetNotFoundException;
 use OCA\CMSPico\Exceptions\AssetNotPermittedException;
-use OCA\CMSPico\Exceptions\EncryptedFilesystemException;
+use OCA\CMSPico\Exceptions\FilesystemEncryptedException;
 use OCA\CMSPico\Exceptions\PageInvalidPathException;
 use OCA\CMSPico\Exceptions\PageNotFoundException;
 use OCA\CMSPico\Exceptions\PageNotPermittedException;
@@ -47,7 +47,7 @@ use OCP\Files\File;
 
 class WebsitesService
 {
-	/** @var Manager */
+	/** @var EncryptionManager */
 	private $encryptionManager;
 
 	/** @var WebsitesRequest */
@@ -219,7 +219,7 @@ class WebsitesService
 	 * @return PicoPage
 	 * @throws WebsiteNotFoundException
 	 * @throws WebsiteNotPermittedException
-	 * @throws EncryptedFilesystemException
+	 * @throws FilesystemEncryptedException
 	 * @throws PageInvalidPathException
 	 * @throws PageNotFoundException
 	 * @throws PageNotPermittedException
@@ -234,7 +234,7 @@ class WebsitesService
 		$website->setPage($page);
 
 		if ($this->encryptionManager->isEnabled()) {
-			throw new EncryptedFilesystemException();
+			throw new FilesystemEncryptedException();
 		}
 
 		return $this->picoService->getPage($website);
@@ -248,7 +248,7 @@ class WebsitesService
 	 * @return File
 	 * @throws WebsiteNotFoundException
 	 * @throws WebsiteNotPermittedException
-	 * @throws EncryptedFilesystemException
+	 * @throws FilesystemEncryptedException
 	 * @throws AssetInvalidPathException
 	 * @throws AssetNotFoundException
 	 * @throws AssetNotPermittedException
@@ -260,7 +260,7 @@ class WebsitesService
 		$website->setPage($asset);
 
 		if ($this->encryptionManager->isEnabled()) {
-			throw new EncryptedFilesystemException();
+			throw new FilesystemEncryptedException();
 		}
 
 		return $this->assetsService->getAsset($website);
