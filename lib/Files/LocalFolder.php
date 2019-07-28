@@ -148,12 +148,23 @@ class LocalFolder extends AbstractLocalNode implements FolderInterface
 		$path = $this->normalizePath($this->path . '/' . $path);
 
 		$parentPath = dirname($path);
+		$parentFolder = null;
+
 		if ($parentPath !== '/') {
 			if (!$this->getBaseFolder()->exists($parentPath)) {
-				$this->getBaseFolder()->newFolder($parentPath);
-			} elseif (!$this->getBaseFolder()->get($parentPath)->isFolder()) {
-				throw new AlreadyExistsException();
+				$parentFolder = $this->getBaseFolder()->newFolder($parentPath);
+			} else {
+				$parentFolder = $this->getBaseFolder()->get($parentPath);
+				if (!$parentFolder->isFolder()) {
+					throw new AlreadyExistsException();
+				}
 			}
+		} else {
+			$parentFolder = $this->getBaseFolder();
+		}
+
+		if (!$parentFolder->isCreatable()) {
+			throw new NotPermittedException();
 		}
 
 		if (!@mkdir($this->basePath . '/' . $path)) {
@@ -175,12 +186,23 @@ class LocalFolder extends AbstractLocalNode implements FolderInterface
 		$path = $this->normalizePath($this->path . '/' . $path);
 
 		$parentPath = dirname($path);
+		$parentFolder = null;
+
 		if ($parentPath !== '/') {
 			if (!$this->getBaseFolder()->exists($parentPath)) {
-				$this->getBaseFolder()->newFolder($parentPath);
-			} elseif (!$this->getBaseFolder()->get($parentPath)->isFolder()) {
-				throw new AlreadyExistsException();
+				$parentFolder = $this->getBaseFolder()->newFolder($parentPath);
+			} else {
+				$parentFolder = $this->getBaseFolder()->get($parentPath);
+				if (!$parentFolder->isFolder()) {
+					throw new AlreadyExistsException();
+				}
 			}
+		} else {
+			$parentFolder = $this->getBaseFolder();
+		}
+
+		if (!$parentFolder->isCreatable()) {
+			throw new NotPermittedException();
 		}
 
 		if (!@touch($this->basePath . '/' . $path)) {
