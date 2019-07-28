@@ -172,14 +172,17 @@ class Version010000 extends SimpleMigrationStep
 			$publicPluginsTestFile = $publicPluginsFolder->newFile($this->miscService->getRandomFileName());
 			$publicPluginsTestFile->delete();
 		} catch (NotPermittedException $e) {
+			$appDataPublicPath = $this->appManager->getAppPath(Application::APP_NAME) . '/appdata_public';
+			$dataPath = $this->configService->getSystemValue('datadirectory', \OC::$SERVERROOT . '/data');
+
 			throw new FilesystemNotWritableException($this->l10n->t(
 				'Failed to enable Pico CMS for Nextcloud: The webserver has no permission to create files and '
 						. 'folders below "%s". Make sure to give the webserver write access to this directory by '
 						. 'changing its permissions and ownership to the same as of your "%s" directory. Then try '
 						. 'again enabling Pico CMS for Nextcloud.',
 				[
-					$this->miscService->getRelativePath($this->appManager->getAppPath(Application::APP_NAME)),
-					$this->miscService->getRelativePath($this->configService->getSystemValue('datadirectory'))
+					$this->miscService->getRelativePath($appDataPublicPath) . '/',
+					$this->miscService->getRelativePath($dataPath) . '/'
 				]
 			));
 		}
