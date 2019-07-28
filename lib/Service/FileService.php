@@ -40,10 +40,10 @@ use OCP\Files\NotPermittedException;
 class FileService
 {
 	/** @var string */
-	const APPDATA_PUBLIC = __DIR__ . '/../../appdata_public/';
+	const APPDATA_PUBLIC = 'appdata_public';
 
 	/** @var string */
-	const APPDATA_SYSTEM = __DIR__ . '/../../appdata/';
+	const APPDATA_SYSTEM = 'appdata';
 
 	/** @var IRootFolder */
 	private $rootFolder;
@@ -85,7 +85,7 @@ class FileService
 	public function getPublicFolder(string $folderName = null): FolderInterface
 	{
 		if ($this->publicFolder === null) {
-			$this->publicFolder = new LocalFolder('/', self::APPDATA_PUBLIC);
+			$this->publicFolder = new LocalFolder('/', Application::APP_PATH . self::APPDATA_PUBLIC);
 		}
 
 		if ($folderName) {
@@ -115,7 +115,7 @@ class FileService
 	public function getSystemFolder(string $folderName = null): FolderInterface
 	{
 		if ($this->systemFolder === null) {
-			$this->systemFolder = new LocalFolder('/', self::APPDATA_SYSTEM);
+			$this->systemFolder = new LocalFolder('/', Application::APP_PATH . self::APPDATA_SYSTEM);
 		}
 
 		if ($folderName) {
