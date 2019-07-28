@@ -193,9 +193,9 @@ class PicoService
 	 */
 	private function loadPicoPlugins(Pico $pico)
 	{
-		$includeClosure = \Closure::bind(function (string $pluginFile) {
+		$includeClosure = static function (string $pluginFile) {
 			require($pluginFile);
-		}, null);
+		};
 
 		$plugins = $this->pluginsService->getPlugins();
 		foreach ($plugins as $pluginData) {

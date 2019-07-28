@@ -133,7 +133,7 @@ class ConfigService
 	 *
 	 * @return mixed
 	 */
-	public function getSystemValue(string $key, $defaultValue)
+	public function getSystemValue(string $key, $defaultValue = '')
 	{
 		return $this->config->getSystemValue($key, $defaultValue);
 	}

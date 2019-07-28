@@ -111,9 +111,9 @@ class Plugin implements \JsonSerializable
 			return;
 		}
 
-		$includeClosure = \Closure::bind(function (string $pluginFile) {
+		$includeClosure = static function (string $pluginFile) {
 			require($pluginFile);
-		}, null);
+		};
 
 		try {
 			if (!is_file($this->getFolder()->getLocalPath() . '/' . $this->getName() . '.php')) {
