@@ -24,24 +24,54 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Migration;
 
+use OC\Encryption\Manager as EncryptionManager;
+use OCA\CMSPico\AppInfo\Application;
+use OCA\CMSPico\Exceptions\FilesystemEncryptedException;
+use OCA\CMSPico\Exceptions\FilesystemNotWritableException;
 use OCA\CMSPico\Model\Plugin;
 use OCA\CMSPico\Service\ConfigService;
+use OCA\CMSPico\Service\FileService;
+use OCA\CMSPico\Service\MiscService;
+use OCA\CMSPico\Service\PicoService;
+use OCP\App\IAppManager;
 use OCP\DB\ISchemaWrapper;
+use OCP\Files\AlreadyExistsException;
+use OCP\Files\NotPermittedException;
+use OCP\IL10N;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
 class Version010000 extends SimpleMigrationStep
 {
+	/** @var IL10N */
+	private $l10n;
+
+	/** @var IAppManager */
+	private $appManager;
+
+	/** @var EncryptionManager */
+	private $encryptionManager;
+
 	/** @var ConfigService */
 	private $configService;
 
+	/** @var MiscService */
+	private $miscService;
+
+	/** @var FileService */
+	private $fileService;
+
 	/**
 	 * Version010000 constructor.
-	 *
-	 * @param ConfigService $configService
 	 */
-	public function __construct(ConfigService $configService) {
-		$this->configService = $configService;
+	public function __construct()
+	{
+		$this->l10n = \OC::$server->getL10N(Application::APP_NAME);
+		$this->appManager = \OC::$server->getAppManager();
+		$this->encryptionManager = \OC::$server->getEncryptionManager();
+		$this->configService = \OC::$server->query(ConfigService::class);
+		$this->fileService = \OC::$server->query(FileService::class);
+		$this->miscService = \OC::$server->query(MiscService::class);
 	}
 
 	/**
@@ -111,7 +141,60 @@ class Version010000 extends SimpleMigrationStep
 	 */
 	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options)
 	{
+		$this->createPublicFolder();
+		$this->checkEncryptedFilesystem();
 		$this->migrateCustomPlugins();
+	}
+
+	/**
+	 * @throws FilesystemNotWritableException
+	 */
+	private function createPublicFolder()
+	{
+		$publicFolder = $this->fileService->getPublicFolder();
+
+		try {
+			try {
+				$publicThemesFolder = $publicFolder->newFolder(PicoService::DIR_THEMES);
+			} catch (AlreadyExistsException $e) {
+				$publicThemesFolder = $publicFolder->get(PicoService::DIR_THEMES);
+			}
+
+			$publicThemesTestFile = $publicThemesFolder->newFile($this->miscService->getRandomFileName());
+			$publicThemesTestFile->delete();
+
+			try {
+				$publicPluginsFolder = $publicFolder->newFolder(PicoService::DIR_PLUGINS);
+			} catch (AlreadyExistsException $e) {
+				$publicPluginsFolder = $publicFolder->get(PicoService::DIR_PLUGINS);
+			}
+
+			$publicPluginsTestFile = $publicPluginsFolder->newFile($this->miscService->getRandomFileName());
+			$publicPluginsTestFile->delete();
+		} catch (NotPermittedException $e) {
+			throw new FilesystemNotWritableException($this->l10n->t(
+				'Failed to enable Pico CMS for Nextcloud: The webserver has no permission to create files and '
+						. 'folders below "%s". Make sure to give the webserver write access to this directory by '
+						. 'changing its permissions and ownership to the same as of your "%s" directory. Then try '
+						. 'again enabling Pico CMS for Nextcloud.',
+				[
+					$this->miscService->getRelativePath($this->appManager->getAppPath(Application::APP_NAME)),
+					$this->miscService->getRelativePath($this->configService->getSystemValue('datadirectory'))
+				]
+			));
+		}
+	}
+
+	/**
+	 * @throws FilesystemEncryptedException
+	 */
+	private function checkEncryptedFilesystem()
+	{
+		if ($this->encryptionManager->isEnabled()) {
+			throw new FilesystemEncryptedException($this->l10n->t(
+				'Failed to enable Pico CMS for Nextcloud: You can\'t host websites on a encrypted Nextcloud.'
+			));
+		}
 	}
 
 	/**

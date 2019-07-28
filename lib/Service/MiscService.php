@@ -23,7 +23,9 @@
 
 namespace OCA\CMSPico\Service;
 
+use OCA\CMSPico\AppInfo\Application;
 use OCP\Files\InvalidPathException;
+use OCP\Security\ISecureRandom;
 
 class MiscService
 {
@@ -55,5 +57,35 @@ class MiscService
 		}
 
 		return implode('/', $resultParts);
+	}
+
+	/**
+	 * @param string      $path
+	 * @param string|null $basePath
+	 *
+	 * @return string
+	 * @throws InvalidPathException
+	 */
+	public function getRelativePath(string $path, string $basePath = null): string
+	{
+		if (!$basePath) {
+			$basePath = \OC::$SERVERROOT;
+		}
+
+		$basePath = $this->normalizePath($basePath) . '/';
+		$basePathLength = strlen($basePath);
+
+		$path = $this->normalizePath($path);
+		return (substr($path, 0, $basePathLength) === $basePath) ? substr($path, $basePathLength) : $path;
+	}
+
+	/**
+	 * @param string $suffix
+	 */
+	public function getRandomFileName(string $suffix = ''): string
+	{
+		$randomChars = ISecureRandom::CHAR_UPPER . ISecureRandom::CHAR_LOWER . ISecureRandom::CHAR_DIGITS;
+		$random = \OC::$server->getSecureRandom()->generate(10, $randomChars);
+		return 'tmp.' . $random . '_' . Application::APP_NAME . ($suffix ? '_' . $suffix : '');
 	}
 }
