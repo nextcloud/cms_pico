@@ -145,7 +145,7 @@ class FileService
 	public function getAppDataFolder(string $folderName = null): FolderInterface
 	{
 		if ($this->appDataFolder === null) {
-			$baseAppDataFolderName = 'appdata_' . $this->configService->getSystemValue('instanceid', '');
+			$baseAppDataFolderName = 'appdata_' . $this->configService->getSystemValue('instanceid');
 			$appDataFolderName = Application::APP_NAME;
 
 			try {
@@ -195,14 +195,14 @@ class FileService
 	 */
 	public function getAppDataFolderPath(string $folderName = null, bool $absolute = false): string
 	{
-		$baseAppDataFolderName = 'appdata_' . $this->configService->getSystemValue('instanceid', '');
+		$baseAppDataFolderName = 'appdata_' . $this->configService->getSystemValue('instanceid');
 		$appDataFolderName = Application::APP_NAME . ($folderName ? '/' . $folderName : '');
 
 		if (!$absolute) {
 			return $baseAppDataFolderName . '/' . $appDataFolderName . '/';
 		} else {
-			$dataFolderPath = rtrim($this->configService->getSystemValue('datadirectory', null), '/');
-			return $dataFolderPath . '/' . $baseAppDataFolderName . '/' . $appDataFolderName . '/';
+			$dataFolderPath = $this->configService->getSystemValue('datadirectory', \OC::$SERVERROOT . '/data');
+			return rtrim($dataFolderPath, '/') . '/' . $baseAppDataFolderName . '/' . $appDataFolderName . '/';
 		}
 	}
 
