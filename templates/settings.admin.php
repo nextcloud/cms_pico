@@ -399,16 +399,43 @@ style(Application::APP_NAME, 'pico');
 				. 'using this feature requires some additional webserver configuration. If you\'re using the Apache '
 				. 'webserver, try one of the first two examples shown below. If you\'re rather using the nginx '
 				. 'webserver, try one of last two examples. If you don\'t really understand what\'s going on, contact '
-				. 'your server administrator and send him the information below.'
+				. 'your server administrator and send him the information below. If your server administrator tells '
+				. 'you this isn\'t possible, don\'t despair - you can still use Pico CMS for Nextcloud\'s full '
+				. 'application URLs, they always work out-of-the-box.'
 			)); ?></p>
-			<p><?php p($l->t(
-				'If your server administrator tells you this isn\'t possible, don\'t despair - you can still use '
-				. 'Pico CMS for Nextcloud\'s full application URLs, they always work out-of-the-box and look like the '
-				. 'following:'
-			)); ?>
-			<p class="followup indent"><a><?php p($_['exampleFullUrl']); ?></a></p>
 		</div>
 	</div>
+
+	<section class="lane">
+		<header>
+			<h3><?php p($l->t('Enable short website URLs')); ?></h3>
+		</header>
+		<section>
+			<form id="picocms-link_mode" class="picocms-link_mode-form"
+					data-route="/apps/cms_pico/admin/link_mode">
+				<p>
+					<input type="radio" name="data[link_mode]" value="1" id="picocms-link_mode_long" class="radio" checked="checked">
+					<label for="picocms-link_mode_long">
+						<?php p($l->t('Full application URLs')); ?>
+						<span class="note">– <a><?php p($_['exampleFullUrl']); ?></a></span>
+					</label>
+				</p>
+				<p>
+					<input type="radio" name="data[link_mode]" value="2" id="picocms-link_mode_short" class="radio">
+					<label for="picocms-link_mode_short">
+						<?php p($l->t('Short website URLs')); ?>
+						<span class="note">– <a><?php p($_['exampleProxyUrl']); ?></a></span>
+					</label>
+				</p>
+				<p class="note"><?php p($l->t(
+					'After you\'ve configured your webserver to enable shortened URLs, you should select the '
+					. 'corresponding option above to let your users know about this feature. Don\'t enable this option '
+					. 'if you haven\'t configured the virtual "sites/" folder yet using one of the configuration examples '
+					. 'shown below.'
+				)); ?></p>
+			</form>
+		</section>
+	</section>
 
 	<section class="lane">
 		<header>

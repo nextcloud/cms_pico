@@ -198,4 +198,84 @@
 		$this.data('CMSPicoAdminList', adminList);
 		adminList.reload();
 	});
+
+	/**
+	 * @class
+	 *
+	 * @param {jQuery} $element
+	 * @param {Object} [options]
+	 * @param {string} [options.route]
+	 */
+	OCA.CMSPico.LinkModeForm = function ($element, options) {
+		this.initialize($element, options);
+	};
+
+	/**
+	 * @lends OCA.CMSPico.WebsiteForm.prototype
+	 */
+	OCA.CMSPico.LinkModeForm.prototype = {
+		/** @member {jQuery} */
+		$element: $(),
+
+		/** @member {string} */
+		route: '',
+
+		/**
+		 * @constructs
+		 *
+		 * @param {jQuery} $element
+		 * @param {Object} [options]
+		 * @param {string} [options.route]
+		 */
+		initialize: function ($element, options) {
+			this.$element = $element;
+
+			options = $.extend({
+				route: $element.data('route')
+			}, options);
+
+			this.route = options.route;
+
+			var signature = 'OCA.CMSPico.LinkModeForm.initialize()';
+			if (!this.route) throw signature + ': No route given';
+		},
+
+		/**
+		 * @public
+		 */
+		prepare: function () {
+			var that = this,
+				$input = this.$element.find('input[type="radio"]');
+
+			$input.on('change.CMSPicoLinkModeForm', function (event) {
+				that.submit();
+			});
+		},
+
+		/**
+		 * @public
+		 */
+		submit: function () {
+			var $input = this.$element.find(':input'),
+				data = this.$element.serialize();
+
+			$input.prop('disabled', true);
+
+			$.ajax({
+				method: 'POST',
+				url: OC.generateUrl(this.route),
+				data: data
+			}).done(function (data, textStatus, jqXHR) {
+				$input.prop('disabled', false);
+			});
+		}
+	};
+
+	$('.picocms-link_mode-form').each(function () {
+		var $this = $(this),
+			linkModeForm = new OCA.CMSPico.LinkModeForm($this);
+
+		$this.data('CMSPicoLinkModeForm', linkModeForm);
+		linkModeForm.prepare();
+	});
 })(document, jQuery, OC, OCA);

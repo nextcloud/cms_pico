@@ -57,6 +57,8 @@ return [
 		[ 'name' => 'Settings#addCustomPlugin', 'url' => '/admin/plugins', 'verb' => 'POST' ],
 		[ 'name' => 'Settings#updateCustomPlugin', 'url' => '/admin/plugins/{item}', 'verb' => 'POST' ],
 		[ 'name' => 'Settings#removeCustomPlugin', 'url' => '/admin/plugins/{item}', 'verb' => 'DELETE' ],
+
+		[ 'name' => 'Settings#setLinkMode', 'url' => '/admin/link_mode', 'verb' => 'POST' ],
 	]
 ];
 

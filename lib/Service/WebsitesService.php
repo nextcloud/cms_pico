@@ -47,11 +47,20 @@ use OCP\Files\File;
 
 class WebsitesService
 {
+	/** @var int */
+	const LINK_MODE_LONG = 1;
+
+	/** @var int */
+	const LINK_MODE_SHORT = 2;
+
 	/** @var EncryptionManager */
 	private $encryptionManager;
 
 	/** @var WebsitesRequest */
 	private $websiteRequest;
+
+	/** @var ConfigService */
+	private $configService;
 
 	/** @var TemplatesService */
 	private $templatesService;
@@ -66,6 +75,7 @@ class WebsitesService
 	 * WebsitesService constructor.
 	 *
 	 * @param WebsitesRequest  $websiteRequest
+	 * @param ConfigService    $configService
 	 * @param TemplatesService $templatesService
 	 * @param PicoService      $picoService
 	 * @param AssetsService    $assetsService
@@ -74,12 +84,14 @@ class WebsitesService
 	 */
 	public function __construct(
 		WebsitesRequest $websiteRequest,
+		ConfigService $configService,
 		TemplatesService $templatesService,
 		PicoService $picoService,
 		AssetsService $assetsService
 	) {
 		$this->encryptionManager = \OC::$server->getEncryptionManager();
 		$this->websiteRequest = $websiteRequest;
+		$this->configService = $configService;
 		$this->templatesService = $templatesService;
 		$this->picoService = $picoService;
 		$this->assetsService = $assetsService;
@@ -264,5 +276,27 @@ class WebsitesService
 		}
 
 		return $this->assetsService->getAsset($website);
+	}
+
+	/**
+	 * @param int $linkMode
+	 *
+	 * @throws \UnexpectedValueException
+	 */
+	public function setLinkMode(int $linkMode)
+	{
+		if (($linkMode !== self::LINK_MODE_LONG) && ($linkMode !== self::LINK_MODE_SHORT)) {
+			throw new \UnexpectedValueException();
+		}
+
+		$this->configService->setAppValue(ConfigService::LINK_MODE, $linkMode);
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getLinkMode(): int
+	{
+		return (int) $this->configService->getAppValue(ConfigService::LINK_MODE);
 	}
 }

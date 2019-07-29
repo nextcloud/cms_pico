@@ -42,12 +42,16 @@ class ConfigService
 	/** @var string */
 	const CUSTOM_PLUGINS = 'custom_plugins';
 
+	/** @var string */
+	const LINK_MODE = 'link_mode';
+
 	/** @var array<string,mixed> */
 	private $defaults = [
 		self::CUSTOM_TEMPLATES => '',
 		self::CUSTOM_THEMES => '',
 		self::SYSTEM_PLUGINS => '',
 		self::CUSTOM_PLUGINS => '',
+		self::LINK_MODE => WebsitesService::LINK_MODE_LONG,
 	];
 
 	/** @var IConfig */

@@ -430,6 +430,26 @@ class SettingsController extends Controller
 	}
 
 	/**
+	 * @param array $data
+	 *
+	 * @return DataResponse
+	 */
+	public function setLinkMode(array $data): DataResponse
+	{
+		try {
+			if (!isset($data['link_mode'])) {
+				throw new \UnexpectedValueException();
+			}
+
+			$this->websitesService->setLinkMode((int) $data['link_mode']);
+
+			return new DataResponse([], Http::STATUS_CREATED);
+		} catch (\Exception $e) {
+			return $this->createErrorResponse($e);
+		}
+	}
+
+	/**
 	 * @param \Exception $exception
 	 * @param array      $data
 	 *

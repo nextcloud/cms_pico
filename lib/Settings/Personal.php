@@ -29,6 +29,7 @@ use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Model\Website;
 use OCA\CMSPico\Service\TemplatesService;
 use OCA\CMSPico\Service\ThemesService;
+use OCA\CMSPico\Service\WebsitesService;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IURLGenerator;
 use OCP\Settings\ISettings;
@@ -37,6 +38,9 @@ class Personal implements ISettings
 {
 	/** @var IURLGenerator */
 	private $urlGenerator;
+
+	/** @var WebsitesService */
+	private $websitesService;
 
 	/** @var ThemesService */
 	private $themesService;
@@ -48,15 +52,18 @@ class Personal implements ISettings
 	 * Personal constructor.
 	 *
 	 * @param IURLGenerator    $urlGenerator
+	 * @param WebsitesService  $websitesService
 	 * @param ThemesService    $themesService
 	 * @param TemplatesService $templatesService
 	 */
 	public function __construct(
 		IURLGenerator $urlGenerator,
+		WebsitesService $websitesService,
 		ThemesService $themesService,
 		TemplatesService $templatesService
 	) {
 		$this->urlGenerator = $urlGenerator;
+		$this->websitesService = $websitesService;
 		$this->themesService = $themesService;
 		$this->templatesService = $templatesService;
 	}
@@ -67,18 +74,14 @@ class Personal implements ISettings
 	public function getForm(): TemplateResponse
 	{
 		$exampleSite = 'example_site';
-		$exampleProxyUrl = $this->urlGenerator->getBaseUrl() . '/sites/' . urlencode($exampleSite) . '/';
-		$exampleFullUrl = $this->urlGenerator->linkToRouteAbsolute(
-			Application::APP_NAME . '.Pico.getRoot',
-			[ 'site' => $exampleSite ]
-		);
 
 		$baseUrl = $this->urlGenerator->getBaseUrl() . '/index.php/apps/' . Application::APP_NAME . '/pico/';
+		if ($this->websitesService->getLinkMode() === WebsitesService::LINK_MODE_SHORT) {
+			$baseUrl = $this->urlGenerator->getBaseUrl() . '/sites/';
+		}
 
 		$data = [
 			'exampleSite' => $exampleSite,
-			'exampleProxyUrl'  => $exampleProxyUrl,
-			'exampleFullUrl'   => $exampleFullUrl,
 			'baseUrl' => $baseUrl,
 			'nameLengthMin' => Website::NAME_LENGTH_MIN,
 			'nameLengthMax' => Website::NAME_LENGTH_MAX,

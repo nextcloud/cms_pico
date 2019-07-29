@@ -44,13 +44,7 @@ style(Application::APP_NAME, 'pico');
 			)); ?></p>
 
 			<p><?php p($l->t('You will be able to access your websites using URLs like the following:')); ?>
-			<p class="followup indent"><a><?php p($_['exampleFullUrl']); ?></a></p>
-
-			<p><?php p($l->t(
-					'If your Nextcloud admin configured the webserver appropriately, you might also use URLs like '
-					. 'the following. If you get an "404 Not Found" error, try the longer URL shown above.'
-				)); ?>
-			<p class="followup indent"><a><?php p($_['exampleProxyUrl']); ?></a></p>
+			<p class="followup indent"><a><?php p(rtrim($_['baseUrl'], '/') . '/' . $_['exampleSite']); ?></a></p>
 		</div>
 	</div>
 
@@ -273,9 +267,7 @@ style(Application::APP_NAME, 'pico');
 					</a>
 					<p class="note">
 						<?php p($l->t(
-							'You will be able to access your website using the address (URL) shown above. If your '
-							. 'Nextcloud admin configured the webserver appropriately, you might also use the shorter '
-							. 'URL scheme as shown in the examples above.'
+							'You will be able to access your website using the address (URL) shown above.'
 						)); ?>
 					</p>
 				</div>
