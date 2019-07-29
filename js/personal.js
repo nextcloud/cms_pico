@@ -457,5 +457,5 @@
 
 		$this.data('CMSPicoWebsiteForm', websiteForm);
 		websiteForm.prepare();
-	})
+	});
 })(document, jQuery, OC, OCA);
