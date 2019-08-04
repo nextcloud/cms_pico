@@ -181,6 +181,8 @@ class AppDataRepairStep implements IRepairStep
 		$publicPluginsFolder = $this->fileService->getPublicFolder(PicoService::DIR_PLUGINS);
 		$publicPluginsFolder->empty();
 
+		$this->configService->deleteAppValue(ConfigService::PLUGINS_ETAG);
+
 		$this->publishSystemPlugins();
 		$this->publishCustomPlugins();
 	}

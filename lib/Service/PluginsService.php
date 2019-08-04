@@ -39,16 +39,24 @@ class PluginsService
 	/** @var FileService */
 	private $fileService;
 
+	/** @var MiscService */
+	private $miscService;
+
+	/** @var bool */
+	private $renewedETag = false;
+
 	/**
 	 * PluginsService constructor.
 	 *
 	 * @param ConfigService $configService
 	 * @param FileService   $fileService
+	 * @param MiscService   $miscService
 	 */
-	public function __construct(ConfigService $configService, FileService $fileService)
+	public function __construct(ConfigService $configService, FileService $fileService, MiscService $miscService)
 	{
 		$this->configService = $configService;
 		$this->fileService = $fileService;
+		$this->miscService = $miscService;
 	}
 
 	/**
@@ -160,7 +168,7 @@ class PluginsService
 	 */
 	private function publishPlugin(FolderInterface $pluginSourceFolder, int $pluginType): Plugin
 	{
-		$publicPluginsFolder = $this->fileService->getPublicFolder(PicoService::DIR_PLUGINS);
+		$publicPluginsFolder = $this->getPluginsFolder(true);
 
 		$pluginName = $pluginSourceFolder->getName();
 		$pluginSourceFolder->sync();
@@ -183,7 +191,7 @@ class PluginsService
 	 */
 	public function depublishCustomPlugin(string $plugin)
 	{
-		$publicPluginsFolder = $this->fileService->getPublicFolder(PicoService::DIR_PLUGINS);
+		$publicPluginsFolder = $this->getPluginsFolder();
 
 		try {
 			$publicPluginsFolder->get($plugin)->delete();
@@ -195,12 +203,50 @@ class PluginsService
 	}
 
 	/**
+	 * @param bool $renewETag
+	 * @param bool $forceRenewETag
+	 *
+	 * @return FolderInterface
+	 */
+	private function getPluginsFolder(bool $renewETag = false, bool $forceRenewETag = false): FolderInterface
+	{
+		$pluginsBaseFolder = $this->fileService->getPublicFolder(PicoService::DIR_PLUGINS);
+		$pluginsFolder = null;
+
+		$pluginsETag = $this->configService->getAppValue(ConfigService::PLUGINS_ETAG);
+		if ($pluginsETag) {
+			/** @var FolderInterface $pluginsFolder */
+			$pluginsFolder = $pluginsBaseFolder->get($pluginsETag);
+			if (!$pluginsFolder->isFolder()) {
+				throw new InvalidPathException();
+			}
+		}
+
+		if (($renewETag && !$this->renewedETag) || $forceRenewETag || !$pluginsFolder) {
+			$pluginsETag = $this->miscService->getRandom();
+
+			if ($pluginsFolder) {
+				$pluginsFolder = $pluginsFolder->rename($pluginsETag);
+			} else {
+				$pluginsFolder = $pluginsBaseFolder->newFolder($pluginsETag);
+			}
+
+			$this->configService->setAppValue(ConfigService::PLUGINS_ETAG, $pluginsETag);
+			$this->renewedETag = true;
+		}
+
+		return $pluginsFolder;
+	}
+
+	/**
 	 * @return string
 	 */
 	public function getPluginsPath(): string
 	{
-		$appPath = \OC_App::getAppPath(Application::APP_NAME);
-		return $appPath . '/appdata_public/' . PicoService::DIR_PLUGINS . '/';
+		$appPath = \OC_App::getAppPath(Application::APP_NAME) . '/';
+		$pluginsPath = 'appdata_public/' . PicoService::DIR_PLUGINS . '/';
+		$pluginsETag = $this->configService->getAppValue(ConfigService::PLUGINS_ETAG);
+		return $appPath . $pluginsPath . ($pluginsETag ? $pluginsETag . '/' : '');
 	}
 
 	/**
@@ -208,6 +254,9 @@ class PluginsService
 	 */
 	public function getPluginsUrl(): string
 	{
-		return \OC_App::getAppWebPath(Application::APP_NAME) . '/appdata_public/' . PicoService::DIR_PLUGINS . '/';
+		$appWebPath = \OC_App::getAppWebPath(Application::APP_NAME) . '/';
+		$pluginsPath = 'appdata_public/' . PicoService::DIR_PLUGINS . '/';
+		$pluginsETag = $this->configService->getAppValue(ConfigService::PLUGINS_ETAG);
+		return $appWebPath . $pluginsPath . ($pluginsETag ? $pluginsETag . '/' : '');
 	}
 }

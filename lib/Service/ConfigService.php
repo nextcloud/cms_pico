@@ -43,6 +43,9 @@ class ConfigService
 	const CUSTOM_PLUGINS = 'custom_plugins';
 
 	/** @var string */
+	const PLUGINS_ETAG = 'plugins_etag';
+
+	/** @var string */
 	const LINK_MODE = 'link_mode';
 
 	/** @var array<string,mixed> */
@@ -51,6 +54,7 @@ class ConfigService
 		self::CUSTOM_THEMES => '',
 		self::SYSTEM_PLUGINS => '',
 		self::CUSTOM_PLUGINS => '',
+		self::PLUGINS_ETAG => '',
 		self::LINK_MODE => WebsitesService::LINK_MODE_LONG,
 	];
 
