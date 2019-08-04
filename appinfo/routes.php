@@ -24,11 +24,6 @@
 return [
 	'routes' => [
 		[
-			'name' => 'Pico#getRoot',
-			'url' => '/pico/{site}/',
-			'verb' => 'GET'
-		],
-		[
 			'name' => 'Pico#getAsset',
 			'url' => '/pico/{site}/assets/{asset}',
 			'verb' => 'GET',
@@ -45,16 +40,10 @@ return [
 			'name' => 'Pico#getPage',
 			'url' => '/pico/{site}/{page}',
 			'verb' => 'GET',
-			'requirements' => [ 'page' => '.+' ]
+			'defaults' => [ 'page' => '' ],
+			'requirements' => [ 'page' => '.*' ]
 		],
 
-		[
-			'name' => 'Pico#getRoot',
-			'postfix' => 'Proxy',
-			'url' => '/pico_proxy/{site}/',
-			'verb' => 'GET',
-			'defaults' => [ 'proxyRequest' => true ]
-		],
 		[
 			'name' => 'Pico#getAsset',
 			'postfix' => 'Proxy',
@@ -74,8 +63,8 @@ return [
 			'postfix' => 'Proxy',
 			'url' => '/pico_proxy/{site}/{page}',
 			'verb' => 'GET',
-			'defaults' => [ 'proxyRequest' => true ],
-			'requirements' => [ 'page' => '.+' ]
+			'defaults' => [ 'page' => '', 'proxyRequest' => true ],
+			'requirements' => [ 'page' => '.*' ]
 		],
 
 		[ 'name' => 'Settings#getPersonalWebsites', 'url' => '/personal/websites', 'verb' => 'GET' ],

@@ -58,21 +58,21 @@ class Admin implements ISettings
 	public function getForm(): TemplateResponse
 	{
 		$exampleSite = 'example_site';
-		$exampleProxyUrl = $this->urlGenerator->getBaseUrl() . '/sites/' . urlencode($exampleSite) . '/';
+		$exampleProxyUrl = $this->urlGenerator->getBaseUrl() . '/sites/' . urlencode($exampleSite);
 		$exampleFullUrl = $this->urlGenerator->linkToRouteAbsolute(
-			Application::APP_NAME . '.Pico.getRoot',
-			[ 'site' => $exampleSite ]
+			Application::APP_NAME . '.Pico.getPage',
+			[ 'site' => $exampleSite, 'page' => '' ]
 		);
 
-		$internalBaseUrl = $this->urlGenerator->getBaseUrl() . '/index.php/apps/' . Application::APP_NAME . '/';
-		$internalBasePath = \OC::$WEBROOT . '/';
+		$internalBaseUrl = $this->urlGenerator->getBaseUrl() . '/index.php/apps/' . Application::APP_NAME;
+		$internalBasePath = \OC::$WEBROOT;
 
 		$data = [
-			'exampleProxyUrl'  => $exampleProxyUrl,
-			'exampleFullUrl'   => $exampleFullUrl,
-			'internalProxyUrl' => $internalBaseUrl . 'pico_proxy/',
-			'internalFullUrl'  => $internalBaseUrl . 'pico/',
-			'internalPath'     => $internalBasePath . 'sites/',
+			'exampleProxyUrl'  => $exampleProxyUrl . '/',
+			'exampleFullUrl'   => $exampleFullUrl . '/',
+			'internalProxyUrl' => $internalBaseUrl . '/pico_proxy/',
+			'internalFullUrl'  => $internalBaseUrl . '/pico/',
+			'internalPath'     => $internalBasePath . '/sites/',
 			'themesPath'       => $this->fileService->getAppDataFolderPath(PicoService::DIR_THEMES, true),
 			'pluginsPath'      => $this->fileService->getAppDataFolderPath(PicoService::DIR_PLUGINS, true),
 			'templatesPath'    => $this->fileService->getAppDataFolderPath(PicoService::DIR_TEMPLATES, true)

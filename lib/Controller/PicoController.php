@@ -105,20 +105,6 @@ class PicoController extends Controller
 	 * @NoCSRFRequired
 	 *
 	 * @param string $site
-	 * @param bool   $proxyRequest
-	 *
-	 * @return Response
-	 */
-	public function getRoot(string $site, bool $proxyRequest = false): Response
-	{
-		return $this->getPage($site, '', $proxyRequest);
-	}
-
-	/**
-	 * @PublicPage
-	 * @NoCSRFRequired
-	 *
-	 * @param string $site
 	 * @param string $page
 	 * @param bool   $proxyRequest
 	 *
