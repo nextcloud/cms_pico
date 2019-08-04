@@ -154,17 +154,25 @@ class PicoController extends Controller
 	 *
 	 * @param string $site
 	 * @param string $asset
+	 * @param string $assetsETag
 	 *
 	 * @return Response
 	 */
-	public function getAsset(string $site, string $asset): Response
+	public function getAsset(string $site, string $asset, string $assetsETag = ''): Response
 	{
 		try {
 			$assetFile = $this->websitesService->getAsset($site, $asset, $this->userId);
 
 			try {
 				$secureMimeType = $this->mimeTypeDetector->getSecureMimeType($assetFile->getMimetype());
-				return $this->createFileResponse($assetFile, $secureMimeType);
+				$assetResponse = $this->createFileResponse($assetFile, $secureMimeType);
+
+				if (!$assetsETag && ($assetResponse instanceof PicoFileResponse)) {
+					/** @var PicoFileResponse $assetResponse */
+					$assetResponse->cacheFor(0);
+				}
+
+				return $assetResponse;
 			} catch (NotFoundException $e) {
 				throw new AssetNotFoundException($e);
 			} catch (NotPermittedException $e) {

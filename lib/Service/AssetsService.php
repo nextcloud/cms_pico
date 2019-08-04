@@ -31,6 +31,7 @@ use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
 use OCA\CMSPico\Exceptions\WebsiteNotPermittedException;
 use OCA\CMSPico\Model\Website;
 use OCP\Files\File;
+use OCP\Files\Folder;
 use OCP\Files\InvalidPathException;
 use OCP\Files\IRootFolder;
 use OCP\Files\NotFoundException;
@@ -111,6 +112,15 @@ class AssetsService
 	 */
 	public function getAssetsUrl(Website $website): string
 	{
-		return $website->getWebsiteUrl() . PicoService::DIR_ASSETS . '/';
+		$userFolder = $this->rootFolder->getUserFolder($website->getUserId());
+
+		/** @var Folder $assetsFolder */
+		$assetsFolder = $userFolder->get($website->getPath() . '/' . PicoService::DIR_ASSETS);
+		if (!($assetsFolder instanceof Folder)) {
+			throw new InvalidPathException();
+		}
+
+		$assetsETag = $assetsFolder->getEtag();
+		return $website->getWebsiteUrl() . PicoService::DIR_ASSETS . '_' . $assetsETag . '/';
 	}
 }

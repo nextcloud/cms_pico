@@ -35,6 +35,13 @@ return [
 			'requirements' => [ 'asset' => '.+' ]
 		],
 		[
+			'name' => 'Pico#getAsset',
+			'postfix' => 'ETag',
+			'url' => '/pico/{site}/assets_{assetsETag}/{asset}',
+			'verb' => 'GET',
+			'requirements' => [ 'asset' => '.+' ]
+		],
+		[
 			'name' => 'Pico#getPage',
 			'url' => '/pico/{site}/{page}',
 			'verb' => 'GET',
@@ -52,6 +59,13 @@ return [
 			'name' => 'Pico#getAsset',
 			'postfix' => 'Proxy',
 			'url' => '/pico_proxy/{site}/assets/{asset}',
+			'verb' => 'GET',
+			'requirements' => [ 'asset' => '.+' ]
+		],
+		[
+			'name' => 'Pico#getAsset',
+			'postfix' => 'ProxyETag',
+			'url' => '/pico_proxy/{site}/assets_{assetsETag}/{asset}',
 			'verb' => 'GET',
 			'requirements' => [ 'asset' => '.+' ]
 		],

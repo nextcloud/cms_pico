@@ -122,7 +122,7 @@ class PicoFileResponse extends DownloadResponse
 	 */
 	public function cacheFor(int $cacheSeconds): self
 	{
-		if($cacheSeconds > 0) {
+		if ($cacheSeconds > 0) {
 			$this->addHeader('Cache-Control', 'max-age=' . $cacheSeconds . ', public');
 			$this->addHeader('Pragma', 'public');
 
