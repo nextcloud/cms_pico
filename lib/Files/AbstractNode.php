@@ -25,23 +25,28 @@ declare(strict_types=1);
 namespace OCA\CMSPico\Files;
 
 use OCP\Constants;
+use OCP\Files\InvalidPathException;
 
 abstract class AbstractNode implements NodeInterface
 {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function copy(FolderInterface $targetPath): NodeInterface
+	public function copy(FolderInterface $targetPath, string $name = null): NodeInterface
 	{
+		if ($name !== null) {
+			$this->assertValidFileName($name);
+		}
+
 		if ($this->isFolder()) {
 			/** @var FolderInterface $this */
-			$target = $targetPath->newFolder($this->getName());
+			$target = $targetPath->newFolder($name ?: $this->getName());
 			foreach ($this->listing() as $child) {
 				$child->copy($target);
 			}
 		} else {
 			/** @var FileInterface $this */
-			$target = $targetPath->newFile($this->getName());
+			$target = $targetPath->newFile($name ?: $this->getName());
 			$target->putContent($this->getContent());
 		}
 
@@ -51,17 +56,21 @@ abstract class AbstractNode implements NodeInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function move(FolderInterface $targetPath): NodeInterface
+	public function move(FolderInterface $targetPath, string $name = null): NodeInterface
 	{
+		if ($name !== null) {
+			$this->assertValidFileName($name);
+		}
+
 		if ($this->isFolder()) {
 			/** @var FolderInterface $this */
-			$target = $targetPath->newFolder($this->getName());
+			$target = $targetPath->newFolder($name ?: $this->getName());
 			foreach ($this->listing() as $child) {
 				$child->move($target);
 			}
 		} else {
 			/** @var FileInterface $this */
-			$target = $targetPath->newFile($this->getName());
+			$target = $targetPath->newFile($name ?: $this->getName());
 			$target->putContent($this->getContent());
 		}
 
@@ -86,7 +95,7 @@ abstract class AbstractNode implements NodeInterface
 	}
 
 	/**
-	 * @return bool
+	 * {@inheritDoc}
 	 */
 	public function isFile(): bool
 	{
@@ -94,7 +103,7 @@ abstract class AbstractNode implements NodeInterface
 	}
 
 	/**
-	 * @return bool
+	 * {@inheritDoc}
 	 */
 	public function isFolder(): bool
 	{
@@ -102,7 +111,7 @@ abstract class AbstractNode implements NodeInterface
 	}
 
 	/**
-	 * @return bool
+	 * {@inheritDoc}
 	 */
 	public function isReadable(): bool
 	{
@@ -110,7 +119,7 @@ abstract class AbstractNode implements NodeInterface
 	}
 
 	/**
-	 * @return bool
+	 * {@inheritDoc}
 	 */
 	public function isUpdateable(): bool
 	{
@@ -118,10 +127,25 @@ abstract class AbstractNode implements NodeInterface
 	}
 
 	/**
-	 * @return bool
+	 * {@inheritDoc}
 	 */
 	public function isDeletable(): bool
 	{
 		return ($this->getPermissions() & Constants::PERMISSION_DELETE) === Constants::PERMISSION_DELETE;
+	}
+
+	/**
+	 * @param string $name
+	 *
+	 * @throws InvalidPathException
+	 */
+	protected function assertValidFileName(string $name)
+	{
+		if (in_array($name, [ '', '.', '..' ], true)) {
+			throw new InvalidPathException();
+		}
+		if ((strpos($name, '/') !== false) || (strpos($name, '\\') !== false)) {
+			throw new InvalidPathException();
+		}
 	}
 }

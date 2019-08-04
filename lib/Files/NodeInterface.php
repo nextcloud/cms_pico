@@ -32,24 +32,39 @@ use OCP\Files\NotPermittedException;
 interface NodeInterface
 {
 	/**
-	 * @param FolderInterface $targetPath
+	 * @param string $name
 	 *
 	 * @return NodeInterface
+	 * @throws InvalidPathException
 	 * @throws AlreadyExistsException
 	 * @throws NotPermittedException
 	 * @throws GenericFileException
 	 */
-	public function copy(FolderInterface $targetPath): NodeInterface;
+	public function rename(string $name): NodeInterface;
 
 	/**
 	 * @param FolderInterface $targetPath
+	 * @param string|null     $name
 	 *
 	 * @return NodeInterface
+	 * @throws InvalidPathException
 	 * @throws AlreadyExistsException
 	 * @throws NotPermittedException
 	 * @throws GenericFileException
 	 */
-	public function move(FolderInterface $targetPath): NodeInterface;
+	public function copy(FolderInterface $targetPath, string $name = null): NodeInterface;
+
+	/**
+	 * @param FolderInterface $targetPath
+	 * @param string|null     $name
+	 *
+	 * @return NodeInterface
+	 * @throws InvalidPathException
+	 * @throws AlreadyExistsException
+	 * @throws NotPermittedException
+	 * @throws GenericFileException
+	 */
+	public function move(FolderInterface $targetPath, string $name = null): NodeInterface;
 
 	/**
 	 * @throws NotPermittedException

@@ -73,9 +73,38 @@ abstract class AbstractLocalNode extends AbstractNode implements NodeInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function copy(FolderInterface $targetPath): NodeInterface
+	public function rename(string $name): NodeInterface
+	{
+		$this->assertValidFileName($name);
+
+		$parentNode = $this->getParentNode();
+		if ($parentNode->exists($name)) {
+			throw new AlreadyExistsException();
+		}
+		if (!$parentNode->isCreatable()) {
+			throw new NotPermittedException();
+		}
+
+		if (!rename($this->getLocalPath(), dirname($this->getLocalPath()) . '/' . $name)) {
+			throw new GenericFileException();
+		}
+
+		$parentPath = dirname($this->path);
+		$this->path = (($parentPath !== '/') ? $parentPath : '') . '/' . $name;
+
+		return $this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function copy(FolderInterface $targetPath, string $name = null): NodeInterface
 	{
 		if (($targetPath instanceof LocalFolder) && $this->isFile()) {
+			if ($name !== null) {
+				$this->assertValidFileName($name);
+			}
+
 			if ($targetPath->exists($this->getName())) {
 				throw new AlreadyExistsException();
 			}
@@ -83,7 +112,7 @@ abstract class AbstractLocalNode extends AbstractNode implements NodeInterface
 				throw new NotPermittedException();
 			}
 
-			if (!@copy($this->getLocalPath(), $targetPath->getLocalPath() . '/' . $this->getName())) {
+			if (!@copy($this->getLocalPath(), $targetPath->getLocalPath() . '/' . ($name ?: $this->getName()))) {
 				throw new GenericFileException();
 			}
 
@@ -96,9 +125,13 @@ abstract class AbstractLocalNode extends AbstractNode implements NodeInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function move(FolderInterface $targetPath): NodeInterface
+	public function move(FolderInterface $targetPath, string $name = null): NodeInterface
 	{
 		if (($targetPath instanceof LocalFolder) && $this->isFile()) {
+			if ($name !== null) {
+				$this->assertValidFileName($name);
+			}
+
 			if ($targetPath->exists($this->getName())) {
 				throw new AlreadyExistsException();
 			}
@@ -106,7 +139,7 @@ abstract class AbstractLocalNode extends AbstractNode implements NodeInterface
 				throw new NotPermittedException();
 			}
 
-			if (!@rename($this->getLocalPath(), $targetPath->getLocalPath() . '/' . $this->getName())) {
+			if (!@rename($this->getLocalPath(), $targetPath->getLocalPath() . '/' . ($name ?: $this->getName()))) {
 				throw new GenericFileException();
 			}
 

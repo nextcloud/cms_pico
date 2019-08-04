@@ -56,6 +56,19 @@ class MemoryFile extends AbstractNode implements FileInterface
 	/**
 	 * {@inheritDoc}
 	 */
+	public function rename(string $name): NodeInterface
+	{
+		$this->assertValidFileName($name);
+
+		$parentPath = dirname($this->path);
+		$this->path = (($parentPath !== '/') ? $parentPath : '') . '/' . $name;
+
+		return $this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function getExtension(): string
 	{
 		$pos = strrpos($this->getName(), '.');

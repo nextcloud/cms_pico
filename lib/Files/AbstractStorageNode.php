@@ -26,6 +26,7 @@ namespace OCA\CMSPico\Files;
 
 use OCP\Files\File as OCFile;
 use OCP\Files\Folder as OCFolder;
+use OCP\Files\InvalidPathException;
 use OCP\Files\Node as OCNode;
 
 abstract class AbstractStorageNode extends AbstractNode implements NodeInterface
@@ -49,9 +50,33 @@ abstract class AbstractStorageNode extends AbstractNode implements NodeInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function copy(FolderInterface $targetPath): NodeInterface
+	public function rename(string $name): NodeInterface
 	{
-		if ($targetPath instanceof StorageFolder) {
+		$this->assertValidFileName($name);
+
+		$parentPath = $this->getParentNode();
+		if ($this->isFolder()) {
+			/** @var StorageFolder $this */
+			$target = $parentPath->newFolder($name);
+			foreach ($this->listing() as $child) {
+				$child->move($target);
+			}
+		} else {
+			/** @var StorageFile $this */
+			$target = $parentPath->newFile($name);
+			$target->putContent($this->getContent());
+		}
+
+		$this->delete();
+		return $target;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function copy(FolderInterface $targetPath, string $name = null): NodeInterface
+	{
+		if (($targetPath instanceof StorageFolder) && ($name === null)) {
 			/** @var OCFolder $ocNode */
 			$ocNode = $this->node->copy($targetPath->getPath());
 			return new StorageFolder($ocNode);
@@ -63,9 +88,9 @@ abstract class AbstractStorageNode extends AbstractNode implements NodeInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function move(FolderInterface $targetPath): NodeInterface
+	public function move(FolderInterface $targetPath, string $name = null): NodeInterface
 	{
-		if ($targetPath instanceof StorageFolder) {
+		if (($targetPath instanceof StorageFolder) && ($name === null)) {
 			/** @var OCFolder $ocNode */
 			$ocNode = $this->node->move($targetPath->getPath());
 			return new StorageFolder($ocNode);
