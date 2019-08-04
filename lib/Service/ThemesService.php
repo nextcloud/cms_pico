@@ -28,7 +28,6 @@ namespace OCA\CMSPico\Service;
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Exceptions\ThemeNotFoundException;
 use OCA\CMSPico\Files\FolderInterface;
-use OCP\Files\InvalidPathException;
 use OCP\Files\NotFoundException;
 
 class ThemesService

@@ -77,7 +77,10 @@ class AssetsService
 		try {
 			$asset = $website->getPage();
 			$asset = $this->miscService->normalizePath($asset);
-			if (substr($asset, 0, strlen(PicoService::DIR_ASSETS . '/')) !== PicoService::DIR_ASSETS . '/') {
+
+			if ($asset === '') {
+				throw new InvalidPathException();
+			} elseif (substr($asset, 0, strlen(PicoService::DIR_ASSETS . '/')) !== PicoService::DIR_ASSETS . '/') {
 				throw new InvalidPathException();
 			}
 

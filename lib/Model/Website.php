@@ -361,7 +361,10 @@ class Website extends WebsiteCore
 	public function assertValidPath()
 	{
 		try {
-			$this->miscService->normalizePath($this->getPath());
+			$path = '/' . $this->miscService->normalizePath($this->getPath());
+			if ($path === '/') {
+				throw new InvalidPathException();
+			}
 		} catch (InvalidPathException $e) {
 			throw new WebsiteInvalidDataException(
 				'path',
@@ -373,7 +376,7 @@ class Website extends WebsiteCore
 			$userFolder = $this->rootFolder->getUserFolder($this->getUserId());
 
 			/** @var Folder $node */
-			$node = $userFolder->get(dirname($this->getPath()));
+			$node = $userFolder->get(dirname($path));
 			if (!($node instanceof Folder)) {
 				throw new NotFoundException();
 			}
