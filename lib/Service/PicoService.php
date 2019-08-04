@@ -64,14 +64,17 @@ class PicoService
 	/** @var ILogger */
 	private $logger;
 
-	/** @var FileService */
-	private $fileService;
+	/** @var AssetsService */
+	private $assetsService;
 
 	/** @var ThemesService */
 	private $themesService;
 
 	/** @var PluginsService */
 	private $pluginsService;
+
+	/** @var FileService */
+	private $fileService;
 
 	/** @var MiscService */
 	private $miscService;
@@ -80,22 +83,25 @@ class PicoService
 	 * PicoService constructor.
 	 *
 	 * @param ILogger        $logger
-	 * @param FileService    $fileService
+	 * @param AssetsService  $assetsService
 	 * @param ThemesService  $themesService
 	 * @param PluginsService $pluginsService
+	 * @param FileService    $fileService
 	 * @param MiscService    $miscService
 	 */
 	public function __construct(
 		ILogger $logger,
-		FileService $fileService,
+		AssetsService $assetsService,
 		ThemesService $themesService,
 		PluginsService $pluginsService,
+		FileService $fileService,
 		MiscService $miscService
 	) {
 		$this->logger = $logger;
-		$this->fileService = $fileService;
+		$this->assetsService = $assetsService;
 		$this->themesService = $themesService;
 		$this->pluginsService = $pluginsService;
+		$this->fileService = $fileService;
 		$this->miscService = $miscService;
 	}
 
@@ -181,7 +187,7 @@ class PicoService
 				'content_dir'    => self::DIR_CONTENT,
 				'content_ext'    => '.md',
 				'assets_dir'     => self::DIR_ASSETS,
-				'assets_url'     => $website->getWebsiteUrl() . self::DIR_ASSETS,
+				'assets_url'     => $this->assetsService->getAssetsUrl($website),
 				'plugins_url'    => $this->pluginsService->getPluginsUrl(),
 				'nextcloud_site' => $website->getSite(),
 			]

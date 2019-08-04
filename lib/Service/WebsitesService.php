@@ -269,7 +269,7 @@ class WebsitesService
 	{
 		$website = $this->getWebsiteFromSite($site);
 		$website->setViewer($viewer ?: '');
-		$website->setPage($asset);
+		$website->setPage(PicoService::DIR_ASSETS . '/' . $asset);
 
 		if ($this->encryptionManager->isEnabled()) {
 			throw new FilesystemEncryptedException();

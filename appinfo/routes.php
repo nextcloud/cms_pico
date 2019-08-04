@@ -29,6 +29,12 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'Pico#getAsset',
+			'url' => '/pico/{site}/assets/{asset}',
+			'verb' => 'GET',
+			'requirements' => [ 'asset' => '.+' ]
+		],
+		[
 			'name' => 'Pico#getPage',
 			'url' => '/pico/{site}/{page}',
 			'verb' => 'GET',
@@ -41,6 +47,13 @@ return [
 			'url' => '/pico_proxy/{site}/',
 			'verb' => 'GET',
 			'defaults' => [ 'proxyRequest' => true ]
+		],
+		[
+			'name' => 'Pico#getAsset',
+			'postfix' => 'Proxy',
+			'url' => '/pico_proxy/{site}/assets/{asset}',
+			'verb' => 'GET',
+			'requirements' => [ 'asset' => '.+' ]
 		],
 		[
 			'name' => 'Pico#getPage',

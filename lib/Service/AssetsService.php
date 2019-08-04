@@ -88,14 +88,13 @@ class AssetsService
 
 			$userFolder = $this->rootFolder->getUserFolder($website->getUserId());
 
-			/** @var File $node */
-			$node = $userFolder->get($website->getPath() . $asset);
-
-			if (!($node instanceof File)) {
+			/** @var File $assetFile */
+			$assetFile = $userFolder->get($website->getPath() . $asset);
+			if (!($assetFile instanceof File)) {
 				throw new AssetNotFoundException();
 			}
 
-			return $node;
+			return $assetFile;
 		} catch (InvalidPathException $e) {
 			throw new AssetInvalidPathException($e);
 		} catch (NotFoundException $e) {
@@ -103,5 +102,15 @@ class AssetsService
 		} catch (NotPermittedException $e) {
 			throw new AssetNotPermittedException($e);
 		}
+	}
+
+	/**
+	 * @param Website $website
+	 *
+	 * @return string
+	 */
+	public function getAssetsUrl(Website $website): string
+	{
+		return $website->getWebsiteUrl() . PicoService::DIR_ASSETS . '/';
 	}
 }

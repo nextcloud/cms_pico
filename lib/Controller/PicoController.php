@@ -126,10 +126,6 @@ class PicoController extends Controller
 	 */
 	public function getPage(string $site, string $page, bool $proxyRequest = false): Response
 	{
-		if (strpos($page, PicoService::DIR_ASSETS . '/') === 0) {
-			return $this->getAsset($site, $page);
-		}
-
 		try {
 			$picoPage = $this->websitesService->getPage($site, $page, $this->userId, $proxyRequest);
 			return new PicoPageResponse($picoPage);
@@ -153,19 +149,22 @@ class PicoController extends Controller
 	}
 
 	/**
+	 * @PublicPage
+	 * @NoCSRFRequired
+	 *
 	 * @param string $site
-	 * @param string $page
+	 * @param string $asset
 	 *
 	 * @return Response
 	 */
-	private function getAsset(string $site, string $page): Response
+	public function getAsset(string $site, string $asset): Response
 	{
 		try {
-			$asset = $this->websitesService->getAsset($site, $page, $this->userId);
+			$assetFile = $this->websitesService->getAsset($site, $asset, $this->userId);
 
 			try {
-				$secureMimeType = $this->mimeTypeDetector->getSecureMimeType($asset->getMimetype());
-				return $this->createFileResponse($asset, $secureMimeType);
+				$secureMimeType = $this->mimeTypeDetector->getSecureMimeType($assetFile->getMimetype());
+				return $this->createFileResponse($assetFile, $secureMimeType);
 			} catch (NotFoundException $e) {
 				throw new AssetNotFoundException($e);
 			} catch (NotPermittedException $e) {
