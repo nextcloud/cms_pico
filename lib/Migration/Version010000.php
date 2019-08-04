@@ -155,7 +155,8 @@ class Version010000 extends SimpleMigrationStep
 				$publicThemesFolder = $publicFolder->get(PicoService::DIR_THEMES);
 			}
 
-			$publicThemesTestFile = $publicThemesFolder->newFile($this->miscService->getRandomFileName());
+			$publicThemesTestFileName = $this->miscService->getRandom(10, 'tmp', Application::APP_NAME . '-themes_test');
+			$publicThemesTestFile = $publicThemesFolder->newFile($publicThemesTestFileName);
 			$publicThemesTestFile->delete();
 
 			try {
@@ -164,7 +165,8 @@ class Version010000 extends SimpleMigrationStep
 				$publicPluginsFolder = $publicFolder->get(PicoService::DIR_PLUGINS);
 			}
 
-			$publicPluginsTestFile = $publicPluginsFolder->newFile($this->miscService->getRandomFileName());
+			$publicPluginsTestFileName = $this->miscService->getRandom(10, 'tmp', Application::APP_NAME . '-plugins_test');
+			$publicPluginsTestFile = $publicPluginsFolder->newFile($publicPluginsTestFileName);
 			$publicPluginsTestFile->delete();
 		} catch (NotPermittedException $e) {
 			$appDataPublicPath = \OC_App::getAppPath(Application::APP_NAME) . '/appdata_public';
