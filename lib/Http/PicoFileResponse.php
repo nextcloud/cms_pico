@@ -60,12 +60,13 @@ class PicoFileResponse extends DownloadResponse
 	 * PicoFileResponse constructor.
 	 *
 	 * @param File        $file
+	 * @param bool        $enableCache
 	 * @param string|null $secureMimeType
 	 *
 	 * @throws NotFoundException
 	 * @throws NotPermittedException
 	 */
-	public function __construct(File $file, string $secureMimeType = null)
+	public function __construct(File $file, bool $enableCache = true, string $secureMimeType = null)
 	{
 		$this->file = $file;
 
@@ -88,8 +89,10 @@ class PicoFileResponse extends DownloadResponse
 
 		$this->setETag($etag);
 
-		if (isset($this->cacheFor[$mimeType])) {
+		if ($enableCache && isset($this->cacheFor[$mimeType])) {
 			$this->cacheFor($this->cacheFor[$mimeType]);
+		} else {
+			$this->cacheFor(0);
 		}
 
 		try {

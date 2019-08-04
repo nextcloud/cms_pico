@@ -151,14 +151,7 @@ class PicoController extends Controller
 
 			try {
 				$secureMimeType = $this->mimeTypeDetector->getSecureMimeType($assetFile->getMimetype());
-				$assetResponse = $this->createFileResponse($assetFile, $secureMimeType);
-
-				if (!$assetsETag && ($assetResponse instanceof PicoFileResponse)) {
-					/** @var PicoFileResponse $assetResponse */
-					$assetResponse->cacheFor(0);
-				}
-
-				return $assetResponse;
+				return $this->createFileResponse($assetFile, (bool) $assetsETag, $secureMimeType);
 			} catch (NotFoundException $e) {
 				throw new AssetNotFoundException($e);
 			} catch (NotPermittedException $e) {
@@ -181,13 +174,14 @@ class PicoController extends Controller
 
 	/**
 	 * @param File        $file
+	 * @param bool        $enableCache
 	 * @param string|null $secureFileType
 	 *
 	 * @return Response
 	 * @throws NotFoundException
 	 * @throws NotPermittedException
 	 */
-	private function createFileResponse(File $file, string $secureFileType = null): Response
+	private function createFileResponse(File $file, bool $enableCache = true, string $secureFileType = null): Response
 	{
 		try {
 			$etag = $file->getEtag();
@@ -195,7 +189,7 @@ class PicoController extends Controller
 			throw new NotFoundException();
 		}
 
-		$response = new PicoFileResponse($file, $secureFileType);
+		$response = new PicoFileResponse($file, $enableCache, $secureFileType);
 
 		$clientEtag = $this->request->getHeader('If-None-Match');
 		if ($etag && $clientEtag && preg_match('/^"?' . preg_quote($etag, '/') . '(?>"?$|-)/', $clientEtag)) {
