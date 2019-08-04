@@ -33,9 +33,6 @@ class Application extends App
 	/** @var string */
 	const APP_NAME = 'cms_pico';
 
-	/** @var string */
-	const APP_PATH = __DIR__ . '/../../';
-
 	/**
 	 * @param array $params
 	 */

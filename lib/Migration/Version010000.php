@@ -33,7 +33,6 @@ use OCA\CMSPico\Service\ConfigService;
 use OCA\CMSPico\Service\FileService;
 use OCA\CMSPico\Service\MiscService;
 use OCA\CMSPico\Service\PicoService;
-use OCP\App\IAppManager;
 use OCP\DB\ISchemaWrapper;
 use OCP\Files\AlreadyExistsException;
 use OCP\Files\NotPermittedException;
@@ -45,9 +44,6 @@ class Version010000 extends SimpleMigrationStep
 {
 	/** @var IL10N */
 	private $l10n;
-
-	/** @var IAppManager */
-	private $appManager;
 
 	/** @var EncryptionManager */
 	private $encryptionManager;
@@ -67,7 +63,6 @@ class Version010000 extends SimpleMigrationStep
 	public function __construct()
 	{
 		$this->l10n = \OC::$server->getL10N(Application::APP_NAME);
-		$this->appManager = \OC::$server->getAppManager();
 		$this->encryptionManager = \OC::$server->getEncryptionManager();
 		$this->configService = \OC::$server->query(ConfigService::class);
 		$this->fileService = \OC::$server->query(FileService::class);
@@ -172,7 +167,7 @@ class Version010000 extends SimpleMigrationStep
 			$publicPluginsTestFile = $publicPluginsFolder->newFile($this->miscService->getRandomFileName());
 			$publicPluginsTestFile->delete();
 		} catch (NotPermittedException $e) {
-			$appDataPublicPath = $this->appManager->getAppPath(Application::APP_NAME) . '/appdata_public';
+			$appDataPublicPath = \OC_App::getAppPath(Application::APP_NAME) . '/appdata_public';
 			$dataPath = $this->configService->getSystemValue('datadirectory', \OC::$SERVERROOT . '/data');
 
 			throw new FilesystemNotWritableException($this->l10n->t(

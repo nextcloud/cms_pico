@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Service;
 
-use OC\App\AppManager;
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Exceptions\PluginNotFoundException;
 use OCA\CMSPico\Files\FolderInterface;
@@ -34,9 +33,6 @@ use OCP\Files\NotFoundException;
 
 class PluginsService
 {
-	/** @var AppManager */
-	private $appManager;
-
 	/** @var ConfigService */
 	private $configService;
 
@@ -46,13 +42,11 @@ class PluginsService
 	/**
 	 * PluginsService constructor.
 	 *
-	 * @param AppManager    $appManager
 	 * @param ConfigService $configService
 	 * @param FileService   $fileService
 	 */
-	public function __construct(AppManager $appManager, ConfigService $configService, FileService $fileService)
+	public function __construct(ConfigService $configService, FileService $fileService)
 	{
-		$this->appManager = $appManager;
 		$this->configService = $configService;
 		$this->fileService = $fileService;
 	}
@@ -205,7 +199,7 @@ class PluginsService
 	 */
 	public function getPluginsPath(): string
 	{
-		$appPath = $this->appManager->getAppPath(Application::APP_NAME);
+		$appPath = \OC_App::getAppPath(Application::APP_NAME);
 		return $appPath . '/appdata_public/' . PicoService::DIR_PLUGINS . '/';
 	}
 

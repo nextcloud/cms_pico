@@ -85,7 +85,8 @@ class FileService
 	public function getPublicFolder(string $folderName = null): FolderInterface
 	{
 		if ($this->publicFolder === null) {
-			$this->publicFolder = new LocalFolder('/', Application::APP_PATH . self::APPDATA_PUBLIC);
+			$publicFolderBasePath = \OC_App::getAppPath(Application::APP_NAME) . '/' . self::APPDATA_PUBLIC;
+			$this->publicFolder = new LocalFolder('/', $publicFolderBasePath);
 		}
 
 		if ($folderName) {
@@ -115,7 +116,8 @@ class FileService
 	public function getSystemFolder(string $folderName = null): FolderInterface
 	{
 		if ($this->systemFolder === null) {
-			$this->systemFolder = new LocalFolder('/', Application::APP_PATH . self::APPDATA_SYSTEM);
+			$systemFolderBasePath = \OC_App::getAppPath(Application::APP_NAME) . '/' . self::APPDATA_SYSTEM;
+			$this->systemFolder = new LocalFolder('/', $systemFolderBasePath);
 		}
 
 		if ($folderName) {

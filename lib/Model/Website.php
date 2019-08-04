@@ -40,7 +40,6 @@ use OCA\CMSPico\Service\MiscService;
 use OCA\CMSPico\Service\PicoService;
 use OCA\CMSPico\Service\TemplatesService;
 use OCA\CMSPico\Service\ThemesService;
-use OCP\App\IAppManager;
 use OCP\Files\File;
 use OCP\Files\Folder;
 use OCP\Files\InvalidPathException;
@@ -75,9 +74,6 @@ class Website extends WebsiteCore
 	/** @var IL10N */
 	private $l10n;
 
-	/** @var IAppManager */
-	private $appManager;
-
 	/** @var IGroupManager */
 	private $groupManager;
 
@@ -108,7 +104,6 @@ class Website extends WebsiteCore
 	{
 		$this->config = \OC::$server->getConfig();
 		$this->l10n = \OC::$server->getL10N(Application::APP_NAME);
-		$this->appManager = \OC::$server->getAppManager();
 		$this->groupManager = \OC::$server->getGroupManager();
 		$this->rootFolder = \OC::$server->getRootFolder();
 		$this->urlGenerator = \OC::$server->getURLGenerator();
@@ -247,7 +242,7 @@ class Website extends WebsiteCore
 				throw new PageNotFoundException($e);
 			}
 		} catch (PageInvalidPathException $e) {
-			$appPath = $this->appManager->getAppPath(Application::APP_NAME) . '/';
+			$appPath = \OC_App::getAppPath(Application::APP_NAME) . '/';
 			$appPathLength = strlen($appPath);
 
 			if (substr($file, 0, $appPathLength) !== $appPath) {
