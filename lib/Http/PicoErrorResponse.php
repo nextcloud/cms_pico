@@ -59,7 +59,7 @@ class PicoErrorResponse extends TemplateResponse
 			$params['errorTrace'] = $this->exception->getTraceAsString();
 		}
 
-		parent::__construct(Application::APP_NAME, '500', $params, 'guest');
+		parent::__construct(Application::APP_NAME, 'error', $params, 'guest');
 		$this->setStatus(Http::STATUS_INTERNAL_SERVER_ERROR);
 	}
 }

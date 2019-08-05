@@ -31,6 +31,6 @@
 	<h2><?php p($l->t('Access forbidden')); ?></h2>
 	<p class="infogroup"><?php if (isset($_['message'])) p($_['message'])?></p>
 	<p><a class="button primary" href="<?php p(\OC::$server->getURLGenerator()->linkTo('', 'index.php')) ?>">
-		<?php p($l->t('Back to %s', array($theme->getName()))); ?>
+		<?php p($l->t('Back to %s', [ $theme->getName() ])); ?>
 	</a></p>
 </div>

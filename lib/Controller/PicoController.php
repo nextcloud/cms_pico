@@ -37,6 +37,7 @@ use OCA\CMSPico\Exceptions\PicoRuntimeException;
 use OCA\CMSPico\Exceptions\ThemeNotFoundException;
 use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
 use OCA\CMSPico\Exceptions\WebsiteNotPermittedException;
+use OCA\CMSPico\Http\InternalServerErrorResponse;
 use OCA\CMSPico\Http\NotFoundResponse;
 use OCA\CMSPico\Http\NotModifiedResponse;
 use OCA\CMSPico\Http\NotPermittedResponse;
@@ -122,7 +123,7 @@ class PicoController extends Controller
 		} catch (FilesystemEncryptedException $e) {
 			return new NotPermittedResponse($this->l10n->t('This website is hosted on a encrypted Nextcloud instance and thus could not be accessed.'));
 		} catch (ThemeNotFoundException $e) {
-			return new NotFoundResponse($this->l10n->t('This website uses a theme that could not be found on the server and thus could not be built.'));
+			return new InternalServerErrorResponse($this->l10n->t('This website uses a theme that could not be found on the server and thus could not be built.'));
 		} catch (PageInvalidPathException $e) {
 			return new NotFoundResponse($this->l10n->t('The requested website page could not be found on the server. Maybe the page was deleted?'));
 		} catch (PageNotFoundException $e) {

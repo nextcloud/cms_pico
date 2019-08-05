@@ -20,17 +20,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** @var $_ array */
-/** @var $l \OCP\IL10N */
-/** @var $theme OCP\Defaults */
+declare(strict_types=1);
 
-?>
+namespace OCA\CMSPico\Http;
 
-<div class="body-login-container update">
-	<div class="icon-big icon-error icon-white"></div>
-	<h2><?php p($l->t('Internal Server Error')); ?></h2>
-	<p class="infogroup"><?php if (isset($_['message'])) p($_['message'])?></p>
-	<p><a class="button primary" href="<?php p(\OC::$server->getURLGenerator()->linkTo('', 'index.php')) ?>">
-		<?php p($l->t('Back to %s', [ $theme->getName() ])); ?>
-	</a></p>
-</div>
+use OCA\CMSPico\AppInfo\Application;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\TemplateResponse;
+
+class InternalServerErrorResponse extends TemplateResponse
+{
+	/**
+	 * InternalServerErrorResponse constructor.
+	 *
+	 * @param string|null $message
+	 */
+	public function __construct(string $message = null)
+	{
+		parent::__construct(Application::APP_NAME, '500', [ 'message' => $message ], 'guest');
+		$this->setStatus(Http::STATUS_INTERNAL_SERVER_ERROR);
+	}
+}
