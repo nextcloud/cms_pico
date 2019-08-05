@@ -31,6 +31,7 @@ use OCA\CMSPico\Db\CoreRequestBuilder;
 use OCA\CMSPico\Exceptions\FilesystemEncryptedException;
 use OCA\CMSPico\Exceptions\FilesystemNotWritableException;
 use OCA\CMSPico\Model\Plugin;
+use OCA\CMSPico\Model\WebsiteCore;
 use OCA\CMSPico\Service\ConfigService;
 use OCA\CMSPico\Service\FileService;
 use OCA\CMSPico\Service\MiscService;
@@ -158,9 +159,46 @@ class Version010000 extends SimpleMigrationStep
 	 */
 	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options)
 	{
+		$this->migratePrivateWebsites();
 		$this->createPublicFolder();
 		$this->checkEncryptedFilesystem();
 		$this->migrateCustomPlugins();
+	}
+
+	/**
+	 * @return void
+	 */
+	private function migratePrivateWebsites()
+	{
+		$qbUpdate = $this->databaseConnection->getQueryBuilder();
+		$qbUpdate
+			->update(CoreRequestBuilder::TABLE_WEBSITES, 'w')
+			->set('w.type', $qbUpdate->createParameter('type'))
+			->set('w.options',$qbUpdate->createParameter('options'))
+			->where($qbUpdate->expr()->eq('w.id', $qbUpdate->createParameter('id')));
+
+		$selectCursor = $this->databaseConnection->getQueryBuilder()
+			->select('w.id', 'w.type', 'w.options')
+			->from(CoreRequestBuilder::TABLE_WEBSITES, 'w')
+			->execute();
+
+		while ($data = $selectCursor->fetch()) {
+			$websiteOptions = $data['options'] ? json_decode($data['options'], true) : [];
+			if (isset($websiteOptions['private'])) {
+				$websiteType = $websiteOptions['private'] ? WebsiteCore::TYPE_PRIVATE : WebsiteCore::TYPE_PUBLIC;
+				unset($websiteOptions['private']);
+
+				$qbUpdate->setParameters([
+					'id' => $data['id'],
+					'type' => $websiteType,
+					'options' => json_encode($websiteOptions)
+				]);
+
+				$qbUpdate->execute();
+			}
+		}
+
+		$selectCursor->closeCursor();
 	}
 
 	/**
