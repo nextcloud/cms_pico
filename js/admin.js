@@ -128,14 +128,20 @@
 		 * @protected
 		 */
 		_setup: function () {
-			var that = this;
+			var $newItem = this.$element.find('.action-new-item'),
+				$newItemButton = this.$element.find('.action-new'),
+				that = this;
 
 			this.$element.find('.has-tooltip').tooltip();
 
-			this.$element.find('.action-new').on('click.CMSPicoAdminList', function (event) {
-				event.preventDefault();
-				that._api('POST', '', { item: that.$element.find('.action-new-item').val() });
-			});
+			if ($newItem.val()) {
+				$newItemButton.on('click.CMSPicoAdminList', function (event) {
+					event.preventDefault();
+					that._api('POST', '', {item: $newItem.val()});
+				});
+			} else {
+				$newItemButton.add($newItem).prop('disabled', true);
+			}
 
 			this.$element.find('.action-reload').on('click.CMSPicoAdminList', function (event) {
 				event.preventDefault();

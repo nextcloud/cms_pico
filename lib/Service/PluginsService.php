@@ -27,7 +27,9 @@ namespace OCA\CMSPico\Service;
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Exceptions\PluginNotFoundException;
 use OCA\CMSPico\Files\FolderInterface;
+use OCA\CMSPico\Files\LocalFolder;
 use OCA\CMSPico\Model\Plugin;
+use OCP\Files\AlreadyExistsException;
 use OCP\Files\InvalidPathException;
 use OCP\Files\NotFoundException;
 
@@ -114,6 +116,10 @@ class PluginsService
 	 */
 	public function publishSystemPlugin(string $pluginName): Plugin
 	{
+		if (!$pluginName) {
+			throw new PluginNotFoundException();
+		}
+
 		$systemPluginsFolder = $this->fileService->getSystemFolder(PicoService::DIR_PLUGINS);
 		$systemPluginsFolder->sync(FolderInterface::SYNC_SHALLOW);
 
@@ -141,6 +147,10 @@ class PluginsService
 	 */
 	public function publishCustomPlugin(string $pluginName): Plugin
 	{
+		if (!$pluginName) {
+			throw new PluginNotFoundException();
+		}
+
 		$appDataPluginsFolder = $this->fileService->getAppDataFolder(PicoService::DIR_PLUGINS);
 		$appDataPluginsFolder->sync(FolderInterface::SYNC_SHALLOW);
 
@@ -179,7 +189,7 @@ class PluginsService
 				throw new InvalidPathException();
 			}
 
-			$pluginFolder->delete();
+			throw new AlreadyExistsException();
 		} catch (NotFoundException $e) {}
 
 		$pluginFolder = $pluginSourceFolder->copy($publicPluginsFolder);
@@ -187,18 +197,29 @@ class PluginsService
 	}
 
 	/**
-	 * @param string $plugin
+	 * @param string $pluginName
 	 */
-	public function depublishCustomPlugin(string $plugin)
+	public function depublishCustomPlugin(string $pluginName)
 	{
+		if (!$pluginName) {
+			throw new PluginNotFoundException();
+		}
+
 		$publicPluginsFolder = $this->getPluginsFolder();
 
 		try {
-			$publicPluginsFolder->get($plugin)->delete();
-		} catch (NotFoundException $e) {}
+			$pluginFolder = $publicPluginsFolder->get($pluginName);
+			if (!$pluginFolder->isFolder()) {
+				throw new PluginNotFoundException();
+			}
+
+			$pluginFolder->delete();
+		} catch (NotFoundException $e) {
+			throw new PluginNotFoundException();
+		}
 
 		$customPlugins = $this->getCustomPlugins();
-		unset($customPlugins[$plugin]);
+		unset($customPlugins[$pluginName]);
 		$this->configService->setAppValue(ConfigService::CUSTOM_PLUGINS, json_encode($customPlugins));
 	}
 
@@ -206,16 +227,17 @@ class PluginsService
 	 * @param bool $renewETag
 	 * @param bool $forceRenewETag
 	 *
-	 * @return FolderInterface
+	 * @return LocalFolder
 	 */
-	private function getPluginsFolder(bool $renewETag = false, bool $forceRenewETag = false): FolderInterface
+	private function getPluginsFolder(bool $renewETag = false, bool $forceRenewETag = false): LocalFolder
 	{
 		$pluginsBaseFolder = $this->fileService->getPublicFolder(PicoService::DIR_PLUGINS);
+
+		/** @var LocalFolder $pluginsFolder */
 		$pluginsFolder = null;
 
 		$pluginsETag = $this->configService->getAppValue(ConfigService::PLUGINS_ETAG);
 		if ($pluginsETag) {
-			/** @var FolderInterface $pluginsFolder */
 			$pluginsFolder = $pluginsBaseFolder->get($pluginsETag);
 			if (!$pluginsFolder->isFolder()) {
 				throw new InvalidPathException();
