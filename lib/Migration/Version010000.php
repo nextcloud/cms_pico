@@ -51,11 +51,11 @@ class Version010000 extends SimpleMigrationStep
 	/** @var ConfigService */
 	private $configService;
 
-	/** @var MiscService */
-	private $miscService;
-
 	/** @var FileService */
 	private $fileService;
+
+	/** @var MiscService */
+	private $miscService;
 
 	/**
 	 * Version010000 constructor.
@@ -202,7 +202,8 @@ class Version010000 extends SimpleMigrationStep
 	 */
 	private function migrateCustomPlugins()
 	{
-		$customPlugins = $this->configService->getAppValue(ConfigService::CUSTOM_PLUGINS);
+		$customPluginsJson = $this->configService->getAppValue(ConfigService::CUSTOM_PLUGINS);
+		$customPlugins = $customPluginsJson ? json_decode($customPluginsJson, true) : [];
 
 		$newCustomPlugins = [];
 		foreach ($customPlugins as $pluginName) {
