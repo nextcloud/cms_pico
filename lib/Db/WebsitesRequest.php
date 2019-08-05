@@ -36,7 +36,8 @@ class WebsitesRequest extends WebsitesRequestBuilder
 	public function create(Website $website)
 	{
 		$qb = $this->getWebsitesInsertSql();
-		$qb->setValue('name', $qb->createNamedParameter($website->getName()))
+		$qb
+			->setValue('name', $qb->createNamedParameter($website->getName()))
 			->setValue('user_id', $qb->createNamedParameter($website->getUserId()))
 			->setValue('site', $qb->createNamedParameter($website->getSite()))
 			->setValue('theme', $qb->createNamedParameter($website->getTheme()))
@@ -53,13 +54,14 @@ class WebsitesRequest extends WebsitesRequestBuilder
 	public function update(Website $website)
 	{
 		$qb = $this->getWebsitesUpdateSql();
-		$qb->set('name', $qb->createNamedParameter($website->getName()));
-		$qb->set('user_id', $qb->createNamedParameter($website->getUserId()));
-		$qb->set('site', $qb->createNamedParameter($website->getSite()));
-		$qb->set('theme', $qb->createNamedParameter($website->getTheme()));
-		$qb->set('type', $qb->createNamedParameter($website->getType()));
-		$qb->set('options', $qb->createNamedParameter($website->getOptions(true)));
-		$qb->set('path', $qb->createNamedParameter($website->getPath()));
+		$qb
+			->set('name', $qb->createNamedParameter($website->getName()))
+			->set('user_id', $qb->createNamedParameter($website->getUserId()))
+			->set('site', $qb->createNamedParameter($website->getSite()))
+			->set('theme', $qb->createNamedParameter($website->getTheme()))
+			->set('type', $qb->createNamedParameter($website->getType()))
+			->set('options', $qb->createNamedParameter($website->getOptions(true)))
+			->set('path', $qb->createNamedParameter($website->getPath()));
 
 		$this->limitToId($qb, $website->getId());
 

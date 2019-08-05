@@ -45,7 +45,8 @@ class CoreRequestBuilder
 	 *
 	 * @param IDBConnection $connection
 	 */
-	public function __construct(IDBConnection $connection) {
+	public function __construct(IDBConnection $connection)
+	{
 		$this->dbConnection = $connection;
 	}
 
@@ -89,8 +90,7 @@ class CoreRequestBuilder
 	 */
 	private function limitToDBField(IQueryBuilder $qb, string $field, $value)
 	{
-		$expr = $qb->expr();
-		$pf = ($qb->getType() === QueryBuilder::SELECT) ? $this->defaultSelectAlias . '.' : '';
-		$qb->andWhere($expr->eq($pf . $field, $qb->createNamedParameter($value)));
+		$fieldPrefix = ($qb->getType() === QueryBuilder::SELECT) ? $this->defaultSelectAlias . '.' : '';
+		$qb->andWhere($qb->expr()->eq($fieldPrefix . $field, $qb->createNamedParameter($value)));
 	}
 }

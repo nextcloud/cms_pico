@@ -31,61 +31,46 @@ use OCP\DB\QueryBuilder\IQueryBuilder;
 class WebsitesRequestBuilder extends CoreRequestBuilder
 {
 	/**
-	 * Base of the Sql Insert request
-	 *
 	 * @return IQueryBuilder
 	 */
 	protected function getWebsitesInsertSql(): IQueryBuilder
 	{
 		$qb = $this->dbConnection->getQueryBuilder();
-		$qb->insert(self::TABLE_WEBSITES)
+		$qb
+			->insert(self::TABLE_WEBSITES)
 			->setValue('creation', $qb->createFunction('NOW()'));
 
 		return $qb;
 	}
 
 	/**
-	 * Base of the Sql Update request
-	 *
 	 * @return IQueryBuilder
 	 */
 	protected function getWebsitesUpdateSql(): IQueryBuilder
 	{
-		$qb = $this->dbConnection->getQueryBuilder();
-		$qb->update(self::TABLE_WEBSITES);
-
-		return $qb;
+		return $this->dbConnection->getQueryBuilder()
+			->update(self::TABLE_WEBSITES);
 	}
 
 	/**
-	 * Base of the Sql Select request for Shares
-	 *
 	 * @return IQueryBuilder
 	 */
 	protected function getWebsitesSelectSql(): IQueryBuilder
 	{
-		$qb = $this->dbConnection->getQueryBuilder();
-
-		/** @noinspection PhpMethodParametersCountMismatchInspection */
-		$qb->select('w.id', 'w.name', 'w.user_id', 'w.site', 'w.theme', 'w.type', 'w.options', 'w.path', 'w.creation')
-			->from(self::TABLE_WEBSITES, 'w');
-
 		$this->defaultSelectAlias = 'w';
 
-		return $qb;
+		return $this->dbConnection->getQueryBuilder()
+			->select('w.id', 'w.name', 'w.user_id', 'w.site', 'w.theme', 'w.type', 'w.options', 'w.path', 'w.creation')
+			->from(self::TABLE_WEBSITES, 'w');
 	}
 
 	/**
-	 * Base of the Sql Delete request
-	 *
 	 * @return IQueryBuilder
 	 */
 	protected function getWebsitesDeleteSql(): IQueryBuilder
 	{
-		$qb = $this->dbConnection->getQueryBuilder();
-		$qb->delete(self::TABLE_WEBSITES);
-
-		return $qb;
+		return $this->dbConnection->getQueryBuilder()
+			->delete(self::TABLE_WEBSITES);
 	}
 
 	/**
