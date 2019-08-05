@@ -24,8 +24,10 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Migration;
 
+use Doctrine\DBAL\Schema\SchemaException;
 use OC\Encryption\Manager as EncryptionManager;
 use OCA\CMSPico\AppInfo\Application;
+use OCA\CMSPico\Db\CoreRequestBuilder;
 use OCA\CMSPico\Exceptions\FilesystemEncryptedException;
 use OCA\CMSPico\Exceptions\FilesystemNotWritableException;
 use OCA\CMSPico\Model\Plugin;
@@ -36,12 +38,16 @@ use OCA\CMSPico\Service\PicoService;
 use OCP\DB\ISchemaWrapper;
 use OCP\Files\AlreadyExistsException;
 use OCP\Files\NotPermittedException;
+use OCP\IDBConnection;
 use OCP\IL10N;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
 class Version010000 extends SimpleMigrationStep
 {
+	/** @var IDBConnection */
+	private $databaseConnection;
+
 	/** @var IL10N */
 	private $l10n;
 
@@ -62,6 +68,7 @@ class Version010000 extends SimpleMigrationStep
 	 */
 	public function __construct()
 	{
+		$this->databaseConnection = \OC::$server->getDatabaseConnection();
 		$this->l10n = \OC::$server->getL10N(Application::APP_NAME);
 		$this->encryptionManager = \OC::$server->getEncryptionManager();
 		$this->configService = \OC::$server->query(ConfigService::class);
@@ -81,8 +88,10 @@ class Version010000 extends SimpleMigrationStep
 		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
 
-		if (!$schema->hasTable('cms_pico_websites')) {
-			$table = $schema->createTable('cms_pico_websites');
+		try {
+			$table = $schema->getTable(CoreRequestBuilder::TABLE_WEBSITES);
+		} catch (SchemaException $e) {
+			$table = $schema->createTable(CoreRequestBuilder::TABLE_WEBSITES);
 
 			$table->addColumn('id', 'integer', [
 				'autoincrement' => true,
@@ -104,7 +113,7 @@ class Version010000 extends SimpleMigrationStep
 			]);
 			$table->addColumn('theme', 'string', [
 				'notnull' => true,
-				'length' => 63,
+				'length' => 64,
 				'default' => 'default',
 			]);
 			$table->addColumn('type', 'smallint', [
@@ -124,6 +133,19 @@ class Version010000 extends SimpleMigrationStep
 			]);
 
 			$table->setPrimaryKey(['id']);
+		}
+
+		$themeColumn = $table->getColumn('theme');
+		if ($themeColumn->getLength() < 64) {
+			$themeColumn->setLength(64);
+		}
+
+		if (!$table->hasIndex('user_id')) {
+			$table->addIndex([ 'user_id' ], 'user_id');
+		}
+
+		if (!$table->hasIndex('site')) {
+			$table->addIndex([ 'site' ], 'site');
 		}
 
 		return $schema;
