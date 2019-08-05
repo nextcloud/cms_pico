@@ -135,8 +135,10 @@ style(Application::APP_NAME, 'pico');
 									<span class="menuitem">
 										<span class="icon icon-paint-roller"></span>
 										<select class="action-theme">
-											<?php foreach ($_['themes'] as $theme) { ?>
-												<option value="<?php p($theme); ?>"><?php p($theme); ?></option>
+											<?php foreach ($_['themes'] as $themeData) { ?>
+												<?php if ($themeData['compat']) { ?>
+													<option value="<?php p($themeData['name']); ?>"><?php p($themeData['name']); ?></option>
+												<?php } ?>
 											<?php } ?>
 										</select>
 									</span>
@@ -161,8 +163,10 @@ style(Application::APP_NAME, 'pico');
 			</td>
 			<td class="theme-column">
 				<select class="action-theme">
-					<?php foreach ($_['themes'] as $theme) { ?>
-						<option value="<?php p($theme); ?>"><?php p($theme); ?></option>
+					<?php foreach ($_['themes'] as $themeData) { ?>
+						<?php if ($themeData['compat']) { ?>
+							<option value="<?php p($themeData['name']); ?>"><?php p($themeData['name']); ?></option>
+						<?php } ?>
 					<?php } ?>
 				</select>
 			</td>
@@ -300,8 +304,10 @@ style(Application::APP_NAME, 'pico');
 				</div>
 				<div class="content">
 					<select id="picocms-website-new-theme" class="input input-theme" name="theme">
-						<?php foreach ($_['themes'] as $theme) { ?>
-							<option value="<?php p($theme); ?>"><?php p($theme); ?></option>
+						<?php foreach ($_['themes'] as $themeData) { ?>
+							<?php if ($themeData['compat']) { ?>
+								<option value="<?php p($themeData['name']); ?>"><?php p($themeData['name']); ?></option>
+							<?php } ?>
 						<?php } ?>
 					</select>
 					<p class="note">

@@ -31,6 +31,7 @@ use OCA\CMSPico\Db\CoreRequestBuilder;
 use OCA\CMSPico\Exceptions\FilesystemEncryptedException;
 use OCA\CMSPico\Exceptions\FilesystemNotWritableException;
 use OCA\CMSPico\Model\Plugin;
+use OCA\CMSPico\Model\Theme;
 use OCA\CMSPico\Model\WebsiteCore;
 use OCA\CMSPico\Service\ConfigService;
 use OCA\CMSPico\Service\FileService;
@@ -162,6 +163,7 @@ class Version010000 extends SimpleMigrationStep
 		$this->migratePrivateWebsites();
 		$this->createPublicFolder();
 		$this->checkEncryptedFilesystem();
+		$this->migrateCustomThemes();
 		$this->migrateCustomPlugins();
 	}
 
@@ -255,6 +257,26 @@ class Version010000 extends SimpleMigrationStep
 				'Failed to enable Pico CMS for Nextcloud: You can\'t host websites on a encrypted Nextcloud.'
 			));
 		}
+	}
+
+	/**
+	 * @return void
+	 */
+	private function migrateCustomThemes()
+	{
+		$customThemesJson = $this->configService->getAppValue(ConfigService::CUSTOM_THEMES);
+		$customThemes = $customThemesJson ? json_decode($customThemesJson, true) : [];
+
+		$newCustomThemes = [];
+		foreach ($customThemes as $themeName) {
+			$newCustomThemes[$themeName] = [
+				'name' => $themeName,
+				'type' => Theme::THEME_TYPE_CUSTOM,
+				'compat' => true
+			];
+		}
+
+		$this->configService->setAppValue(ConfigService::CUSTOM_THEMES, json_encode($newCustomThemes));
 	}
 
 	/**

@@ -34,7 +34,13 @@ class ConfigService
 	const CUSTOM_TEMPLATES = 'custom_templates';
 
 	/** @var string */
+	const SYSTEM_THEMES = 'system_themes';
+
+	/** @var string */
 	const CUSTOM_THEMES = 'custom_themes';
+
+	/** @var string */
+	const THEMES_ETAG = 'themes_etag';
 
 	/** @var string */
 	const SYSTEM_PLUGINS = 'system_plugins';
@@ -51,7 +57,9 @@ class ConfigService
 	/** @var array<string,mixed> */
 	private $defaults = [
 		self::CUSTOM_TEMPLATES => '',
+		self::SYSTEM_THEMES => '',
 		self::CUSTOM_THEMES => '',
+		self::THEMES_ETAG => '',
 		self::SYSTEM_PLUGINS => '',
 		self::CUSTOM_PLUGINS => '',
 		self::PLUGINS_ETAG => '',

@@ -26,8 +26,13 @@ declare(strict_types=1);
 namespace OCA\CMSPico\Service;
 
 use OCA\CMSPico\AppInfo\Application;
+use OCA\CMSPico\Exceptions\ThemeNotCompatibleException;
 use OCA\CMSPico\Exceptions\ThemeNotFoundException;
 use OCA\CMSPico\Files\FolderInterface;
+use OCA\CMSPico\Files\LocalFolder;
+use OCA\CMSPico\Model\Theme;
+use OCP\Files\AlreadyExistsException;
+use OCP\Files\InvalidPathException;
 use OCP\Files\NotFoundException;
 
 class ThemesService
@@ -38,58 +43,68 @@ class ThemesService
 	/** @var FileService */
 	private $fileService;
 
+	/** @var MiscService */
+	private $miscService;
+
+	/** @var bool */
+	private $renewedETag = false;
+
 	/**
 	 * ThemesService constructor.
 	 *
 	 * @param ConfigService $configService
 	 * @param FileService   $fileService
+	 * @param MiscService   $miscService
 	 */
-	public function __construct(ConfigService $configService, FileService $fileService)
+	public function __construct(ConfigService $configService, FileService $fileService, MiscService $miscService)
 	{
 		$this->configService = $configService;
 		$this->fileService = $fileService;
+		$this->miscService = $miscService;
 	}
 
 	/**
-	 * @param $theme
+	 * @param string $themeName
 	 *
 	 * @throws ThemeNotFoundException
+	 * @throws ThemeNotCompatibleException
 	 */
-	public function assertValidTheme($theme)
+	public function assertValidTheme(string $themeName)
 	{
-		if (!in_array($theme, $this->getSystemThemes()) && !in_array($theme, $this->getCustomThemes())) {
+		$themes = $this->getThemes();
+
+		if (!isset($themes[$themeName])) {
 			throw new ThemeNotFoundException();
+		}
+
+		if (!$themes[$themeName]['compat']) {
+			throw new ThemeNotCompatibleException(
+				$themeName,
+				$themes[$themeName]['compatReason'],
+				$themes[$themeName]['compatReasonData']
+			);
 		}
 	}
 
 	/**
-	 * @return string[]
+	 * @return array[]
 	 */
 	public function getThemes(): array
 	{
-		return array_merge($this->getSystemThemes(), $this->getCustomThemes());
+		return $this->getSystemThemes() + $this->getCustomThemes();
 	}
 
 	/**
-	 * @return string[]
+	 * @return array[]
 	 */
 	public function getSystemThemes(): array
 	{
-		$systemThemesFolder = $this->fileService->getSystemFolder(PicoService::DIR_THEMES);
-		$systemThemesFolder->sync(FolderInterface::SYNC_SHALLOW);
-
-		$systemThemes = [];
-		foreach ($systemThemesFolder->listing() as $themeFolder) {
-			if ($themeFolder->isFolder()) {
-				$systemThemes[] = $themeFolder->getName();
-			}
-		}
-
-		return $systemThemes;
+		$json = $this->configService->getAppValue(ConfigService::SYSTEM_THEMES);
+		return $json ? json_decode($json, true) : [];
 	}
 
 	/**
-	 * @return string[]
+	 * @return array[]
 	 */
 	public function getCustomThemes(): array
 	{
@@ -102,16 +117,16 @@ class ThemesService
 	 */
 	public function getNewCustomThemes(): array
 	{
-		$currentThemes = $this->getThemes();
-
 		$customThemesFolder = $this->fileService->getAppDataFolder(PicoService::DIR_THEMES);
 		$customThemesFolder->sync(FolderInterface::SYNC_SHALLOW);
 
+		$currentThemes = $this->getThemes();
+
 		$newCustomThemes = [];
 		foreach ($customThemesFolder->listing() as $themeFolder) {
-			$theme = $themeFolder->getName();
-			if ($themeFolder->isFolder() && !in_array($theme, $currentThemes)) {
-				$newCustomThemes[] = $theme;
+			$themeName = $themeFolder->getName();
+			if ($themeFolder->isFolder() && !isset($currentThemes[$themeName])) {
+				$newCustomThemes[] = $themeName;
 			}
 		}
 
@@ -119,32 +134,155 @@ class ThemesService
 	}
 
 	/**
-	 * @param string $theme
+	 * @param string $themeName
+	 *
+	 * @return Theme
+	 * @throws ThemeNotFoundException
 	 */
-	public function publishCustomTheme(string $theme)
+	public function publishSystemTheme(string $themeName): Theme
 	{
-		$publicThemesFolder = $this->fileService->getPublicFolder(PicoService::DIR_THEMES);
+		if (!$themeName) {
+			throw new ThemeNotFoundException();
+		}
+
+		$systemThemesFolder = $this->fileService->getSystemFolder(PicoService::DIR_THEMES);
+		$systemThemesFolder->sync(FolderInterface::SYNC_SHALLOW);
+
+		try {
+			$systemThemeFolder = $systemThemesFolder->get($themeName);
+			if (!$systemThemeFolder->isFolder()) {
+				throw new ThemeNotFoundException();
+			}
+		} catch (NotFoundException $e) {
+			throw new ThemeNotFoundException();
+		}
+
+		$themes = $this->getSystemThemes();
+		$themes[$themeName] = $this->publishTheme($systemThemeFolder, Theme::THEME_TYPE_SYSTEM);
+		$this->configService->setAppValue(ConfigService::SYSTEM_THEMES, json_encode($themes));
+
+		return $themes[$themeName];
+	}
+
+	/**
+	 * @param string $themeName
+	 *
+	 * @return Theme
+	 * @throws ThemeNotFoundException
+	 */
+	public function publishCustomTheme(string $themeName): Theme
+	{
+		if (!$themeName) {
+			throw new ThemeNotFoundException();
+		}
 
 		$appDataThemesFolder = $this->fileService->getAppDataFolder(PicoService::DIR_THEMES);
 		$appDataThemesFolder->sync(FolderInterface::SYNC_SHALLOW);
 
-		/** @var FolderInterface $appDataThemeFolder */
-		$appDataThemeFolder = $appDataThemesFolder->get($theme);
-		$appDataThemeFolder->sync();
+		try {
+			$appDataThemeFolder = $appDataThemesFolder->get($themeName);
+			if (!$appDataThemeFolder->isFolder()) {
+				throw new ThemeNotFoundException();
+			}
+		} catch (NotFoundException $e) {
+			throw new ThemeNotFoundException();
+		}
 
-		$appDataThemeFolder->copy($publicThemesFolder);
+		$themes = $this->getCustomThemes();
+		$themes[$themeName] = $this->publishTheme($appDataThemeFolder, Theme::THEME_TYPE_CUSTOM);
+		$this->configService->setAppValue(ConfigService::CUSTOM_THEMES, json_encode($themes));
+
+		return $themes[$themeName];
 	}
 
 	/**
-	 * @param string $theme
+	 * @param FolderInterface $themeSourceFolder
+	 * @param int             $themeType
+	 *
+	 * @return Theme
 	 */
-	public function depublishCustomTheme(string $theme)
+	private function publishTheme(FolderInterface $themeSourceFolder, int $themeType): Theme
 	{
-		$publicThemesFolder = $this->fileService->getPublicFolder(PicoService::DIR_THEMES);
+		$publicThemesFolder = $this->getThemesFolder(true);
+
+		$themeName = $themeSourceFolder->getName();
+		$themeSourceFolder->sync();
 
 		try {
-			$publicThemesFolder->get($theme)->delete();
+			$themeFolder = $publicThemesFolder->get($themeName);
+			if (!$themeFolder->isFolder()) {
+				throw new InvalidPathException();
+			}
+
+			throw new AlreadyExistsException();
 		} catch (NotFoundException $e) {}
+
+		$themeFolder = $themeSourceFolder->copy($publicThemesFolder);
+		return new Theme($themeFolder, $themeType);
+	}
+
+	/**
+	 * @param string $themeName
+	 */
+	public function depublishCustomTheme(string $themeName)
+	{
+		if (!$themeName) {
+			throw new ThemeNotFoundException();
+		}
+
+		$publicThemesFolder = $this->getThemesFolder();
+
+		try {
+			$themeFolder = $publicThemesFolder->get($themeName);
+			if (!$themeFolder->isFolder()) {
+				throw new ThemeNotFoundException();
+			}
+
+			$themeFolder->delete();
+		} catch (NotFoundException $e) {
+			throw new ThemeNotFoundException();
+		}
+
+		$customThemes = $this->getCustomThemes();
+		unset($customThemes[$themeName]);
+		$this->configService->setAppValue(ConfigService::CUSTOM_THEMES, json_encode($customThemes));
+	}
+
+	/**
+	 * @param bool $renewETag
+	 * @param bool $forceRenewETag
+	 *
+	 * @return LocalFolder
+	 */
+	private function getThemesFolder(bool $renewETag = false, bool $forceRenewETag = false): LocalFolder
+	{
+		$themesBaseFolder = $this->fileService->getPublicFolder(PicoService::DIR_THEMES);
+
+		/** @var LocalFolder $themesFolder */
+		$themesFolder = null;
+
+		$themesETag = $this->configService->getAppValue(ConfigService::THEMES_ETAG);
+		if ($themesETag) {
+			$themesFolder = $themesBaseFolder->get($themesETag);
+			if (!$themesFolder->isFolder()) {
+				throw new InvalidPathException();
+			}
+		}
+
+		if (($renewETag && !$this->renewedETag) || $forceRenewETag || !$themesFolder) {
+			$themesETag = $this->miscService->getRandom();
+
+			if ($themesFolder) {
+				$themesFolder = $themesFolder->rename($themesETag);
+			} else {
+				$themesFolder = $themesBaseFolder->newFolder($themesETag);
+			}
+
+			$this->configService->setAppValue(ConfigService::THEMES_ETAG, $themesETag);
+			$this->renewedETag = true;
+		}
+
+		return $themesFolder;
 	}
 
 	/**
@@ -152,8 +290,10 @@ class ThemesService
 	 */
 	public function getThemesPath(): string
 	{
-		$appPath = \OC_App::getAppPath(Application::APP_NAME);
-		return $appPath . '/appdata_public/' . PicoService::DIR_THEMES . '/';
+		$appPath = \OC_App::getAppPath(Application::APP_NAME) . '/';
+		$themesPath = 'appdata_public/' . PicoService::DIR_THEMES . '/';
+		$themesETag = $this->configService->getAppValue(ConfigService::THEMES_ETAG);
+		return $appPath . $themesPath . ($themesETag ? $themesETag . '/' : '');
 	}
 
 	/**
@@ -161,6 +301,9 @@ class ThemesService
 	 */
 	public function getThemesUrl(): string
 	{
-		return \OC_App::getAppWebPath(Application::APP_NAME) . '/appdata_public/' . PicoService::DIR_THEMES . '/';
+		$appWebPath = \OC_App::getAppWebPath(Application::APP_NAME) . '/';
+		$themesPath = 'appdata_public/' . PicoService::DIR_THEMES . '/';
+		$themesETag = $this->configService->getAppValue(ConfigService::THEMES_ETAG);
+		return $appWebPath . $themesPath . ($themesETag ? $themesETag . '/' : '');
 	}
 }

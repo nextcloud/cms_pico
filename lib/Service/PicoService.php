@@ -30,6 +30,7 @@ use OCA\CMSPico\Exceptions\PageInvalidPathException;
 use OCA\CMSPico\Exceptions\PageNotFoundException;
 use OCA\CMSPico\Exceptions\PageNotPermittedException;
 use OCA\CMSPico\Exceptions\PicoRuntimeException;
+use OCA\CMSPico\Exceptions\ThemeNotCompatibleException;
 use OCA\CMSPico\Exceptions\ThemeNotFoundException;
 use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
 use OCA\CMSPico\Exceptions\WebsiteNotPermittedException;
@@ -112,6 +113,7 @@ class PicoService
 	 * @throws WebsiteNotFoundException
 	 * @throws WebsiteNotPermittedException
 	 * @throws ThemeNotFoundException
+	 * @throws ThemeNotCompatibleException
 	 * @throws PageInvalidPathException
 	 * @throws PageNotFoundException
 	 * @throws PageNotPermittedException

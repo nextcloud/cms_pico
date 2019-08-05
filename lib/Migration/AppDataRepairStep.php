@@ -162,15 +162,56 @@ class AppDataRepairStep implements IRepairStep
 		$publicThemesFolder = $this->fileService->getPublicFolder(PicoService::DIR_THEMES);
 		$publicThemesFolder->empty();
 
+		$this->configService->deleteAppValue(ConfigService::THEMES_ETAG);
+
+		$this->publishSystemThemes();
+		$this->publishCustomThemes();
+	}
+
+	/**
+	 * @return void
+	 */
+	private function publishSystemThemes()
+	{
 		$systemThemesFolder = $this->fileService->getSystemFolder(PicoService::DIR_THEMES);
-		foreach ($this->themesService->getSystemThemes() as $themeName) {
-			$systemThemesFolder->get($themeName)->copy($publicThemesFolder);
+
+		$oldSystemThemes = $this->themesService->getSystemThemes();
+		$this->configService->deleteAppValue(ConfigService::SYSTEM_THEMES);
+
+		foreach ($systemThemesFolder->listing() as $themeFolder) {
+			$themeName = $themeFolder->getName();
+			if ($themeFolder->isFolder()) {
+				$this->themesService->publishSystemTheme($themeName);
+			}
 		}
 
+		$newSystemThemes = $this->themesService->getSystemThemes();
+		$this->logChanges('system theme', array_keys($newSystemThemes), array_keys($oldSystemThemes));
+	}
+
+	/**
+	 * @return void
+	 */
+	private function publishCustomThemes()
+	{
 		$appDataThemesFolder = $this->fileService->getAppDataFolder(PicoService::DIR_THEMES);
-		foreach ($this->themesService->getCustomThemes() as $themeName) {
-			$appDataThemesFolder->get($themeName)->copy($publicThemesFolder);
+		$appDataThemesFolder->sync(FolderInterface::SYNC_SHALLOW);
+
+		$oldCustomThemes = $this->themesService->getCustomThemes();
+		$this->configService->deleteAppValue(ConfigService::CUSTOM_THEMES);
+
+		$systemThemes = $this->themesService->getSystemThemes();
+		foreach ($appDataThemesFolder->listing() as $themeFolder) {
+			$themeName = $themeFolder->getName();
+			if ($themeFolder->isFolder()) {
+				if (isset($oldCustomThemes[$themeName]) && !isset($systemThemes[$themeName])) {
+					$this->themesService->publishCustomTheme($themeName);
+				}
+			}
 		}
+
+		$newCustomThemes = $this->themesService->getCustomThemes();
+		$this->logChanges('custom theme', array_keys($newCustomThemes), array_keys($oldCustomThemes));
 	}
 
 	/**

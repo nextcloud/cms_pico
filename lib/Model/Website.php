@@ -31,6 +31,7 @@ use OCA\CMSPico\Exceptions\PageInvalidPathException;
 use OCA\CMSPico\Exceptions\PageNotFoundException;
 use OCA\CMSPico\Exceptions\PageNotPermittedException;
 use OCA\CMSPico\Exceptions\TemplateNotFoundException;
+use OCA\CMSPico\Exceptions\ThemeNotCompatibleException;
 use OCA\CMSPico\Exceptions\ThemeNotFoundException;
 use OCA\CMSPico\Exceptions\WebsiteForeignOwnerException;
 use OCA\CMSPico\Exceptions\WebsiteInvalidDataException;
@@ -390,6 +391,7 @@ class Website extends WebsiteCore
 
 	/**
 	 * @throws ThemeNotFoundException
+	 * @throws ThemeNotCompatibleException
 	 */
 	public function assertValidTheme()
 	{

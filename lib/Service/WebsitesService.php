@@ -36,6 +36,7 @@ use OCA\CMSPico\Exceptions\PageNotFoundException;
 use OCA\CMSPico\Exceptions\PageNotPermittedException;
 use OCA\CMSPico\Exceptions\PicoRuntimeException;
 use OCA\CMSPico\Exceptions\TemplateNotFoundException;
+use OCA\CMSPico\Exceptions\ThemeNotCompatibleException;
 use OCA\CMSPico\Exceptions\ThemeNotFoundException;
 use OCA\CMSPico\Exceptions\WebsiteExistsException;
 use OCA\CMSPico\Exceptions\WebsiteInvalidDataException;
@@ -105,6 +106,7 @@ class WebsitesService
 	 * @throws WebsiteExistsException
 	 * @throws WebsiteInvalidDataException
 	 * @throws ThemeNotFoundException
+	 * @throws ThemeNotCompatibleException
 	 * @throws TemplateNotFoundException
 	 */
 	public function createWebsite(Website $website)
@@ -137,6 +139,7 @@ class WebsitesService
 	 * @throws WebsiteNotFoundException
 	 * @throws WebsiteInvalidDataException
 	 * @throws ThemeNotFoundException
+	 * @throws ThemeNotCompatibleException
 	 * @throws TemplateNotFoundException
 	 */
 	public function updateWebsite(Website $website)
@@ -236,6 +239,7 @@ class WebsitesService
 	 * @throws PageNotFoundException
 	 * @throws PageNotPermittedException
 	 * @throws ThemeNotFoundException
+	 * @throws ThemeNotCompatibleException
 	 * @throws PicoRuntimeException
 	 */
 	public function getPage(string $site, string $page, string $viewer = null, bool $proxyRequest = false): PicoPage

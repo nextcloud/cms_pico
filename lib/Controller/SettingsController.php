@@ -27,6 +27,7 @@ namespace OCA\CMSPico\Controller;
 
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Exceptions\TemplateNotFoundException;
+use OCA\CMSPico\Exceptions\ThemeNotCompatibleException;
 use OCA\CMSPico\Exceptions\ThemeNotFoundException;
 use OCA\CMSPico\Exceptions\WebsiteExistsException;
 use OCA\CMSPico\Exceptions\WebsiteForeignOwnerException;
@@ -147,6 +148,8 @@ class SettingsController extends Controller
 				$data['form_error'] = [ 'field' => $e->getField(), 'message' => $e->getMessage() ];
 			} elseif ($e instanceof ThemeNotFoundException) {
 				$data['form_error'] = [ 'field' => 'theme', 'message' => $this->l10n->t('Theme not found.') ];
+			} elseif ($e instanceof ThemeNotCompatibleException) {
+				$data['form_error'] = [ 'field' => 'theme', 'message' => $this->l10n->t($e->getReason()) ];
 			} elseif ($e instanceof TemplateNotFoundException) {
 				$data['form_error'] = [ 'field' => 'template', 'message' => $this->l10n->t('Template not found.') ];
 			}
@@ -196,6 +199,8 @@ class SettingsController extends Controller
 				$data['form_error'] = [ 'field' => $e->getField(), 'message' => $e->getMessage() ];
 			} elseif ($e instanceof ThemeNotFoundException) {
 				$data['form_error'] = [ 'field' => 'theme', 'message' => $this->l10n->t('Theme not found.') ];
+			} elseif ($e instanceof ThemeNotCompatibleException) {
+				$data['form_error'] = [ 'field' => 'theme', 'message' => $this->l10n->t($e->getReason()) ];
 			} elseif ($e instanceof TemplateNotFoundException) {
 				$data['form_error'] = [ 'field' => 'template', 'message' => $this->l10n->t('Template not found.') ];
 			}
@@ -310,11 +315,6 @@ class SettingsController extends Controller
 		try {
 			$this->themesService->publishCustomTheme($item);
 
-			$customThemes = $this->themesService->getCustomThemes();
-			$customThemes[] = $item;
-
-			$this->configService->setAppValue(ConfigService::CUSTOM_THEMES, json_encode($customThemes));
-
 			return $this->getThemes();
 		} catch (\Exception $e) {
 			return $this->createErrorResponse($e);
@@ -346,19 +346,7 @@ class SettingsController extends Controller
 	public function removeCustomTheme(string $item): DataResponse
 	{
 		try {
-			$customThemes = $this->themesService->getCustomThemes();
-
-			$newCustomThemes = [];
-			foreach ($customThemes as $customTheme) {
-				if ($customTheme === $item) {
-					$this->themesService->depublishCustomTheme($item);
-					continue;
-				}
-
-				$newCustomThemes[] = $customTheme;
-			}
-
-			$this->configService->setAppValue(ConfigService::CUSTOM_THEMES, json_encode($newCustomThemes));
+			$this->themesService->depublishCustomTheme($item);
 
 			return $this->getThemes();
 		} catch (\Exception $e) {

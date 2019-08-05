@@ -94,7 +94,12 @@ style(Application::APP_NAME, 'pico');
 		<div class="app-content-list-item">
 			<div class="app-content-list-item-line-one">
 				<p>{name}</p>
-				<p class="note"><?php p($l->t('System theme')); ?></p>
+				<div class="info-compat message">
+					<div class="icon-checkmark has-tooltip" title="<?php p($l->t('Compatible theme.')); ?>"></div>
+					<div>
+						<p class="note"><?php p($l->t('System theme')); ?></p>
+					</div>
+				</div>
 			</div>
 		</div>
 	</script>
@@ -104,7 +109,12 @@ style(Application::APP_NAME, 'pico');
 		<div class="app-content-list-item">
 			<div class="app-content-list-item-line-one">
 				<p>{name}</p>
-				<p class="note"><?php p($l->t('Custom theme')); ?></p>
+				<div class="info-compat message">
+					<div class="icon-checkmark has-tooltip" title="<?php p($l->t('Compatible theme.')); ?>"></div>
+					<div>
+						<p class="note"><?php p($l->t('Custom theme')); ?></p>
+					</div>
+				</div>
 			</div>
 			<div class="action-sync icon-sync-alt has-tooltip" data-placement="left"
 					title="<?php p($l->t('Reload custom theme')); ?>">
