@@ -159,4 +159,21 @@
 			return $content;
 		}
 	};
+
+	/** @namespace */
+	OCA.CMSPico.Util = {
+		/**
+		 * @param string
+		 *
+		 * @returns string
+		 */
+		unescape: function (string) {
+			return string
+				.replace(/&amp;/g, '&')
+				.replace(/&lt;/g, '<')
+				.replace(/&gt;/g, '>')
+				.replace(/&quot;/g, '"')
+				.replace(/&#039;/g, "'");
+		}
+	};
 })(document, jQuery, OC, OCA);

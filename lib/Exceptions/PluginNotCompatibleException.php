@@ -48,7 +48,7 @@ class PluginNotCompatibleException extends \Exception
 		$this->reason = $reason;
 		$this->reasonData = $reasonData;
 
-		parent::__construct();
+		parent::__construct($this->getReason());
 	}
 
 	/**
@@ -64,12 +64,16 @@ class PluginNotCompatibleException extends \Exception
 	 */
 	public function getReason(): string
 	{
+		if (!$this->reason) {
+			return '';
+		}
+
 		$reasonData = $this->reasonData;
 		$replaceCallback = function (array $matches) use ($reasonData) {
 			return $reasonData[$matches[1]] ?? '';
 		};
 
-		return preg_replace_callback('/{([^{}]*)}/g', $replaceCallback, $this->reason);
+		return preg_replace_callback('/{([^{}]*)}/g', $replaceCallback, $this->reason) ?: '';
 	}
 
 	/**

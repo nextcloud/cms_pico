@@ -165,7 +165,7 @@
 			$item.find('.info-compat').each(function () {
 				var $this = $(this),
 					$icon = $this.find('[class^="icon-"], [class*=" icon-"]'),
-					compat = !!itemData.compat;
+					compat = (itemData.compat === undefined) || !!itemData.compat;
 
 				$this.data('value', compat);
 
@@ -176,7 +176,8 @@
 				if ($icon.hasClass('has-tooltip')) {
 					var compatReason = $icon.prop('title') || '';
 					if (itemData.compatReason) {
-						compatReason = t('cms_pico', itemData.compatReason, itemData.compatReasonData);
+						var rawCompatReason = OCA.CMSPico.Util.unescape(itemData.compatReason);
+						compatReason = t('cms_pico', rawCompatReason, itemData.compatReasonData);
 					}
 
 					$icon
