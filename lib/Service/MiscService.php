@@ -61,21 +61,41 @@ class MiscService
 	/**
 	 * @param string      $path
 	 * @param string|null $basePath
+	 * @param string|null $fileExtension
 	 *
 	 * @return string
 	 * @throws InvalidPathException
 	 */
-	public function getRelativePath(string $path, string $basePath = null): string
+	public function getRelativePath(string $path, string $basePath = null, string $fileExtension = null): string
 	{
 		if (!$basePath) {
 			$basePath = \OC::$SERVERROOT;
 		}
 
-		$basePath = $this->normalizePath($basePath) . '/';
+		$basePath = $this->normalizePath($basePath);
 		$basePathLength = strlen($basePath);
 
 		$path = $this->normalizePath($path);
-		return (substr($path, 0, $basePathLength) === $basePath) ? substr($path, $basePathLength) : $path;
+
+		if ($path === $basePath) {
+			$relativePath = '';
+		} elseif (substr($path, 0, $basePathLength + 1) === $basePath . '/') {
+			$relativePath = substr($path, $basePathLength + 1);
+		} else {
+			throw new InvalidPathException();
+		}
+
+		if ($fileExtension) {
+			$fileName = basename($relativePath);
+			$fileExtensionPos = strrpos($fileName, '.');
+			if (($fileExtensionPos === false) || (substr($fileName, $fileExtensionPos) !== $fileExtension)) {
+				throw new InvalidPathException();
+			}
+
+			return substr($relativePath, 0, strlen($relativePath) - strlen($fileExtension));
+		}
+
+		return $relativePath;
 	}
 
 	/**

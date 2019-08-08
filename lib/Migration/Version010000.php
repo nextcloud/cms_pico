@@ -39,6 +39,7 @@ use OCA\CMSPico\Service\MiscService;
 use OCA\CMSPico\Service\PicoService;
 use OCP\DB\ISchemaWrapper;
 use OCP\Files\AlreadyExistsException;
+use OCP\Files\InvalidPathException;
 use OCP\Files\NotPermittedException;
 use OCP\IDBConnection;
 use OCP\IL10N;
@@ -231,18 +232,26 @@ class Version010000 extends SimpleMigrationStep
 			$publicPluginsTestFile = $publicPluginsFolder->newFile($publicPluginsTestFileName);
 			$publicPluginsTestFile->delete();
 		} catch (NotPermittedException $e) {
-			$appDataPublicPath = \OC_App::getAppPath(Application::APP_NAME) . '/appdata_public';
-			$dataPath = $this->configService->getSystemValue('datadirectory', \OC::$SERVERROOT . '/data');
+			try {
+				$appDataPublicPath = \OC_App::getAppPath(Application::APP_NAME) . '/appdata_public';
+				$appDataPublicPath = $this->miscService->getRelativePath($appDataPublicPath) . '/';
+			} catch (InvalidPathException $e) {
+				$appDataPublicPath = 'apps/' . Application::APP_NAME . '/appdata_public/';
+			}
+
+			try {
+				$dataPath = $this->configService->getSystemValue('datadirectory', \OC::$SERVERROOT . '/data');
+				$dataPath = $this->miscService->getRelativePath($dataPath) . '/';
+			} catch (InvalidPathException $e) {
+				$dataPath = 'data/';
+			}
 
 			throw new FilesystemNotWritableException($this->l10n->t(
 				'Failed to enable Pico CMS for Nextcloud: The webserver has no permission to create files and '
 						. 'folders below "%s". Make sure to give the webserver write access to this directory by '
 						. 'changing its permissions and ownership to the same as of your "%s" directory. Then try '
 						. 'again enabling Pico CMS for Nextcloud.',
-				[
-					$this->miscService->getRelativePath($appDataPublicPath) . '/',
-					$this->miscService->getRelativePath($dataPath) . '/'
-				]
+				[ $appDataPublicPath, $dataPath ]
 			));
 		}
 	}
