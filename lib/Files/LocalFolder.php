@@ -50,7 +50,7 @@ class LocalFolder extends AbstractLocalNode implements FolderInterface
 		parent::__construct($path, $basePath);
 
 		if (!is_dir($this->getLocalPath())) {
-			throw new NotFoundException();
+			throw new InvalidPathException();
 		}
 	}
 

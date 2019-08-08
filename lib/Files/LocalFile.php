@@ -45,7 +45,7 @@ class LocalFile extends AbstractLocalNode implements FileInterface
 		parent::__construct($path, $basePath);
 
 		if (!is_file($this->getLocalPath())) {
-			throw new NotFoundException();
+			throw new InvalidPathException();
 		}
 	}
 
