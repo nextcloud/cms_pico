@@ -28,6 +28,7 @@ use OCP\Files\File as OCFile;
 use OCP\Files\Folder as OCFolder;
 use OCP\Files\InvalidPathException;
 use OCP\Files\Node as OCNode;
+use OCP\Files\NotFoundException;
 
 abstract class AbstractStorageNode extends AbstractNode implements NodeInterface
 {
@@ -121,6 +122,30 @@ abstract class AbstractStorageNode extends AbstractNode implements NodeInterface
 	public function getPath(): string
 	{
 		return $this->node->getPath();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getLocalPath(): string
+	{
+		$localPath = null;
+
+		try {
+			$storage = $this->node->getStorage();
+			$internalPath = $this->node->getInternalPath();
+			$localPath = $storage->getLocalFile($internalPath);
+		} catch (\Exception $e) {}
+
+		if ($localPath && file_exists($localPath)) {
+			if ($this->isFolder() ? is_dir($localPath) : is_file($localPath)) {
+				return $localPath;
+			}
+
+			throw new InvalidPathException();
+		}
+
+		throw new NotFoundException();
 	}
 
 	/**

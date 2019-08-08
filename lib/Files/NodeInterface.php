@@ -27,6 +27,7 @@ namespace OCA\CMSPico\Files;
 use OCP\Files\AlreadyExistsException;
 use OCP\Files\GenericFileException;
 use OCP\Files\InvalidPathException;
+use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 
 interface NodeInterface
@@ -82,6 +83,13 @@ interface NodeInterface
 	 * @return string
 	 */
 	public function getPath(): string;
+
+	/**
+	 * @return string
+	 * @throws InvalidPathException
+	 * @throws NotFoundException
+	 */
+	public function getLocalPath(): string;
 
 	/**
 	 * @return string

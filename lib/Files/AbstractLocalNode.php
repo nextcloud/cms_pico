@@ -180,7 +180,7 @@ abstract class AbstractLocalNode extends AbstractNode implements NodeInterface
 	}
 
 	/**
-	 * @return string
+	 * {@inheritDoc}
 	 */
 	public function getLocalPath(): string
 	{

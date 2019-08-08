@@ -27,6 +27,7 @@ namespace OCA\CMSPico\Files;
 use OCA\CMSPico\Service\MiscService;
 use OCP\Constants;
 use OCP\Files\InvalidPathException;
+use OCP\Files\NotFoundException;
 
 class MemoryFile extends AbstractNode implements FileInterface
 {
@@ -105,6 +106,14 @@ class MemoryFile extends AbstractNode implements FileInterface
 	public function getPath(): string
 	{
 		return $this->path;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getLocalPath(): string
+	{
+		throw new NotFoundException();
 	}
 
 	/**
