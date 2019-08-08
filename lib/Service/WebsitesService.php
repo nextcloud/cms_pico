@@ -40,11 +40,13 @@ use OCA\CMSPico\Exceptions\ThemeNotCompatibleException;
 use OCA\CMSPico\Exceptions\ThemeNotFoundException;
 use OCA\CMSPico\Exceptions\WebsiteExistsException;
 use OCA\CMSPico\Exceptions\WebsiteInvalidDataException;
+use OCA\CMSPico\Exceptions\WebsiteInvalidFilesystemException;
 use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
 use OCA\CMSPico\Exceptions\WebsiteNotPermittedException;
+use OCA\CMSPico\Model\PicoAsset;
 use OCA\CMSPico\Model\PicoPage;
 use OCA\CMSPico\Model\Website;
-use OCP\Files\File;
+use OCP\Files\InvalidPathException;
 
 class WebsitesService
 {
@@ -72,6 +74,9 @@ class WebsitesService
 	/** @var AssetsService */
 	private $assetsService;
 
+	/** @var MiscService */
+	private $miscService;
+
 	/**
 	 * WebsitesService constructor.
 	 *
@@ -80,6 +85,7 @@ class WebsitesService
 	 * @param TemplatesService $templatesService
 	 * @param PicoService      $picoService
 	 * @param AssetsService    $assetsService
+	 * @param MiscService      $miscService
 	 *
 	 * @internal param Manager $encryptionManager
 	 */
@@ -88,7 +94,8 @@ class WebsitesService
 		ConfigService $configService,
 		TemplatesService $templatesService,
 		PicoService $picoService,
-		AssetsService $assetsService
+		AssetsService $assetsService,
+		MiscService $miscService
 	) {
 		$this->encryptionManager = \OC::$server->getEncryptionManager();
 		$this->websiteRequest = $websiteRequest;
@@ -96,6 +103,7 @@ class WebsitesService
 		$this->templatesService = $templatesService;
 		$this->picoService = $picoService;
 		$this->assetsService = $assetsService;
+		$this->miscService = $miscService;
 	}
 
 	/**
@@ -261,16 +269,26 @@ class WebsitesService
 	 * @param string      $asset
 	 * @param string|null $viewer
 	 *
-	 * @return File
+	 * @return PicoAsset
 	 * @throws WebsiteNotFoundException
+	 * @throws WebsiteInvalidFilesystemException
 	 * @throws WebsiteNotPermittedException
 	 * @throws FilesystemEncryptedException
 	 * @throws AssetInvalidPathException
 	 * @throws AssetNotFoundException
 	 * @throws AssetNotPermittedException
 	 */
-	public function getAsset(string $site, string $asset, string $viewer = null): File
+	public function getAsset(string $site, string $asset, string $viewer = null): PicoAsset
 	{
+		try {
+			$asset = $this->miscService->normalizePath($asset);
+			if ($asset === '') {
+				throw new InvalidPathException();
+			}
+		} catch (InvalidPathException $e) {
+			throw new AssetInvalidPathException($e);
+		}
+
 		$website = $this->getWebsiteFromSite($site);
 		$website->setViewer($viewer ?: '');
 		$website->setPage(PicoService::DIR_ASSETS . '/' . $asset);

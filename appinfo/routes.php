@@ -32,7 +32,7 @@ return [
 		[
 			'name' => 'Pico#getAsset',
 			'postfix' => 'ETag',
-			'url' => '/pico/{site}/assets_{assetsETag}/{asset}',
+			'url' => '/pico/{site}/assets-{assetsETag}/{asset}',
 			'verb' => 'GET',
 			'requirements' => [ 'asset' => '.+' ]
 		],
@@ -54,7 +54,7 @@ return [
 		[
 			'name' => 'Pico#getAsset',
 			'postfix' => 'ProxyETag',
-			'url' => '/pico_proxy/{site}/assets_{assetsETag}/{asset}',
+			'url' => '/pico_proxy/{site}/assets-{assetsETag}/{asset}',
 			'verb' => 'GET',
 			'requirements' => [ 'asset' => '.+' ]
 		],

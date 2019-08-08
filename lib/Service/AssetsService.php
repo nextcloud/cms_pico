@@ -27,75 +27,67 @@ namespace OCA\CMSPico\Service;
 use OCA\CMSPico\Exceptions\AssetInvalidPathException;
 use OCA\CMSPico\Exceptions\AssetNotFoundException;
 use OCA\CMSPico\Exceptions\AssetNotPermittedException;
-use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
+use OCA\CMSPico\Exceptions\WebsiteInvalidFilesystemException;
 use OCA\CMSPico\Exceptions\WebsiteNotPermittedException;
+use OCA\CMSPico\Files\StorageFile;
+use OCA\CMSPico\Files\StorageFolder;
+use OCA\CMSPico\Model\PicoAsset;
 use OCA\CMSPico\Model\Website;
-use OCP\Files\File;
-use OCP\Files\Folder;
 use OCP\Files\InvalidPathException;
 use OCP\Files\IRootFolder;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 
-/**
- * @TODO In den "virtuellen" assets-Pfad sollte man optional den Etag des assets-Verzeichnisses (assets-<hash>)
- *       einbauen können. Grundsätzlich gehen beide URLs, wenn der Etag aber im Verzeichnisnamen enthalten ist wird
- *       bei der Antwort cacheFor() mit sehr großen Zahlen verwendet. Damit man die in Pico aber überhaupt nutzen kann
- *       braucht's ein %asset_dir% und {{ asset_dir }}. Sollte auch zu Pico 2.0.5-6 backported werden...
- */
 class AssetsService
 {
 	/** @var IRootFolder */
 	private $rootFolder;
 
-	/** @var MiscService */
-	private $miscService;
-
 	/**
 	 * AssetsService constructor.
 	 *
 	 * @param IRootFolder $rootFolder
-	 * @param MiscService $miscService
 	 */
-	public function __construct(IRootFolder $rootFolder, MiscService $miscService)
+	public function __construct(IRootFolder $rootFolder)
 	{
 		$this->rootFolder = $rootFolder;
-		$this->miscService = $miscService;
 	}
 
 	/**
 	 * @param Website $website
 	 *
-	 * @return File
-	 * @throws WebsiteNotFoundException
+	 * @return PicoAsset
+	 * @throws WebsiteInvalidFilesystemException
 	 * @throws WebsiteNotPermittedException
 	 * @throws AssetInvalidPathException
 	 * @throws AssetNotFoundException
 	 * @throws AssetNotPermittedException
 	 */
-	public function getAsset(Website $website): File
+	public function getAsset(Website $website): PicoAsset
 	{
 		try {
 			$asset = $website->getPage();
-			$asset = $this->miscService->normalizePath($asset);
 
-			if ($asset === '') {
-				throw new InvalidPathException();
-			} elseif (substr($asset, 0, strlen(PicoService::DIR_ASSETS . '/')) !== PicoService::DIR_ASSETS . '/') {
+			$assetsDir = PicoService::DIR_ASSETS . '/';
+			$assetsDirLength = strlen($assetsDir);
+			if (substr($asset, 0, $assetsDirLength) !== $assetsDir) {
 				throw new InvalidPathException();
 			}
 
 			$website->assertViewerAccess($asset);
 
-			$userFolder = $this->rootFolder->getUserFolder($website->getUserId());
-
-			/** @var File $assetFile */
-			$assetFile = $userFolder->get($website->getPath() . $asset);
-			if (!($assetFile instanceof File)) {
-				throw new AssetNotFoundException();
+			$asset = substr($asset, $assetsDirLength);
+			if ($asset === '') {
+				throw new InvalidPathException();
 			}
 
-			return $assetFile;
+			/** @var StorageFile $assetFile */
+			$assetFile = $this->getAssetsFolder($website)->get($asset);
+			if (!$assetFile->isFile()) {
+				throw new InvalidPathException();
+			}
+
+			$picoAsset = new PicoAsset($assetFile);
 		} catch (InvalidPathException $e) {
 			throw new AssetInvalidPathException($e);
 		} catch (NotFoundException $e) {
@@ -103,24 +95,53 @@ class AssetsService
 		} catch (NotPermittedException $e) {
 			throw new AssetNotPermittedException($e);
 		}
+
+		return $picoAsset;
+	}
+
+	/**
+	 * @param Website $website
+	 *
+	 * @return StorageFolder
+	 * @throws WebsiteInvalidFilesystemException
+	 */
+	public function getAssetsFolder(Website $website): StorageFolder
+	{
+		try {
+			return $website->getWebsiteFolder(PicoService::DIR_ASSETS);
+		} catch (InvalidPathException $e) {
+			throw new WebsiteInvalidFilesystemException($e);
+		} catch (NotFoundException $e) {
+			throw new WebsiteInvalidFilesystemException($e);
+		}
 	}
 
 	/**
 	 * @param Website $website
 	 *
 	 * @return string
+	 * @throws WebsiteInvalidFilesystemException
+	 */
+	public function getAssetsPath(Website $website): string
+	{
+		try {
+			return $this->getAssetsFolder($website)->getLocalPath();
+		} catch (InvalidPathException $e) {
+			throw new WebsiteInvalidFilesystemException($e);
+		} catch (NotFoundException $e) {
+			throw new WebsiteInvalidFilesystemException($e);
+		}
+	}
+
+	/**
+	 * @param Website $website
+	 *
+	 * @return string
+	 * @throws WebsiteInvalidFilesystemException
 	 */
 	public function getAssetsUrl(Website $website): string
 	{
-		$userFolder = $this->rootFolder->getUserFolder($website->getUserId());
-
-		/** @var Folder $assetsFolder */
-		$assetsFolder = $userFolder->get($website->getPath() . '/' . PicoService::DIR_ASSETS);
-		if (!($assetsFolder instanceof Folder)) {
-			throw new InvalidPathException();
-		}
-
-		$assetsETag = $assetsFolder->getEtag();
-		return $website->getWebsiteUrl() . PicoService::DIR_ASSETS . '_' . $assetsETag . '/';
+		$assetsETag = $this->getAssetsFolder($website)->getOCNode()->getEtag();
+		return $website->getWebsiteUrl() . PicoService::DIR_ASSETS . '-' . $assetsETag . '/';
 	}
 }

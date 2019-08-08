@@ -24,18 +24,14 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Http;
 
+use OCA\CMSPico\Model\PicoAsset;
 use OCP\AppFramework\Http\DownloadResponse;
 use OCP\AppFramework\Http\EmptyContentSecurityPolicy;
-use OCP\Constants;
-use OCP\Files\File;
-use OCP\Files\InvalidPathException;
-use OCP\Files\NotFoundException;
-use OCP\Files\NotPermittedException;
 
-class PicoFileResponse extends DownloadResponse
+class PicoAssetResponse extends DownloadResponse
 {
-	/** @var File */
-	private $file;
+	/** @var PicoAsset */
+	private $asset;
 
 	/** @var array<string,int> */
 	private $cacheFor = [
@@ -57,48 +53,30 @@ class PicoFileResponse extends DownloadResponse
 	];
 
 	/**
-	 * PicoFileResponse constructor.
+	 * PicoAssetResponse constructor.
 	 *
-	 * @param File        $file
-	 * @param bool        $enableCache
-	 * @param string|null $secureMimeType
-	 *
-	 * @throws NotFoundException
-	 * @throws NotPermittedException
+	 * @param PicoAsset $asset
+	 * @param bool      $enableCache
+	 * @param bool      $enableSecureMimeType
 	 */
-	public function __construct(File $file, bool $enableCache = true, string $secureMimeType = null)
+	public function __construct(PicoAsset $asset, bool $enableCache = true, bool $enableSecureMimeType = true)
 	{
-		$this->file = $file;
+		$this->asset = $asset;
 
 		parent::setContentSecurityPolicy(new PicoContentSecurityPolicy());
 
-		try {
-			$etag = $file->getEtag();
-			$lastModified = $file->getMTime();
-			$mimeType = $file->getMimeType();
+		$mimeType = $asset->getMimeType();
+		$contentType = $enableSecureMimeType ? $asset->getSecureMimeType() : $mimeType;
 
-			if (($file->getPermissions() & Constants::PERMISSION_READ) !== Constants::PERMISSION_READ) {
-				throw new NotPermittedException();
-			}
-		} catch (InvalidPathException $e) {
-			throw new NotFoundException();
-		}
+		parent::__construct($asset->getName(), $contentType);
 
-		$contentType = $secureMimeType ?: $mimeType ?: 'application/octet-stream';
-		parent::__construct($file->getName(), $contentType);
-
-		$this->setETag($etag);
+		$this->setETag($asset->getEtag());
+		$this->setLastModified($asset->getLastModified());
 
 		if ($enableCache && isset($this->cacheFor[$mimeType])) {
 			$this->cacheFor($this->cacheFor[$mimeType]);
 		} else {
 			$this->cacheFor(0);
-		}
-
-		try {
-			$this->setLastModified((new \DateTime())->setTimestamp($lastModified));
-		} catch (\Exception $e) {
-			// ignore DateTime exception
 		}
 	}
 
@@ -162,11 +140,6 @@ class PicoFileResponse extends DownloadResponse
 	 */
 	public function render(): string
 	{
-		try {
-			return $this->file->getContent();
-		} catch (NotPermittedException $e) {
-			// we checked permissions in constructor, silently ignore
-			return '';
-		}
+		return $this->asset->getContent();
 	}
 }

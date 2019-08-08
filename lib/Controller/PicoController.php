@@ -36,6 +36,7 @@ use OCA\CMSPico\Exceptions\PageNotPermittedException;
 use OCA\CMSPico\Exceptions\PicoRuntimeException;
 use OCA\CMSPico\Exceptions\ThemeNotCompatibleException;
 use OCA\CMSPico\Exceptions\ThemeNotFoundException;
+use OCA\CMSPico\Exceptions\WebsiteInvalidFilesystemException;
 use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
 use OCA\CMSPico\Exceptions\WebsiteNotPermittedException;
 use OCA\CMSPico\Http\InternalServerErrorResponse;
@@ -43,7 +44,7 @@ use OCA\CMSPico\Http\NotFoundResponse;
 use OCA\CMSPico\Http\NotModifiedResponse;
 use OCA\CMSPico\Http\NotPermittedResponse;
 use OCA\CMSPico\Http\PicoErrorResponse;
-use OCA\CMSPico\Http\PicoFileResponse;
+use OCA\CMSPico\Http\PicoAssetResponse;
 use OCA\CMSPico\Http\PicoPageResponse;
 use OCA\CMSPico\Service\FileService;
 use OCA\CMSPico\Service\PicoService;
@@ -63,43 +64,37 @@ class PicoController extends Controller
 	/** @var string|null */
 	private $userId;
 
+	/** @var IL10N */
+	private $l10n;
+
 	/** @var WebsitesService */
 	private $websitesService;
 
 	/** @var FileService */
 	private $fileService;
 
-	/** @var IL10N */
-	private $l10n;
-
-	/** @var IMimeTypeDetector */
-	private $mimeTypeDetector;
-
 	/**
 	 * PicoController constructor.
 	 *
-	 * @param IRequest          $request
-	 * @param string|null       $userId
-	 * @param WebsitesService   $websitesService
-	 * @param FileService       $fileService
-	 * @param IL10N             $l10n
-	 * @param IMimeTypeDetector $mimeTypeDetector
+	 * @param IRequest        $request
+	 * @param string|null     $userId
+	 * @param IL10N           $l10n
+	 * @param WebsitesService $websitesService
+	 * @param FileService     $fileService
 	 */
 	public function __construct(
 		IRequest $request,
 		$userId,
-		WebsitesService $websitesService,
-		FileService $fileService,
 		IL10N $l10n,
-		IMimeTypeDetector $mimeTypeDetector
+		WebsitesService $websitesService,
+		FileService $fileService
 	) {
 		parent::__construct(Application::APP_NAME, $request);
 
 		$this->userId = $userId;
+		$this->l10n = $l10n;
 		$this->websitesService = $websitesService;
 		$this->fileService = $fileService;
-		$this->l10n = $l10n;
-		$this->mimeTypeDetector = $mimeTypeDetector;
 	}
 
 	/**
@@ -151,18 +146,23 @@ class PicoController extends Controller
 	public function getAsset(string $site, string $asset, string $assetsETag = ''): Response
 	{
 		try {
-			$assetFile = $this->websitesService->getAsset($site, $asset, $this->userId);
+			$picoAsset = $this->websitesService->getAsset($site, $asset, $this->userId);
 
-			try {
-				$secureMimeType = $this->mimeTypeDetector->getSecureMimeType($assetFile->getMimetype());
-				return $this->createFileResponse($assetFile, (bool) $assetsETag, $secureMimeType);
-			} catch (NotFoundException $e) {
-				throw new AssetNotFoundException($e);
-			} catch (NotPermittedException $e) {
-				throw new AssetNotPermittedException($e);
+			$response = new PicoAssetResponse($picoAsset, (bool) $assetsETag);
+
+			$assetETag = $picoAsset->getETag();
+			$clientETag = $this->request->getHeader('If-None-Match');
+			if ($assetETag && $clientETag) {
+				if (preg_match('/^"?' . preg_quote($assetETag, '/') . '(?>"?$|-)/', $clientETag)) {
+					return new NotModifiedResponse($response);
+				}
 			}
+
+			return $response;
 		} catch (WebsiteNotFoundException $e) {
 			return new NotFoundResponse($this->l10n->t('The requested website could not be found on the server. Maybe the website was deleted?'));
+		} catch (WebsiteInvalidFilesystemException $e) {
+			return new InternalServerErrorResponse($this->l10n->t('The file and directory structure of this website appears to be broken und thus could not be accessed.'));
 		} catch (WebsiteNotPermittedException $e) {
 			return new NotPermittedResponse($this->l10n->t('You don\'t have access to this private website. Maybe the share was deleted or has expired?'));
 		} catch (FilesystemEncryptedException $e) {
@@ -174,32 +174,5 @@ class PicoController extends Controller
 		} catch (AssetNotPermittedException $e) {
 			return new NotPermittedResponse($this->l10n->t('You don\'t have access to this website asset. Maybe the share was deleted or has expired?'));
 		}
-	}
-
-	/**
-	 * @param File        $file
-	 * @param bool        $enableCache
-	 * @param string|null $secureFileType
-	 *
-	 * @return Response
-	 * @throws NotFoundException
-	 * @throws NotPermittedException
-	 */
-	private function createFileResponse(File $file, bool $enableCache = true, string $secureFileType = null): Response
-	{
-		try {
-			$etag = $file->getEtag();
-		} catch (InvalidPathException $e) {
-			throw new NotFoundException();
-		}
-
-		$response = new PicoFileResponse($file, $enableCache, $secureFileType);
-
-		$clientEtag = $this->request->getHeader('If-None-Match');
-		if ($etag && $clientEtag && preg_match('/^"?' . preg_quote($etag, '/') . '(?>"?$|-)/', $clientEtag)) {
-			return new NotModifiedResponse($response);
-		}
-
-		return $response;
 	}
 }

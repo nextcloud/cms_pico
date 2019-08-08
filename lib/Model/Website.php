@@ -35,8 +35,10 @@ use OCA\CMSPico\Exceptions\ThemeNotCompatibleException;
 use OCA\CMSPico\Exceptions\ThemeNotFoundException;
 use OCA\CMSPico\Exceptions\WebsiteForeignOwnerException;
 use OCA\CMSPico\Exceptions\WebsiteInvalidDataException;
+use OCA\CMSPico\Exceptions\WebsiteInvalidFilesystemException;
 use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
 use OCA\CMSPico\Exceptions\WebsiteNotPermittedException;
+use OCA\CMSPico\Files\StorageFolder;
 use OCA\CMSPico\Service\MiscService;
 use OCA\CMSPico\Service\PicoService;
 use OCA\CMSPico\Service\TemplatesService;
@@ -96,6 +98,9 @@ class Website extends WebsiteCore
 	/** @var MiscService */
 	private $miscService;
 
+	/** @var StorageFolder */
+	private $folder;
+
 	/**
 	 * Website constructor.
 	 *
@@ -122,20 +127,6 @@ class Website extends WebsiteCore
 	{
 		$serverTimeZone = date_default_timezone_get() ?: 'UTC';
 		return $this->config->getUserValue($this->getUserId(), 'core', 'timezone', $serverTimeZone);
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getWebsiteUrl(): string
-	{
-		if (!$this->getProxyRequest()) {
-			$route = Application::APP_NAME . '.Pico.getPage';
-			$parameters = [ 'site' => $this->getSite(), 'page' => '' ];
-			return $this->urlGenerator->linkToRoute($route, $parameters) . '/';
-		} else {
-			return \OC::$WEBROOT . '/sites/' . urlencode($this->getSite()) . '/';
-		}
 	}
 
 	/**
@@ -433,5 +424,61 @@ class Website extends WebsiteCore
 		}
 
 		return $this->ownerView;
+	}
+
+	/**
+	 * @param string|null $folderName
+	 *
+	 * @return StorageFolder
+	 * @throws WebsiteInvalidFilesystemException
+	 * @throws InvalidPathException
+	 * @throws NotFoundException
+	 */
+	public function getWebsiteFolder(string $folderName = null): StorageFolder
+	{
+		if ($this->folder === null) {
+			try {
+				$ocUserFolder = $this->rootFolder->getUserFolder($this->getUserId());
+				$userFolder = new StorageFolder($ocUserFolder);
+
+				/** @var StorageFolder $websiteFolder */
+				$websiteFolder = $userFolder->get($this->getPath());
+				if (!$websiteFolder->isFolder()) {
+					throw new InvalidPathException();
+				}
+
+				$this->folder = $websiteFolder;
+			} catch (InvalidPathException $e) {
+				throw new WebsiteInvalidFilesystemException($e);
+			} catch (NotFoundException $e) {
+				throw new WebsiteInvalidFilesystemException($e);
+			}
+		}
+
+		if ($folderName) {
+			/** @var StorageFolder $folder */
+			$folder = $this->folder->get($folderName);
+			if (!$folder->isFolder()) {
+				throw new InvalidPathException();
+			}
+
+			return $folder;
+		}
+
+		return $this->folder;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getWebsiteUrl(): string
+	{
+		if (!$this->getProxyRequest()) {
+			$route = Application::APP_NAME . '.Pico.getPage';
+			$parameters = [ 'site' => $this->getSite(), 'page' => '' ];
+			return $this->urlGenerator->linkToRoute($route, $parameters) . '/';
+		} else {
+			return \OC::$WEBROOT . '/sites/' . urlencode($this->getSite()) . '/';
+		}
 	}
 }

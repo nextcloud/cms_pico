@@ -23,6 +23,7 @@
     "Choose website directory": "Wählen Sie das Verzeichnis Ihrer Webseite",
     "A unexpected error occured while performing this action. Please check Nextcloud's logs.": "Bei der Ausführung dieser Aktion ist ein unerwarteter Fehler aufgetreten. Bitte prüfe das Protokoll von Nextcloud.",
     "The requested website could not be found on the server. Maybe the website was deleted?": "Die angeforderte Webseite konnte nicht gefunden werden. Vielleicht wurde sie zwischenzeitlich gelöscht?",
+    "The file and directory structure of this website appears to be broken und thus could not be accessed.": "Die Datei- und Verzeichnisstruktur dieser Webseite ist fehlerhaft und daher nicht zugänglich.",
     "You don't have access to this private website. Maybe the share was deleted or has expired?": "Sie keinen Zugriff auf diese private Webseite. Vielleicht wurde die Freigabe zwischenzeitlich aufgehoben oder ist abgelaufen?",
     "This website is hosted on a encrypted Nextcloud instance and thus could not be accessed.": "Diese Webseite wird auf einer verschlüsselten Nextcloud gehostet und ist daher nicht zugänglich.",
     "This website uses a theme that could not be found on the server and thus could not be built.": "Bei der Darstellung dieser Webseite ist ein Fehler aufgetreten, da sie ein Design verwendet, das auf dem Server nicht mehr verfügbar ist.",
