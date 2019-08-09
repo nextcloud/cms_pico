@@ -24,6 +24,9 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Files;
 
+use OCP\Files\GenericFileException;
+use OCP\Files\NotPermittedException;
+
 trait FolderIteratorTrait
 {
 	/** @var \Generator */
@@ -31,11 +34,15 @@ trait FolderIteratorTrait
 
 	/**
 	 * @return \Generator
+	 * @throws NotPermittedException
+	 * @throws GenericFileException
 	 */
 	abstract protected function getGenerator(): \Generator;
 
 	/**
 	 * @return void
+	 * @throws NotPermittedException
+	 * @throws GenericFileException
 	 */
 	public function rewind()
 	{

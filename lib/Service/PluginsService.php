@@ -260,7 +260,7 @@ class PluginsService
 			$this->renewedETag = true;
 		}
 
-		return $pluginsFolder;
+		return $pluginsFolder->fakeRoot();
 	}
 
 	/**

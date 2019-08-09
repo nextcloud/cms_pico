@@ -396,7 +396,7 @@ class Website extends WebsiteCore
 					throw new InvalidPathException();
 				}
 
-				$this->folder = $websiteFolder;
+				$this->folder = $websiteFolder->fakeRoot();
 			} catch (InvalidPathException $e) {
 				throw new WebsiteInvalidFilesystemException($e);
 			} catch (NotFoundException $e) {

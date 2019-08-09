@@ -222,6 +222,14 @@ class LocalFolder extends AbstractLocalNode implements FolderInterface
 	/**
 	 * {@inheritDoc}
 	 */
+	public function fakeRoot(): FolderInterface
+	{
+		return new LocalFolder('/', $this->getLocalPath());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function sync(bool $recursive = self::SYNC_RECURSIVE)
 	{
 		// nothing to do

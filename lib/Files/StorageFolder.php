@@ -123,6 +123,14 @@ class StorageFolder extends AbstractStorageNode implements FolderInterface
 	/**
 	 * {@inheritDoc}
 	 */
+	public function fakeRoot(): FolderInterface
+	{
+		return new StorageFolder($this->node);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function sync(bool $recursive = FolderInterface::SYNC_RECURSIVE)
 	{
 		$scanner = new Scanner(null, $this->connection, $this->logger);

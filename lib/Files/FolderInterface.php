@@ -87,6 +87,11 @@ interface FolderInterface extends NodeInterface, \RecursiveIterator
 	public function newFile(string $path): FileInterface;
 
 	/**
+	 * @return FolderInterface
+	 */
+	public function fakeRoot(): FolderInterface;
+
+	/**
 	 * @param bool $recursive
 	 * @throws NotFoundException
 	 * @throws NotPermittedException

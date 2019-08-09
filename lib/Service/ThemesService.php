@@ -285,7 +285,7 @@ class ThemesService
 			$this->renewedETag = true;
 		}
 
-		return $themesFolder;
+		return $themesFolder->fakeRoot();
 	}
 
 	/**
