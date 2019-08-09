@@ -24,19 +24,20 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Model;
 
-use OCA\CMSPico\Exceptions\PageInvalidPathException;
-use OCA\CMSPico\Exceptions\PageNotFoundException;
-use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
-use OCA\CMSPico\Service\PicoService;
+use OCA\CMSPico\Service\MiscService;
+use OCP\Files\InvalidPathException;
 use Pico;
 
 class PicoPage
 {
-	/** @var Pico */
-	private $pico;
+	/** @var MiscService */
+	private $miscService;
 
 	/** @var Website */
 	private $website;
+
+	/** @var Pico */
+	private $pico;
 
 	/** @var string */
 	private $output;
@@ -50,6 +51,8 @@ class PicoPage
 	 */
 	public function __construct(Website $website, Pico $pico, string $output)
 	{
+		$this->miscService = \OC::$server->query(MiscService::class);
+
 		$this->website = $website;
 		$this->pico = $pico;
 		$this->output = $output;
@@ -60,12 +63,14 @@ class PicoPage
 	 */
 	public function getAbsolutePath(): string
 	{
-		$absolutePath = $this->pico->getRequestFile();
-		if ($absolutePath) {
-			return $absolutePath;
+		$requestFile = $this->pico->getRequestFile();
+		if ($requestFile) {
+			return $requestFile;
 		}
 
-		return $this->website->getAbsolutePath(PicoService::DIR_CONTENT . '/' . $this->website->getPage());
+		$contentDir = $this->pico->getConfig('content_dir');
+		$contentExt = $this->pico->getConfig('content_ext');
+		return $contentDir . ($this->website->getPage() ?: 'index') . $contentExt;
 	}
 
 	/**
@@ -73,20 +78,16 @@ class PicoPage
 	 */
 	public function getRelativePath(): string
 	{
-		$absolutePath = $this->pico->getRequestFile();
-		if ($absolutePath) {
+		$requestFile = $this->pico->getRequestFile();
+		if ($requestFile) {
 			try {
-				return $this->website->getRelativePagePath($absolutePath);
-			} catch (WebsiteNotFoundException $e) {
-				// silently ignore this exception, proceed
-			} catch (PageInvalidPathException $e) {
-				// silently ignore this exception, proceed
-			} catch (PageNotFoundException $e) {
-				// silently ignore this exception, proceed
-			}
+				$contentDir = $this->pico->getConfig('content_dir');
+				$contentExt = $this->pico->getConfig('content_ext');
+				return $this->miscService->getRelativePath($requestFile, $contentDir, $contentExt);
+			} catch (InvalidPathException $e) {}
 		}
 
-		return $this->website->getPage();
+		return ($this->website->getPage() ?: 'index');
 	}
 
 	/**
