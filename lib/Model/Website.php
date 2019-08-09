@@ -38,15 +38,17 @@ use OCA\CMSPico\Exceptions\WebsiteInvalidDataException;
 use OCA\CMSPico\Exceptions\WebsiteInvalidFilesystemException;
 use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
 use OCA\CMSPico\Exceptions\WebsiteNotPermittedException;
+use OCA\CMSPico\Files\StorageFile;
 use OCA\CMSPico\Files\StorageFolder;
 use OCA\CMSPico\Service\MiscService;
 use OCA\CMSPico\Service\PicoService;
 use OCA\CMSPico\Service\TemplatesService;
 use OCA\CMSPico\Service\ThemesService;
 use OCP\Files\File;
-use OCP\Files\Folder;
+use OCP\Files\Folder as OCFolder;
 use OCP\Files\InvalidPathException;
 use OCP\Files\IRootFolder;
+use OCP\Files\Node as OCNode;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 use OCP\IConfig;
@@ -264,15 +266,15 @@ class Website extends WebsiteCore
 	 * @param string $path
 	 * @param array  $meta
 	 *
-	 * @throws WebsiteNotPermittedException
 	 * @throws InvalidPathException
-	 * @throws NotFoundException
+	 * @throws WebsiteInvalidFilesystemException
+	 * @throws WebsiteNotPermittedException
 	 * @throws NotPermittedException
 	 */
 	public function assertViewerAccess(string $path, array $meta = [])
 	{
 		$exceptionClass = WebsiteNotPermittedException::class;
-		if ($this->getType() === WebsiteCore::TYPE_PUBLIC) {
+		if ($this->getType() === self::TYPE_PUBLIC) {
 			if (empty($meta['access'])) {
 				return;
 			}
@@ -302,12 +304,45 @@ class Website extends WebsiteCore
 				return;
 			}
 
-			$viewerUserFolder = $this->rootFolder->getUserFolder($this->getViewer());
-			$viewerFiles = $viewerUserFolder->getById($this->getPageFileId($path));
-			foreach ($viewerFiles as $file) {
-				if ($file->isReadable()) {
-					return;
+			/** @var OCFolder $viewerOCFolder */
+			$viewerOCFolder = $this->rootFolder->getUserFolder($this->getViewer());
+			$viewerAccessClosure = function (OCNode $node) use ($viewerOCFolder) {
+				$nodeId = $node->getId();
+
+				$viewerNodes = $viewerOCFolder->getById($nodeId);
+				foreach ($viewerNodes as $viewerNode) {
+					if ($viewerNode->isReadable()) {
+						return true;
+					}
 				}
+
+				return false;
+			};
+
+			$websiteFolder = $this->getWebsiteFolder();
+
+			$path = $this->miscService->normalizePath($path);
+			while ($path && ($path !== '.')) {
+				$file = null;
+
+				try {
+					/** @var StorageFile|StorageFolder $file */
+					$file = $websiteFolder->get($path);
+				} catch (NotFoundException $e) {}
+
+				if ($file) {
+					if ($viewerAccessClosure($file->getOCNode())) {
+						return;
+					}
+
+					throw new $exceptionClass();
+				}
+
+				$path = dirname($path);
+			}
+
+			if ($viewerAccessClosure($websiteFolder->getOCNode())) {
+				return;
 			}
 		}
 
@@ -367,9 +402,9 @@ class Website extends WebsiteCore
 		try {
 			$userFolder = $this->rootFolder->getUserFolder($this->getUserId());
 
-			/** @var Folder $node */
+			/** @var OCFolder $node */
 			$node = $userFolder->get(dirname($path));
-			if (!($node instanceof Folder)) {
+			if (!($node instanceof OCFolder)) {
 				throw new NotFoundException();
 			}
 		} catch (NotFoundException $e) {

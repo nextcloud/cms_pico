@@ -32,6 +32,7 @@ use OCA\CMSPico\Exceptions\PageNotPermittedException;
 use OCA\CMSPico\Exceptions\PicoRuntimeException;
 use OCA\CMSPico\Exceptions\ThemeNotCompatibleException;
 use OCA\CMSPico\Exceptions\ThemeNotFoundException;
+use OCA\CMSPico\Exceptions\WebsiteInvalidFilesystemException;
 use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
 use OCA\CMSPico\Exceptions\WebsiteNotPermittedException;
 use OCA\CMSPico\Model\PicoPage;
@@ -61,6 +62,9 @@ class PicoService
 
 	/** @var string */
 	const DIR_ASSETS = 'assets';
+
+	/** @var string */
+	const CONTENT_EXT = '.md';
 
 	/** @var ILogger */
 	private $logger;
@@ -111,6 +115,7 @@ class PicoService
 	 *
 	 * @return PicoPage
 	 * @throws WebsiteNotFoundException
+	 * @throws WebsiteInvalidFilesystemException
 	 * @throws WebsiteNotPermittedException
 	 * @throws ThemeNotFoundException
 	 * @throws ThemeNotCompatibleException
@@ -125,7 +130,7 @@ class PicoService
 			$page = $website->getPage();
 			$page = $this->miscService->normalizePath($page);
 
-			$website->assertViewerAccess($page);
+			$website->assertViewerAccess(self::DIR_CONTENT . '/' . ($page ?: 'index') . self::CONTENT_EXT);
 
 			$this->themesService->assertValidTheme($website->getTheme());
 
@@ -155,7 +160,9 @@ class PicoService
 			}
 
 			$picoPage = new PicoPage($website, $pico, $output);
-			$website->assertViewerAccess($picoPage->getRelativePath(), $picoPage->getMeta());
+
+			$picoPagePath = self::DIR_CONTENT . '/' . $picoPage->getRelativePath() . self::CONTENT_EXT;
+			$website->assertViewerAccess($picoPagePath, $picoPage->getMeta());
 		} catch (InvalidPathException $e) {
 			throw new PageInvalidPathException($e);
 		} catch (NotFoundException $e) {
@@ -187,7 +194,7 @@ class PicoService
 				'theme'          => $website->getTheme(),
 				'themes_url'     => $this->themesService->getThemesUrl(),
 				'content_dir'    => self::DIR_CONTENT,
-				'content_ext'    => '.md',
+				'content_ext'    => self::CONTENT_EXT,
 				'assets_dir'     => self::DIR_ASSETS,
 				'assets_url'     => $this->assetsService->getAssetsUrl($website),
 				'plugins_url'    => $this->pluginsService->getPluginsUrl(),

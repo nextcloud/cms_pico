@@ -241,6 +241,7 @@ class WebsitesService
 	 *
 	 * @return PicoPage
 	 * @throws WebsiteNotFoundException
+	 * @throws WebsiteInvalidFilesystemException
 	 * @throws WebsiteNotPermittedException
 	 * @throws FilesystemEncryptedException
 	 * @throws PageInvalidPathException
