@@ -388,8 +388,8 @@ class Website extends WebsiteCore
 	public function assertValidPath()
 	{
 		try {
-			$path = '/' . $this->miscService->normalizePath($this->getPath());
-			if ($path === '/') {
+			$path = $this->miscService->normalizePath($this->getPath());
+			if ($path === '') {
 				throw new InvalidPathException();
 			}
 		} catch (InvalidPathException $e) {
@@ -399,19 +399,23 @@ class Website extends WebsiteCore
 			);
 		}
 
-		try {
-			$userFolder = $this->rootFolder->getUserFolder($this->getUserId());
+		$userFolder = $this->rootFolder->getUserFolder($this->getUserId());
 
-			/** @var OCFolder $node */
-			$node = $userFolder->get(dirname($path));
-			if (!($node instanceof OCFolder)) {
-				throw new NotFoundException();
+		try {
+			/** @var OCFolder $ocFolder */
+			$ocFolder = $userFolder->get(dirname($path));
+			if (!($ocFolder instanceof OCFolder)) {
+				throw new InvalidPathException();
 			}
-		} catch (NotFoundException $e) {
-			throw new WebsiteInvalidDataException(
-				'path',
-				$this->l10n->t('Parent folder of the website\'s path not found.')
-			);
+		} catch (\Exception $e) {
+			if (($e instanceof InvalidPathException) || ($e instanceof NotFoundException)) {
+				throw new WebsiteInvalidDataException(
+					'path',
+					$this->l10n->t('Parent folder of the website\'s path not found.')
+				);
+			}
+
+			throw $e;
 		}
 	}
 
