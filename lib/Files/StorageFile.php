@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace OCA\CMSPico\Files;
 
 use OCP\Files\File as OCFile;
+use OCP\Files\InvalidPathException;
 
 class StorageFile extends AbstractStorageNode implements FileInterface
 {
@@ -34,11 +35,14 @@ class StorageFile extends AbstractStorageNode implements FileInterface
 	/**
 	 * StorageFile constructor.
 	 *
-	 * @param OCFile $file
+	 * @param OCFile      $file
+	 * @param string|null $basePath
+	 *
+	 * @throws InvalidPathException
 	 */
-	public function __construct(OCFile $file)
+	public function __construct(OCFile $file, string $basePath = null)
 	{
-		parent::__construct($file);
+		parent::__construct($file, $basePath);
 	}
 
 	/**

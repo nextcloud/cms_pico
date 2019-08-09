@@ -28,6 +28,7 @@ use OC\Files\Utils\Scanner;
 use OC\ForbiddenException;
 use OCP\Files\File as OCFile;
 use OCP\Files\Folder as OCFolder;
+use OCP\Files\InvalidPathException;
 use OCP\Files\Node as OCNode;
 use OCP\Files\NotPermittedException;
 use OCP\IDBConnection;
@@ -49,14 +50,17 @@ class StorageFolder extends AbstractStorageNode implements FolderInterface
 	/**
 	 * StorageFolder constructor.
 	 *
-	 * @param OCFolder $folder
+	 * @param OCFolder    $folder
+	 * @param string|null $basePath
+	 *
+	 * @throws InvalidPathException
 	 */
-	public function __construct(OCFolder $folder)
+	public function __construct(OCFolder $folder, string $basePath = null)
 	{
 		$this->connection = \OC::$server->query(IDBConnection::class);
 		$this->logger = \OC::$server->query(ILogger::class);
 
-		parent::__construct($folder);
+		parent::__construct($folder, $basePath);
 	}
 
 	/**
@@ -72,8 +76,9 @@ class StorageFolder extends AbstractStorageNode implements FolderInterface
 	 */
 	protected function getGenerator(): \Generator
 	{
+		$basePath = $this->getPath();
 		foreach ($this->node->getDirectoryListing() as $node) {
-			yield $this->repackNode($node);
+			yield $this->repackNode($node, $basePath);
 		}
 	}
 
@@ -82,6 +87,9 @@ class StorageFolder extends AbstractStorageNode implements FolderInterface
 	 */
 	public function exists(string $path): bool
 	{
+		// check for root path breakouts
+		$this->getBasePath($path);
+
 		return $this->node->nodeExists($path);
 	}
 
@@ -90,7 +98,8 @@ class StorageFolder extends AbstractStorageNode implements FolderInterface
 	 */
 	public function get(string $path): NodeInterface
 	{
-		return $this->repackNode($this->node->get($path));
+		$basePath = $this->getBasePath($path);
+		return $this->repackNode($this->node->get($path), $basePath);
 	}
 
 	/**
@@ -98,7 +107,8 @@ class StorageFolder extends AbstractStorageNode implements FolderInterface
 	 */
 	public function newFolder(string $path): FolderInterface
 	{
-		return new StorageFolder($this->node->newFolder($path));
+		$basePath = $this->getBasePath($path);
+		return new StorageFolder($this->node->newFolder($path), $basePath);
 	}
 
 	/**
@@ -106,7 +116,8 @@ class StorageFolder extends AbstractStorageNode implements FolderInterface
 	 */
 	public function newFile(string $path): FileInterface
 	{
-		return new StorageFile($this->node->newFile($path));
+		$basePath = $this->getBasePath($path);
+		return new StorageFile($this->node->newFile($path), $basePath);
 	}
 
 	/**
@@ -132,18 +143,32 @@ class StorageFolder extends AbstractStorageNode implements FolderInterface
 	}
 
 	/**
-	 * @param OCNode $node
+	 * @param OCNode      $node
+	 * @param string|null $basePath
 	 *
 	 * @return AbstractStorageNode
+	 * @throws InvalidPathException
 	 */
-	private function repackNode(OCNode $node): AbstractStorageNode
+	private function repackNode(OCNode $node, string $basePath = null): AbstractStorageNode
 	{
 		if ($node instanceof OCFile) {
-			return new StorageFile($node);
+			return new StorageFile($node, $basePath);
 		} elseif ($node instanceof OCFolder) {
-			return new StorageFolder($node);
+			return new StorageFolder($node, $basePath);
 		} else {
 			throw new \UnexpectedValueException();
 		}
+	}
+
+	/**
+	 * @param string $path
+	 *
+	 * @return string|null
+	 * @throws InvalidPathException
+	 */
+	private function getBasePath(string $path)
+	{
+		$path = $this->normalizePath($this->getPath() . '/' . $path);
+		return ($path !== '/') ? dirname($path) : null;
 	}
 }
