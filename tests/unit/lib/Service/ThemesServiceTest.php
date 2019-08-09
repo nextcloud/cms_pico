@@ -69,7 +69,7 @@ class ThemesServiceTest extends TestCase
 		$this->assertCount(0, $this->themesService->getCustomThemes());
 		$this->assertCount(0, $this->themesService->getNewCustomThemes());
 
-		mkdir($this->fileService->getAppDataFolderPath('themes', true) . 'this_is_a_test');
+		mkdir($this->fileService->getAppDataFolderPath('themes') . 'this_is_a_test');
 		$this->assertCount(1, $this->themesService->getThemes());
 		$this->assertCount(0, $this->themesService->getCustomThemes());
 		$this->assertCount(1, $this->themesService->getNewCustomThemes());
@@ -94,7 +94,7 @@ class ThemesServiceTest extends TestCase
 		$this->assertCount(0, $this->themesService->getCustomThemes());
 		$this->assertCount(1, $this->themesService->getNewCustomThemes());
 
-		rmdir($this->fileService->getAppDataFolderPath('themes', true) . 'this_is_a_test');
+		rmdir($this->fileService->getAppDataFolderPath('themes') . 'this_is_a_test');
 		$this->assertCount(1, $this->themesService->getThemes());
 		$this->assertCount(0, $this->themesService->getCustomThemes());
 		$this->assertCount(0, $this->themesService->getNewCustomThemes());

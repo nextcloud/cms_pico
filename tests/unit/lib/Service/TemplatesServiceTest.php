@@ -65,15 +65,15 @@ class TemplatesServiceTest extends TestCase
 
 	public function testTemplates()
 	{
-		if (file_exists($this->fileService->getAppDataFolderPath('templates', true) . 'this_is_a_template')) {
-			rmdir($this->fileService->getAppDataFolderPath('templates', true) . 'this_is_a_template');
+		if (file_exists($this->fileService->getAppDataFolderPath('templates') . 'this_is_a_template')) {
+			rmdir($this->fileService->getAppDataFolderPath('templates') . 'this_is_a_template');
 		}
 
 		$this->assertCount(2, $this->templatesService->getTemplates());
 		$this->assertCount(0, $this->templatesService->getCustomTemplates());
 		$this->assertCount(0, $this->templatesService->getNewCustomTemplates());
 
-		mkdir($this->fileService->getAppDataFolderPath('templates', true) . 'this_is_a_template');
+		mkdir($this->fileService->getAppDataFolderPath('templates') . 'this_is_a_template');
 		$this->assertCount(2, $this->templatesService->getTemplates());
 		$this->assertCount(0, $this->templatesService->getCustomTemplates());
 		$this->assertCount(1, $this->templatesService->getNewCustomTemplates());
@@ -98,7 +98,7 @@ class TemplatesServiceTest extends TestCase
 		$this->assertCount(0, $this->templatesService->getCustomTemplates());
 		$this->assertCount(1, $this->templatesService->getNewCustomTemplates());
 
-		rmdir($this->fileService->getAppDataFolderPath('templates', true) . 'this_is_a_template');
+		rmdir($this->fileService->getAppDataFolderPath('templates') . 'this_is_a_template');
 		$this->assertCount(2, $this->templatesService->getTemplates());
 		$this->assertCount(0, $this->templatesService->getCustomTemplates());
 		$this->assertCount(0, $this->templatesService->getNewCustomTemplates());

@@ -134,7 +134,7 @@ class PicoService
 
 			$pico = new Pico(
 				$website->getWebsiteFolder()->getLocalPath(),
-				$this->fileService->getAppDataFolderPath(self::DIR_CONFIG, true),
+				$this->fileService->getAppDataFolderPath(self::DIR_CONFIG),
 				$this->pluginsService->getPluginsPath(),
 				$this->themesService->getThemesPath(),
 				false

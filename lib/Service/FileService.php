@@ -186,20 +186,15 @@ class FileService
 
 	/**
 	 * @param string|null $folderName
-	 * @param bool        $absolute
 	 *
 	 * @return string
 	 */
-	public function getAppDataFolderPath(string $folderName = null, bool $absolute = false): string
+	public function getAppDataFolderPath(string $folderName = null): string
 	{
+		$dataFolderPath = $this->configService->getSystemValue('datadirectory', \OC::$SERVERROOT . '/data');
 		$baseAppDataFolderName = 'appdata_' . $this->configService->getSystemValue('instanceid');
-		$appDataFolderName = Application::APP_NAME . ($folderName ? '/' . $folderName : '');
+		$appDataFolderPath = Application::APP_NAME . ($folderName ? '/' . $folderName : '');
 
-		if (!$absolute) {
-			return $baseAppDataFolderName . '/' . $appDataFolderName . '/';
-		} else {
-			$dataFolderPath = $this->configService->getSystemValue('datadirectory', \OC::$SERVERROOT . '/data');
-			return rtrim($dataFolderPath, '/') . '/' . $baseAppDataFolderName . '/' . $appDataFolderName . '/';
-		}
+		return rtrim($dataFolderPath, '/') . '/' . $baseAppDataFolderName . '/' . $appDataFolderPath . '/';
 	}
 }

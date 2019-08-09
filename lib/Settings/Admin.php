@@ -73,9 +73,9 @@ class Admin implements ISettings
 			'internalProxyUrl' => $internalBaseUrl . '/pico_proxy/',
 			'internalFullUrl'  => $internalBaseUrl . '/pico/',
 			'internalPath'     => $internalBasePath . '/sites/',
-			'themesPath'       => $this->fileService->getAppDataFolderPath(PicoService::DIR_THEMES, true),
-			'pluginsPath'      => $this->fileService->getAppDataFolderPath(PicoService::DIR_PLUGINS, true),
-			'templatesPath'    => $this->fileService->getAppDataFolderPath(PicoService::DIR_TEMPLATES, true)
+			'themesPath'       => $this->fileService->getAppDataFolderPath(PicoService::DIR_THEMES),
+			'pluginsPath'      => $this->fileService->getAppDataFolderPath(PicoService::DIR_PLUGINS),
+			'templatesPath'    => $this->fileService->getAppDataFolderPath(PicoService::DIR_TEMPLATES)
 		];
 
 		return new TemplateResponse(Application::APP_NAME, 'settings.admin', $data);
