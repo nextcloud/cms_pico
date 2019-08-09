@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Files;
 
-use OCA\CMSPico\Service\MiscService;
 use OCP\Constants;
 use OCP\Files\AlreadyExistsException;
 use OCP\Files\GenericFileException;
@@ -46,9 +45,6 @@ abstract class AbstractLocalNode extends AbstractNode implements NodeInterface
 	/** @var int */
 	protected $permissions;
 
-	/** @var MiscService */
-	private $miscService;
-
 	/**
 	 * AbstractLocalNode constructor.
 	 *
@@ -60,7 +56,7 @@ abstract class AbstractLocalNode extends AbstractNode implements NodeInterface
 	 */
 	public function __construct(string $path, string $basePath)
 	{
-		$this->miscService = \OC::$server->query(MiscService::class);
+		parent::__construct();
 
 		$this->path = $this->normalizePath($path);
 		$this->basePath = realpath($basePath ?: \OC::$SERVERROOT);
@@ -263,16 +259,5 @@ abstract class AbstractLocalNode extends AbstractNode implements NodeInterface
 		}
 
 		return $this->permissions;
-	}
-
-	/**
-	 * @param string $path
-	 *
-	 * @return string
-	 * @throws InvalidPathException
-	 */
-	protected function normalizePath(string $path): string
-	{
-		return '/' . $this->miscService->normalizePath($path);
 	}
 }

@@ -24,11 +24,23 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Files;
 
+use OCA\CMSPico\Service\MiscService;
 use OCP\Constants;
 use OCP\Files\InvalidPathException;
 
 abstract class AbstractNode implements NodeInterface
 {
+	/** @var MiscService */
+	private $miscService;
+
+	/**
+	 * AbstractNode constructor.
+	 */
+	public function __construct()
+	{
+		$this->miscService = \OC::$server->query(MiscService::class);
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -147,5 +159,16 @@ abstract class AbstractNode implements NodeInterface
 		if ((strpos($name, '/') !== false) || (strpos($name, '\\') !== false)) {
 			throw new InvalidPathException();
 		}
+	}
+
+	/**
+	 * @param string $path
+	 *
+	 * @return string
+	 * @throws InvalidPathException
+	 */
+	protected function normalizePath(string $path): string
+	{
+		return '/' . $this->miscService->normalizePath($path);
 	}
 }

@@ -45,6 +45,8 @@ abstract class AbstractStorageNode extends AbstractNode implements NodeInterface
 	 */
 	public function __construct(OCNode $node)
 	{
+		parent::__construct();
+
 		$this->node = $node;
 	}
 

@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Files;
 
-use OCA\CMSPico\Service\MiscService;
 use OCP\Constants;
 use OCP\Files\InvalidPathException;
 use OCP\Files\NotFoundException;
@@ -47,10 +46,9 @@ class MemoryFile extends AbstractNode implements FileInterface
 	 */
 	public function __construct(string $path, string $data)
 	{
-		/** @var MiscService $miscService */
-		$miscService = \OC::$server->query(MiscService::class);
+		parent::__construct();
 
-		$this->path = '/' . $miscService->normalizePath($path);
+		$this->path = $this->normalizePath($path);
 		$this->data = $data;
 	}
 
