@@ -211,6 +211,7 @@ class PicoService
 	private function loadPicoPlugins(Pico $pico)
 	{
 		$includeClosure = static function (string $pluginFile) {
+			/** @noinspection PhpIncludeInspection */
 			require($pluginFile);
 		};
 

@@ -112,6 +112,7 @@ class Plugin implements \JsonSerializable
 		}
 
 		$includeClosure = static function (string $pluginFile) {
+			/** @noinspection PhpIncludeInspection */
 			require($pluginFile);
 		};
 

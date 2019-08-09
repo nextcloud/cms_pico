@@ -149,6 +149,7 @@ class ThemesService
 		$systemThemesFolder->sync(FolderInterface::SYNC_SHALLOW);
 
 		try {
+			/** @var FolderInterface $systemThemeFolder */
 			$systemThemeFolder = $systemThemesFolder->get($themeName);
 			if (!$systemThemeFolder->isFolder()) {
 				throw new ThemeNotFoundException();
@@ -180,6 +181,7 @@ class ThemesService
 		$appDataThemesFolder->sync(FolderInterface::SYNC_SHALLOW);
 
 		try {
+			/** @var FolderInterface $appDataThemeFolder */
 			$appDataThemeFolder = $appDataThemesFolder->get($themeName);
 			if (!$appDataThemeFolder->isFolder()) {
 				throw new ThemeNotFoundException();
@@ -209,6 +211,7 @@ class ThemesService
 		$themeSourceFolder->sync();
 
 		try {
+			/** @var LocalFolder $themeFolder */
 			$themeFolder = $publicThemesFolder->get($themeName);
 			if (!$themeFolder->isFolder()) {
 				throw new InvalidPathException();

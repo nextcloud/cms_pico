@@ -28,9 +28,7 @@ namespace OCA\CMSPico\Service;
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Files\FolderInterface;
 use OCA\CMSPico\Files\LocalFolder;
-use OCA\CMSPico\Files\StorageFile;
 use OCA\CMSPico\Files\StorageFolder;
-use OCP\Files\File;
 use OCP\Files\Folder;
 use OCP\Files\InvalidPathException;
 use OCP\Files\IRootFolder;
@@ -59,9 +57,6 @@ class FileService
 
 	/** @var FolderInterface */
 	private $appDataFolder;
-
-	/** @var string */
-	private $fileExtensionBlacklist = '/^ph(?:ar|p|ps|tml|p[0-9]+)$/';
 
 	/**
 	 * FileService constructor.
@@ -206,29 +201,5 @@ class FileService
 			$dataFolderPath = $this->configService->getSystemValue('datadirectory', \OC::$SERVERROOT . '/data');
 			return rtrim($dataFolderPath, '/') . '/' . $baseAppDataFolderName . '/' . $appDataFolderName . '/';
 		}
-	}
-
-	/**
-	 * @param string $file
-	 *
-	 * @return File
-	 * @throws NotFoundException
-	 * @throws NotPermittedException
-	 */
-	public function getFile(string $file): File
-	{
-		/** @var StorageFile $fileNode */
-		$fileNode = $this->getAppDataFolder()->get($file);
-		if (!$fileNode->isFile()) {
-			throw new NotFoundException();
-		}
-
-		if (preg_match($this->fileExtensionBlacklist, $fileNode->getExtension()) === 1) {
-			throw new NotPermittedException();
-		}
-
-		/** @var File $ocFileNode */
-		$ocFileNode = $fileNode->getOCNode();
-		return $ocFileNode;
 	}
 }

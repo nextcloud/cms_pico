@@ -124,6 +124,7 @@ class PluginsService
 		$systemPluginsFolder->sync(FolderInterface::SYNC_SHALLOW);
 
 		try {
+			/** @var FolderInterface $systemPluginFolder */
 			$systemPluginFolder = $systemPluginsFolder->get($pluginName);
 			if (!$systemPluginFolder->isFolder()) {
 				throw new PluginNotFoundException();
@@ -155,6 +156,7 @@ class PluginsService
 		$appDataPluginsFolder->sync(FolderInterface::SYNC_SHALLOW);
 
 		try {
+			/** @var FolderInterface $appDataPluginFolder */
 			$appDataPluginFolder = $appDataPluginsFolder->get($pluginName);
 			if (!$appDataPluginFolder->isFolder()) {
 				throw new PluginNotFoundException();
@@ -184,6 +186,7 @@ class PluginsService
 		$pluginSourceFolder->sync();
 
 		try {
+			/** @var LocalFolder $pluginFolder */
 			$pluginFolder = $publicPluginsFolder->get($pluginName);
 			if (!$pluginFolder->isFolder()) {
 				throw new InvalidPathException();

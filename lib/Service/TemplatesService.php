@@ -31,7 +31,6 @@ use OCA\CMSPico\Files\FolderInterface;
 use OCA\CMSPico\Files\StorageFolder;
 use OCA\CMSPico\Model\TemplateFile;
 use OCA\CMSPico\Model\Website;
-use OCP\Files\InvalidPathException;
 use OCP\Files\NotFoundException;
 
 class TemplatesService
