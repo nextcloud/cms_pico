@@ -125,7 +125,7 @@ class AssetsService
 	public function getAssetsPath(Website $website): string
 	{
 		try {
-			return $this->getAssetsFolder($website)->getLocalPath();
+			return $this->getAssetsFolder($website)->getLocalPath() . '/';
 		} catch (InvalidPathException $e) {
 			throw new WebsiteInvalidFilesystemException($e);
 		} catch (NotFoundException $e) {

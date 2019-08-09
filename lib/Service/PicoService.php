@@ -134,7 +134,7 @@ class PicoService
 
 			$pico = new Pico(
 				$website->getWebsiteFolder()->getLocalPath(),
-				$this->fileService->getAppDataFolderPath(self::DIR_CONFIG),
+				$this->getConfigFolder()->getLocalPath(),
 				$this->pluginsService->getPluginsPath(),
 				$this->themesService->getThemesPath(),
 				false
@@ -252,11 +252,31 @@ class PicoService
 	public function getContentPath(Website $website): string
 	{
 		try {
-			return $this->getContentFolder($website)->getLocalPath();
+			return $this->getContentFolder($website)->getLocalPath() . '/';
 		} catch (InvalidPathException $e) {
 			throw new WebsiteInvalidFilesystemException($e);
 		} catch (NotFoundException $e) {
 			throw new WebsiteInvalidFilesystemException($e);
 		}
+	}
+
+	/**
+	 * @return StorageFolder
+	 */
+	public function getConfigFolder(): StorageFolder
+	{
+		/** @var StorageFolder $configFolder */
+		$configFolder = $this->fileService->getAppDataFolder(self::DIR_CONFIG);
+		$configFolder->sync();
+
+		return $configFolder;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getConfigPath(): string
+	{
+		return $this->fileService->getAppDataFolderPath(self::DIR_CONFIG);
 	}
 }
