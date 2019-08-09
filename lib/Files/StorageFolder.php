@@ -35,6 +35,8 @@ use OCP\ILogger;
 
 class StorageFolder extends AbstractStorageNode implements FolderInterface
 {
+	use FolderIteratorTrait;
+
 	/** @var OCFolder */
 	protected $node;
 
@@ -62,12 +64,17 @@ class StorageFolder extends AbstractStorageNode implements FolderInterface
 	 */
 	public function listing(): array
 	{
-		$nodes = [];
-		foreach ($this->node->getDirectoryListing() as $node) {
-			$nodes[] = $this->repackNode($node);
-		}
+		return iterator_to_array($this->getGenerator());
+	}
 
-		return $nodes;
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function getGenerator(): \Generator
+	{
+		foreach ($this->node->getDirectoryListing() as $node) {
+			yield $this->repackNode($node);
+		}
 	}
 
 	/**

@@ -30,7 +30,7 @@ use OCP\Files\InvalidPathException;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 
-interface FolderInterface extends NodeInterface
+interface FolderInterface extends NodeInterface, \RecursiveIterator
 {
 	/** @var bool */
 	const SYNC_SHALLOW = false;

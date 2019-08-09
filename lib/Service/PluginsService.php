@@ -98,7 +98,7 @@ class PluginsService
 		$currentPlugins = $this->getPlugins();
 
 		$newCustomPlugins = [];
-		foreach ($appDataPluginsFolder->listing() as $pluginFolder) {
+		foreach ($appDataPluginsFolder as $pluginFolder) {
 			$pluginName = $pluginFolder->getName();
 			if ($pluginFolder->isFolder() && !isset($currentPlugins[$pluginName])) {
 				$newCustomPlugins[] = $pluginName;

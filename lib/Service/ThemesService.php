@@ -123,7 +123,7 @@ class ThemesService
 		$currentThemes = $this->getThemes();
 
 		$newCustomThemes = [];
-		foreach ($customThemesFolder->listing() as $themeFolder) {
+		foreach ($customThemesFolder as $themeFolder) {
 			$themeName = $themeFolder->getName();
 			if ($themeFolder->isFolder() && !isset($currentThemes[$themeName])) {
 				$newCustomThemes[] = $themeName;

@@ -84,7 +84,7 @@ class TemplatesService
 		$systemTemplatesFolder->sync(FolderInterface::SYNC_SHALLOW);
 
 		$systemTemplates = [];
-		foreach ($systemTemplatesFolder->listing() as $templateFolder) {
+		foreach ($systemTemplatesFolder as $templateFolder) {
 			if ($templateFolder->isFolder()) {
 				$systemTemplates[] = $templateFolder->getName();
 			}
@@ -113,7 +113,7 @@ class TemplatesService
 		$customTemplatesFolder->sync(FolderInterface::SYNC_SHALLOW);
 
 		$newTemplates = [];
-		foreach ($customTemplatesFolder->listing() as $templateFolder) {
+		foreach ($customTemplatesFolder as $templateFolder) {
 			$template = $templateFolder->getName();
 			if ($templateFolder->isFolder() && !in_array($template, $currentTemplates)) {
 				$newTemplates[] = $template;
@@ -132,7 +132,7 @@ class TemplatesService
 	{
 		$filesIterator = function (FolderInterface $folder, string $basePath = '') use (&$filesIterator) {
 			$files = [];
-			foreach ($folder->listing() as $node) {
+			foreach ($folder as $node) {
 				if ($node->isFolder()) {
 					/** @var FolderInterface $node */
 					$files += $filesIterator($node, $basePath . '/' . $node->getName());

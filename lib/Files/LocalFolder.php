@@ -33,6 +33,8 @@ use OCP\Files\NotPermittedException;
 
 class LocalFolder extends AbstractLocalNode implements FolderInterface
 {
+	use FolderIteratorTrait;
+
 	/** @var LocalFolder */
 	private $baseFolder;
 
@@ -63,7 +65,7 @@ class LocalFolder extends AbstractLocalNode implements FolderInterface
 			throw new NotPermittedException();
 		}
 
-		foreach ($this->listing() as $node) {
+		foreach ($this as $node) {
 			$node->delete();
 		}
 
@@ -82,6 +84,14 @@ class LocalFolder extends AbstractLocalNode implements FolderInterface
 	 */
 	public function listing(): array
 	{
+		return iterator_to_array($this->getGenerator());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function getGenerator(): \Generator
+	{
 		if (!$this->isReadable()) {
 			throw new NotPermittedException();
 		}
@@ -91,7 +101,6 @@ class LocalFolder extends AbstractLocalNode implements FolderInterface
 			throw new GenericFileException();
 		}
 
-		$nodes = [];
 		foreach ($files as $file) {
 			if (($file === '.') || ($file === '..')) {
 				continue;
@@ -100,11 +109,9 @@ class LocalFolder extends AbstractLocalNode implements FolderInterface
 			$path = (($this->path !== '/') ? $this->path . '/' : '/') . $file;
 			$node = $this->createNode($path);
 			if ($node !== null) {
-				$nodes[] = $node;
+				yield $node;
 			}
 		}
-
-		return $nodes;
 	}
 
 	/**

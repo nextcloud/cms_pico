@@ -110,7 +110,7 @@ class AppDataRepairStep implements IRepairStep
 		$appDataConfigFolder = $this->fileService->getAppDataFolder(PicoService::DIR_CONFIG);
 		$systemConfigFolder = $this->fileService->getSystemFolder(PicoService::DIR_CONFIG);
 
-		foreach ($systemConfigFolder->listing() as $configFile) {
+		foreach ($systemConfigFolder as $configFile) {
 			$configFileName = $configFile->getName();
 
 			if (!$configFile->isFile()) {
@@ -136,7 +136,7 @@ class AppDataRepairStep implements IRepairStep
 		$appDataTemplatesFolder = $this->fileService->getAppDataFolder(PicoService::DIR_TEMPLATES);
 		$systemTemplatesFolder = $this->fileService->getSystemFolder(PicoService::DIR_TEMPLATES);
 
-		foreach ($systemTemplatesFolder->listing() as $templateFolder) {
+		foreach ($systemTemplatesFolder as $templateFolder) {
 			$templateFileName = $templateFolder->getName();
 
 			if (!$templateFolder->isFolder()) {
@@ -178,7 +178,7 @@ class AppDataRepairStep implements IRepairStep
 		$oldSystemThemes = $this->themesService->getSystemThemes();
 		$this->configService->deleteAppValue(ConfigService::SYSTEM_THEMES);
 
-		foreach ($systemThemesFolder->listing() as $themeFolder) {
+		foreach ($systemThemesFolder as $themeFolder) {
 			$themeName = $themeFolder->getName();
 			if ($themeFolder->isFolder()) {
 				$this->themesService->publishSystemTheme($themeName);
@@ -201,7 +201,7 @@ class AppDataRepairStep implements IRepairStep
 		$this->configService->deleteAppValue(ConfigService::CUSTOM_THEMES);
 
 		$systemThemes = $this->themesService->getSystemThemes();
-		foreach ($appDataThemesFolder->listing() as $themeFolder) {
+		foreach ($appDataThemesFolder as $themeFolder) {
 			$themeName = $themeFolder->getName();
 			if ($themeFolder->isFolder()) {
 				if (isset($oldCustomThemes[$themeName]) && !isset($systemThemes[$themeName])) {
@@ -238,7 +238,7 @@ class AppDataRepairStep implements IRepairStep
 		$oldSystemPlugins = $this->pluginsService->getSystemPlugins();
 		$this->configService->deleteAppValue(ConfigService::SYSTEM_PLUGINS);
 
-		foreach ($systemPluginsFolder->listing() as $pluginFolder) {
+		foreach ($systemPluginsFolder as $pluginFolder) {
 			$pluginName = $pluginFolder->getName();
 			if ($pluginFolder->isFolder()) {
 				$this->pluginsService->publishSystemPlugin($pluginName);
@@ -261,7 +261,7 @@ class AppDataRepairStep implements IRepairStep
 		$this->configService->deleteAppValue(ConfigService::CUSTOM_PLUGINS);
 
 		$systemPlugins = $this->pluginsService->getSystemPlugins();
-		foreach ($appDataPluginsFolder->listing() as $pluginFolder) {
+		foreach ($appDataPluginsFolder as $pluginFolder) {
 			$pluginName = $pluginFolder->getName();
 			if ($pluginFolder->isFolder()) {
 				if (isset($oldCustomPlugins[$pluginName]) && !isset($systemPlugins[$pluginName])) {

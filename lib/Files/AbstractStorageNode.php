@@ -59,7 +59,7 @@ abstract class AbstractStorageNode extends AbstractNode implements NodeInterface
 		if ($this->isFolder()) {
 			/** @var StorageFolder $this */
 			$target = $parentPath->newFolder($name);
-			foreach ($this->listing() as $child) {
+			foreach ($this as $child) {
 				$child->move($target);
 			}
 		} else {
