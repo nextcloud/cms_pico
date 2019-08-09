@@ -84,7 +84,7 @@ abstract class AbstractStorageNode extends AbstractNode implements NodeInterface
 			$ocNode = $this->node->copy($targetPath->getPath());
 			return new StorageFolder($ocNode);
 		} else {
-			return parent::copy($targetPath);
+			return parent::copy($targetPath, $name);
 		}
 	}
 
@@ -98,7 +98,7 @@ abstract class AbstractStorageNode extends AbstractNode implements NodeInterface
 			$ocNode = $this->node->move($targetPath->getPath());
 			return new StorageFolder($ocNode);
 		} else {
-			return parent::move($targetPath);
+			return parent::move($targetPath, $name);
 		}
 	}
 
@@ -172,7 +172,13 @@ abstract class AbstractStorageNode extends AbstractNode implements NodeInterface
 	public function getParentNode(): FolderInterface
 	{
 		if ($this->parentFolder === null) {
-			$this->parentFolder = new StorageFolder($this->node->getParent());
+			try {
+				$ocNode = $this->node->getParent();
+			} catch (NotFoundException $e) {
+				throw new InvalidPathException();
+			}
+
+			$this->parentFolder = new StorageFolder($ocNode);
 		}
 
 		return $this->parentFolder;
@@ -199,30 +205,10 @@ abstract class AbstractStorageNode extends AbstractNode implements NodeInterface
 	 */
 	public function getPermissions(): int
 	{
-		return $this->node->getPermissions();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function isReadable(): bool
-	{
-		return $this->node->isReadable();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function isUpdateable(): bool
-	{
-		return $this->node->isUpdateable();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function isDeletable(): bool
-	{
-		return $this->node->isDeletable();
+		try {
+			return $this->node->getPermissions();
+		} catch (\Exception $e) {
+			return 0;
+		}
 	}
 }

@@ -239,23 +239,25 @@ abstract class AbstractLocalNode extends AbstractNode implements NodeInterface
 		if ($this->permissions === null) {
 			$this->permissions = 0;
 
-			if (is_readable($this->getLocalPath())) {
-				$this->permissions |= Constants::PERMISSION_READ;
-			}
-
-			if (is_writable($this->getLocalPath())) {
-				$this->permissions |= Constants::PERMISSION_UPDATE;
-
-				if ($this->isFolder()) {
-					$this->permissions |= Constants::PERMISSION_CREATE;
+			try {
+				if (is_readable($this->getLocalPath())) {
+					$this->permissions |= Constants::PERMISSION_READ;
 				}
 
-				try {
-					if (is_writable($this->basePath . $this->getParent())) {
-						$this->permissions |= Constants::PERMISSION_DELETE;
+				if (is_writable($this->getLocalPath())) {
+					$this->permissions |= Constants::PERMISSION_UPDATE;
+
+					if ($this->isFolder()) {
+						$this->permissions |= Constants::PERMISSION_CREATE;
 					}
-				} catch (InvalidPathException $e) {}
-			}
+
+					try {
+						if (is_writable($this->basePath . $this->getParent())) {
+							$this->permissions |= Constants::PERMISSION_DELETE;
+						}
+					} catch (InvalidPathException $e) {}
+				}
+			} catch (\Exception $e) {}
 		}
 
 		return $this->permissions;

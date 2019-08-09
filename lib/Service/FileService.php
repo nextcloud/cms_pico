@@ -29,7 +29,7 @@ use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Files\FolderInterface;
 use OCA\CMSPico\Files\LocalFolder;
 use OCA\CMSPico\Files\StorageFolder;
-use OCP\Files\Folder;
+use OCP\Files\Folder as OCFolder;
 use OCP\Files\InvalidPathException;
 use OCP\Files\IRootFolder;
 use OCP\Files\NotFoundException;
@@ -146,9 +146,9 @@ class FileService
 			$appDataFolderName = Application::APP_NAME;
 
 			try {
-				/** @var Folder $baseFolder */
+				/** @var OCFolder $baseFolder */
 				$baseFolder = $this->rootFolder->get($baseAppDataFolderName);
-				if (!($baseFolder instanceof Folder)) {
+				if (!($baseFolder instanceof OCFolder)) {
 					throw new InvalidPathException();
 				}
 			} catch (NotFoundException $e) {
@@ -157,7 +157,7 @@ class FileService
 
 			try {
 				$appDataFolder = $baseFolder->get($appDataFolderName);
-				if (!($appDataFolder instanceof Folder)) {
+				if (!($appDataFolder instanceof OCFolder)) {
 					throw new InvalidPathException();
 				}
 			} catch (NotFoundException $e) {

@@ -37,7 +37,7 @@ use Symfony\Component\Yaml\Exception\ParseException;
 class Pico extends \Pico
 {
 	/** @var HTMLPurifier */
-	protected $htmlPurifier;
+	private $htmlPurifier;
 
 	/** @var Website */
 	private $website;
