@@ -254,7 +254,7 @@ class ThemesService
 	 *
 	 * @return LocalFolder
 	 */
-	private function getThemesFolder(bool $renewETag = false, bool $forceRenewETag = false): LocalFolder
+	public function getThemesFolder(bool $renewETag = false, bool $forceRenewETag = false): LocalFolder
 	{
 		$themesBaseFolder = $this->fileService->getPublicFolder(PicoService::DIR_THEMES);
 

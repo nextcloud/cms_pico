@@ -25,26 +25,23 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Model;
 
-use OC\Files\View;
 use OCA\CMSPico\AppInfo\Application;
-use OCA\CMSPico\Exceptions\PageInvalidPathException;
-use OCA\CMSPico\Exceptions\PageNotFoundException;
-use OCA\CMSPico\Exceptions\PageNotPermittedException;
 use OCA\CMSPico\Exceptions\TemplateNotFoundException;
 use OCA\CMSPico\Exceptions\ThemeNotCompatibleException;
 use OCA\CMSPico\Exceptions\ThemeNotFoundException;
 use OCA\CMSPico\Exceptions\WebsiteForeignOwnerException;
 use OCA\CMSPico\Exceptions\WebsiteInvalidDataException;
 use OCA\CMSPico\Exceptions\WebsiteInvalidFilesystemException;
-use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
 use OCA\CMSPico\Exceptions\WebsiteNotPermittedException;
+use OCA\CMSPico\Files\FileInterface;
 use OCA\CMSPico\Files\StorageFile;
 use OCA\CMSPico\Files\StorageFolder;
+use OCA\CMSPico\Service\AssetsService;
 use OCA\CMSPico\Service\MiscService;
 use OCA\CMSPico\Service\PicoService;
+use OCA\CMSPico\Service\PluginsService;
 use OCA\CMSPico\Service\TemplatesService;
 use OCA\CMSPico\Service\ThemesService;
-use OCP\Files\File;
 use OCP\Files\Folder as OCFolder;
 use OCP\Files\InvalidPathException;
 use OCP\Files\IRootFolder;
@@ -88,8 +85,14 @@ class Website extends WebsiteCore
 	/** @var IURLGenerator */
 	private $urlGenerator;
 
-	/** @var View */
-	private $ownerView;
+	/** @var PicoService */
+	private $picoService;
+
+	/** @var AssetsService */
+	private $assetsService;
+
+	/** @var PluginsService */
+	private $pluginsService;
 
 	/** @var ThemesService */
 	private $themesService;
@@ -115,6 +118,9 @@ class Website extends WebsiteCore
 		$this->groupManager = \OC::$server->getGroupManager();
 		$this->rootFolder = \OC::$server->getRootFolder();
 		$this->urlGenerator = \OC::$server->getURLGenerator();
+		$this->picoService = \OC::$server->query(PicoService::class);
+		$this->assetsService = \OC::$server->query(AssetsService::class);
+		$this->pluginsService = \OC::$server->query(PluginsService::class);
 		$this->themesService = \OC::$server->query(ThemesService::class);
 		$this->templatesService = \OC::$server->query(TemplatesService::class);
 		$this->miscService = \OC::$server->query(MiscService::class);
@@ -132,134 +138,55 @@ class Website extends WebsiteCore
 	}
 
 	/**
-	 * @return string
-	 * @throws WebsiteNotFoundException
-	 */
-	public function getWebsitePath(): string
-	{
-		$ownerView = $this->getOwnerView();
-		$localPath = $ownerView->getLocalFolder('');
-
-		if ($localPath === null) {
-			throw new WebsiteNotFoundException();
-		}
-
-		return $localPath . '/';
-	}
-
-	/**
-	 * @param string $path
-	 * @param bool   $isFolder
-	 *
-	 * @return string
-	 * @throws WebsiteNotFoundException
-	 * @throws NotFoundException
-	 */
-	public function getAbsolutePath(string $path = '', bool $isFolder = true): string
-	{
-		$ownerView = $this->getOwnerView();
-		$localPath = $isFolder ? $ownerView->getLocalFolder($path) : $ownerView->getLocalFile($path);
-
-		if ($localPath === null) {
-			throw new NotFoundException();
-		}
-
-		return $localPath . ($isFolder ? '/' : '');
-	}
-
-	/**
-	 * @param string $file
-	 *
-	 * @return int
-	 * @throws InvalidPathException
-	 * @throws NotFoundException
-	 */
-	public function getPageFileId(string $file = ''): int
-	{
-		$userFolder = $this->rootFolder->getUserFolder($this->getUserId());
-		$fileNode = $userFolder->get($this->getPath() . $file);
-		return $fileNode->getId();
-	}
-
-	/**
 	 * @param string $absolutePath
 	 *
 	 * @return string
-	 * @throws WebsiteNotFoundException
-	 * @throws PageInvalidPathException
-	 * @throws PageNotFoundException
+	 * @throws WebsiteInvalidFilesystemException
+	 * @throws InvalidPathException
+	 * @throws NotFoundException
+	 * @throws NotPermittedException
 	 */
-	public function getRelativePagePath(string $absolutePath): string
+	public function getFileContent(string $absolutePath): string
 	{
-		try {
-			$contentDir = $this->getAbsolutePath(PicoService::DIR_CONTENT);
-			$contentDirLength = strlen($contentDir);
-			if (substr($absolutePath, 0, $contentDirLength) === $contentDir) {
-				return substr($absolutePath, $contentDirLength);
-			}
-		} catch (NotFoundException $e) {
-			throw new PageNotFoundException($e);
-		}
+		$folder = $this->picoService->getContentFolder($this);
+		$basePath = $this->picoService->getContentPath($this);
 
-		throw new PageInvalidPathException();
-	}
-
-	/**
-	 * @param string|null $file
-	 *
-	 * @return string
-	 * @throws WebsiteNotFoundException
-	 * @throws PageInvalidPathException
-	 * @throws PageNotFoundException
-	 * @throws PageNotPermittedException
-	 */
-	public function getFileContent(string $file = null): string
-	{
 		try {
+			$relativePath = $this->miscService->getRelativePath($absolutePath, $basePath);
+		} catch (InvalidPathException $e) {
+			$folder = $this->assetsService->getAssetsFolder($this);
+			$basePath = $this->assetsService->getAssetsPath($this);
+
 			try {
-				$file = ($file !== null) ? $this->getRelativePagePath($file) : $this->getPage();
-				$userFolder = $this->rootFolder->getUserFolder($this->getUserId());
-
-				/** @var File $fileNode */
-				$fileNode = $userFolder->get($this->getPath() . PicoService::DIR_CONTENT . '/' . $file);
-
-				if (!($fileNode instanceof File)) {
-					throw new PageNotFoundException();
-				}
+				$relativePath = $this->miscService->getRelativePath($absolutePath, $basePath);
+			} catch (InvalidPathException $e) {
+				$folder = $this->pluginsService->getPluginsFolder();
+				$basePath = $this->pluginsService->getPluginsPath();
 
 				try {
-					return $fileNode->getContent();
-				} catch (NotPermittedException $e) {
-					throw new PageNotPermittedException($e);
-				}
-			} catch (NotFoundException $e) {
-				throw new PageNotFoundException($e);
-			}
-		} catch (PageInvalidPathException $e) {
-			$appPath = \OC_App::getAppPath(Application::APP_NAME) . '/';
-			$appPathLength = strlen($appPath);
+					$relativePath = $this->miscService->getRelativePath($absolutePath, $basePath);
+				} catch (InvalidPathException $e) {
+					$folder = $this->themesService->getThemesFolder();
+					$basePath = $this->themesService->getThemesPath();
 
-			if (substr($file, 0, $appPathLength) !== $appPath) {
-				throw new PageInvalidPathException();
-			}
-
-			$file = substr($file, $appPathLength);
-
-			if (strpos($file, 'appdata_public/' . PicoService::DIR_THEMES . '/') !== 0) {
-				if (strpos($file, 'appdata_public/' . PicoService::DIR_PLUGINS . '/') !== 0) {
-					throw new PageInvalidPathException();
+					try {
+						$relativePath = $this->miscService->getRelativePath($absolutePath, $basePath);
+					} catch (InvalidPathException $e) {
+						// the requested file is neither in the content nor assets, plugins or themes folder
+						// Pico mustn't have access to any other directory
+						throw new InvalidPathException();
+					}
 				}
 			}
-
-			if (!is_file($appPath . $file)) {
-				throw new PageNotFoundException();
-			}
-			if (!is_readable($appPath . $file)) {
-				throw new PageNotPermittedException();
-			}
-
-			return file_get_contents($file) ?: '';
 		}
+
+		/** @var FileInterface $file */
+		$file = $folder->get($relativePath);
+		if (!$file->isFile()) {
+			throw new InvalidPathException();
+		}
+
+		return $file->getContent();
 	}
 
 	/**
@@ -446,23 +373,6 @@ class Website extends WebsiteCore
 		if ($this->getUserId() !== $userId) {
 			throw new WebsiteForeignOwnerException();
 		}
-	}
-
-	/**
-	 * @return View
-	 * @throws WebsiteNotFoundException
-	 */
-	private function getOwnerView(): View
-	{
-		if ($this->ownerView === null) {
-			try {
-				$this->ownerView = new View($this->getUserId() . '/files/' . $this->getPath());
-			} catch (\Exception $e) {
-				throw new WebsiteNotFoundException();
-			}
-		}
-
-		return $this->ownerView;
 	}
 
 	/**

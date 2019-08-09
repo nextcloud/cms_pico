@@ -27,11 +27,11 @@ namespace OCA\CMSPico;
 
 use HTMLPurifier;
 use HTMLPurifier_Config;
-use OCA\CMSPico\Exceptions\PageInvalidPathException;
-use OCA\CMSPico\Exceptions\PageNotFoundException;
-use OCA\CMSPico\Exceptions\PageNotPermittedException;
-use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
+use OCA\CMSPico\Exceptions\WebsiteInvalidFilesystemException;
 use OCA\CMSPico\Model\Website;
+use OCP\Files\InvalidPathException;
+use OCP\Files\NotFoundException;
+use OCP\Files\NotPermittedException;
 use Symfony\Component\Yaml\Exception\ParseException;
 
 class Pico extends \Pico
@@ -46,9 +46,10 @@ class Pico extends \Pico
 	 * {@inheritDoc}
 	 *
 	 * @return string
-	 * @throws PageInvalidPathException
-	 * @throws PageNotFoundException
-	 * @throws PageNotPermittedException
+	 * @throws WebsiteInvalidFilesystemException
+	 * @throws InvalidPathException
+	 * @throws NotFoundException
+	 * @throws NotPermittedException
 	 */
 	public function run()
 	{
@@ -97,10 +98,10 @@ class Pico extends \Pico
 	 * @param string $file file path
 	 *
 	 * @return string raw contents of the file
-	 * @throws WebsiteNotFoundException
-	 * @throws PageInvalidPathException
-	 * @throws PageNotFoundException
-	 * @throws PageNotPermittedException
+	 * @throws WebsiteInvalidFilesystemException
+	 * @throws InvalidPathException
+	 * @throws NotFoundException
+	 * @throws NotPermittedException
 	 */
 	public function loadFileContent($file)
 	{

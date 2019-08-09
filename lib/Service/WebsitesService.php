@@ -253,6 +253,12 @@ class WebsitesService
 	 */
 	public function getPage(string $site, string $page, string $viewer = null, bool $proxyRequest = false): PicoPage
 	{
+		try {
+			$page = $this->miscService->normalizePath($page);
+		} catch (InvalidPathException $e) {
+			throw new PageInvalidPathException($e);
+		}
+
 		$website = $this->getWebsiteFromSite($site);
 		$website->setProxyRequest($proxyRequest);
 		$website->setViewer($viewer ?: '');

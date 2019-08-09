@@ -229,7 +229,7 @@ class PluginsService
 	 *
 	 * @return LocalFolder
 	 */
-	private function getPluginsFolder(bool $renewETag = false, bool $forceRenewETag = false): LocalFolder
+	public function getPluginsFolder(bool $renewETag = false, bool $forceRenewETag = false): LocalFolder
 	{
 		$pluginsBaseFolder = $this->fileService->getPublicFolder(PicoService::DIR_PLUGINS);
 

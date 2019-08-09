@@ -33,8 +33,8 @@ use OCA\CMSPico\Exceptions\PicoRuntimeException;
 use OCA\CMSPico\Exceptions\ThemeNotCompatibleException;
 use OCA\CMSPico\Exceptions\ThemeNotFoundException;
 use OCA\CMSPico\Exceptions\WebsiteInvalidFilesystemException;
-use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
 use OCA\CMSPico\Exceptions\WebsiteNotPermittedException;
+use OCA\CMSPico\Files\StorageFolder;
 use OCA\CMSPico\Model\PicoPage;
 use OCA\CMSPico\Model\Website;
 use OCA\CMSPico\Pico;
@@ -114,7 +114,6 @@ class PicoService
 	 * @param Website $website
 	 *
 	 * @return PicoPage
-	 * @throws WebsiteNotFoundException
 	 * @throws WebsiteInvalidFilesystemException
 	 * @throws WebsiteNotPermittedException
 	 * @throws ThemeNotFoundException
@@ -128,14 +127,13 @@ class PicoService
 	{
 		try {
 			$page = $website->getPage();
-			$page = $this->miscService->normalizePath($page);
 
 			$website->assertViewerAccess(self::DIR_CONTENT . '/' . ($page ?: 'index') . self::CONTENT_EXT);
 
 			$this->themesService->assertValidTheme($website->getTheme());
 
 			$pico = new Pico(
-				$website->getWebsitePath(),
+				$website->getWebsiteFolder()->getLocalPath(),
 				$this->fileService->getAppDataFolderPath(self::DIR_CONFIG, true),
 				$this->pluginsService->getPluginsPath(),
 				$this->themesService->getThemesPath(),
@@ -147,11 +145,13 @@ class PicoService
 				$this->loadPicoPlugins($pico);
 
 				$output = $pico->run();
-			} catch (PageInvalidPathException $e) {
+			} catch (WebsiteInvalidFilesystemException $e) {
 				throw $e;
-			} catch (PageNotFoundException $e) {
+			} catch (InvalidPathException $e) {
 				throw $e;
-			} catch (PageNotPermittedException $e) {
+			} catch (NotFoundException $e) {
+				throw $e;
+			} catch (NotPermittedException $e) {
 				throw $e;
 			} catch (\Exception $e) {
 				$exception = new PicoRuntimeException($e);
@@ -176,8 +176,10 @@ class PicoService
 
 	/**
 	 * @param Website $website
-	 * @param Pico $pico
-	 * @param string $page
+	 * @param Pico    $pico
+	 * @param string  $page
+	 *
+	 * @throws WebsiteInvalidFilesystemException
 	 */
 	private function setupPico(Website $website, Pico $pico, string $page)
 	{
@@ -193,9 +195,9 @@ class PicoService
 				'timezone'       => $website->getTimeZone(),
 				'theme'          => $website->getTheme(),
 				'themes_url'     => $this->themesService->getThemesUrl(),
-				'content_dir'    => self::DIR_CONTENT,
+				'content_dir'    => $this->getContentPath($website),
 				'content_ext'    => self::CONTENT_EXT,
-				'assets_dir'     => self::DIR_ASSETS,
+				'assets_dir'     => $this->assetsService->getAssetsPath($website),
 				'assets_url'     => $this->assetsService->getAssetsUrl($website),
 				'plugins_url'    => $this->pluginsService->getPluginsUrl(),
 				'nextcloud_site' => $website->getSite(),
@@ -220,6 +222,40 @@ class PicoService
 
 				$pico->loadPlugin($pluginData['name']);
 			}
+		}
+	}
+
+	/**
+	 * @param Website $website
+	 *
+	 * @return StorageFolder
+	 * @throws WebsiteInvalidFilesystemException
+	 */
+	public function getContentFolder(Website $website): StorageFolder
+	{
+		try {
+			return $website->getWebsiteFolder(PicoService::DIR_CONTENT);
+		} catch (InvalidPathException $e) {
+			throw new WebsiteInvalidFilesystemException($e);
+		} catch (NotFoundException $e) {
+			throw new WebsiteInvalidFilesystemException($e);
+		}
+	}
+
+	/**
+	 * @param Website $website
+	 *
+	 * @return string
+	 * @throws WebsiteInvalidFilesystemException
+	 */
+	public function getContentPath(Website $website): string
+	{
+		try {
+			return $this->getContentFolder($website)->getLocalPath();
+		} catch (InvalidPathException $e) {
+			throw new WebsiteInvalidFilesystemException($e);
+		} catch (NotFoundException $e) {
+			throw new WebsiteInvalidFilesystemException($e);
 		}
 	}
 }
