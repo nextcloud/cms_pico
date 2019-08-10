@@ -112,7 +112,7 @@ abstract class AbstractLocalNode extends AbstractNode implements NodeInterface
 				throw new GenericFileException();
 			}
 
-			return new LocalFile($targetPath->getPath() . '/' . $this->getName(), $this->basePath);
+			return new LocalFile($targetPath->getPath() . '/' . $this->getName(), $targetPath->basePath);
 		} else {
 			return parent::copy($targetPath);
 		}
@@ -180,7 +180,7 @@ abstract class AbstractLocalNode extends AbstractNode implements NodeInterface
 	 */
 	public function getLocalPath(): string
 	{
-		return $this->basePath . (($this->path !== '/') ? '/' . $this->path : '');
+		return $this->basePath . (($this->path !== '/') ? $this->path : '');
 	}
 
 	/**
