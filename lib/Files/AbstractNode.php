@@ -147,6 +147,14 @@ abstract class AbstractNode implements NodeInterface
 	}
 
 	/**
+	 * {@inheritDoc}
+	 */
+	public function __toString(): string
+	{
+		return $this->getName();
+	}
+
+	/**
 	 * @param string $name
 	 *
 	 * @throws InvalidPathException

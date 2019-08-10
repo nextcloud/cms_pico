@@ -234,6 +234,14 @@ abstract class AbstractLocalNode extends AbstractNode implements NodeInterface
 	/**
 	 * {@inheritDoc}
 	 */
+	public function isLocal(): bool
+	{
+		return true;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function getPermissions(): int
 	{
 		if ($this->permissions === null) {

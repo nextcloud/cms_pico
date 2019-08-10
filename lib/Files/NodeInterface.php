@@ -119,6 +119,11 @@ interface NodeInterface
 	public function isFolder(): bool;
 
 	/**
+	 * @return bool
+	 */
+	public function isLocal(): bool;
+
+	/**
 	 * @return int
 	 */
 	public function getPermissions(): int;
@@ -137,4 +142,9 @@ interface NodeInterface
 	 * @return bool
 	 */
 	public function isDeletable(): bool;
+
+	/**
+	 * @return string
+	 */
+	public function __toString(): string;
 }

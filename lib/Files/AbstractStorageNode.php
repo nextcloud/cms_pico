@@ -225,6 +225,20 @@ abstract class AbstractStorageNode extends AbstractNode implements NodeInterface
 	/**
 	 * {@inheritDoc}
 	 */
+	public function isLocal(): bool
+	{
+		try {
+			if ($this->getOCNode()->getStorage()->isLocal()) {
+				return true;
+			}
+		} catch (\Exception $e) {}
+
+		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function getPermissions(): int
 	{
 		try {
