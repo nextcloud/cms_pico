@@ -34,25 +34,11 @@ use OCA\CMSPico\Files\StorageFolder;
 use OCA\CMSPico\Model\PicoAsset;
 use OCA\CMSPico\Model\Website;
 use OCP\Files\InvalidPathException;
-use OCP\Files\IRootFolder;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 
 class AssetsService
 {
-	/** @var IRootFolder */
-	private $rootFolder;
-
-	/**
-	 * AssetsService constructor.
-	 *
-	 * @param IRootFolder $rootFolder
-	 */
-	public function __construct(IRootFolder $rootFolder)
-	{
-		$this->rootFolder = $rootFolder;
-	}
-
 	/**
 	 * @param Website $website
 	 *

@@ -40,7 +40,6 @@ use OCA\CMSPico\Service\TemplatesService;
 use OCA\CMSPico\Service\ThemesService;
 use OCP\Files\Folder as OCFolder;
 use OCP\Files\InvalidPathException;
-use OCP\Files\IRootFolder;
 use OCP\Files\Node as OCNode;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
@@ -75,9 +74,6 @@ class Website extends WebsiteCore
 	/** @var IGroupManager */
 	private $groupManager;
 
-	/** @var IRootFolder */
-	private $rootFolder;
-
 	/** @var IURLGenerator */
 	private $urlGenerator;
 
@@ -103,7 +99,6 @@ class Website extends WebsiteCore
 		$this->config = \OC::$server->getConfig();
 		$this->l10n = \OC::$server->getL10N(Application::APP_NAME);
 		$this->groupManager = \OC::$server->getGroupManager();
-		$this->rootFolder = \OC::$server->getRootFolder();
 		$this->urlGenerator = \OC::$server->getURLGenerator();
 		$this->themesService = \OC::$server->query(ThemesService::class);
 		$this->templatesService = \OC::$server->query(TemplatesService::class);
@@ -164,7 +159,7 @@ class Website extends WebsiteCore
 			}
 
 			/** @var OCFolder $viewerOCFolder */
-			$viewerOCFolder = $this->rootFolder->getUserFolder($this->getViewer());
+			$viewerOCFolder = \OC::$server->getUserFolder($this->getViewer());
 			$viewerAccessClosure = function (OCNode $node) use ($viewerOCFolder) {
 				$nodeId = $node->getId();
 
@@ -258,7 +253,7 @@ class Website extends WebsiteCore
 			);
 		}
 
-		$userFolder = $this->rootFolder->getUserFolder($this->getUserId());
+		$userFolder = \OC::$server->getUserFolder($this->getUserId());
 
 		try {
 			/** @var OCFolder $ocFolder */
@@ -319,7 +314,7 @@ class Website extends WebsiteCore
 	{
 		if ($this->folder === null) {
 			try {
-				$ocUserFolder = $this->rootFolder->getUserFolder($this->getUserId());
+				$ocUserFolder = \OC::$server->getUserFolder($this->getUserId());
 				$userFolder = new StorageFolder($ocUserFolder);
 
 				/** @var StorageFolder $websiteFolder */
