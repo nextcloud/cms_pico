@@ -33,13 +33,20 @@ use OCP\Files\Node as OCNode;
 use OCP\Files\NotPermittedException;
 use OCP\IDBConnection;
 use OCP\ILogger;
+use OCP\ITempManager;
 
 class StorageFolder extends AbstractStorageNode implements FolderInterface
 {
 	use FolderIteratorTrait;
 
+	/** @var array<string,string> */
+	private static $localPathCache = [];
+
 	/** @var OCFolder */
 	protected $node;
+
+	/** @var ITempManager */
+	private $tempManager;
 
 	/** @var IDBConnection */
 	private $connection;
@@ -57,10 +64,28 @@ class StorageFolder extends AbstractStorageNode implements FolderInterface
 	 */
 	public function __construct(OCFolder $folder, string $basePath = null)
 	{
+		$this->tempManager = \OC::$server->getTempManager();
 		$this->connection = \OC::$server->query(IDBConnection::class);
 		$this->logger = \OC::$server->query(ILogger::class);
 
 		parent::__construct($folder, $basePath);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getLocalPath(): string
+	{
+		if ($this->isLocal()) {
+			return parent::getLocalPath();
+		}
+
+		$cachePath = $this->getOCNode()->getPath();
+		if (!isset(self::$localPathCache[$cachePath])) {
+			self::$localPathCache[$cachePath] = $this->tempManager->getTemporaryFolder();
+		}
+
+		return self::$localPathCache[$cachePath];
 	}
 
 	/**
