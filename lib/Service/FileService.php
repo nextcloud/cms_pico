@@ -86,13 +86,7 @@ class FileService
 
 		if ($folderName) {
 			try {
-				/** @var FolderInterface $folder */
-				$folder = $this->publicFolder->get($folderName);
-				if (!$folder->isFolder()) {
-					throw new InvalidPathException();
-				}
-
-				return $folder;
+				return $this->publicFolder->getFolder($folderName);
 			} catch (NotFoundException $e) {
 				return $this->publicFolder->newFolder($folderName);
 			}
@@ -117,13 +111,7 @@ class FileService
 
 		if ($folderName) {
 			try {
-				/** @var FolderInterface $folder */
-				$folder = $this->systemFolder->get($folderName);
-				if (!$folder->isFolder()) {
-					throw new InvalidPathException();
-				}
-
-				return $folder;
+				return $this->systemFolder->getFolder($folderName);
 			} catch (NotFoundException $e) {
 				return $this->systemFolder->newFolder($folderName);
 			}
@@ -169,13 +157,7 @@ class FileService
 
 		if ($folderName) {
 			try {
-				/** @var FolderInterface $folder */
-				$folder = $this->appDataFolder->get($folderName);
-				if (!$folder->isFolder()) {
-					throw new InvalidPathException();
-				}
-
-				return $folder;
+				return $this->appDataFolder->getFolder($folderName);
 			} catch (NotFoundException $e) {
 				return $this->appDataFolder->newFolder($folderName);
 			}

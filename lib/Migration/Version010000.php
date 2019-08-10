@@ -215,7 +215,7 @@ class Version010000 extends SimpleMigrationStep
 			try {
 				$publicThemesFolder = $publicFolder->newFolder(PicoService::DIR_THEMES);
 			} catch (AlreadyExistsException $e) {
-				$publicThemesFolder = $publicFolder->get(PicoService::DIR_THEMES);
+				$publicThemesFolder = $publicFolder->getFolder(PicoService::DIR_THEMES);
 			}
 
 			$publicThemesTestFileName = $this->miscService->getRandom(10, 'tmp', Application::APP_NAME . '-themes_test');
@@ -225,7 +225,7 @@ class Version010000 extends SimpleMigrationStep
 			try {
 				$publicPluginsFolder = $publicFolder->newFolder(PicoService::DIR_PLUGINS);
 			} catch (AlreadyExistsException $e) {
-				$publicPluginsFolder = $publicFolder->get(PicoService::DIR_PLUGINS);
+				$publicPluginsFolder = $publicFolder->getFolder(PicoService::DIR_PLUGINS);
 			}
 
 			$publicPluginsTestFileName = $this->miscService->getRandom(10, 'tmp', Application::APP_NAME . '-plugins_test');

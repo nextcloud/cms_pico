@@ -33,7 +33,7 @@ use OCP\Files\NotPermittedException;
 
 class LocalFolder extends AbstractLocalNode implements FolderInterface
 {
-	use FolderIteratorTrait;
+	use FolderTrait;
 
 	/** @var LocalFolder */
 	private $baseFolder;

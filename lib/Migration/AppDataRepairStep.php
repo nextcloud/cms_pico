@@ -118,10 +118,12 @@ class AppDataRepairStep implements IRepairStep
 			}
 
 			try {
-				$appDataConfigFolder->get($configFileName)->delete();
+				$appDataConfigFolder->getFile($configFileName)->delete();
 				$this->log(sprintf('Replacing %s "%s"', 'config file', $configFileName), ILogger::WARN);
 			} catch (NotFoundException $e) {
 				$this->log(sprintf('Adding %s "%s"', 'config file', $configFileName));
+			} catch (\Exception $e) {
+				$this->log(sprintf('Unable to create %s "%s"', 'config file', $configFileName), ILogger::ERROR);
 			}
 
 			$configFile->copy($appDataConfigFolder);
@@ -144,10 +146,12 @@ class AppDataRepairStep implements IRepairStep
 			}
 
 			try {
-				$appDataTemplatesFolder->get($templateFileName)->delete();
+				$appDataTemplatesFolder->getFolder($templateFileName)->delete();
 				$this->log(sprintf('Replacing %s "%s"', 'template', $templateFileName), ILogger::WARN);
 			} catch (NotFoundException $e) {
 				$this->log(sprintf('Adding %s "%s"', 'template', $templateFileName));
+			} catch (\Exception $e) {
+				$this->log(sprintf('Unable to create %s "%s"', 'template', $templateFileName), ILogger::ERROR);
 			}
 
 			$templateFolder->copy($appDataTemplatesFolder);

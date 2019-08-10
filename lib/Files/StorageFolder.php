@@ -37,7 +37,7 @@ use OCP\ITempManager;
 
 class StorageFolder extends AbstractStorageNode implements FolderInterface
 {
-	use FolderIteratorTrait;
+	use FolderTrait;
 
 	/** @var array<string,string> */
 	private static $localPathCache = [];

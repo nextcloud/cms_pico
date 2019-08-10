@@ -69,6 +69,26 @@ interface FolderInterface extends NodeInterface, \RecursiveIterator
 	 *
 	 * @return FolderInterface
 	 * @throws InvalidPathException
+	 * @throws NotFoundException
+	 * @throws GenericFileException
+	 */
+	public function getFolder(string $path): FolderInterface;
+
+	/**
+	 * @param string $path
+	 *
+	 * @return FileInterface
+	 * @throws InvalidPathException
+	 * @throws NotFoundException
+	 * @throws GenericFileException
+	 */
+	public function getFile(string $path): FileInterface;
+
+	/**
+	 * @param string $path
+	 *
+	 * @return FolderInterface
+	 * @throws InvalidPathException
 	 * @throws AlreadyExistsException
 	 * @throws NotPermittedException
 	 * @throws GenericFileException

@@ -30,7 +30,6 @@ use OCA\CMSPico\Files\FolderInterface;
 use OCA\CMSPico\Files\LocalFolder;
 use OCA\CMSPico\Model\Plugin;
 use OCP\Files\AlreadyExistsException;
-use OCP\Files\InvalidPathException;
 use OCP\Files\NotFoundException;
 
 class PluginsService
@@ -124,11 +123,7 @@ class PluginsService
 		$systemPluginsFolder->sync(FolderInterface::SYNC_SHALLOW);
 
 		try {
-			/** @var FolderInterface $systemPluginFolder */
-			$systemPluginFolder = $systemPluginsFolder->get($pluginName);
-			if (!$systemPluginFolder->isFolder()) {
-				throw new PluginNotFoundException();
-			}
+			$systemPluginFolder = $systemPluginsFolder->getFolder($pluginName);
 		} catch (NotFoundException $e) {
 			throw new PluginNotFoundException();
 		}
@@ -156,11 +151,7 @@ class PluginsService
 		$appDataPluginsFolder->sync(FolderInterface::SYNC_SHALLOW);
 
 		try {
-			/** @var FolderInterface $appDataPluginFolder */
-			$appDataPluginFolder = $appDataPluginsFolder->get($pluginName);
-			if (!$appDataPluginFolder->isFolder()) {
-				throw new PluginNotFoundException();
-			}
+			$appDataPluginFolder = $appDataPluginsFolder->getFolder($pluginName);
 		} catch (NotFoundException $e) {
 			throw new PluginNotFoundException();
 		}
@@ -186,15 +177,11 @@ class PluginsService
 		$pluginSourceFolder->sync();
 
 		try {
-			/** @var LocalFolder $pluginFolder */
-			$pluginFolder = $publicPluginsFolder->get($pluginName);
-			if (!$pluginFolder->isFolder()) {
-				throw new InvalidPathException();
-			}
-
+			$publicPluginsFolder->getFolder($pluginName);
 			throw new AlreadyExistsException();
 		} catch (NotFoundException $e) {}
 
+		/** @var LocalFolder $pluginFolder */
 		$pluginFolder = $pluginSourceFolder->copy($publicPluginsFolder);
 		return new Plugin($pluginFolder, $pluginType);
 	}
@@ -211,12 +198,7 @@ class PluginsService
 		$publicPluginsFolder = $this->getPluginsFolder();
 
 		try {
-			$pluginFolder = $publicPluginsFolder->get($pluginName);
-			if (!$pluginFolder->isFolder()) {
-				throw new PluginNotFoundException();
-			}
-
-			$pluginFolder->delete();
+			$publicPluginsFolder->getFolder($pluginName)->delete();
 		} catch (NotFoundException $e) {
 			throw new PluginNotFoundException();
 		}
@@ -241,10 +223,7 @@ class PluginsService
 
 		$pluginsETag = $this->configService->getAppValue(ConfigService::PLUGINS_ETAG);
 		if ($pluginsETag) {
-			$pluginsFolder = $pluginsBaseFolder->get($pluginsETag);
-			if (!$pluginsFolder->isFolder()) {
-				throw new InvalidPathException();
-			}
+			$pluginsFolder = $pluginsBaseFolder->getFolder($pluginsETag);
 		}
 
 		if (($renewETag && !$this->renewedETag) || $forceRenewETag || !$pluginsFolder) {

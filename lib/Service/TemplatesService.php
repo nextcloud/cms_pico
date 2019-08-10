@@ -31,6 +31,7 @@ use OCA\CMSPico\Files\FolderInterface;
 use OCA\CMSPico\Files\StorageFolder;
 use OCA\CMSPico\Model\TemplateFile;
 use OCA\CMSPico\Model\Website;
+use OCP\Files\InvalidPathException;
 use OCP\Files\NotFoundException;
 
 class TemplatesService
@@ -153,18 +154,10 @@ class TemplatesService
 		$userFolder = new StorageFolder(\OC::$server->getUserFolder($website->getUserId()));
 
 		try {
-			/** @var FolderInterface $templateFolder */
-			$templateFolder = $systemFolder->get(PicoService::DIR_TEMPLATES . '/' . $templateFile);
-			if (!$templateFolder->isFolder()) {
-				throw new NotFoundException();
-			}
+			$templateFolder = $systemFolder->getFolder(PicoService::DIR_TEMPLATES . '/' . $templateFile);
 		} catch (NotFoundException $e) {
 			try {
-				/** @var FolderInterface $templateFolder */
-				$templateFolder = $appDataFolder->get(PicoService::DIR_TEMPLATES . '/' . $templateFile);
-				if (!$templateFolder->isFolder()) {
-					throw new NotFoundException();
-				}
+				$templateFolder = $appDataFolder->getFolder(PicoService::DIR_TEMPLATES . '/' . $templateFile);
 			} catch (NotFoundException $e) {
 				throw new TemplateNotFoundException();
 			}
@@ -187,7 +180,7 @@ class TemplatesService
 			$templateFile = new TemplateFile($templateFilePath, $templateData);
 
 			try {
-				$targetFolder = $websiteFolder->get($templateFile->getParent());
+				$targetFolder = $websiteFolder->getFolder($templateFile->getParent());
 			} catch (NotFoundException $e) {
 				$targetFolder = $websiteFolder->newFolder($templateFile->getParent());
 			}

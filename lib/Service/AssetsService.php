@@ -68,11 +68,7 @@ class AssetsService
 			}
 
 			/** @var StorageFile $assetFile */
-			$assetFile = $this->getAssetsFolder($website)->get($asset);
-			if (!$assetFile->isFile()) {
-				throw new InvalidPathException();
-			}
-
+			$assetFile = $this->getAssetsFolder($website)->getFile($asset);
 			$picoAsset = new PicoAsset($assetFile);
 		} catch (InvalidPathException $e) {
 			throw new AssetInvalidPathException($e);

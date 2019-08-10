@@ -130,12 +130,7 @@ class Pico extends \Pico
 		/** @var string $relativePath */
 		list($folder, $basePath, $relativePath) = $this->picoService->getRelativePath($this->website, $absolutePath);
 
-		/** @var FileInterface $file */
-		$file = $folder->get($relativePath);
-		if (!$file->isFile()) {
-			throw new InvalidPathException();
-		}
-
+		$file = $folder->getFile($relativePath);
 		return $file->getContent();
 	}
 

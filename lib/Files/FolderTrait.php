@@ -25,12 +25,47 @@ declare(strict_types=1);
 namespace OCA\CMSPico\Files;
 
 use OCP\Files\GenericFileException;
+use OCP\Files\InvalidPathException;
 use OCP\Files\NotPermittedException;
 
-trait FolderIteratorTrait
+trait FolderTrait
 {
 	/** @var \Generator */
 	private $generator;
+
+	/**
+	 * @param string $path
+	 *
+	 * @return FolderInterface
+	 * @throws InvalidPathException
+	 */
+	public function getFolder(string $path): FolderInterface
+	{
+		/** @var FolderInterface $folder */
+		$folder = $this->get($path);
+		if (!$folder->isFolder()) {
+			throw new InvalidPathException();
+		}
+
+		return $folder;
+	}
+
+	/**
+	 * @param string $path
+	 *
+	 * @return FileInterface
+	 * @throws InvalidPathException
+	 */
+	public function getFile(string $path): FileInterface
+	{
+		/** @var FileInterface $file */
+		$file = $this->get($path);
+		if (!$file->isFile()) {
+			throw new InvalidPathException();
+		}
+
+		return $file;
+	}
 
 	/**
 	 * @return \Generator

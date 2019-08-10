@@ -32,7 +32,6 @@ use OCA\CMSPico\Files\FolderInterface;
 use OCA\CMSPico\Files\LocalFolder;
 use OCA\CMSPico\Model\Theme;
 use OCP\Files\AlreadyExistsException;
-use OCP\Files\InvalidPathException;
 use OCP\Files\NotFoundException;
 
 class ThemesService
@@ -149,11 +148,7 @@ class ThemesService
 		$systemThemesFolder->sync(FolderInterface::SYNC_SHALLOW);
 
 		try {
-			/** @var FolderInterface $systemThemeFolder */
-			$systemThemeFolder = $systemThemesFolder->get($themeName);
-			if (!$systemThemeFolder->isFolder()) {
-				throw new ThemeNotFoundException();
-			}
+			$systemThemeFolder = $systemThemesFolder->getFolder($themeName);
 		} catch (NotFoundException $e) {
 			throw new ThemeNotFoundException();
 		}
@@ -181,11 +176,7 @@ class ThemesService
 		$appDataThemesFolder->sync(FolderInterface::SYNC_SHALLOW);
 
 		try {
-			/** @var FolderInterface $appDataThemeFolder */
-			$appDataThemeFolder = $appDataThemesFolder->get($themeName);
-			if (!$appDataThemeFolder->isFolder()) {
-				throw new ThemeNotFoundException();
-			}
+			$appDataThemeFolder = $appDataThemesFolder->getFolder($themeName);
 		} catch (NotFoundException $e) {
 			throw new ThemeNotFoundException();
 		}
@@ -211,15 +202,11 @@ class ThemesService
 		$themeSourceFolder->sync();
 
 		try {
-			/** @var LocalFolder $themeFolder */
-			$themeFolder = $publicThemesFolder->get($themeName);
-			if (!$themeFolder->isFolder()) {
-				throw new InvalidPathException();
-			}
-
+			$publicThemesFolder->getFolder($themeName);
 			throw new AlreadyExistsException();
 		} catch (NotFoundException $e) {}
 
+		/** @var LocalFolder $themeFolder */
 		$themeFolder = $themeSourceFolder->copy($publicThemesFolder);
 		return new Theme($themeFolder, $themeType);
 	}
@@ -236,12 +223,7 @@ class ThemesService
 		$publicThemesFolder = $this->getThemesFolder();
 
 		try {
-			$themeFolder = $publicThemesFolder->get($themeName);
-			if (!$themeFolder->isFolder()) {
-				throw new ThemeNotFoundException();
-			}
-
-			$themeFolder->delete();
+			$publicThemesFolder->getFolder($themeName)->delete();
 		} catch (NotFoundException $e) {
 			throw new ThemeNotFoundException();
 		}
@@ -266,10 +248,7 @@ class ThemesService
 
 		$themesETag = $this->configService->getAppValue(ConfigService::THEMES_ETAG);
 		if ($themesETag) {
-			$themesFolder = $themesBaseFolder->get($themesETag);
-			if (!$themesFolder->isFolder()) {
-				throw new InvalidPathException();
-			}
+			$themesFolder = $themesBaseFolder->getFolder($themesETag);
 		}
 
 		if (($renewETag && !$this->renewedETag) || $forceRenewETag || !$themesFolder) {

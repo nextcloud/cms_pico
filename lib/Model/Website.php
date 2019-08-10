@@ -317,12 +317,7 @@ class Website extends WebsiteCore
 				$ocUserFolder = \OC::$server->getUserFolder($this->getUserId());
 				$userFolder = new StorageFolder($ocUserFolder);
 
-				/** @var StorageFolder $websiteFolder */
-				$websiteFolder = $userFolder->get($this->getPath());
-				if (!$websiteFolder->isFolder()) {
-					throw new InvalidPathException();
-				}
-
+				$websiteFolder = $userFolder->getFolder($this->getPath());
 				$this->folder = $websiteFolder->fakeRoot();
 			} catch (InvalidPathException $e) {
 				throw new WebsiteInvalidFilesystemException($e);
@@ -333,11 +328,7 @@ class Website extends WebsiteCore
 
 		if ($folderName) {
 			/** @var StorageFolder $folder */
-			$folder = $this->folder->get($folderName);
-			if (!$folder->isFolder()) {
-				throw new InvalidPathException();
-			}
-
+			$folder = $this->folder->getFolder($folderName);
 			return $folder;
 		}
 
