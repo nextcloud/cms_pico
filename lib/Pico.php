@@ -28,7 +28,10 @@ namespace OCA\CMSPico;
 use HTMLPurifier;
 use HTMLPurifier_Config;
 use OCA\CMSPico\Exceptions\WebsiteInvalidFilesystemException;
+use OCA\CMSPico\Files\FileInterface;
+use OCA\CMSPico\Files\FolderInterface;
 use OCA\CMSPico\Model\Website;
+use OCA\CMSPico\Service\PicoService;
 use OCP\Files\InvalidPathException;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
@@ -36,11 +39,26 @@ use Symfony\Component\Yaml\Exception\ParseException;
 
 class Pico extends \Pico
 {
+	/** @var PicoService */
+	private $picoService;
+
 	/** @var HTMLPurifier */
 	private $htmlPurifier;
 
 	/** @var Website */
 	private $website;
+
+	/**
+	 * Pico constructor.
+	 *
+	 * {@inheritDoc}
+	 */
+	public function __construct($rootDir, $configDir, $pluginsDir, $themesDir, $enableLocalPlugins = true)
+	{
+		$this->picoService = \OC::$server->query(PicoService::class);
+
+		parent::__construct($rootDir, $configDir, $pluginsDir, $themesDir, $enableLocalPlugins);
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -95,7 +113,7 @@ class Pico extends \Pico
 	/**
 	 * Checks whether a file is readable in Nextcloud and returns the raw contents of this file
 	 *
-	 * @param string $file file path
+	 * @param string $absolutePath file path
 	 *
 	 * @return string raw contents of the file
 	 * @throws WebsiteInvalidFilesystemException
@@ -103,9 +121,20 @@ class Pico extends \Pico
 	 * @throws NotFoundException
 	 * @throws NotPermittedException
 	 */
-	public function loadFileContent($file)
+	public function loadFileContent($absolutePath)
 	{
-		return $this->website->getFileContent($file);
+		/** @var FolderInterface $folder */
+		/** @var string $basePath */
+		/** @var string $relativePath */
+		list($folder, $basePath, $relativePath) = $this->picoService->getRelativePath($this->website, $absolutePath);
+
+		/** @var FileInterface $file */
+		$file = $folder->get($relativePath);
+		if (!$file->isFile()) {
+			throw new InvalidPathException();
+		}
+
+		return $file->getContent();
 	}
 
 	/**

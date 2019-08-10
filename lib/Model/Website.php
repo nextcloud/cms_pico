@@ -33,13 +33,9 @@ use OCA\CMSPico\Exceptions\WebsiteForeignOwnerException;
 use OCA\CMSPico\Exceptions\WebsiteInvalidDataException;
 use OCA\CMSPico\Exceptions\WebsiteInvalidFilesystemException;
 use OCA\CMSPico\Exceptions\WebsiteNotPermittedException;
-use OCA\CMSPico\Files\FileInterface;
 use OCA\CMSPico\Files\StorageFile;
 use OCA\CMSPico\Files\StorageFolder;
-use OCA\CMSPico\Service\AssetsService;
 use OCA\CMSPico\Service\MiscService;
-use OCA\CMSPico\Service\PicoService;
-use OCA\CMSPico\Service\PluginsService;
 use OCA\CMSPico\Service\TemplatesService;
 use OCA\CMSPico\Service\ThemesService;
 use OCP\Files\Folder as OCFolder;
@@ -85,15 +81,6 @@ class Website extends WebsiteCore
 	/** @var IURLGenerator */
 	private $urlGenerator;
 
-	/** @var PicoService */
-	private $picoService;
-
-	/** @var AssetsService */
-	private $assetsService;
-
-	/** @var PluginsService */
-	private $pluginsService;
-
 	/** @var ThemesService */
 	private $themesService;
 
@@ -118,9 +105,6 @@ class Website extends WebsiteCore
 		$this->groupManager = \OC::$server->getGroupManager();
 		$this->rootFolder = \OC::$server->getRootFolder();
 		$this->urlGenerator = \OC::$server->getURLGenerator();
-		$this->picoService = \OC::$server->query(PicoService::class);
-		$this->assetsService = \OC::$server->query(AssetsService::class);
-		$this->pluginsService = \OC::$server->query(PluginsService::class);
 		$this->themesService = \OC::$server->query(ThemesService::class);
 		$this->templatesService = \OC::$server->query(TemplatesService::class);
 		$this->miscService = \OC::$server->query(MiscService::class);
@@ -135,58 +119,6 @@ class Website extends WebsiteCore
 	{
 		$serverTimeZone = date_default_timezone_get() ?: 'UTC';
 		return $this->config->getUserValue($this->getUserId(), 'core', 'timezone', $serverTimeZone);
-	}
-
-	/**
-	 * @param string $absolutePath
-	 *
-	 * @return string
-	 * @throws WebsiteInvalidFilesystemException
-	 * @throws InvalidPathException
-	 * @throws NotFoundException
-	 * @throws NotPermittedException
-	 */
-	public function getFileContent(string $absolutePath): string
-	{
-		$folder = $this->picoService->getContentFolder($this);
-		$basePath = $this->picoService->getContentPath($this);
-
-		try {
-			$relativePath = $this->miscService->getRelativePath($absolutePath, $basePath);
-		} catch (InvalidPathException $e) {
-			$folder = $this->assetsService->getAssetsFolder($this);
-			$basePath = $this->assetsService->getAssetsPath($this);
-
-			try {
-				$relativePath = $this->miscService->getRelativePath($absolutePath, $basePath);
-			} catch (InvalidPathException $e) {
-				$folder = $this->pluginsService->getPluginsFolder();
-				$basePath = $this->pluginsService->getPluginsPath();
-
-				try {
-					$relativePath = $this->miscService->getRelativePath($absolutePath, $basePath);
-				} catch (InvalidPathException $e) {
-					$folder = $this->themesService->getThemesFolder();
-					$basePath = $this->themesService->getThemesPath();
-
-					try {
-						$relativePath = $this->miscService->getRelativePath($absolutePath, $basePath);
-					} catch (InvalidPathException $e) {
-						// the requested file is neither in the content nor assets, plugins or themes folder
-						// Pico mustn't have access to any other directory
-						throw new InvalidPathException();
-					}
-				}
-			}
-		}
-
-		/** @var FileInterface $file */
-		$file = $folder->get($relativePath);
-		if (!$file->isFile()) {
-			throw new InvalidPathException();
-		}
-
-		return $file->getContent();
 	}
 
 	/**
