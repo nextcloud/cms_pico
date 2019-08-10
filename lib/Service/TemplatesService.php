@@ -31,7 +31,6 @@ use OCA\CMSPico\Files\FolderInterface;
 use OCA\CMSPico\Files\StorageFolder;
 use OCA\CMSPico\Model\TemplateFile;
 use OCA\CMSPico\Model\Website;
-use OCP\Files\InvalidPathException;
 use OCP\Files\NotFoundException;
 
 class TemplatesService
@@ -129,55 +128,27 @@ class TemplatesService
 	 *
 	 * @throws TemplateNotFoundException
 	 */
-	public function installTemplates(Website $website)
+	public function installTemplate(Website $website)
 	{
-		$filesIterator = function (FolderInterface $folder, string $basePath = '') use (&$filesIterator) {
-			$files = [];
-			foreach ($folder as $node) {
-				if ($node->isFolder()) {
-					/** @var FolderInterface $node */
-					$files += $filesIterator($node, $basePath . '/' . $node->getName());
-				} else {
-					/** @var FileInterface $node */
-					$files[$basePath . '/' . $node->getName()] = $node->getContent();
-				}
-			}
-
-			return $files;
-		};
-
-		$websitePath = $website->getPath();
-		$templateFile = $website->getTemplateSource();
-
-		$systemFolder = $this->fileService->getSystemFolder();
-		$appDataFolder = $this->fileService->getAppDataFolder();
 		$userFolder = new StorageFolder(\OC::$server->getUserFolder($website->getUserId()));
 
 		try {
-			$templateFolder = $systemFolder->getFolder(PicoService::DIR_TEMPLATES . '/' . $templateFile);
-		} catch (NotFoundException $e) {
-			try {
-				$templateFolder = $appDataFolder->getFolder(PicoService::DIR_TEMPLATES . '/' . $templateFile);
-			} catch (NotFoundException $e) {
-				throw new TemplateNotFoundException();
-			}
-		}
+			$userFolder->get($website->getPath());
 
-		try {
-			$userFolder->get($websitePath);
-
-			// website folder exists, we don't want to mess around
-			// with a user's files, thus we (silently) bail out
+			// website folder exists; since we don't want to
+			// mess around with a user's files, bail out
 			return;
-		} catch (NotFoundException $e) {
-			$websiteFolder = $userFolder->newFolder($websitePath);
-		}
+		} catch (NotFoundException $e) {}
 
+		$websiteFolder = $userFolder->newFolder($website->getPath());
+
+		$templateFolder = $this->getTemplateFolder($website);
 		$templateFolder->sync();
 
-		$websiteData = $this->generateWebsiteData($website);
-		foreach ($filesIterator($templateFolder) as $templateFilePath => $templateData) {
-			$templateFile = new TemplateFile($templateFilePath, $templateData);
+		$templateData = $this->getTemplateData($website);
+		foreach (new \RecursiveIteratorIterator($templateFolder) as $file) {
+			/** @var FileInterface $file */
+			$templateFile = new TemplateFile($file);
 
 			try {
 				$targetFolder = $websiteFolder->getFolder($templateFile->getParent());
@@ -189,7 +160,7 @@ class TemplatesService
 				continue;
 			}
 
-			$templateFile->applyWebsiteData($websiteData);
+			$templateFile->setTemplateData($templateData);
 			$templateFile->copy($targetFolder);
 		}
 	}
@@ -199,10 +170,42 @@ class TemplatesService
 	 *
 	 * @return array<string,string>
 	 */
-	private function generateWebsiteData(Website $website): array
+	private function getTemplateData(Website $website): array
 	{
 		return [
 			'site_title' => $website->getName()
 		];
+	}
+
+	/**
+	 * @param Website $website
+	 *
+	 * @return FolderInterface
+	 * @throws TemplateNotFoundException
+	 */
+	public function getTemplateFolder(Website $website): FolderInterface
+	{
+		$templateName = $website->getTemplateSource();
+		if (!$templateName) {
+			throw new TemplateNotFoundException();
+		}
+
+		$systemTemplatesFolder = $this->fileService->getSystemFolder(PicoService::DIR_TEMPLATES);
+		$systemTemplatesFolder->sync(FolderInterface::SYNC_SHALLOW);
+
+		$customTemplatesFolder = $this->fileService->getAppDataFolder(PicoService::DIR_TEMPLATES);
+		$customTemplatesFolder->sync(FolderInterface::SYNC_SHALLOW);
+
+		try {
+			$templateFolder = $systemTemplatesFolder->getFolder($templateName);
+		} catch (NotFoundException $e) {
+			try {
+				$templateFolder = $customTemplatesFolder->getFolder($templateName);
+			} catch (NotFoundException $e) {
+				throw new TemplateNotFoundException();
+			}
+		}
+
+		return $templateFolder->fakeRoot();
 	}
 }

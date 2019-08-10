@@ -132,7 +132,7 @@ class WebsitesService
 			// in fact we want the website not to exist yet
 		}
 
-		$this->templatesService->installTemplates($website);
+		$this->templatesService->installTemplate($website);
 		$this->websiteRequest->create($website);
 	}
 

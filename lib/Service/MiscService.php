@@ -23,11 +23,39 @@
 
 namespace OCA\CMSPico\Service;
 
+use OCA\CMSPico\Files\FileInterface;
+use OCP\Files\GenericFileException;
 use OCP\Files\InvalidPathException;
+use OCP\Files\NotPermittedException;
 use OCP\Security\ISecureRandom;
 
 class MiscService
 {
+	/** @var string[] */
+	private $textFileMagic;
+
+	/** @var string[] */
+	private $binaryFileMagic;
+
+	/**
+	 * MiscService constructor.
+	 */
+	public function __construct()
+	{
+		$this->textFileMagic = [
+			hex2bin('EFBBBF'),
+			hex2bin('0000FEFF'),
+			hex2bin('FFFE0000'),
+			hex2bin('FEFF'),
+			hex2bin('FFFE')
+		];
+
+		$this->binaryFileMagic = [
+			'%PDF',
+			hex2bin('89') . 'PNG'
+		];
+	}
+
 	/**
 	 * @param string $path
 	 *
@@ -110,5 +138,43 @@ class MiscService
 		$randomChars = ISecureRandom::CHAR_UPPER . ISecureRandom::CHAR_LOWER . ISecureRandom::CHAR_DIGITS;
 		$random = \OC::$server->getSecureRandom()->generate($length, $randomChars);
 		return ($prefix ? $prefix . '.' : '') . $random . ($suffix ? '.' . $suffix : '');
+	}
+
+	/**
+	 * @param FileInterface $file
+	 *
+	 * @return bool
+	 * @throws NotPermittedException
+	 * @throws GenericFileException
+	 */
+	public function isBinaryFile(FileInterface $file): bool
+	{
+		$buffer = false;
+
+		try {
+			$buffer = file_get_contents($file->getLocalPath(), false, null, 0, 1024);
+		} catch (\Exception $e) {}
+
+		if ($buffer === false) {
+			$buffer = substr($file->getContent(), 0, 1024);
+		}
+
+		if ($buffer === '') {
+			return false;
+		}
+
+		foreach ($this->textFileMagic as $textFileMagic) {
+			if (substr_compare($buffer, $textFileMagic, 0, strlen($textFileMagic)) === 0) {
+				return false;
+			}
+		}
+
+		foreach ($this->binaryFileMagic as $binaryFileMagic) {
+			if (substr_compare($buffer, $binaryFileMagic, 0, strlen($binaryFileMagic)) === 0) {
+				return true;
+			}
+		}
+
+		return (strpos($buffer, "\0") !== false);
 	}
 }

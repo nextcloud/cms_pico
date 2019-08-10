@@ -25,22 +25,161 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Model;
 
-use OCA\CMSPico\Files\MemoryFile;
+use OCA\CMSPico\Files\AbstractNode;
+use OCA\CMSPico\Files\FileInterface;
+use OCA\CMSPico\Files\FolderInterface;
+use OCA\CMSPico\Files\NodeInterface;
+use OCP\Constants;
+use OCP\Files\GenericFileException;
+use OCP\Files\InvalidPathException;
+use OCP\Files\NotFoundException;
+use OCP\Files\NotPermittedException;
 
-class TemplateFile extends MemoryFile
+class TemplateFile extends AbstractNode implements FileInterface
 {
+	/** @var FileInterface */
+	private $file;
+
+	/** @var bool */
+	private $isBinary;
+
+	/** @var array<string,string> */
+	private $data = [];
+
+	/**
+	 * TemplateFile constructor.
+	 *
+	 * @param FileInterface $file
+	 */
+	public function __construct(FileInterface $file)
+	{
+		parent::__construct();
+
+		$this->file = $file;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function rename(string $name): NodeInterface
+	{
+		throw new NotPermittedException();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function delete()
+	{
+		// nothing to do
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getPath(): string
+	{
+		return $this->file->getPath();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getLocalPath(): string
+	{
+		throw new NotFoundException();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getName(): string
+	{
+		return $this->file->getName();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getParent(): string
+	{
+		return $this->file->getParent();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getParentNode(): FolderInterface
+	{
+		throw new InvalidPathException();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function isLocal(): bool
+	{
+		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getPermissions(): int
+	{
+		return Constants::PERMISSION_READ | Constants::PERMISSION_DELETE;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getExtension(): string
+	{
+		return $this->file->getExtension();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getContent(): string
+	{
+		if ($this->isBinary() || !$this->data) {
+			return $this->file->getContent();
+		}
+
+		return str_replace(array_keys($this->data), $this->data, $this->file->getContent());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function putContent(string $data)
+	{
+		throw new NotPermittedException();
+	}
+
+	/**
+	 * @return bool
+	 * @throws NotPermittedException
+	 * @throws GenericFileException
+	 */
+	public function isBinary(): bool
+	{
+		if ($this->isBinary === null) {
+			$this->isBinary = $this->miscService->isBinaryFile($this->file);
+		}
+
+		return $this->isBinary;
+	}
+
 	/**
 	 * @param array<string,string> $data
 	 */
-	public function applyWebsiteData(array $data)
+	public function setTemplateData(array $data)
 	{
-		$variables = [];
+		$this->data = [];
 		foreach ($data as $key => $value) {
-			$variables['%%' . $key . '%%'] = $value;
+			$this->data['%%' . $key . '%%'] = $value;
 		}
-
-		$content = $this->getContent();
-		$content = str_replace(array_keys($variables), $variables, $content);
-		$this->putContent($content);
 	}
 }

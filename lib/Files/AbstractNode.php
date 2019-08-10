@@ -31,7 +31,7 @@ use OCP\Files\InvalidPathException;
 abstract class AbstractNode implements NodeInterface
 {
 	/** @var MiscService */
-	private $miscService;
+	protected $miscService;
 
 	/**
 	 * AbstractNode constructor.
