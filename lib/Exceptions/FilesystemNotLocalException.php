@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Exceptions;
 
-class FilesystemEncryptedException extends \Exception
+class FilesystemNotLocalException extends \Exception
 {
 
 }

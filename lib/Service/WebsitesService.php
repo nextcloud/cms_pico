@@ -25,12 +25,11 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Service;
 
-use OC\Encryption\Manager as EncryptionManager;
 use OCA\CMSPico\Db\WebsitesRequest;
 use OCA\CMSPico\Exceptions\AssetInvalidPathException;
 use OCA\CMSPico\Exceptions\AssetNotFoundException;
 use OCA\CMSPico\Exceptions\AssetNotPermittedException;
-use OCA\CMSPico\Exceptions\FilesystemEncryptedException;
+use OCA\CMSPico\Exceptions\FilesystemNotLocalException;
 use OCA\CMSPico\Exceptions\PageInvalidPathException;
 use OCA\CMSPico\Exceptions\PageNotFoundException;
 use OCA\CMSPico\Exceptions\PageNotPermittedException;
@@ -55,9 +54,6 @@ class WebsitesService
 
 	/** @var int */
 	const LINK_MODE_SHORT = 2;
-
-	/** @var EncryptionManager */
-	private $encryptionManager;
 
 	/** @var WebsitesRequest */
 	private $websiteRequest;
@@ -97,7 +93,6 @@ class WebsitesService
 		AssetsService $assetsService,
 		MiscService $miscService
 	) {
-		$this->encryptionManager = \OC::$server->getEncryptionManager();
 		$this->websiteRequest = $websiteRequest;
 		$this->configService = $configService;
 		$this->templatesService = $templatesService;
@@ -243,7 +238,7 @@ class WebsitesService
 	 * @throws WebsiteNotFoundException
 	 * @throws WebsiteInvalidFilesystemException
 	 * @throws WebsiteNotPermittedException
-	 * @throws FilesystemEncryptedException
+	 * @throws FilesystemNotLocalException
 	 * @throws PageInvalidPathException
 	 * @throws PageNotFoundException
 	 * @throws PageNotPermittedException
@@ -264,8 +259,8 @@ class WebsitesService
 		$website->setViewer($viewer ?: '');
 		$website->setPage($page);
 
-		if ($this->encryptionManager->isEnabled()) {
-			throw new FilesystemEncryptedException();
+		if (!$website->getWebsiteFolder()->isLocal()) {
+			throw new FilesystemNotLocalException();
 		}
 
 		return $this->picoService->getPage($website);
@@ -280,7 +275,7 @@ class WebsitesService
 	 * @throws WebsiteNotFoundException
 	 * @throws WebsiteInvalidFilesystemException
 	 * @throws WebsiteNotPermittedException
-	 * @throws FilesystemEncryptedException
+	 * @throws FilesystemNotLocalException
 	 * @throws AssetInvalidPathException
 	 * @throws AssetNotFoundException
 	 * @throws AssetNotPermittedException
@@ -300,8 +295,8 @@ class WebsitesService
 		$website->setViewer($viewer ?: '');
 		$website->setPage(PicoService::DIR_ASSETS . '/' . $asset);
 
-		if ($this->encryptionManager->isEnabled()) {
-			throw new FilesystemEncryptedException();
+		if (!$website->getWebsiteFolder()->isLocal()) {
+			throw new FilesystemNotLocalException();
 		}
 
 		return $this->assetsService->getAsset($website);

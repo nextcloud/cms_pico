@@ -28,7 +28,7 @@ use Doctrine\DBAL\Schema\SchemaException;
 use OC\Encryption\Manager as EncryptionManager;
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Db\CoreRequestBuilder;
-use OCA\CMSPico\Exceptions\FilesystemEncryptedException;
+use OCA\CMSPico\Exceptions\FilesystemNotLocalException;
 use OCA\CMSPico\Exceptions\FilesystemNotWritableException;
 use OCA\CMSPico\Model\Plugin;
 use OCA\CMSPico\Model\Theme;
@@ -257,12 +257,12 @@ class Version010000 extends SimpleMigrationStep
 	}
 
 	/**
-	 * @throws FilesystemEncryptedException
+	 * @throws FilesystemNotLocalException
 	 */
 	private function checkEncryptedFilesystem()
 	{
 		if ($this->encryptionManager->isEnabled()) {
-			throw new FilesystemEncryptedException($this->l10n->t(
+			throw new FilesystemNotLocalException($this->l10n->t(
 				'Failed to enable Pico CMS for Nextcloud: You can\'t host websites on a encrypted Nextcloud.'
 			));
 		}

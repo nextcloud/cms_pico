@@ -27,7 +27,7 @@ OC.L10N.register(
         "The requested website could not be found on the server. Maybe the website was deleted?": "Die angeforderte Webseite konnte nicht gefunden werden. Vielleicht wurde sie zwischenzeitlich gelöscht?",
         "The file and directory structure of this website appears to be broken und thus could not be accessed.": "Die Datei- und Verzeichnisstruktur dieser Webseite ist fehlerhaft und daher nicht zugänglich.",
         "You don't have access to this private website. Maybe the share was deleted or has expired?": "Sie keinen Zugriff auf diese private Webseite. Vielleicht wurde die Freigabe zwischenzeitlich aufgehoben oder ist abgelaufen?",
-        "This website is hosted on a encrypted Nextcloud instance and thus could not be accessed.": "Diese Webseite wird auf einer verschlüsselten Nextcloud gehostet und ist daher nicht zugänglich.",
+        "This website is hosted on a non-local storage and thus could not be accessed.": "Diese Webseite wurde auf einem nicht-lokalen Speicher abgelegt und ist daher nicht zugänglich.",
         "This website uses a theme that could not be found on the server and thus could not be built.": "Bei der Darstellung dieser Webseite ist ein Fehler aufgetreten, da sie ein Design verwendet, das auf dem Server nicht mehr verfügbar ist.",
         "This website uses a incompatible theme and thus could not be built.": "Bei der Darstellung dieser Webseite ist ein Fehler aufgetreten, da sie ein Design verwendet, das inkompatibel ist.",
         "The requested website page could not be found on the server. Maybe the page was deleted?": "Die angeforderte Seite der Webseite konnte nicht gefunden werden. Vielleicht wurde sie zwischenzeitlich gelöscht?",
@@ -127,7 +127,8 @@ OC.L10N.register(
         "The identifier of the website is too long.": "Die Kennung der Webseite ist zu lang.",
         "The identifier of the website can only contains alpha numeric chars.": "Die Kennung der Webseite darf nur aus Kleinbuchstaben bestehen.",
         "The path of the website is invalid.": "Das Verzeichnis der Webseite ist ungültig.",
-        "Parent folder of the website's path not found.": "Das Verzeichnis, in dem die Webseite gespeichert werden soll, existiert nicht."
+        "Parent folder of the website's path not found.": "Das Verzeichnis, in dem die Webseite gespeichert werden soll, existiert nicht.",
+        "The website's path is stored on a non-local storage.": "Das Verzeichnis, in dem die Webseite gespeichert werden soll, liegt auf einem nicht-lokalen Speicher."
     },
     "nplurals=2; plural=(n != 1);"
 );

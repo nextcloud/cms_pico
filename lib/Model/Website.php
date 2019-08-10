@@ -253,23 +253,38 @@ class Website extends WebsiteCore
 			);
 		}
 
-		$userFolder = \OC::$server->getUserFolder($this->getUserId());
+		$userFolder = new StorageFolder(\OC::$server->getUserFolder($this->getUserId()));
 
 		try {
-			/** @var OCFolder $ocFolder */
-			$ocFolder = $userFolder->get(dirname($path));
-			if (!($ocFolder instanceof OCFolder)) {
-				throw new InvalidPathException();
-			}
-		} catch (\Exception $e) {
-			if (($e instanceof InvalidPathException) || ($e instanceof NotFoundException)) {
-				throw new WebsiteInvalidDataException(
-					'path',
-					$this->l10n->t('Parent folder of the website\'s path not found.')
-				);
-			}
+			$websiteBaseFolder = $userFolder->getFolder(dirname($path));
 
-			throw $e;
+			try {
+				$websiteFolder = $websiteBaseFolder->getFolder(basename($path));
+
+				if (!$websiteFolder->isLocal()) {
+					throw new WebsiteInvalidDataException(
+						'path',
+						$this->l10n->t('The website\'s path is stored on a non-local storage.')
+					);
+				}
+			} catch (NotFoundException $e) {
+				if (!$websiteBaseFolder->isLocal()) {
+					throw new WebsiteInvalidDataException(
+						'path',
+						$this->l10n->t('The website\'s path is stored on a non-local storage.')
+					);
+				}
+			}
+		} catch (InvalidPathException $e) {
+			throw new WebsiteInvalidDataException(
+				'path',
+				$this->l10n->t('Parent folder of the website\'s path not found.')
+			);
+		} catch (NotFoundException $e) {
+			throw new WebsiteInvalidDataException(
+				'path',
+				$this->l10n->t('Parent folder of the website\'s path not found.')
+			);
 		}
 	}
 
