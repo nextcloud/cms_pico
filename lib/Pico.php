@@ -30,6 +30,8 @@ use HTMLPurifier_Config;
 use OCA\CMSPico\Exceptions\WebsiteInvalidFilesystemException;
 use OCA\CMSPico\Files\FileInterface;
 use OCA\CMSPico\Files\FolderInterface;
+use OCA\CMSPico\Files\Glob\GlobIterator;
+use OCA\CMSPico\Files\NodeInterface;
 use OCA\CMSPico\Model\Website;
 use OCA\CMSPico\Service\PicoService;
 use OCP\Files\InvalidPathException;
@@ -212,5 +214,96 @@ class Pico extends \Pico
 		}
 
 		return $this->htmlPurifier;
+	}
+
+	/**
+	 * @param string $absolutePath
+	 * @param string $fileExtension
+	 * @param int    $order
+	 *
+	 * @return string[]
+	 * @throws WebsiteInvalidFilesystemException
+	 * @throws InvalidPathException
+	 */
+	public function getFiles($absolutePath, $fileExtension = '', $order = \Pico::SORT_ASC)
+	{
+		/** @var FolderInterface $folder */
+		/** @var string $basePath */
+		/** @var string $relativePath */
+		list($folder, $basePath, $relativePath) = $this->picoService->getRelativePath($this->website, $absolutePath);
+
+		if ($folder->isLocal()) {
+			return parent::getFiles($absolutePath, $fileExtension, $order);
+		}
+
+		$folderFilter = function (NodeInterface $node, int $key, FolderInterface $folder) use ($fileExtension) {
+			$fileName = $node->getName();
+
+			// exclude hidden files/dirs starting with a .
+			// exclude files ending with a ~ (vim/nano backup) or # (emacs backup)
+			if (($fileName[0] === '.') || in_array(substr($fileName, -1), [ '~', '#' ], true)) {
+				return false;
+			}
+
+			if ($node->isFile()) {
+				/** @var FileInterface $node */
+				if ($fileExtension && ($fileExtension !== '.' . $node->getExtension())) {
+					return false;
+				}
+			}
+
+			return true;
+		};
+
+		try {
+			$folderIterator = new \RecursiveCallbackFilterIterator($folder->fakeRoot(), $folderFilter);
+
+			$result = [];
+			foreach (new \RecursiveIteratorIterator($folderIterator) as $file) {
+				$result[] = $basePath . '/' . $relativePath . $file->getPath();
+			}
+
+			return ($order === \Pico::SORT_DESC) ? array_reverse($result) : $result;
+		} catch (\Exception $e) {
+			return [];
+		}
+	}
+
+	/**
+	 * @param string $absolutePathPattern
+	 * @param int    $order
+	 *
+	 * @return string[]
+	 * @throws WebsiteInvalidFilesystemException
+	 * @throws InvalidPathException
+	 */
+	public function getFilesGlob($absolutePathPattern, $order = \Pico::SORT_ASC)
+	{
+		/** @var FolderInterface $folder */
+		/** @var string $basePath */
+		/** @var string $pattern */
+		list($folder, $basePath, $pattern) = $this->picoService->getRelativePath($this->website, $absolutePathPattern);
+
+		if ($folder->isLocal()) {
+			return parent::getFiles($absolutePathPattern, $order);
+		}
+
+		try {
+			$result = [];
+			foreach (new GlobIterator($folder, $pattern) as $file) {
+				$fileName = $file->getName();
+
+				// exclude files ending with a ~ (vim/nano backup) or # (emacs backup)
+				if (in_array(substr($fileName, -1), [ '~', '#' ], true)) {
+					continue;
+				}
+
+				$result[] = $basePath . $file->getPath();
+			}
+
+			return ($order === \Pico::SORT_DESC) ? array_reverse($result) : $result;
+		} catch (\Exception $e) {
+			return [];
+		}
 	}
 }
