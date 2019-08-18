@@ -45,7 +45,7 @@ OC.L10N.register(
     "Add custom template" : "Toevoegen maatwerksjabloon",
     "Delete custom template" : "Verwijderen maatwerksjabloon",
     "Delete custom theme" : "Verwijderen maatwerkthema",
-    "Your current websites" : "Je huidige websites",
+    "Your current websites" : "Je huidige websites",
     "Name" : "Naam",
     "Address" : "Adres",
     "Local directory" : "Lokale directory",
