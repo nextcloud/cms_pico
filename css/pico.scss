@@ -375,6 +375,16 @@
 		&.indent {
 			margin-left: 2em;
 		}
+
+		a[href] {
+			color: var(--color-text-light);
+			border-bottom: 1px dotted var(--color-text-lighter);
+
+			&:hover {
+				color: var(--color-main-text);
+				border-bottom-color: transparent;
+			}
+		}
 	}
 
 	.note,

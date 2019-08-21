@@ -39,8 +39,40 @@ style(Application::APP_NAME, 'pico');
 	<div class="message large">
 		<div class="icon icon-info"></div>
 		<div>
-			<p><?php p($l->t(
-				'Pico CMS for Nextcloud allows you to …'
+			<p><?php print_unescaped($l->t(
+				'<a href="https://apps.nextcloud.com/apps/cms_pico">Pico CMS for Nextcloud</a> combines the power of '
+				. '<a href="http://picocms.org/"><strong>Pico</strong></a> and Nextcloud to create simple, secure, '
+				. 'shareable and amazingly powerful websites with just a few clicks. Pico is a stupidly simple, '
+				. 'blazing fast, flat file CMS - making the web easy!'
+			)); ?></p>
+
+			<p><?php print_unescaped($l->t(
+				'Start a blog, share your resume with the world, create a plan for world domination and only share '
+				. 'it with the right friends or build a knowledge base and let the smart ones among your colleagues '
+				. 'help out. Pico CMS for Nextcloud allows you to create and manage your own websites. Creating a new '
+				. 'page with Pico is no more than creating a simple text file in your Nextcloud files. No config is '
+				. 'required, no utterly complex management interfaces - just files. It\'s the perfect match with '
+				. 'Nextcloud. Secure Sharing, Collaboration, Access Control - not just for your files, but also your '
+				. 'websites, all made possible by Pico CMS for Nextcloud! Breaking the boundaries between your Mobile '
+				. '& Desktop devices and your Server.'
+			)); ?></p>
+
+			<p><?php print_unescaped($l->t(
+				'A website consist of just a bunch of <code class="inline">.md</code> text files in your Nextcloud '
+				. 'files. <code class="inline">.md</code> stands for <a href="https://www.markdownguide.org/"><strong>'
+				. 'Markdown</strong></a> - a super simple and intuitive markup to create headings, paragraphs, text '
+				. 'formatting, lists, images and links. But don\'t despair - you don\'t have to learn yet another '
+				. 'language if you don\'t want to. Try Nextcloud\'s <a href="https://apps.nextcloud.com/apps/text">'
+				. 'Text</a> or <a href="https://apps.nextcloud.com/apps/files_markdown">Markdown Editor</a> apps to '
+				. 'make easy things stupidly simple. But what about meta data like a page\'s title or release date? '
+				. 'Guess right, it\'s all in one place. At the top of your Markdown files you can place a block with '
+				. 'such meta data - called the <a href="https://en.wikipedia.org/wiki/YAML"><strong>YAML</strong></a> '
+				. 'Front Matter. Creating websites can\'t be easier…'
+			)); ?></p>
+
+			<p><?php print_unescaped($l->t(
+				'You want to learn more about Pico CMS for Nextcloud? Easy! Just create your first personal website '
+				. 'using the "sample_pico" template. Pico\'s sample contents will explain all you need to know…'
 			)); ?></p>
 
 			<p><?php p($l->t('You will be able to access your websites using URLs like the following:')); ?>
