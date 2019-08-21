@@ -141,6 +141,8 @@ class Website extends WebsiteCore
 			foreach ($groupAccess as $group) {
 				if ($group === 'public') {
 					return;
+				} elseif ($group === 'private') {
+					continue;
 				}
 
 				if ($this->getViewer() && $this->groupManager->groupExists($group)) {
