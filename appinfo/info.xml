@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <info xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	  xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
+		xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
 	<id>cms_pico</id>
 	<name>Pico CMS</name>
 	<summary>Create websites using Pico CMS for Nextcloud</summary>
@@ -25,29 +25,34 @@ You want to learn more about Pico CMS for Nextcloud? Easy! Just download and ena
 	</description>
 	<version>1.0.0</version>
 	<licence>agpl</licence>
-	<author>Maxence Lange</author>
-	<author>Daniel Rudolf</author>
+	<author homepage="https://github.com/daita">Maxence Lange</author>
+	<author homepage="https://github.com/PhrozenByte">Daniel Rudolf</author>
 	<namespace>CMSPico</namespace>
 	<documentation>
 		<admin>https://github.com/nextcloud/cms_pico/wiki</admin>
 		<user>https://github.com/nextcloud/cms_pico/wiki</user>
 	</documentation>
+	<category>social</category>
+	<category>integration</category>
 	<category>tools</category>
 	<website>https://github.com/nextcloud/cms_pico</website>
+	<discussion>https://help.nextcloud.com/c/apps/cms-pico</discussion>
 	<bugs>https://github.com/nextcloud/cms_pico/issues</bugs>
 	<repository>https://github.com/nextcloud/cms_pico.git</repository>
 	<screenshot>https://raw.githubusercontent.com/nextcloud/cms_pico/master/screenshots/list_websites.png</screenshot>
+	<screenshot>https://raw.githubusercontent.com/nextcloud/cms_pico/master/screenshots/new_website.png</screenshot>
+	<screenshot>https://raw.githubusercontent.com/nextcloud/cms_pico/master/screenshots/website.png</screenshot>
+	<screenshot>https://raw.githubusercontent.com/nextcloud/cms_pico/master/screenshots/custom.png</screenshot>
 	<dependencies>
 		<nextcloud min-version="14" max-version="17"/>
+		<php min-version="7.0.0"/>
 	</dependencies>
-
 	<settings>
 		<admin>OCA\CMSPico\Settings\Admin</admin>
 		<admin-section>OCA\CMSPico\Settings\AdminSection</admin-section>
 		<personal>OCA\CMSPico\Settings\Personal</personal>
 		<personal-section>OCA\CMSPico\Settings\PersonalSection</personal-section>
 	</settings>
-
 	<repair-steps>
 		<install>
 			<step>OCA\CMSPico\Migration\AppDataRepairStep</step>
