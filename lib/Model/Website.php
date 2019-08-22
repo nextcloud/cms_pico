@@ -329,6 +329,18 @@ class Website extends WebsiteCore
 	 */
 	public function getWebsiteFolder(string $folderName = null): StorageFolder
 	{
+		if ($this->folder !== null) {
+			try {
+				// NC doesn't guarantee that mounts are present for the whole request lifetime
+				// for example, if you call \OC\Files\Utils\Scanner::scan(), all mounts are reset
+				// this makes OCNode instances, which rely on mounts of different users than the current, unusable
+				// by calling OCFolder::get('') we can detect this situation and re-init the required mounts
+				$this->folder->get('');
+			} catch (NotFoundException $e) {
+				$this->folder = null;
+			}
+		}
+
 		if ($this->folder === null) {
 			try {
 				$ocUserFolder = \OC::$server->getUserFolder($this->getUserId());
