@@ -2,7 +2,6 @@
 /**
  * CMS Pico - Create websites using Pico CMS for Nextcloud.
  *
- * @copyright Copyright (c) 2017, Maxence Lange (<maxence@artificial-owl.com>)
  * @copyright Copyright (c) 2019, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
  *
  * @license GNU AGPL version 3 or any later version
@@ -23,44 +22,9 @@
 
 declare(strict_types=1);
 
-namespace OCA\CMSPico\AppInfo;
+namespace OCA\CMSPico\Exceptions;
 
-use OCP\AppFramework\App;
-use OCP\Util;
-
-class Application extends App
+class ComposerException extends \Exception
 {
-	/** @var string */
-	const APP_NAME = 'cms_pico';
 
-	/**
-	 * @param array $params
-	 */
-	public function __construct(array $params = [])
-	{
-		parent::__construct(self::APP_NAME, $params);
-
-		$this->registerAutoloader();
-		$this->registerHooks();
-	}
-
-	/**
-	 * Register autoloader.
-	 */
-	public function registerAutoloader()
-	{
-		$appPath = \OC_APP::getAppPath(Application::APP_NAME);
-		if (is_file($appPath . '/vendor/autoload.php')) {
-			require_once($appPath . '/vendor/autoload.php');
-		}
-	}
-
-	/**
-	 * Register hooks.
-	 */
-	public function registerHooks()
-	{
-		Util::connectHook('OC_User', 'post_deleteUser', '\OCA\CMSPico\Hooks\UserHooks', 'onUserDeleted');
-	}
 }
-

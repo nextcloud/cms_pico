@@ -28,6 +28,7 @@ use Doctrine\DBAL\Schema\SchemaException;
 use OC\Encryption\Manager as EncryptionManager;
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Db\CoreRequestBuilder;
+use OCA\CMSPico\Exceptions\ComposerException;
 use OCA\CMSPico\Exceptions\FilesystemNotLocalException;
 use OCA\CMSPico\Exceptions\FilesystemNotWritableException;
 use OCA\CMSPico\Model\Plugin;
@@ -162,6 +163,7 @@ class Version010000 extends SimpleMigrationStep
 	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options)
 	{
 		$this->migratePrivateWebsites();
+		$this->checkComposer();
 		$this->createPublicFolder();
 		$this->checkEncryptedFilesystem();
 		$this->migrateCustomThemes();
@@ -202,6 +204,28 @@ class Version010000 extends SimpleMigrationStep
 		}
 
 		$selectCursor->closeCursor();
+	}
+
+	/**
+	 * @throws ComposerException
+	 */
+	private function checkComposer()
+	{
+		$appPath = \OC_APP::getAppPath(Application::APP_NAME);
+		if (!is_file($appPath . '/vendor/autoload.php')) {
+			try {
+				$relativeAppPath = $this->miscService->getRelativePath($appPath) . '/';
+			} catch (InvalidPathException $e) {
+				$relativeAppPath = 'apps/' . Application::APP_NAME . '/';
+			}
+
+			throw new ComposerException($this->l10n->t(
+				'Failed to enable Pico CMS for Nextcloud: Couldn\'t find "%s". Make sure to install the app\'s '
+						. 'dependencies by executing \`composer install\` in the app\'s install directory below "%s". '
+						. 'Then try again enabling Pico CMS for Nextcloud.',
+				[ $relativeAppPath . 'vendor/autoload.php', $relativeAppPath ]
+			));
+		}
 	}
 
 	/**
