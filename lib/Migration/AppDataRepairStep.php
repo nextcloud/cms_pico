@@ -89,6 +89,9 @@ class AppDataRepairStep implements IRepairStep
 	 */
 	public function run(IOutput $output)
 	{
+		$this->log('Syncing Pico CMS app data folder …');
+		$this->syncAppDataFolder();
+
 		$this->log('Copying Pico CMS config …');
 		$this->copyConfig();
 
@@ -100,6 +103,14 @@ class AppDataRepairStep implements IRepairStep
 
 		$this->log('Publishing Pico CMS plugins …');
 		$this->publishPlugins();
+	}
+
+	/**
+	 * @return void
+	 */
+	private function syncAppDataFolder()
+	{
+		$this->fileService->getAppDataFolder()->sync();
 	}
 
 	/**

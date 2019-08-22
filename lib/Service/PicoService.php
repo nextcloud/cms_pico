@@ -317,11 +317,7 @@ class PicoService
 	 */
 	public function getConfigFolder(): StorageFolder
 	{
-		/** @var StorageFolder $configFolder */
-		$configFolder = $this->fileService->getAppDataFolder(self::DIR_CONFIG)->fakeRoot();
-		$configFolder->sync();
-
-		return $configFolder;
+		return $this->fileService->getAppDataFolder(self::DIR_CONFIG)->fakeRoot();
 	}
 
 	/**
