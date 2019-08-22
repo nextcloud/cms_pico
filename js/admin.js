@@ -132,8 +132,6 @@
 				$newItemButton = this.$element.find('.action-new'),
 				that = this;
 
-			this.$element.find('.has-tooltip').tooltip();
-
 			if ($newItem.val()) {
 				$newItemButton.on('click.CMSPicoAdminList', function (event) {
 					event.preventDefault();

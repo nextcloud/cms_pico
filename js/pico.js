@@ -150,6 +150,9 @@
 			var $baseElement = $($template.data('replaces') || $template.data('appendTo') || this.$element),
 				$content = $template.octemplate(vars || {});
 
+			$baseElement.find('.has-tooltip').tooltip('hide');
+			$content.find('.has-tooltip').tooltip();
+
 			if ((replaceContent !== undefined) ? replaceContent : $template.data('replaces')) {
 				$baseElement.empty();
 			}

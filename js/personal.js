@@ -143,8 +143,6 @@
 		 * @protected
 		 */
 		_setup: function () {
-			this.$element.find('.has-tooltip').tooltip();
-
 			this.$element.find('.live-relative-timestamp').each(function() {
 				var $this = $(this),
 					time = parseInt($this.data('timestamp'), 10) * 1000;
