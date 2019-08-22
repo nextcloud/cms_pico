@@ -221,7 +221,7 @@ class Version010000 extends SimpleMigrationStep
 
 			throw new ComposerException($this->l10n->t(
 				'Failed to enable Pico CMS for Nextcloud: Couldn\'t find "%s". Make sure to install the app\'s '
-						. 'dependencies by executing \`composer install\` in the app\'s install directory below "%s". '
+						. 'dependencies by executing `composer install` in the app\'s install directory below "%s". '
 						. 'Then try again enabling Pico CMS for Nextcloud.',
 				[ $relativeAppPath . 'vendor/autoload.php', $relativeAppPath ]
 			));
