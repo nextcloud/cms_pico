@@ -280,7 +280,7 @@ class Pico extends \Pico
 		list($folder, $basePath, $pattern) = $this->picoService->getRelativePath($this->website, $absolutePathPattern);
 
 		if ($folder->isLocal()) {
-			return parent::getFiles($absolutePathPattern, $order);
+			return parent::getFilesGlob($absolutePathPattern, $order);
 		}
 
 		try {
