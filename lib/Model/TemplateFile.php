@@ -143,7 +143,7 @@ class TemplateFile extends AbstractNode implements FileInterface
 	 */
 	public function getContent(): string
 	{
-		if ($this->isBinary() || !$this->data) {
+		if ($this->isBinary() || empty($this->data)) {
 			return $this->file->getContent();
 		}
 

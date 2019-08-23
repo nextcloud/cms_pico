@@ -141,7 +141,7 @@ class Theme implements \JsonSerializable
 			'compat' => $this->isCompatible(),
 		];
 
-		if (!$this->isCompatible()) {
+		if (!$this->isCompatible() && ($this->compatException !== null)) {
 			$data['compatReason'] = $this->compatException->getRawReason();
 			$data['compatReasonData'] = $this->compatException->getRawReasonData();
 		}

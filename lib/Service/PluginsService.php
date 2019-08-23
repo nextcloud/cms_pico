@@ -249,7 +249,7 @@ class PluginsService
 	 */
 	public function getPluginsPath(): string
 	{
-		$appPath = \OC_App::getAppPath(Application::APP_NAME) . '/';
+		$appPath = Application::getAppPath() . '/';
 		$pluginsPath = 'appdata_public/' . PicoService::DIR_PLUGINS . '/';
 		$pluginsETag = $this->configService->getAppValue(ConfigService::PLUGINS_ETAG);
 		return $appPath . $pluginsPath . ($pluginsETag ? $pluginsETag . '/' : '');
@@ -260,7 +260,7 @@ class PluginsService
 	 */
 	public function getPluginsUrl(): string
 	{
-		$appWebPath = \OC_App::getAppWebPath(Application::APP_NAME) . '/';
+		$appWebPath = Application::getAppWebPath() . '/';
 		$pluginsPath = 'appdata_public/' . PicoService::DIR_PLUGINS . '/';
 		$pluginsETag = $this->configService->getAppValue(ConfigService::PLUGINS_ETAG);
 		return $appWebPath . $pluginsPath . ($pluginsETag ? $pluginsETag . '/' : '');

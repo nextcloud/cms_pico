@@ -211,7 +211,7 @@ class Version010000 extends SimpleMigrationStep
 	 */
 	private function checkComposer()
 	{
-		$appPath = \OC_APP::getAppPath(Application::APP_NAME);
+		$appPath = Application::getAppPath();
 		if (!is_file($appPath . '/vendor/autoload.php')) {
 			try {
 				$relativeAppPath = $this->miscService->getRelativePath($appPath) . '/';
@@ -257,7 +257,7 @@ class Version010000 extends SimpleMigrationStep
 			$publicPluginsTestFile->delete();
 		} catch (NotPermittedException $e) {
 			try {
-				$appDataPublicPath = \OC_App::getAppPath(Application::APP_NAME) . '/appdata_public';
+				$appDataPublicPath = Application::getAppPath() . '/appdata_public';
 				$appDataPublicPath = $this->miscService->getRelativePath($appDataPublicPath) . '/';
 			} catch (InvalidPathException $e) {
 				$appDataPublicPath = 'apps/' . Application::APP_NAME . '/appdata_public/';

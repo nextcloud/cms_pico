@@ -274,7 +274,7 @@ class ThemesService
 	 */
 	public function getThemesPath(): string
 	{
-		$appPath = \OC_App::getAppPath(Application::APP_NAME) . '/';
+		$appPath = Application::getAppPath() . '/';
 		$themesPath = 'appdata_public/' . PicoService::DIR_THEMES . '/';
 		$themesETag = $this->configService->getAppValue(ConfigService::THEMES_ETAG);
 		return $appPath . $themesPath . ($themesETag ? $themesETag . '/' : '');
@@ -285,7 +285,7 @@ class ThemesService
 	 */
 	public function getThemesUrl(): string
 	{
-		$appWebPath = \OC_App::getAppWebPath(Application::APP_NAME) . '/';
+		$appWebPath = Application::getAppWebPath() . '/';
 		$themesPath = 'appdata_public/' . PicoService::DIR_THEMES . '/';
 		$themesETag = $this->configService->getAppValue(ConfigService::THEMES_ETAG);
 		return $appWebPath . $themesPath . ($themesETag ? $themesETag . '/' : '');

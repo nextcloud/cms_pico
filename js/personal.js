@@ -394,11 +394,7 @@
 		 * @returns {jQuery|string|number|Array}
 		 */
 		_val: function ($element, value) {
-			if (value === undefined) {
-				return $element.is(':input') ? $element.val() : $element.text();
-			} else {
-				return $element.is(':input') ? $element.val(value) : $element.text(value);
-			}
+			return $element.is(':input') ? $element.val(value) : $element.text(value);
 		},
 
 		/**

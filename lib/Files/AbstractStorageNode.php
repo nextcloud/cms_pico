@@ -60,7 +60,7 @@ abstract class AbstractStorageNode extends AbstractNode implements NodeInterface
 			$nodePath = $this->normalizePath($node->getPath());
 
 			$path = (($basePath !== '/') ? $basePath : '') . '/' . basename($nodePath);
-			if (!substr_compare($nodePath, $path, -strlen($path)) === 0) {
+			if (substr_compare($nodePath, $path, -strlen($path)) !== 0) {
 				throw new InvalidPathException();
 			}
 

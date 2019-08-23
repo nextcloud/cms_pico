@@ -97,7 +97,7 @@ class PicoPage
 	 */
 	public function getRawContent(): string
 	{
-		return $this->pico->getRawContent();
+		return $this->pico->getRawContent() ?? '';
 	}
 
 	/**
@@ -105,7 +105,7 @@ class PicoPage
 	 */
 	public function getMeta(): array
 	{
-		return $this->pico->getFileMeta();
+		return $this->pico->getFileMeta() ?? [];
 	}
 
 	/**
@@ -113,7 +113,7 @@ class PicoPage
 	 */
 	public function getContent(): string
 	{
-		return $this->pico->getFileContent();
+		return $this->pico->getFileContent() ?? '';
 	}
 
 	/**

@@ -287,7 +287,9 @@ class PicoService
 	public function getContentFolder(Website $website): StorageFolder
 	{
 		try {
-			return $website->getWebsiteFolder(PicoService::DIR_CONTENT)->fakeRoot();
+			/** @var StorageFolder $websiteFolder */
+			$websiteFolder = $website->getWebsiteFolder(PicoService::DIR_CONTENT)->fakeRoot();
+			return $websiteFolder;
 		} catch (InvalidPathException $e) {
 			throw new WebsiteInvalidFilesystemException($e);
 		} catch (NotFoundException $e) {
@@ -317,7 +319,9 @@ class PicoService
 	 */
 	public function getConfigFolder(): StorageFolder
 	{
-		return $this->fileService->getAppDataFolder(self::DIR_CONFIG)->fakeRoot();
+		/** @var StorageFolder $configFolder */
+		$configFolder = $this->fileService->getAppDataFolder(self::DIR_CONFIG)->fakeRoot();
+		return $configFolder;
 	}
 
 	/**

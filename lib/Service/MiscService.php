@@ -72,7 +72,7 @@ class MiscService
 			if (($pathPart === '') || ($pathPart === '.')) {
 				continue;
 			} elseif ($pathPart === '..') {
-				if (!$resultParts) {
+				if (empty($resultParts)) {
 					throw new InvalidPathException();
 				}
 

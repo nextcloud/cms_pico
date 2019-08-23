@@ -49,9 +49,8 @@ class Application extends App
 	 */
 	public function registerAutoloader()
 	{
-		$appPath = \OC_APP::getAppPath(Application::APP_NAME);
-		if (is_file($appPath . '/vendor/autoload.php')) {
-			require_once($appPath . '/vendor/autoload.php');
+		if (is_file(self::getAppPath() . '/vendor/autoload.php')) {
+			require_once(self::getAppPath() . '/vendor/autoload.php');
 		}
 	}
 
@@ -61,5 +60,25 @@ class Application extends App
 	public function registerHooks()
 	{
 		Util::connectHook('OC_User', 'post_deleteUser', '\OCA\CMSPico\Hooks\UserHooks', 'onUserDeleted');
+	}
+
+	/**
+	 * Returns the absolute path to this app.
+	 *
+	 * @return string
+	 */
+	public static function getAppPath(): string
+	{
+		return \OC_App::getAppPath(self::APP_NAME) ?: '';
+	}
+
+	/**
+	 * Returns the absolute web path to this app.
+	 *
+	 * @return string
+	 */
+	public static function getAppWebPath(): string
+	{
+		return \OC_App::getAppWebPath(self::APP_NAME) ?: '';
 	}
 }
