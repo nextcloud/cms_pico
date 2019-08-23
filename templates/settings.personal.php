@@ -169,7 +169,9 @@ style(Application::APP_NAME, 'pico');
 										<select class="action-theme">
 											<?php foreach ($_['themes'] as $themeData) { ?>
 												<?php if ($themeData['compat']) { ?>
-													<option value="<?php p($themeData['name']); ?>"><?php p($themeData['name']); ?></option>
+													<option value="<?php p($themeData['name']); ?>">
+														<?php p($themeData['name']); ?>
+													</option>
 												<?php } ?>
 											<?php } ?>
 										</select>

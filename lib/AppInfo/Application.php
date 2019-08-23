@@ -63,4 +63,3 @@ class Application extends App
 		Util::connectHook('OC_User', 'post_deleteUser', '\OCA\CMSPico\Hooks\UserHooks', 'onUserDeleted');
 	}
 }
-

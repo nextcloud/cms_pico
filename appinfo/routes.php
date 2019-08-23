@@ -89,5 +89,3 @@ return [
 		[ 'name' => 'Settings#setLinkMode', 'url' => '/admin/link_mode', 'verb' => 'POST' ],
 	]
 ];
-
-

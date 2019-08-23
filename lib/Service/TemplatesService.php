@@ -138,7 +138,9 @@ class TemplatesService
 			// website folder exists; since we don't want to
 			// mess around with a user's files, bail out
 			return;
-		} catch (NotFoundException $e) {}
+		} catch (NotFoundException $e) {
+			// proceed if the website folder doesn't exist yet
+		}
 
 		$websiteFolder = $userFolder->newFolder($website->getPath());
 

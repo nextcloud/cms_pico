@@ -204,7 +204,9 @@ class ThemesService
 		try {
 			$publicThemesFolder->getFolder($themeName);
 			throw new AlreadyExistsException();
-		} catch (NotFoundException $e) {}
+		} catch (NotFoundException $e) {
+			// in fact we want the theme not to exist yet
+		}
 
 		/** @var LocalFolder $themeFolder */
 		$themeFolder = $themeSourceFolder->copy($publicThemesFolder);

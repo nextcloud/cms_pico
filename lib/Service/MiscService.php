@@ -149,11 +149,11 @@ class MiscService
 	 */
 	public function isBinaryFile(FileInterface $file): bool
 	{
-		$buffer = false;
-
 		try {
 			$buffer = file_get_contents($file->getLocalPath(), false, null, 0, 1024);
-		} catch (\Exception $e) {}
+		} catch (\Exception $e) {
+			$buffer = false;
+		}
 
 		if ($buffer === false) {
 			$buffer = substr($file->getContent(), 0, 1024);

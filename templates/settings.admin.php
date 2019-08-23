@@ -417,6 +417,9 @@ style(Application::APP_NAME, 'pico');
 	</div>
 
 	<section class="lane">
+		<?php $internalPathRegex = '^' . preg_quote($_['internalPath']) . '(.*)$'; ?>
+		<?php $internalPathReplacement = $_['internalFullUrl'] . '$1'; ?>
+
 		<header>
 			<h3><?php p($l->t('Enable short website URLs')); ?></h3>
 		</header>
@@ -424,7 +427,8 @@ style(Application::APP_NAME, 'pico');
 			<form id="picocms-link_mode" class="picocms-link_mode-form"
 					data-route="/apps/cms_pico/admin/link_mode">
 				<p>
-					<input type="radio" name="data[link_mode]" value="1" id="picocms-link_mode_long" class="radio" checked="checked">
+					<input type="radio" name="data[link_mode]" value="1" id="picocms-link_mode_long" class="radio"
+							checked="checked">
 					<label for="picocms-link_mode_long">
 						<?php p($l->t('Full application URLs')); ?>
 						<span class="note">– <a><?php p($_['exampleFullUrl']); ?></a></span>
@@ -439,9 +443,9 @@ style(Application::APP_NAME, 'pico');
 				</p>
 				<p class="note"><?php p($l->t(
 					'After you\'ve configured your webserver to enable shortened URLs, you should select the '
-					. 'corresponding option above to let your users know about this feature. Don\'t enable this option '
-					. 'if you haven\'t configured the virtual "sites/" folder yet using one of the configuration examples '
-					. 'shown below.'
+					. 'corresponding option above to let your users know about this feature. Don\'t enable this '
+					. 'option if you haven\'t configured the virtual "sites/" folder yet using one of the '
+					. 'configuration examples shown below.'
 				)); ?></p>
 			</form>
 		</section>
@@ -485,7 +489,7 @@ style(Application::APP_NAME, 'pico');
 			<p class="code">
 				<code>
 					RewriteEngine On<br/>
-					RewriteRule ^<?php p(preg_quote($_['internalPath'])); ?>(.*)$ <?php p($_['internalFullUrl']); ?>$1 [QSA,L]<br/>
+					RewriteRule <?php p($internalPathRegex); ?> <?php p($internalPathReplacement); ?> [QSA,L]<br/>
 				</code>
 			</p>
 			<p><?php p($l->t(
@@ -536,7 +540,7 @@ style(Application::APP_NAME, 'pico');
 		<section>
 			<p class="code">
 				<code>
-					rewrite ^<?php p(preg_quote($_['internalPath'])); ?>(.*)$ <?php p($_['internalFullUrl']); ?>$1 last;<br/>
+					rewrite <?php p($internalPathRegex); ?> <?php p($internalPathReplacement); ?> last;<br/>
 				</code>
 			</p>
 			<p><?php p($l->t(

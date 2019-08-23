@@ -107,25 +107,47 @@ class PicoController extends Controller
 			$picoPage = $this->websitesService->getPage($site, $page, $this->userId, $proxyRequest);
 			return new PicoPageResponse($picoPage);
 		} catch (WebsiteNotFoundException $e) {
-			return new NotFoundResponse($this->l10n->t('The requested website could not be found on the server. Maybe the website was deleted?'));
+			return new NotFoundResponse($this->l10n->t(
+				'The requested website could not be found on the server. Maybe the website was deleted?'
+			));
 		} catch (WebsiteInvalidFilesystemException $e) {
-			return new InternalServerErrorResponse($this->l10n->t('The file and directory structure of this website appears to be broken und thus could not be accessed.'));
+			return new InternalServerErrorResponse($this->l10n->t(
+				'The file and directory structure of this website appears to be broken und thus could not be accessed.'
+			));
 		} catch (WebsiteNotPermittedException $e) {
-			return new NotPermittedResponse($this->l10n->t('You don\'t have access to this private website. Maybe the share was deleted or has expired?'));
+			return new NotPermittedResponse($this->l10n->t(
+				'You don\'t have access to this private website. Maybe the share was deleted or has expired?'
+			));
 		} catch (FilesystemNotLocalException $e) {
-			return new InternalServerErrorResponse($this->l10n->t('This website is hosted on a non-local storage and thus could not be accessed.'));
+			return new InternalServerErrorResponse($this->l10n->t(
+				'This website is hosted on a non-local storage and thus could not be accessed.'
+			));
 		} catch (ThemeNotFoundException $e) {
-			return new InternalServerErrorResponse($this->l10n->t('This website uses a theme that could not be found on the server and thus could not be built.'));
+			return new InternalServerErrorResponse($this->l10n->t(
+				'This website uses a theme that could not be found on the server and thus could not be built.'
+			));
 		} catch (ThemeNotCompatibleException $e) {
-			return new InternalServerErrorResponse($this->l10n->t('This website uses a incompatible theme and thus could not be built.'));
+			return new InternalServerErrorResponse($this->l10n->t(
+				'This website uses a incompatible theme and thus could not be built.'
+			));
 		} catch (PageInvalidPathException $e) {
-			return new NotFoundResponse($this->l10n->t('The requested website page could not be found on the server. Maybe the page was deleted?'));
+			return new NotFoundResponse($this->l10n->t(
+				'The requested website page could not be found on the server. Maybe the page was deleted?'
+			));
 		} catch (PageNotFoundException $e) {
-			return new NotFoundResponse($this->l10n->t('The requested website page could not be found on the server. Maybe the page was deleted?'));
+			return new NotFoundResponse($this->l10n->t(
+				'The requested website page could not be found on the server. Maybe the page was deleted?'
+			));
 		} catch (PageNotPermittedException $e) {
-			return new NotPermittedResponse($this->l10n->t('You don\'t have access to this website page. Maybe the share was deleted or has expired?'));
+			return new NotPermittedResponse($this->l10n->t(
+				'You don\'t have access to this website page. Maybe the share was deleted or has expired?'
+			));
 		} catch (PicoRuntimeException $e) {
-			return new PicoErrorResponse($this->l10n->t('The requested website page could not be built, so that the server was unable to complete your request.'), $e);
+			$errorMessage = $this->l10n->t(
+				'The requested website page could not be built, '
+					. 'so that the server was unable to complete your request.'
+			);
+			return new PicoErrorResponse($errorMessage, $e);
 		}
 	}
 
@@ -156,19 +178,33 @@ class PicoController extends Controller
 
 			return $response;
 		} catch (WebsiteNotFoundException $e) {
-			return new NotFoundResponse($this->l10n->t('The requested website could not be found on the server. Maybe the website was deleted?'));
+			return new NotFoundResponse($this->l10n->t(
+				'The requested website could not be found on the server. Maybe the website was deleted?'
+			));
 		} catch (WebsiteInvalidFilesystemException $e) {
-			return new InternalServerErrorResponse($this->l10n->t('The file and directory structure of this website appears to be broken und thus could not be accessed.'));
+			return new InternalServerErrorResponse($this->l10n->t(
+				'The file and directory structure of this website appears to be broken und thus could not be accessed.'
+			));
 		} catch (WebsiteNotPermittedException $e) {
-			return new NotPermittedResponse($this->l10n->t('You don\'t have access to this private website. Maybe the share was deleted or has expired?'));
+			return new NotPermittedResponse($this->l10n->t(
+				'You don\'t have access to this private website. Maybe the share was deleted or has expired?'
+			));
 		} catch (FilesystemNotLocalException $e) {
-			return new InternalServerErrorResponse($this->l10n->t('This website is hosted on a non-local storage and thus could not be accessed.'));
+			return new InternalServerErrorResponse($this->l10n->t(
+				'This website is hosted on a non-local storage and thus could not be accessed.'
+			));
 		} catch (AssetInvalidPathException $e) {
-			return new NotFoundResponse($this->l10n->t('The requested website asset could not be found on the server. Maybe the asset was deleted?'));
+			return new NotFoundResponse($this->l10n->t(
+				'The requested website asset could not be found on the server. Maybe the asset was deleted?'
+			));
 		} catch (AssetNotFoundException $e) {
-			return new NotFoundResponse($this->l10n->t('The requested website asset could not be found on the server. Maybe the asset was deleted?'));
+			return new NotFoundResponse($this->l10n->t(
+				'The requested website asset could not be found on the server. Maybe the asset was deleted?'
+			));
 		} catch (AssetNotPermittedException $e) {
-			return new NotPermittedResponse($this->l10n->t('You don\'t have access to this website asset. Maybe the share was deleted or has expired?'));
+			return new NotPermittedResponse($this->l10n->t(
+				'You don\'t have access to this website asset. Maybe the share was deleted or has expired?'
+			));
 		}
 	}
 }

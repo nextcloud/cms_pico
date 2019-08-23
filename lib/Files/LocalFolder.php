@@ -258,9 +258,11 @@ class LocalFolder extends AbstractLocalNode implements FolderInterface
 			} elseif (is_dir($this->basePath . '/' . $path)) {
 				return new LocalFolder($path, $this->basePath);
 			}
-		} catch (NotFoundException $e) {}
 
-		return null;
+			return null;
+		} catch (NotFoundException $e) {
+			return null;
+		}
 	}
 
 	/**

@@ -179,12 +179,12 @@ class Website extends WebsiteCore
 
 			$path = $this->miscService->normalizePath($path);
 			while ($path && ($path !== '.')) {
-				$file = null;
-
 				try {
 					/** @var StorageFile|StorageFolder $file */
 					$file = $websiteFolder->get($path);
-				} catch (NotFoundException $e) {}
+				} catch (NotFoundException $e) {
+					$file = null;
+				}
 
 				if ($file) {
 					if ($viewerAccessClosure($file->getOCNode())) {
@@ -224,17 +224,16 @@ class Website extends WebsiteCore
 	public function assertValidSite()
 	{
 		if (strlen($this->getSite()) < self::SITE_LENGTH_MIN) {
-			throw new WebsiteInvalidDataException('site', $this->l10n->t('The identifier of the website must be longer.'));
+			$errorMessage = $this->l10n->t('The identifier of the website must be longer.');
+			throw new WebsiteInvalidDataException('site', $errorMessage);
 		}
 		if (strlen($this->getSite()) > self::SITE_LENGTH_MAX) {
-			throw new WebsiteInvalidDataException('site', $this->l10n->t('The identifier of the website is too long.'));
+			$errorMessage = $this->l10n->t('The identifier of the website is too long.');
+			throw new WebsiteInvalidDataException('site', $errorMessage);
 		}
-
 		if (preg_match('/' . self::SITE_REGEX . '/', $this->getSite()) !== 1) {
-			throw new WebsiteInvalidDataException(
-				'site',
-				$this->l10n->t('The identifier of the website can only contains alpha numeric chars.')
-			);
+			$errorMessage = $this->l10n->t('The identifier of the website can only contains alpha numeric chars.');
+			throw new WebsiteInvalidDataException('site', $errorMessage);
 		}
 	}
 

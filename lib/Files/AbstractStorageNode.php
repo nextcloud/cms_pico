@@ -149,13 +149,13 @@ abstract class AbstractStorageNode extends AbstractNode implements NodeInterface
 	 */
 	public function getLocalPath(): string
 	{
-		$localPath = null;
-
 		try {
 			$storage = $this->node->getStorage();
 			$internalPath = $this->node->getInternalPath();
 			$localPath = $storage->getLocalFile($internalPath);
-		} catch (\Exception $e) {}
+		} catch (\Exception $e) {
+			$localPath = null;
+		}
 
 		if ($localPath && file_exists($localPath)) {
 			if ($this->isFolder() ? is_dir($localPath) : is_file($localPath)) {
@@ -228,12 +228,10 @@ abstract class AbstractStorageNode extends AbstractNode implements NodeInterface
 	public function isLocal(): bool
 	{
 		try {
-			if ($this->getOCNode()->getStorage()->isLocal()) {
-				return true;
-			}
-		} catch (\Exception $e) {}
-
-		return false;
+			return $this->getOCNode()->getStorage()->isLocal();
+		} catch (\Exception $e) {
+			return false;
+		}
 	}
 
 	/**

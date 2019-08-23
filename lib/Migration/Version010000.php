@@ -179,7 +179,7 @@ class Version010000 extends SimpleMigrationStep
 		$qbUpdate
 			->update(CoreRequestBuilder::TABLE_WEBSITES, 'w')
 			->set('w.type', $qbUpdate->createParameter('type'))
-			->set('w.options',$qbUpdate->createParameter('options'))
+			->set('w.options', $qbUpdate->createParameter('options'))
 			->where($qbUpdate->expr()->eq('w.id', $qbUpdate->createParameter('id')));
 
 		$selectCursor = $this->databaseConnection->getQueryBuilder()
@@ -242,7 +242,7 @@ class Version010000 extends SimpleMigrationStep
 				$publicThemesFolder = $publicFolder->getFolder(PicoService::DIR_THEMES);
 			}
 
-			$publicThemesTestFileName = $this->miscService->getRandom(10, 'tmp', Application::APP_NAME . '-themes_test');
+			$publicThemesTestFileName = $this->miscService->getRandom(10, 'tmp', Application::APP_NAME . '-test');
 			$publicThemesTestFile = $publicThemesFolder->newFile($publicThemesTestFileName);
 			$publicThemesTestFile->delete();
 
@@ -252,7 +252,7 @@ class Version010000 extends SimpleMigrationStep
 				$publicPluginsFolder = $publicFolder->getFolder(PicoService::DIR_PLUGINS);
 			}
 
-			$publicPluginsTestFileName = $this->miscService->getRandom(10, 'tmp', Application::APP_NAME . '-plugins_test');
+			$publicPluginsTestFileName = $this->miscService->getRandom(10, 'tmp', Application::APP_NAME . '-test');
 			$publicPluginsTestFile = $publicPluginsFolder->newFile($publicPluginsTestFileName);
 			$publicPluginsTestFile->delete();
 		} catch (NotPermittedException $e) {

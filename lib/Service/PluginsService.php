@@ -179,7 +179,9 @@ class PluginsService
 		try {
 			$publicPluginsFolder->getFolder($pluginName);
 			throw new AlreadyExistsException();
-		} catch (NotFoundException $e) {}
+		} catch (NotFoundException $e) {
+			// in fact we want the plugin not to exist yet
+		}
 
 		/** @var LocalFolder $pluginFolder */
 		$pluginFolder = $pluginSourceFolder->copy($publicPluginsFolder);
