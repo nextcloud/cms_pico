@@ -210,7 +210,6 @@ class AppDataRepairStep implements IRepairStep
 	private function publishCustomThemes()
 	{
 		$appDataThemesFolder = $this->fileService->getAppDataFolder(PicoService::DIR_THEMES);
-		$appDataThemesFolder->sync(FolderInterface::SYNC_SHALLOW);
 
 		$oldCustomThemes = $this->themesService->getCustomThemes();
 		$this->configService->deleteAppValue(ConfigService::CUSTOM_THEMES);
@@ -270,7 +269,6 @@ class AppDataRepairStep implements IRepairStep
 	private function publishCustomPlugins()
 	{
 		$appDataPluginsFolder = $this->fileService->getAppDataFolder(PicoService::DIR_PLUGINS);
-		$appDataPluginsFolder->sync(FolderInterface::SYNC_SHALLOW);
 
 		$oldCustomPlugins = $this->pluginsService->getCustomPlugins();
 		$this->configService->deleteAppValue(ConfigService::CUSTOM_PLUGINS);
