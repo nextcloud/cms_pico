@@ -165,7 +165,6 @@ class Version010000 extends SimpleMigrationStep
 		$this->migratePrivateWebsites();
 		$this->checkComposer();
 		$this->createPublicFolder();
-		$this->checkEncryptedFilesystem();
 		$this->migrateCustomThemes();
 		$this->migrateCustomPlugins();
 	}
@@ -276,18 +275,6 @@ class Version010000 extends SimpleMigrationStep
 						. 'changing its permissions and ownership to the same as of your "%s" directory. Then try '
 						. 'again enabling Pico CMS for Nextcloud.',
 				[ $appDataPublicPath, $dataPath ]
-			));
-		}
-	}
-
-	/**
-	 * @throws FilesystemNotLocalException
-	 */
-	private function checkEncryptedFilesystem()
-	{
-		if ($this->encryptionManager->isEnabled()) {
-			throw new FilesystemNotLocalException($this->l10n->t(
-				'Failed to enable Pico CMS for Nextcloud: You can\'t host websites on a encrypted Nextcloud.'
 			));
 		}
 	}
