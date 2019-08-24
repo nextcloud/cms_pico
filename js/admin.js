@@ -212,6 +212,66 @@
 	 * @param {Object} [options]
 	 * @param {string} [options.route]
 	 */
+	OCA.CMSPico.LimitGroupsForm = function ($element, options) {
+		this.initialize($element, options);
+	};
+
+	/**
+	 * @lends OCA.CMSPico.LimitGroupsForm.prototype
+	 */
+	OCA.CMSPico.LimitGroupsForm.prototype = $.extend({}, OCA.CMSPico.Form.prototype, {
+		/**
+		 * @public
+		 */
+		prepare: function () {
+			var that = this,
+				$input = this.$element.find('input');
+
+			// loading order is crucial - and Nextcloud loads its own JS settings files last... m(
+			$(function () {
+				OC.Settings.setupGroupsSelect($input);
+
+				$input.on('change.CMSPicoLimitGroupsForm', function (event) {
+					that.submit();
+				});
+			});
+		},
+
+		/**
+		 * @public
+		 */
+		submit: function () {
+			var $input = this.$element.find(':input'),
+				data = this.$element.serialize();
+
+			$input.prop('disabled', true);
+
+			$.ajax({
+				method: 'POST',
+				url: OC.generateUrl(this.route),
+				data: data
+			}).done(function (data, textStatus, jqXHR) {
+				$input.prop('disabled', false);
+			});
+		}
+	});
+
+	$('.picocms-limit_groups-form').each(function () {
+		var $this = $(this),
+			limitGroupsForm = new OCA.CMSPico.LimitGroupsForm($this);
+
+		$this.data('CMSPicoLimitGroupsForm', limitGroupsForm);
+		limitGroupsForm.prepare();
+	});
+
+	/**
+	 * @class
+	 * @extends OCA.CMSPico.Form
+	 *
+	 * @param {jQuery} $element
+	 * @param {Object} [options]
+	 * @param {string} [options.route]
+	 */
 	OCA.CMSPico.LinkModeForm = function ($element, options) {
 		this.initialize($element, options);
 	};

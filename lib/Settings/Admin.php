@@ -85,6 +85,7 @@ class Admin implements ISettings
 			'themesPath'       => $this->fileService->getAppDataFolderPath(PicoService::DIR_THEMES),
 			'pluginsPath'      => $this->fileService->getAppDataFolderPath(PicoService::DIR_PLUGINS),
 			'templatesPath'    => $this->fileService->getAppDataFolderPath(PicoService::DIR_TEMPLATES),
+			'limitGroups'      => $this->websitesService->getLimitGroups(),
 			'linkMode'         => $this->websitesService->getLinkMode(),
 			'linkModeLong'     => WebsitesService::LINK_MODE_LONG,
 			'linkModeShort'    => WebsitesService::LINK_MODE_SHORT,

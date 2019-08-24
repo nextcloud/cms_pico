@@ -32,6 +32,7 @@ use OCA\CMSPico\Exceptions\ThemeNotFoundException;
 use OCA\CMSPico\Exceptions\WebsiteExistsException;
 use OCA\CMSPico\Exceptions\WebsiteForeignOwnerException;
 use OCA\CMSPico\Exceptions\WebsiteInvalidDataException;
+use OCA\CMSPico\Exceptions\WebsiteInvalidOwnerException;
 use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
 use OCA\CMSPico\Model\Website;
 use OCA\CMSPico\Service\ConfigService;
@@ -144,6 +145,8 @@ class SettingsController extends Controller
 			$data = [];
 			if ($e instanceof WebsiteExistsException) {
 				$data['form_error'] = [ 'field' => 'site', 'message' => $this->l10n->t('Website exists.') ];
+			} elseif ($e instanceof WebsiteInvalidOwnerException) {
+				$data['form_error'] = [ 'field' => 'user', 'message' => $this->l10n->t('No permission.') ];
 			} elseif (($e instanceof WebsiteInvalidDataException) && $e->getField()) {
 				$data['form_error'] = [ 'field' => $e->getField(), 'message' => $e->getMessage() ];
 			} elseif ($e instanceof ThemeNotFoundException) {
@@ -412,6 +415,27 @@ class SettingsController extends Controller
 			$this->pluginsService->depublishCustomPlugin($item);
 
 			return $this->getPlugins();
+		} catch (\Exception $e) {
+			return $this->createErrorResponse($e);
+		}
+	}
+
+	/**
+	 * @param array $data
+	 *
+	 * @return DataResponse
+	 */
+	public function setLimitGroups(array $data): DataResponse
+	{
+		try {
+			if (!isset($data['limit_groups'])) {
+				throw new \UnexpectedValueException();
+			}
+
+			$limitGroups = $data['limit_groups'] ? explode('|', $data['limit_groups']) : [];
+			$this->websitesService->setLimitGroups($limitGroups);
+
+			return new DataResponse();
 		} catch (\Exception $e) {
 			return $this->createErrorResponse($e);
 		}

@@ -32,12 +32,14 @@ use OCA\CMSPico\Exceptions\ThemeNotFoundException;
 use OCA\CMSPico\Exceptions\WebsiteForeignOwnerException;
 use OCA\CMSPico\Exceptions\WebsiteInvalidDataException;
 use OCA\CMSPico\Exceptions\WebsiteInvalidFilesystemException;
+use OCA\CMSPico\Exceptions\WebsiteInvalidOwnerException;
 use OCA\CMSPico\Exceptions\WebsiteNotPermittedException;
 use OCA\CMSPico\Files\StorageFile;
 use OCA\CMSPico\Files\StorageFolder;
 use OCA\CMSPico\Service\MiscService;
 use OCA\CMSPico\Service\TemplatesService;
 use OCA\CMSPico\Service\ThemesService;
+use OCA\CMSPico\Service\WebsitesService;
 use OCP\Files\Folder as OCFolder;
 use OCP\Files\InvalidPathException;
 use OCP\Files\Node as OCNode;
@@ -47,6 +49,7 @@ use OCP\IConfig;
 use OCP\IGroupManager;
 use OCP\IL10N;
 use OCP\IURLGenerator;
+use OCP\IUserManager;
 
 class Website extends WebsiteCore
 {
@@ -71,11 +74,17 @@ class Website extends WebsiteCore
 	/** @var IL10N */
 	private $l10n;
 
+	/** @var IUserManager */
+	private $userManager;
+
 	/** @var IGroupManager */
 	private $groupManager;
 
 	/** @var IURLGenerator */
 	private $urlGenerator;
+
+	/** @var WebsitesService */
+	private $websitesService;
 
 	/** @var ThemesService */
 	private $themesService;
@@ -98,8 +107,10 @@ class Website extends WebsiteCore
 	{
 		$this->config = \OC::$server->getConfig();
 		$this->l10n = \OC::$server->getL10N(Application::APP_NAME);
+		$this->userManager = \OC::$server->getUserManager();
 		$this->groupManager = \OC::$server->getGroupManager();
 		$this->urlGenerator = \OC::$server->getURLGenerator();
+		$this->websitesService = \OC::$server->query(WebsitesService::class);
 		$this->themesService = \OC::$server->query(ThemesService::class);
 		$this->templatesService = \OC::$server->query(TemplatesService::class);
 		$this->miscService = \OC::$server->query(MiscService::class);
@@ -203,6 +214,23 @@ class Website extends WebsiteCore
 		}
 
 		throw new $exceptionClass();
+	}
+
+	/**
+	 * @throws WebsiteInvalidOwnerException
+	 */
+	public function assertValidOwner()
+	{
+		$user = $this->userManager->get($this->getUserId());
+		if ($user === null) {
+			throw new WebsiteInvalidOwnerException();
+		}
+		if (!$user->isEnabled()) {
+			throw new WebsiteInvalidOwnerException();
+		}
+		if (!$this->websitesService->isUserAllowed($this->getUserId())) {
+			throw new WebsiteInvalidOwnerException();
+		}
 	}
 
 	/**

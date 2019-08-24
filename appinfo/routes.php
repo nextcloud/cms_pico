@@ -86,6 +86,7 @@ return [
 		[ 'name' => 'Settings#updateCustomPlugin', 'url' => '/admin/plugins/{item}', 'verb' => 'POST' ],
 		[ 'name' => 'Settings#removeCustomPlugin', 'url' => '/admin/plugins/{item}', 'verb' => 'DELETE' ],
 
+		[ 'name' => 'Settings#setLimitGroups', 'url' => '/admin/limit_groups', 'verb' => 'POST' ],
 		[ 'name' => 'Settings#setLinkMode', 'url' => '/admin/link_mode', 'verb' => 'POST' ],
 	]
 ];

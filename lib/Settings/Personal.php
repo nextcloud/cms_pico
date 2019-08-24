@@ -36,6 +36,9 @@ use OCP\Settings\ISettings;
 
 class Personal implements ISettings
 {
+	/** @var string|null */
+	private $userId;
+
 	/** @var IURLGenerator */
 	private $urlGenerator;
 
@@ -51,17 +54,20 @@ class Personal implements ISettings
 	/**
 	 * Personal constructor.
 	 *
+	 * @param string|null      $userId
 	 * @param IURLGenerator    $urlGenerator
 	 * @param WebsitesService  $websitesService
 	 * @param ThemesService    $themesService
 	 * @param TemplatesService $templatesService
 	 */
 	public function __construct(
+		$userId,
 		IURLGenerator $urlGenerator,
 		WebsitesService $websitesService,
 		ThemesService $themesService,
 		TemplatesService $templatesService
 	) {
+		$this->userId = $userId;
 		$this->urlGenerator = $urlGenerator;
 		$this->websitesService = $websitesService;
 		$this->themesService = $themesService;
@@ -89,7 +95,8 @@ class Personal implements ISettings
 			'siteLengthMax' => Website::SITE_LENGTH_MAX,
 			'siteRegex' => Website::SITE_REGEX,
 			'themes' => $this->themesService->getThemes(),
-			'templates' => $this->templatesService->getTemplates()
+			'templates' => $this->templatesService->getTemplates(),
+			'limitedUser' => !$this->websitesService->isUserAllowed($this->userId),
 		];
 
 		return new TemplateResponse(Application::APP_NAME, 'settings.personal', $data);

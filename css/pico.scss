@@ -303,10 +303,6 @@
 				text-align: center;
 
 				.input {
-					display: block;
-					width: 100%;
-					max-width: 37.5em;
-
 					overflow: hidden;
 					text-overflow: ellipsis;
 					word-wrap: break-word;
@@ -362,6 +358,12 @@
 				max-width: none;
 			}
 		}
+	}
+
+	.input {
+		display: block;
+		width: 100%;
+		max-width: 37.5em;
 	}
 
 	p {
@@ -427,6 +429,12 @@
 			padding: 0;
 		}
 
+		&:not(.large) > .icon-loading::after {
+			width: 16px;
+			height: 16px;
+			margin: -10px 0 0 -10px;
+		}
+
 		> div:not(.icon):not([class^="icon-"]):not([class*=" icon-"]) {
 			flex: 1 1 auto;
 			align-self: center;
@@ -445,6 +453,28 @@
 				background-size: 50%;
 			}
 		}
+
+		&.error {
+			border: 2px solid var(--color-error);
+			border-radius: var(--border-radius);
+			padding: calc(var(--margin) * 0.5) var(--margin);
+		}
+
+		&.select2-loading {
+			height: 40px;
+			margin: 3px 3px 3px 0;
+			padding-left: 8px;
+
+			border: 1px solid var(--color-border-dark);
+			border-radius: var(--border-radius);
+
+			background: var(--color-main-background);
+			color: var(--color-text-lighter);
+
+			overflow: hidden;
+			text-overflow: ellipsis;
+			word-wrap: break-word;
+		}
 	}
 
 	button.icon-loading {
@@ -457,6 +487,17 @@
 			height: 16px;
 			margin: -11px 0 0 11px;
 		}
+	}
+
+	.select2-align {
+		line-height: 46px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.select2-container ~ .select2-loading {
+		display: none;
 	}
 }
 

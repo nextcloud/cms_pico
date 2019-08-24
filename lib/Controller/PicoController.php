@@ -37,6 +37,7 @@ use OCA\CMSPico\Exceptions\PicoRuntimeException;
 use OCA\CMSPico\Exceptions\ThemeNotCompatibleException;
 use OCA\CMSPico\Exceptions\ThemeNotFoundException;
 use OCA\CMSPico\Exceptions\WebsiteInvalidFilesystemException;
+use OCA\CMSPico\Exceptions\WebsiteInvalidOwnerException;
 use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
 use OCA\CMSPico\Exceptions\WebsiteNotPermittedException;
 use OCA\CMSPico\Http\InternalServerErrorResponse;
@@ -110,6 +111,10 @@ class PicoController extends Controller
 			return new NotFoundResponse($this->l10n->t(
 				'The requested website could not be found on the server. Maybe the website was deleted?'
 			));
+		} catch (WebsiteInvalidOwnerException $e) {
+			return new NotFoundResponse($this->l10n->t(
+				'The requested website could not be found on the server. Maybe the website was deleted?'
+			));
 		} catch (WebsiteInvalidFilesystemException $e) {
 			return new InternalServerErrorResponse($this->l10n->t(
 				'The file and directory structure of this website appears to be broken und thus could not be accessed.'
@@ -178,6 +183,10 @@ class PicoController extends Controller
 
 			return $response;
 		} catch (WebsiteNotFoundException $e) {
+			return new NotFoundResponse($this->l10n->t(
+				'The requested website could not be found on the server. Maybe the website was deleted?'
+			));
+		} catch (WebsiteInvalidOwnerException $e) {
 			return new NotFoundResponse($this->l10n->t(
 				'The requested website could not be found on the server. Maybe the website was deleted?'
 			));

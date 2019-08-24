@@ -52,6 +52,9 @@ class ConfigService
 	const PLUGINS_ETAG = 'plugins_etag';
 
 	/** @var string */
+	const LIMIT_GROUPS = 'limit_groups';
+
+	/** @var string */
 	const LINK_MODE = 'link_mode';
 
 	/** @var array<string,mixed> */
@@ -63,6 +66,7 @@ class ConfigService
 		self::SYSTEM_PLUGINS => '',
 		self::CUSTOM_PLUGINS => '',
 		self::PLUGINS_ETAG => '',
+		self::LIMIT_GROUPS => '',
 		self::LINK_MODE => WebsitesService::LINK_MODE_LONG,
 	];
 

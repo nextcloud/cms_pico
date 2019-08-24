@@ -38,14 +38,17 @@ use OCA\CMSPico\Exceptions\TemplateNotFoundException;
 use OCA\CMSPico\Exceptions\ThemeNotCompatibleException;
 use OCA\CMSPico\Exceptions\ThemeNotFoundException;
 use OCA\CMSPico\Exceptions\WebsiteExistsException;
+use OCA\CMSPico\Exceptions\WebsiteForeignOwnerException;
 use OCA\CMSPico\Exceptions\WebsiteInvalidDataException;
 use OCA\CMSPico\Exceptions\WebsiteInvalidFilesystemException;
+use OCA\CMSPico\Exceptions\WebsiteInvalidOwnerException;
 use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
 use OCA\CMSPico\Exceptions\WebsiteNotPermittedException;
 use OCA\CMSPico\Model\PicoAsset;
 use OCA\CMSPico\Model\PicoPage;
 use OCA\CMSPico\Model\Website;
 use OCP\Files\InvalidPathException;
+use OCP\IGroupManager;
 
 class WebsitesService
 {
@@ -57,6 +60,9 @@ class WebsitesService
 
 	/** @var WebsitesRequest */
 	private $websiteRequest;
+
+	/** @var IGroupManager */
+	private $groupManager;
 
 	/** @var ConfigService */
 	private $configService;
@@ -77,6 +83,7 @@ class WebsitesService
 	 * WebsitesService constructor.
 	 *
 	 * @param WebsitesRequest  $websiteRequest
+	 * @param IGroupManager    $groupManager
 	 * @param ConfigService    $configService
 	 * @param TemplatesService $templatesService
 	 * @param PicoService      $picoService
@@ -87,6 +94,7 @@ class WebsitesService
 	 */
 	public function __construct(
 		WebsitesRequest $websiteRequest,
+		IGroupManager $groupManager,
 		ConfigService $configService,
 		TemplatesService $templatesService,
 		PicoService $picoService,
@@ -94,6 +102,7 @@ class WebsitesService
 		MiscService $miscService
 	) {
 		$this->websiteRequest = $websiteRequest;
+		$this->groupManager = $groupManager;
 		$this->configService = $configService;
 		$this->templatesService = $templatesService;
 		$this->picoService = $picoService;
@@ -108,12 +117,14 @@ class WebsitesService
 	 *
 	 * @throws WebsiteExistsException
 	 * @throws WebsiteInvalidDataException
+	 * @throws WebsiteInvalidOwnerException
 	 * @throws ThemeNotFoundException
 	 * @throws ThemeNotCompatibleException
 	 * @throws TemplateNotFoundException
 	 */
 	public function createWebsite(Website $website)
 	{
+		$website->assertValidOwner();
 		$website->assertValidName();
 		$website->assertValidSite();
 		$website->assertValidPath();
@@ -236,6 +247,7 @@ class WebsitesService
 	 *
 	 * @return PicoPage
 	 * @throws WebsiteNotFoundException
+	 * @throws WebsiteInvalidOwnerException
 	 * @throws WebsiteInvalidFilesystemException
 	 * @throws WebsiteNotPermittedException
 	 * @throws FilesystemNotLocalException
@@ -259,6 +271,8 @@ class WebsitesService
 		$website->setViewer($viewer ?: '');
 		$website->setPage($page);
 
+		$website->assertValidOwner();
+
 		if (!$website->getWebsiteFolder()->isLocal()) {
 			throw new FilesystemNotLocalException();
 		}
@@ -273,6 +287,7 @@ class WebsitesService
 	 *
 	 * @return PicoAsset
 	 * @throws WebsiteNotFoundException
+	 * @throws WebsiteInvalidOwnerException
 	 * @throws WebsiteInvalidFilesystemException
 	 * @throws WebsiteNotPermittedException
 	 * @throws FilesystemNotLocalException
@@ -295,11 +310,63 @@ class WebsitesService
 		$website->setViewer($viewer ?: '');
 		$website->setPage(PicoService::DIR_ASSETS . '/' . $asset);
 
+		$website->assertValidOwner();
+
 		if (!$website->getWebsiteFolder()->isLocal()) {
 			throw new FilesystemNotLocalException();
 		}
 
 		return $this->assetsService->getAsset($website);
+	}
+
+	/**
+	 * @param string[] $limitGroups
+	 *
+	 * @throws \UnexpectedValueException
+	 */
+	public function setLimitGroups(array $limitGroups)
+	{
+		foreach ($limitGroups as $group) {
+			if (!$this->groupManager->groupExists($group)) {
+				throw new \UnexpectedValueException();
+			}
+		}
+
+		$this->configService->setAppValue(ConfigService::LIMIT_GROUPS, json_encode($limitGroups));
+	}
+
+	/**
+	 * @return string[]
+	 */
+	public function getLimitGroups(): array
+	{
+		$json = $this->configService->getAppValue(ConfigService::LIMIT_GROUPS);
+		return $json ? json_decode($json, true) : [];
+	}
+
+	/**
+	 * @param string|null $userId
+	 *
+	 * @return bool
+	 */
+	public function isUserAllowed(string $userId = null)
+	{
+		if (!$userId) {
+			return false;
+		}
+
+		$limitGroups = $this->getLimitGroups();
+		if (empty($limitGroups)) {
+			return true;
+		}
+
+		foreach ($this->getLimitGroups() as $group) {
+			if ($this->groupManager->isInGroup($userId, $group)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**

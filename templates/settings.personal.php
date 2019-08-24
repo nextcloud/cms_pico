@@ -80,6 +80,21 @@ style(Application::APP_NAME, 'pico');
 		</div>
 	</div>
 
+	<?php if ($_['limitedUser']) { ?>
+		<div class="message large error">
+			<div class="icon icon-error-color"></div>
+			<div>
+				<p><?php p($l->t(
+					'The Nextcloud admin limited access of Pico CMS for Nextcloud to certain groups. Unfortunately '
+					. 'you don\'t have permission to create personal websites. You can still access websites of other '
+					. 'users, possibly including private websites. If you had permission to create websites in the '
+					. 'past, you don\'t have to worry about your data: Nothing is lost. However, nobody will be able '
+					. 'to access your private websites and a "Website not found" error is shown instead.'
+				)); ?></p>
+			</div>
+		</div>
+	<?php } ?>
+
 	<div id="picocms-websites" class="picocms-website-list"
 			data-route="/apps/cms_pico/personal/websites"
 			data-template="#picocms-websites-template"
@@ -233,176 +248,178 @@ style(Application::APP_NAME, 'pico');
 	</script>
 </article>
 
-<article class="section">
-	<h2><?php p($l->t('Create a new website')); ?></h2>
-	<p class="settings-hint"><?php p($l->t(
-		'Just fill the form below to create your own personal website.'
-	)); ?></p>
+<?php if (!$_['limitedUser']) { ?>
+	<article class="section">
+		<h2><?php p($l->t('Create a new website')); ?></h2>
+		<p class="settings-hint"><?php p($l->t(
+			'Just fill the form below to create your own personal website.'
+		)); ?></p>
 
-	<div id="picocms-website-form" class="picocms-website-form"
-			data-route="/apps/cms_pico/personal/websites"
-			data-website-base-url="<?php p($_['baseUrl']); ?>"
-			data-website-list="#picocms-websites">
-		<form class="form">
-			<fieldset>
-				<div class="label">
-					<label for="picocms-website-new-name"><?php p($l->t('Name')); ?></label>
-				</div>
-				<div class="content">
-					<input id="picocms-website-new-name" class="input input-name" type="text" name="name" value=""
-							placeholder="<?php p($l->t('My example website')); ?>"
-							minlength="<?php p($_['nameLengthMin']); ?>"
-							maxlength="<?php p($_['nameLengthMax']); ?>" />
-					<p class="note">
-						<?php p($l->t(
-							'Here you can specify the name of your personal website. Your website\'s name will be '
-							. 'used as website title, often shown in your website\'s header.'
-						)); ?>
-					</p>
-					<div class="message input-error">
-						<div class="icon icon-error-color"></div>
-						<div>
-							<p class="input-name-error"></p>
+		<div id="picocms-website-form" class="picocms-website-form"
+				data-route="/apps/cms_pico/personal/websites"
+				data-website-base-url="<?php p($_['baseUrl']); ?>"
+				data-website-list="#picocms-websites">
+			<form class="form">
+				<fieldset>
+					<div class="label">
+						<label for="picocms-website-new-name"><?php p($l->t('Name')); ?></label>
+					</div>
+					<div class="content">
+						<input id="picocms-website-new-name" class="input input-name" type="text" name="name" value=""
+								placeholder="<?php p($l->t('My example website')); ?>"
+								minlength="<?php p($_['nameLengthMin']); ?>"
+								maxlength="<?php p($_['nameLengthMax']); ?>" />
+						<p class="note">
+							<?php p($l->t(
+								'Here you can specify the name of your personal website. Your website\'s name will be '
+								. 'used as website title, often shown in your website\'s header.'
+							)); ?>
+						</p>
+						<div class="message input-error">
+							<div class="icon icon-error-color"></div>
+							<div>
+								<p class="input-name-error"></p>
+							</div>
 						</div>
 					</div>
-				</div>
-			</fieldset>
+				</fieldset>
 
-			<fieldset>
-				<div class="label">
-					<label for="picocms-website-new-site"><?php p($l->t('Identifier')); ?></label>
-				</div>
-				<div class="content">
-					<input id="picocms-website-new-site" class="input input-site" type="text" name="site" value=""
-							placeholder="<?php p($_['exampleSite']); ?>"
-							minlength="<?php p($_['siteLengthMin']); ?>"
-							maxlength="<?php p($_['siteLengthMax']); ?>"
-							pattern="<?php p($_['siteRegex']); ?>" />
-					<p class="note">
-						<?php p($l->t(
-							'The identifier of your website prescribes both your website\'s address (URL) and the '
-							. 'name of the directory your website\'s files (both pages and assets) will be stored in. '
-							. 'A website\'s identifier must consist of lowercase alphanumeric characters, dashes and '
-							. 'underscores (a-z, 0-9, - and _) only.'
-						)); ?>
-					</p>
-					<div class="message input-error">
-						<div class="icon icon-error-color"></div>
-						<div>
-							<p class="input-site-error"></p>
+				<fieldset>
+					<div class="label">
+						<label for="picocms-website-new-site"><?php p($l->t('Identifier')); ?></label>
+					</div>
+					<div class="content">
+						<input id="picocms-website-new-site" class="input input-site" type="text" name="site" value=""
+								placeholder="<?php p($_['exampleSite']); ?>"
+								minlength="<?php p($_['siteLengthMin']); ?>"
+								maxlength="<?php p($_['siteLengthMax']); ?>"
+								pattern="<?php p($_['siteRegex']); ?>" />
+						<p class="note">
+							<?php p($l->t(
+								'The identifier of your website prescribes both your website\'s address (URL) and the '
+								. 'name of the directory your website\'s files (both pages and assets) will be stored in. '
+								. 'A website\'s identifier must consist of lowercase alphanumeric characters, dashes and '
+								. 'underscores (a-z, 0-9, - and _) only.'
+							)); ?>
+						</p>
+						<div class="message input-error">
+							<div class="icon icon-error-color"></div>
+							<div>
+								<p class="input-site-error"></p>
+							</div>
 						</div>
 					</div>
-				</div>
-			</fieldset>
+				</fieldset>
 
-			<fieldset>
-				<div class="label">
-					<label for="picocms-website-new-address"><?php p($l->t('Address')); ?></label>
-				</div>
-				<div class="content">
-					<a id="picocms-website-new-address" class="input input-address">
-						<?php p($_['baseUrl']); ?>
-					</a>
-					<p class="note">
-						<?php p($l->t(
-							'You will be able to access your website using the address (URL) shown above.'
-						)); ?>
-					</p>
-				</div>
-			</fieldset>
+				<fieldset>
+					<div class="label">
+						<label for="picocms-website-new-address"><?php p($l->t('Address')); ?></label>
+					</div>
+					<div class="content">
+						<a id="picocms-website-new-address" class="input input-address">
+							<?php p($_['baseUrl']); ?>
+						</a>
+						<p class="note">
+							<?php p($l->t(
+								'You will be able to access your website using the address (URL) shown above.'
+							)); ?>
+						</p>
+					</div>
+				</fieldset>
 
-			<fieldset>
-				<div class="label">
-					<label for="picocms-website-new-path"><?php p($l->t('Path')); ?></label>
-				</div>
-				<div class="content">
-					<input id="picocms-website-new-path" class="input input-path" type="button" name="path" value="/" />
-					<p class="note">
-						<?php p($l->t(
-							'When creating a new website, Pico CMS for Nextcloud copies the website '
-							. 'template to the following new directory in your Nextcloud.'
-						)); ?>
-					</p>
-					<div class="message input-error">
-						<div class="icon icon-error-color"></div>
-						<div>
-							<p class="input-path-error"></p>
+				<fieldset>
+					<div class="label">
+						<label for="picocms-website-new-path"><?php p($l->t('Path')); ?></label>
+					</div>
+					<div class="content">
+						<input id="picocms-website-new-path" class="input input-path" type="button" name="path" value="/" />
+						<p class="note">
+							<?php p($l->t(
+								'When creating a new website, Pico CMS for Nextcloud copies the website '
+								. 'template to the following new directory in your Nextcloud.'
+							)); ?>
+						</p>
+						<div class="message input-error">
+							<div class="icon icon-error-color"></div>
+							<div>
+								<p class="input-path-error"></p>
+							</div>
 						</div>
 					</div>
-				</div>
-			</fieldset>
+				</fieldset>
 
-			<fieldset>
-				<div class="label">
-					<label for="picocms-website-new-theme"><?php p($l->t('Theme')); ?></label>
-				</div>
-				<div class="content">
-					<select id="picocms-website-new-theme" class="input input-theme" name="theme">
-						<?php foreach ($_['themes'] as $themeData) { ?>
-							<?php if ($themeData['compat']) { ?>
-								<option value="<?php p($themeData['name']); ?>"><?php p($themeData['name']); ?></option>
+				<fieldset>
+					<div class="label">
+						<label for="picocms-website-new-theme"><?php p($l->t('Theme')); ?></label>
+					</div>
+					<div class="content">
+						<select id="picocms-website-new-theme" class="input input-theme" name="theme">
+							<?php foreach ($_['themes'] as $themeData) { ?>
+								<?php if ($themeData['compat']) { ?>
+									<option value="<?php p($themeData['name']); ?>"><?php p($themeData['name']); ?></option>
+								<?php } ?>
 							<?php } ?>
-						<?php } ?>
-					</select>
-					<p class="note">
-						<?php p($l->t(
-							'You can use one of the provided themes for some greater individuality and '
-							. 'style. If you want to use another theme, ask your Nextcloud admin - it might '
-							. 'be possible to add your favourite theme, too!'
-						)); ?>
-					</p>
-					<div class="message input-error">
-						<div class="icon icon-error-color"></div>
-						<div>
-							<p class="input-theme-error"></p>
+						</select>
+						<p class="note">
+							<?php p($l->t(
+								'You can use one of the provided themes for some greater individuality and '
+								. 'style. If you want to use another theme, ask your Nextcloud admin - it might '
+								. 'be possible to add your favourite theme, too!'
+							)); ?>
+						</p>
+						<div class="message input-error">
+							<div class="icon icon-error-color"></div>
+							<div>
+								<p class="input-theme-error"></p>
+							</div>
 						</div>
 					</div>
-				</div>
-			</fieldset>
+				</fieldset>
 
-			<fieldset>
-				<div class="label">
-					<label for="picocms-website-new-template"><?php p($l->t('Template')); ?></label>
-				</div>
-				<div class="content">
-					<select id="picocms-website-new-template" class="input input-template" name="template">
-						<?php foreach ($_['templates'] as $template) { ?>
-							<option value="<?php p($template); ?>"><?php p($template); ?></option>
-						<?php } ?>
-					</select>
-					<p class="note">
-						<?php p($l->t(
-							'Templates act as a starting point when creating a new website. All templates '
-							. 'consist of a "content" directory (for your pages) and a "assets" directory '
-							. '(for your website\'s assets), which will be copied to the above folder in '
-							. 'your Nextcloud.'
-						)); ?>
-					</p>
-					<div class="message input-error">
-						<div class="icon icon-error-color"></div>
-						<div>
-							<p class="input-template-error"></p>
+				<fieldset>
+					<div class="label">
+						<label for="picocms-website-new-template"><?php p($l->t('Template')); ?></label>
+					</div>
+					<div class="content">
+						<select id="picocms-website-new-template" class="input input-template" name="template">
+							<?php foreach ($_['templates'] as $template) { ?>
+								<option value="<?php p($template); ?>"><?php p($template); ?></option>
+							<?php } ?>
+						</select>
+						<p class="note">
+							<?php p($l->t(
+								'Templates act as a starting point when creating a new website. All templates '
+								. 'consist of a "content" directory (for your pages) and a "assets" directory '
+								. '(for your website\'s assets), which will be copied to the above folder in '
+								. 'your Nextcloud.'
+							)); ?>
+						</p>
+						<div class="message input-error">
+							<div class="icon icon-error-color"></div>
+							<div>
+								<p class="input-template-error"></p>
+							</div>
 						</div>
 					</div>
-				</div>
-			</fieldset>
+				</fieldset>
 
-			<fieldset>
-				<div class="content">
-					<div class="message input-error">
-						<div class="icon icon-error-color"></div>
-						<div>
-							<p class="input-unknown-error"></p>
+				<fieldset>
+					<div class="content">
+						<div class="message input-error">
+							<div class="icon icon-error-color"></div>
+							<div>
+								<p class="input-unknown-error"></p>
+							</div>
 						</div>
-					</div>
 
-					<input class="form-submit" type="submit"
-							value="<?php p($l->t('Create new website')); ?>" />
-					<button class="form-submit-loading icon-loading" disabled="disabled">
-						<?php p($l->t('Loading…')); ?>
-					</button>
-				</div>
-			</fieldset>
-		</form>
-	</div>
-</article>
+						<input class="form-submit" type="submit"
+								value="<?php p($l->t('Create new website')); ?>" />
+						<button class="form-submit-loading icon-loading" disabled="disabled">
+							<?php p($l->t('Loading…')); ?>
+						</button>
+					</div>
+				</fieldset>
+			</form>
+		</div>
+	</article>
+<?php } ?>
