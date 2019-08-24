@@ -1,2 +1,25 @@
-/vendor/
-\.idea/
+# Linux
+*~
+*.swp
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# Mac OS X
+.DS_Store
+._*
+
+# IntelliJ IDEA
+/\.idea
+
+# Build
+/build
+
+# composer
+/composer.phar
+/vendor
+
+# PHP_Codesniffer
+/phpcs.phar
+/phpcbf.phar
