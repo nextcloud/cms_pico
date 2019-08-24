@@ -431,7 +431,7 @@ class SettingsController extends Controller
 
 			$this->websitesService->setLinkMode((int) $data['link_mode']);
 
-			return new DataResponse([], Http::STATUS_CREATED);
+			return new DataResponse();
 		} catch (\Exception $e) {
 			return $this->createErrorResponse($e);
 		}

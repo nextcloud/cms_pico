@@ -28,6 +28,7 @@ namespace OCA\CMSPico\Settings;
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Service\FileService;
 use OCA\CMSPico\Service\PicoService;
+use OCA\CMSPico\Service\WebsitesService;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IURLGenerator;
 use OCP\Settings\ISettings;
@@ -37,18 +38,26 @@ class Admin implements ISettings
 	/** @var IURLGenerator */
 	private $urlGenerator;
 
+	/** @var WebsitesService */
+	private $websitesService;
+
 	/** @var FileService */
 	private $fileService;
 
 	/**
 	 * Admin constructor.
 	 *
-	 * @param IURLGenerator $urlGenerator
-	 * @param FileService   $fileService
+	 * @param IURLGenerator   $urlGenerator
+	 * @param WebsitesService $websitesService
+	 * @param FileService     $fileService
 	 */
-	public function __construct(IURLGenerator $urlGenerator, FileService $fileService)
-	{
+	public function __construct(
+		IURLGenerator $urlGenerator,
+		WebsitesService $websitesService,
+		FileService $fileService
+	) {
 		$this->urlGenerator = $urlGenerator;
+		$this->websitesService = $websitesService;
 		$this->fileService = $fileService;
 	}
 
@@ -75,7 +84,10 @@ class Admin implements ISettings
 			'internalPath'     => $internalBasePath . '/sites/',
 			'themesPath'       => $this->fileService->getAppDataFolderPath(PicoService::DIR_THEMES),
 			'pluginsPath'      => $this->fileService->getAppDataFolderPath(PicoService::DIR_PLUGINS),
-			'templatesPath'    => $this->fileService->getAppDataFolderPath(PicoService::DIR_TEMPLATES)
+			'templatesPath'    => $this->fileService->getAppDataFolderPath(PicoService::DIR_TEMPLATES),
+			'linkMode'         => $this->websitesService->getLinkMode(),
+			'linkModeLong'     => WebsitesService::LINK_MODE_LONG,
+			'linkModeShort'    => WebsitesService::LINK_MODE_SHORT,
 		];
 
 		return new TemplateResponse(Application::APP_NAME, 'settings.admin', $data);

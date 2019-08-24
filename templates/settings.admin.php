@@ -427,15 +427,18 @@ style(Application::APP_NAME, 'pico');
 			<form id="picocms-link_mode" class="picocms-link_mode-form"
 					data-route="/apps/cms_pico/admin/link_mode">
 				<p>
-					<input type="radio" name="data[link_mode]" value="1" id="picocms-link_mode_long" class="radio"
-							checked="checked">
+					<input type="radio" id="picocms-link_mode_long" class="radio"
+							name="data[link_mode]" value="<?php p($_['linkModeLong']); ?>"
+							<?php if ($_['linkMode'] === $_['linkModeLong']) { ?>checked="checked"<?php } ?>>
 					<label for="picocms-link_mode_long">
 						<?php p($l->t('Full application URLs')); ?>
 						<span class="note">– <a><?php p($_['exampleFullUrl']); ?></a></span>
 					</label>
 				</p>
 				<p>
-					<input type="radio" name="data[link_mode]" value="2" id="picocms-link_mode_short" class="radio">
+					<input type="radio" id="picocms-link_mode_short" class="radio"
+							name="data[link_mode]" value="<?php p($_['linkModeShort']); ?>"
+							<?php if ($_['linkMode'] === $_['linkModeShort']) { ?>checked="checked"<?php } ?>>
 					<label for="picocms-link_mode_short">
 						<?php p($l->t('Short website URLs')); ?>
 						<span class="note">– <a><?php p($_['exampleProxyUrl']); ?></a></span>
