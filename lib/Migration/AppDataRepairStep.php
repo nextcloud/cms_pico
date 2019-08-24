@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace OCA\CMSPico\Migration;
 
 use OCA\CMSPico\AppInfo\Application;
-use OCA\CMSPico\Files\FolderInterface;
 use OCA\CMSPico\Service\ConfigService;
 use OCA\CMSPico\Service\FileService;
 use OCA\CMSPico\Service\PicoService;

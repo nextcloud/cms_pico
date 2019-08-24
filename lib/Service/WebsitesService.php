@@ -38,7 +38,6 @@ use OCA\CMSPico\Exceptions\TemplateNotFoundException;
 use OCA\CMSPico\Exceptions\ThemeNotCompatibleException;
 use OCA\CMSPico\Exceptions\ThemeNotFoundException;
 use OCA\CMSPico\Exceptions\WebsiteExistsException;
-use OCA\CMSPico\Exceptions\WebsiteForeignOwnerException;
 use OCA\CMSPico\Exceptions\WebsiteInvalidDataException;
 use OCA\CMSPico\Exceptions\WebsiteInvalidFilesystemException;
 use OCA\CMSPico\Exceptions\WebsiteInvalidOwnerException;

@@ -127,20 +127,6 @@ class MiscService
 	}
 
 	/**
-	 * @param int    $length
-	 * @param string $prefix
-	 * @param string $suffix
-	 *
-	 * @return string
-	 */
-	public function getRandom(int $length = 10, string $prefix = '', string $suffix = ''): string
-	{
-		$randomChars = ISecureRandom::CHAR_UPPER . ISecureRandom::CHAR_LOWER . ISecureRandom::CHAR_DIGITS;
-		$random = \OC::$server->getSecureRandom()->generate($length, $randomChars);
-		return ($prefix ? $prefix . '.' : '') . $random . ($suffix ? '.' . $suffix : '');
-	}
-
-	/**
 	 * @param FileInterface $file
 	 *
 	 * @return bool
@@ -176,5 +162,19 @@ class MiscService
 		}
 
 		return (strpos($buffer, "\0") !== false);
+	}
+
+	/**
+	 * @param int    $length
+	 * @param string $prefix
+	 * @param string $suffix
+	 *
+	 * @return string
+	 */
+	public function getRandom(int $length = 10, string $prefix = '', string $suffix = ''): string
+	{
+		$randomChars = ISecureRandom::CHAR_UPPER . ISecureRandom::CHAR_LOWER . ISecureRandom::CHAR_DIGITS;
+		$random = \OC::$server->getSecureRandom()->generate($length, $randomChars);
+		return ($prefix ? $prefix . '.' : '') . $random . ($suffix ? '.' . $suffix : '');
 	}
 }
