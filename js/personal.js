@@ -394,7 +394,11 @@
 		 * @returns {jQuery|string|number|Array}
 		 */
 		_val: function ($element, value) {
-			return $element.is(':input') ? $element.val(value) : $element.text(value);
+			if (value !== undefined) {
+				return $element.is(':input') ? $element.val(value) : $element.text(value);
+			}
+
+			return $element.is(':input') ? $element.val() : $element.text();
 		},
 
 		/**
@@ -406,8 +410,9 @@
 			var $form = this.$element.find('form'),
 				$address = $form.find('.input-address'),
 				$path = $form.find('.input-path'),
-				value = this._val($site);
+				value = this._val($site).replace(/[\/\\]/g, '');
 
+			this._val($site, value);
 			this._val($address, OC.dirname(this._val($address)) + '/' + value);
 			this._val($path, OC.dirname(this._val($path)) + '/' + value);
 		},
