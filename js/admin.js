@@ -206,6 +206,7 @@
 
 	/**
 	 * @class
+	 * @extends OCA.CMSPico.Form
 	 *
 	 * @param {jQuery} $element
 	 * @param {Object} [options]
@@ -216,35 +217,9 @@
 	};
 
 	/**
-	 * @lends OCA.CMSPico.WebsiteForm.prototype
+	 * @lends OCA.CMSPico.LinkModeForm.prototype
 	 */
-	OCA.CMSPico.LinkModeForm.prototype = {
-		/** @member {jQuery} */
-		$element: $(),
-
-		/** @member {string} */
-		route: '',
-
-		/**
-		 * @constructs
-		 *
-		 * @param {jQuery} $element
-		 * @param {Object} [options]
-		 * @param {string} [options.route]
-		 */
-		initialize: function ($element, options) {
-			this.$element = $element;
-
-			options = $.extend({
-				route: $element.data('route')
-			}, options);
-
-			this.route = options.route;
-
-			var signature = 'OCA.CMSPico.LinkModeForm.initialize()';
-			if (!this.route) throw signature + ': No route given';
-		},
-
+	OCA.CMSPico.LinkModeForm.prototype = $.extend({}, OCA.CMSPico.Form.prototype, {
 		/**
 		 * @public
 		 */
@@ -274,7 +249,7 @@
 				$input.prop('disabled', false);
 			});
 		}
-	};
+	});
 
 	$('.picocms-link_mode-form').each(function () {
 		var $this = $(this),

@@ -49,6 +49,9 @@
 	 * @lends OCA.CMSPico.List.prototype
 	 */
 	OCA.CMSPico.List.prototype = {
+		/** @member {jQuery} */
+		$element: $(),
+
 		/** @member {string} */
 		route: '',
 
@@ -160,6 +163,76 @@
 			$content.appendTo($baseElement);
 
 			return $content;
+		}
+	};
+
+	/**
+	 * @class
+	 *
+	 * @param {jQuery}        $element
+	 * @param {Object}        [options]
+	 * @param {string}        [options.route]
+	 */
+	OCA.CMSPico.Form = function ($element, options) {
+		this.initialize($element, options);
+	};
+
+	/**
+	 * @lends OCA.CMSPico.Form.prototype
+	 */
+	OCA.CMSPico.Form.prototype = {
+		/** @member {jQuery} */
+		$element: $(),
+
+		/** @member {string} */
+		route: '',
+
+		/**
+		 * @constructs
+		 *
+		 * @param {jQuery}        $element
+		 * @param {Object}        [options]
+		 * @param {string}        [options.route]
+		 */
+		initialize: function ($element, options) {
+			this.$element = $element;
+
+			options = $.extend({
+				route: $element.data('route')
+			}, options);
+
+			this.route = options.route;
+
+			var signature = 'OCA.CMSPico.Form.initialize()';
+			if (!this.route) throw signature + ': No route given';
+		},
+
+		/**
+		 * @public
+		 * @abstract
+		 */
+		prepare: function () {},
+
+		/**
+		 * @public
+		 * @abstract
+		 */
+		submit: function () {},
+
+		/**
+		 * @protected
+		 *
+		 * @param {jQuery}              $element
+		 * @param {string|number|Array} [value]
+		 *
+		 * @returns {jQuery|string|number|Array}
+		 */
+		_val: function ($element, value) {
+			if (value !== undefined) {
+				return $element.is(':input') ? $element.val(value) : $element.text(value);
+			}
+
+			return $element.is(':input') ? $element.val() : $element.text();
 		}
 	};
 

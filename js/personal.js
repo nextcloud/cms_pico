@@ -272,6 +272,7 @@
 
 	/**
 	 * @class
+	 * @extends OCA.CMSPico.Form
 	 *
 	 * @param {jQuery} $element
 	 * @param {Object} [options]
@@ -284,33 +285,7 @@
 	/**
 	 * @lends OCA.CMSPico.WebsiteForm.prototype
 	 */
-	OCA.CMSPico.WebsiteForm.prototype = {
-		/** @member {jQuery} */
-		$element: $(),
-
-		/** @member {string} */
-		route: '',
-
-		/**
-		 * @constructs
-		 *
-		 * @param {jQuery} $element
-		 * @param {Object} [options]
-		 * @param {string} [options.route]
-		 */
-		initialize: function ($element, options) {
-			this.$element = $element;
-
-			options = $.extend({
-				route: $element.data('route')
-			}, options);
-
-			this.route = options.route;
-
-			var signature = 'OCA.CMSPico.WebsiteForm.initialize()';
-			if (!this.route) throw signature + ': No route given';
-		},
-
+	OCA.CMSPico.WebsiteForm.prototype = $.extend({}, OCA.CMSPico.Form.prototype, {
 		/**
 		 * @public
 		 */
@@ -388,22 +363,6 @@
 		/**
 		 * @private
 		 *
-		 * @param {jQuery}              $element
-		 * @param {string|number|Array} [value]
-		 *
-		 * @returns {jQuery|string|number|Array}
-		 */
-		_val: function ($element, value) {
-			if (value !== undefined) {
-				return $element.is(':input') ? $element.val(value) : $element.text(value);
-			}
-
-			return $element.is(':input') ? $element.val() : $element.text();
-		},
-
-		/**
-		 * @private
-		 *
 		 * @param {jQuery} $site
 		 */
 		_inputSite: function ($site) {
@@ -449,7 +408,7 @@
 			$formError.closest('fieldset').addClass('form-error');
 			$formError.text(message);
 		}
-	};
+	});
 
 	$('.picocms-website-form').each(function () {
 		var $this = $(this),
