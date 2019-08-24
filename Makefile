@@ -1,71 +1,85 @@
 app_name=cms_pico
+version?=1.0.0
+prerelease?=false
 
-project_dir=$(CURDIR)/../$(app_name)
-build_dir=$(CURDIR)/build/artifacts
-appstore_dir=$(build_dir)/appstore
-source_dir=$(build_dir)/source
-sign_dir=$(build_dir)/sign
-package_name=$(app_name)
+build_dir=$(CURDIR)/build
 cert_dir=$(HOME)/.nextcloud/certificates
-codecov_token_dir=$(HOME)/.nextcloud/codecov_token
-github_account=nextcloud
-branch=master
-version+=0.9.8
+curlrc=$(HOME)/.nextcloud/curlrc
+archive=$(app_name)-v$(version).tar.gz
+signature=$(app_name)-v$(version).tar.gz.sig
+github_owner=nextcloud
+github_repo=cms_pico
+github_branch=master
+download_url=https://github.com/$(github_owner)/$(github_repo)/releases/download/v$(version)/$(archive)
+publish_url=https://apps.nextcloud.com/api/v1/apps/releases
 
-all: appstore
+all: build
 
-release: appstore github-release github-upload
+clean:
+	rm -rf "$(build_dir)"
+
+composer:
+	composer install --no-dev --prefer-dist --optimize-autoloader
+
+build: clean composer
+	mkdir -p "$(build_dir)"
+	rsync -a \
+		--exclude="/build" \
+		--exclude="/tests" \
+		--exclude="/vendor/picocms/pico/index.php" \
+		--exclude="/vendor/picocms/pico/index.php.dist" \
+		--exclude="/.tx" \
+		--exclude="/composer.json" \
+		--exclude="/composer.lock" \
+		--exclude="/Makefile" \
+		--exclude="/README.md" \
+		--exclude="/.drone.yml" \
+		--exclude="/.phpcs.xml" \
+		--exclude="/.scrutinizer.yml" \
+		--exclude=".git" \
+		--exclude=".github" \
+		--exclude=".gitattributes" \
+		--exclude=".gitignore" \
+		./ "$(build_dir)/$(app_name)/"
+	tar czf "$(build_dir)/$(archive)" \
+		-C "$(build_dir)" "$(app_name)"
+
+sign: build
+	openssl dgst -sha512 \
+		-sign "$(cert_dir)/$(app_name).key" \
+		"$(build_dir)/$(archive)" \
+			| openssl base64 -A > "$(build_dir)/$(signature)"
 
 github-release:
 	github-release release \
-		--user $(github_account) \
-		--repo $(app_name) \
-		--target $(branch) \
-		--tag v$(version) \
-		--name "$(app_name) v$(version)"
+		--user "$(github_owner)" \
+		--repo "$(github_repo)" \
+		--tag "v$(version)" \
+		--target "$(github_branch)" \
+		--name "Pico CMS for Nextcloud v$(version)" \
+		--description "Pico CMS for Nextcloud v$(version)" \
+		$(if $(findstring true,$(prerelease)),--pre-release,)
 
-github-upload:
+github-upload: build github-release
 	github-release upload \
-		--user $(github_account) \
-		--repo $(app_name) \
-		--tag v$(version) \
-		--name "$(app_name)-$(version).tar.gz" \
-		--file $(build_dir)/$(app_name)-$(version).tar.gz
+		--user "$(github_owner)" \
+		--repo "$(github_repo)" \
+		--tag "v$(version)" \
+		--name "$(archive)"
+		--file "$(build_dir)/$(archive)"
 
-# composer packages
-composer:
-	composer install --prefer-dist
+publish: sign github-upload
+	php -r 'echo json_encode([ "download" => $$_SERVER["argv"][1], "signature" => file_get_contents($$_SERVER["argv"][2]), "nightly" => !!$$_SERVER["argv"][3] ]);' "" \
+		"$(download_url)" "$(build_dir)/$(signature)" "$(if $(findstring true,$(prerelease)),1,0)" \
+			| curl -K "$(curlrc)" \
+				-H "Content-Type: application/json" -d "@-" \
+				-X POST "$(publish_url)"
 
-clean:
-	rm -rf $(build_dir)
-	rm -rf node_modules
+github-release-dev: prerelease=true
+github-release-dev: github-release
 
-appstore: composer clean
-	mkdir -p $(sign_dir)
-	rsync -a \
-	--exclude=/build \
-	--exclude=/docs \
-	--exclude=/translationfiles \
-	--exclude=/tests \
-	--exclude=/.tx \
-	--exclude=/.git \
-	--exclude=/.github \
-	--exclude=/composer.json \
-	--exclude=/composer.lock \
-	--exclude=/l10n/l10n.pl \
-	--exclude=/CONTRIBUTING.md \
-	--exclude=/issue_template.md \
-	--exclude=/README.md \
-	--exclude=/.gitattributes \
-	--exclude=.gitignore \
-	--exclude=/.scrutinizer.yml \
-	--exclude=/.travis.yml \
-	--exclude=/Makefile \
-	--exclude=/vendor/picocms/pico/index.php \
-	./ $(sign_dir)/$(app_name)
-	tar -czf $(build_dir)/$(app_name)-$(version).tar.gz \
-		-C $(sign_dir) $(app_name)
-	@if [ -f $(cert_dir)/$(app_name).key ]; then \
-		echo "Signing package…"; \
-		openssl dgst -sha512 -sign $(cert_dir)/$(app_name).key $(build_dir)/$(app_name)-$(version).tar.gz | openssl base64; \
-	fi
+github-upload-dev: prerelease=true
+github-upload-dev: github-upload
+
+publish-dev: prerelease=true
+publish-dev: publish
