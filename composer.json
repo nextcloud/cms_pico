@@ -18,7 +18,7 @@
     "picocms/pico": "~2.1.0@dev",
     "picocms/pico-theme": "~2.1.0@dev",
     "picocms/composer-installer": "^1.0",
-    "ezyang/htmlpurifier": "^4.10"
+    "xemlock/htmlpurifier-html5": "~0.1.11"
   },
   "extra": {
     "pico-theme-dir": "appdata/themes/",

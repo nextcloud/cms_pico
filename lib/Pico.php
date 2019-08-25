@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace OCA\CMSPico;
 
 use HTMLPurifier;
-use HTMLPurifier_Config;
+use HTMLPurifier_HTML5Config;
 use OCA\CMSPico\Exceptions\WebsiteInvalidFilesystemException;
 use OCA\CMSPico\Files\FileInterface;
 use OCA\CMSPico\Files\FolderInterface;
@@ -203,7 +203,8 @@ class Pico extends \Pico
 	public function getHtmlPurifier()
 	{
 		if ($this->htmlPurifier === null) {
-			$this->htmlPurifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+			$htmlPurifierConfig = HTMLPurifier_HTML5Config::createDefault();;
+			$this->htmlPurifier = new HTMLPurifier($htmlPurifierConfig);
 
 			$this->triggerEvent('onHtmlPurifier', [ &$this->htmlPurifier ]);
 		}

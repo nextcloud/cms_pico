@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "311cf4acd214afa20a058d793103330b",
+    "content-hash": "e7c98ae3336f5816549289ed97924b32",
     "packages": [
         {
             "name": "erusev/parsedown",
@@ -444,26 +444,26 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.42.2",
+            "version": "v1.42.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "21707d6ebd05476854805e4f91b836531941bcd4"
+                "reference": "201baee843e0ffe8b0b956f336dd42b2a92fae4e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/21707d6ebd05476854805e4f91b836531941bcd4",
-                "reference": "21707d6ebd05476854805e4f91b836531941bcd4",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/201baee843e0ffe8b0b956f336dd42b2a92fae4e",
+                "reference": "201baee843e0ffe8b0b956f336dd42b2a92fae4e",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4.0",
+                "php": ">=5.5.0",
                 "symfony/polyfill-ctype": "^1.8"
             },
             "require-dev": {
                 "psr/container": "^1.0",
-                "symfony/debug": "^2.7",
-                "symfony/phpunit-bridge": "^3.4.19|^4.1.8|^5.0"
+                "symfony/debug": "^3.4|^4.2",
+                "symfony/phpunit-bridge": "^4.4@dev|^5.0"
             },
             "type": "library",
             "extra": {
@@ -486,19 +486,19 @@
             "authors": [
                 {
                     "name": "Fabien Potencier",
+                    "role": "Lead Developer",
                     "email": "fabien@symfony.com",
-                    "homepage": "http://fabien.potencier.org",
-                    "role": "Lead Developer"
-                },
-                {
-                    "name": "Armin Ronacher",
-                    "email": "armin.ronacher@active-4.com",
-                    "role": "Project Founder"
+                    "homepage": "http://fabien.potencier.org"
                 },
                 {
                     "name": "Twig Team",
-                    "homepage": "https://twig.symfony.com/contributors",
-                    "role": "Contributors"
+                    "role": "Contributors",
+                    "homepage": "https://twig.symfony.com/contributors"
+                },
+                {
+                    "name": "Armin Ronacher",
+                    "role": "Project Founder",
+                    "email": "armin.ronacher@active-4.com"
                 }
             ],
             "description": "Twig, the flexible, fast, and secure template language for PHP",
@@ -506,7 +506,58 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2019-06-18T15:35:16+00:00"
+            "time": "2019-08-24T12:51:03+00:00"
+        },
+        {
+            "name": "xemlock/htmlpurifier-html5",
+            "version": "v0.1.11",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/xemlock/htmlpurifier-html5.git",
+                "reference": "f0d563f9fd4a82a3d759043483f9a94c0d8c2255"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/xemlock/htmlpurifier-html5/zipball/f0d563f9fd4a82a3d759043483f9a94c0d8c2255",
+                "reference": "f0d563f9fd4a82a3d759043483f9a94c0d8c2255",
+                "shasum": ""
+            },
+            "require": {
+                "ezyang/htmlpurifier": "^4.8",
+                "php": ">=5.2"
+            },
+            "require-dev": {
+                "php-coveralls/php-coveralls": "^1.1|^2.1",
+                "phpunit/phpunit": ">=4.7 <8.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "library/HTMLPurifier/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "xemlock",
+                    "email": "xemlock@gmail.com"
+                }
+            ],
+            "description": "HTML5 element definitions for HTML Purifier",
+            "keywords": [
+                "HTML5",
+                "Purifier",
+                "html",
+                "htmlpurifier",
+                "security",
+                "tidy",
+                "validator",
+                "xss"
+            ],
+            "time": "2019-08-07T17:19:21+00:00"
         }
     ],
     "packages-dev": [],
