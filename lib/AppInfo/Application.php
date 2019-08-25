@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\AppInfo;
 
+use OCP\App\AppPathNotFoundException;
+use OCP\App\IAppManager;
 use OCP\AppFramework\App;
 use OCP\Util;
 
@@ -69,7 +71,13 @@ class Application extends App
 	 */
 	public static function getAppPath(): string
 	{
-		return \OC_App::getAppPath(self::APP_NAME) ?: '';
+		try {
+			/** @var IAppManager $appManager */
+			$appManager = \OC::$server->getAppManager();
+			return $appManager->getAppPath(self::APP_NAME);
+		} catch (AppPathNotFoundException $e) {
+			return '';
+		}
 	}
 
 	/**

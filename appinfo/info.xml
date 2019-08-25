@@ -29,8 +29,8 @@ You want to learn more about Pico CMS for Nextcloud? Easy! Just download and ena
 	<author homepage="https://github.com/PhrozenByte">Daniel Rudolf</author>
 	<namespace>CMSPico</namespace>
 	<documentation>
-		<admin>https://github.com/nextcloud/cms_pico/wiki</admin>
 		<user>https://github.com/nextcloud/cms_pico/wiki</user>
+		<admin>https://github.com/nextcloud/cms_pico/wiki</admin>
 	</documentation>
 	<category>social</category>
 	<category>integration</category>
@@ -44,21 +44,21 @@ You want to learn more about Pico CMS for Nextcloud? Easy! Just download and ena
 	<screenshot>https://raw.githubusercontent.com/nextcloud/cms_pico/master/screenshots/website.png</screenshot>
 	<screenshot>https://raw.githubusercontent.com/nextcloud/cms_pico/master/screenshots/custom.png</screenshot>
 	<dependencies>
-		<nextcloud min-version="14" max-version="17"/>
 		<php min-version="7.0.0"/>
+		<nextcloud min-version="14" max-version="17"/>
 	</dependencies>
+	<repair-steps>
+		<post-migration>
+			<step>OCA\CMSPico\Migration\AppDataRepairStep</step>
+		</post-migration>
+		<install>
+			<step>OCA\CMSPico\Migration\AppDataRepairStep</step>
+		</install>
+	</repair-steps>
 	<settings>
 		<admin>OCA\CMSPico\Settings\Admin</admin>
 		<admin-section>OCA\CMSPico\Settings\AdminSection</admin-section>
 		<personal>OCA\CMSPico\Settings\Personal</personal>
 		<personal-section>OCA\CMSPico\Settings\PersonalSection</personal-section>
 	</settings>
-	<repair-steps>
-		<install>
-			<step>OCA\CMSPico\Migration\AppDataRepairStep</step>
-		</install>
-		<post-migration>
-			<step>OCA\CMSPico\Migration\AppDataRepairStep</step>
-		</post-migration>
-	</repair-steps>
 </info>
