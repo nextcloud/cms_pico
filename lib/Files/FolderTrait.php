@@ -26,6 +26,7 @@ namespace OCA\CMSPico\Files;
 
 use OCP\Files\GenericFileException;
 use OCP\Files\InvalidPathException;
+use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 
 trait FolderTrait
@@ -38,6 +39,8 @@ trait FolderTrait
 	 *
 	 * @return FolderInterface
 	 * @throws InvalidPathException
+	 * @throws NotFoundException
+	 * @throws GenericFileException
 	 */
 	public function getFolder(string $path): FolderInterface
 	{
@@ -55,6 +58,8 @@ trait FolderTrait
 	 *
 	 * @return FileInterface
 	 * @throws InvalidPathException
+	 * @throws NotFoundException
+	 * @throws GenericFileException
 	 */
 	public function getFile(string $path): FileInterface
 	{
