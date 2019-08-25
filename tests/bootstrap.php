@@ -3,6 +3,7 @@
  * CMS Pico - Create websites using Pico CMS for Nextcloud.
  *
  * @copyright Copyright (c) 2017, Maxence Lange (<maxence@artificial-owl.com>)
+ * @copyright Copyright (c) 2019, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -24,11 +25,10 @@ if (!defined('PHPUNIT_RUN')) {
 	define('PHPUNIT_RUN', 1);
 }
 
-require_once __DIR__ . '/../../../lib/base.php';
+require_once(__DIR__ . '/../../../lib/base.php');
 
 \OC::$loader->addValidRoot(OC::$SERVERROOT . '/tests');
 
 \OC_App::loadApp('cms_pico');
 
 OC_Hook::clear();
-

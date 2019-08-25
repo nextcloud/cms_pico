@@ -50,7 +50,7 @@ class PicoControllerTest extends TestCase
 	/** @var WebsitesService */
 	private $websitesService;
 
-	protected function setUp(): void
+	protected function setUp()
 	{
 		Env::setUser(Env::ENV_TEST_USER1);
 		Env::logout();
@@ -62,7 +62,7 @@ class PicoControllerTest extends TestCase
 		$this->websitesService = $container->query(WebsitesService::class);
 	}
 
-	protected function tearDown(): void
+	protected function tearDown()
 	{
 		Env::setUser(Env::ENV_TEST_USER1);
 		Env::logout();
@@ -87,20 +87,6 @@ class PicoControllerTest extends TestCase
 		if (substr($content, 0, 15) !== '<!DOCTYPE html>') {
 			$this->assertSame(true, false, 'Unexpected content');
 		}
-	}
-
-	public function testGetRoot()
-	{
-		$result = $this->picoController->getRoot(self::INFOS_WEBSITE1['site']);
-		$content = $result->render();
-		if (substr($content, 0, 15) !== '<!DOCTYPE html>') {
-			$this->assertSame(true, false, 'Unexpected content');
-		}
-
-		try {
-			$this->picoController->getRoot('random_website');
-			$this->assertSame(true, false, 'Should return Exception');
-		} catch (\Exception $e) {}
 	}
 
 	public function testWebsiteDeletion()

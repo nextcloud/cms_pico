@@ -26,12 +26,13 @@ declare(strict_types=1);
 namespace OCA\CMSPico\Tests;
 
 use PHPUnit\Framework\AssertionFailedError;
+use PHPUnit\Framework\BaseTestListener;
 use PHPUnit\Framework\Test;
 use PHPUnit\Framework\TestListener;
 use PHPUnit\Framework\TestSuite;
 use PHPUnit\Framework\Warning;
 
-class Env implements TestListener
+class Env extends BaseTestListener implements TestListener
 {
 	const ENV_TEST_USER1 = 'testpico1';
 	const ENV_TEST_USER2 = 'testpico2';
@@ -40,19 +41,7 @@ class Env implements TestListener
 	/** @var array<string> */
 	private $users;
 
-	public function addError(Test $test, \Throwable $t, float $time): void {}
-
-	public function addWarning(Test $test, Warning $e, float $time): void {}
-
-	public function addFailure(Test $test, AssertionFailedError $e, float $time): void {}
-
-	public function addIncompleteTest(Test $test, \Throwable $t, float $time): void {}
-
-	public function addRiskyTest(Test $test, \Throwable $t, float $time): void {}
-
-	public function addSkippedTest(Test $test, \Throwable $t, float $time): void {}
-
-	public function startTestSuite(TestSuite $suite): void
+	public function startTestSuite(TestSuite $suite)
 	{
 		$userManager = \OC::$server->getUserManager();
 		$this->users = self::listUsers();
@@ -64,12 +53,8 @@ class Env implements TestListener
 		}
 	}
 
-	public function endTestSuite(TestSuite $suite): void
+	public function endTestSuite(TestSuite $suite)
 	{
-		if ($suite->getName() !== '.') {
-			return;
-		}
-
 		foreach ($this->users AS $uid) {
 			$user = \OC::$server->getUserManager()->get($uid);
 			if ($user !== null) {
@@ -77,10 +62,6 @@ class Env implements TestListener
 			}
 		}
 	}
-
-	public function startTest(Test $test): void {}
-
-	public function endTest(Test $test, float $time): void {}
 
 	public static function setUser($which)
 	{

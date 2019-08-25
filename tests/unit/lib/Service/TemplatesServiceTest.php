@@ -31,6 +31,7 @@ use OCA\CMSPico\Exceptions\TemplateNotFoundException;
 use OCA\CMSPico\Service\FileService;
 use OCA\CMSPico\Service\TemplatesService;
 use OCA\CMSPico\Tests\Env;
+use PHPUnit\Exception as PHPUnitException;
 use PHPUnit\Framework\TestCase;
 
 class TemplatesServiceTest extends TestCase
@@ -44,7 +45,7 @@ class TemplatesServiceTest extends TestCase
 	/** @var TemplatesService */
 	private $templatesService;
 
-	protected function setUp(): void
+	protected function setUp()
 	{
 		Env::setUser(Env::ENV_TEST_USER1);
 		Env::logout();
@@ -57,7 +58,7 @@ class TemplatesServiceTest extends TestCase
 		$this->settingsController = $container->query(SettingsController::class);
 	}
 
-	protected function tearDown(): void
+	protected function tearDown()
 	{
 		Env::setUser(Env::ENV_TEST_USER1);
 		Env::logout();
@@ -82,8 +83,10 @@ class TemplatesServiceTest extends TestCase
 			$this->templatesService->assertValidTemplate('this_is_a_template');
 			$this->assertSame(true, false, 'should return an exception');
 		} catch (TemplateNotFoundException $e) {
+		} catch (PHPUnitException $e) {
+			throw $e;
 		} catch (\Exception $e) {
-			$this->assertSame(true, false, 'should return TemplateDoesNotExistException');
+			$this->assertSame(true, false, 'should return TemplateNotFoundException');
 		}
 
 		$this->settingsController->addCustomTemplate('this_is_a_template');
@@ -107,8 +110,10 @@ class TemplatesServiceTest extends TestCase
 			$this->templatesService->assertValidTemplate('this_is_a_template');
 			$this->assertSame(true, false, 'should return an exception');
 		} catch (TemplateNotFoundException $e) {
+		} catch (PHPUnitException $e) {
+			throw $e;
 		} catch (\Exception $e) {
-			$this->assertSame(true, false, 'should return TemplateDoesNotExistException');
+			$this->assertSame(true, false, 'should return TemplateNotFoundException');
 		}
 	}
 }

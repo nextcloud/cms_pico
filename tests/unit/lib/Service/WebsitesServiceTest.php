@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace OCA\CMSPico\Tests\Service;
 
 use OCA\CMSPico\AppInfo\Application;
-use OCA\CMSPico\Exceptions\PicoRuntimeException;
 use OCA\CMSPico\Exceptions\WebsiteExistsException;
 use OCA\CMSPico\Exceptions\WebsiteForeignOwnerException;
 use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
@@ -34,6 +33,7 @@ use OCA\CMSPico\Model\Website;
 use OCA\CMSPico\Model\WebsiteCore;
 use OCA\CMSPico\Service\WebsitesService;
 use OCA\CMSPico\Tests\Env;
+use PHPUnit\Exception as PHPUnitException;
 use PHPUnit\Framework\TestCase;
 
 class WebsitesServiceTest extends TestCase
@@ -57,7 +57,7 @@ class WebsitesServiceTest extends TestCase
 	/** @var WebsitesService */
 	private $websitesService;
 
-	protected function setUp(): void
+	protected function setUp()
 	{
 		Env::setUser(Env::ENV_TEST_USER1);
 		Env::logout();
@@ -68,7 +68,7 @@ class WebsitesServiceTest extends TestCase
 		$this->websitesService = $container->query(WebsitesService::class);
 	}
 
-	protected function tearDown(): void
+	protected function tearDown()
 	{
 		Env::setUser(Env::ENV_TEST_USER1);
 		Env::logout();
@@ -89,6 +89,8 @@ class WebsitesServiceTest extends TestCase
 			$this->createWebsite($data);
 			$this->assertSame(true, false, 'should return an exception');
 		} catch (WebsiteExistsException $e) {
+		} catch (PHPUnitException $e) {
+			throw $e;
 		} catch (\Exception $e) {
 			$this->assertSame(true, false, 'should return WebsiteExistsException');
 		}
@@ -192,24 +194,13 @@ class WebsitesServiceTest extends TestCase
 			$this->websitesService->getPage(
 				'random_website', '', Env::ENV_TEST_USER1
 			);
-			$this->assertSame(true, false, 'Should return an exception');
+			$this->assertSame(true, false, 'should return an exception');
 		} catch (WebsiteNotFoundException $e) {
+		} catch (PHPUnitException $e) {
+			throw $e;
 		} catch (\Exception $e) {
-			$this->assertSame(true, false, 'Should return WebsiteNotFoundException');
+			$this->assertSame(true, false, 'should return WebsiteNotFoundException');
 		}
-
-		// test website with no content
-		rename($website->getWebsitePath() . 'content', './content');
-		try {
-			$this->websitesService->getPage($website->getSite(), '', Env::ENV_TEST_USER1)
-				->render();
-			$this->assertSame(true, false, 'Should return an exception');
-		} catch (PicoRuntimeException $e) {
-		} catch (\Exception $e) {
-			$this->assertSame(true, false, 'Should return PicoRuntimeException' . $e->getMessage());
-		}
-
-		rename('./content', $website->getAbsolutePath() . 'content');
 	}
 
 	public function testWebsiteDeletion()
@@ -238,6 +229,8 @@ class WebsitesServiceTest extends TestCase
 			$this->deleteWebsite($data);
 			$this->assertSame(true, false, 'should return an exception');
 		} catch (WebsiteNotFoundException $e) {
+		} catch (PHPUnitException $e) {
+			throw $e;
 		} catch (\Exception $e) {
 			$this->assertSame(true, false, 'should return WebsiteNotFoundException');
 		}

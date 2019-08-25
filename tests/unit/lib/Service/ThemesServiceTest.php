@@ -29,8 +29,10 @@ use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Controller\SettingsController;
 use OCA\CMSPico\Exceptions\ThemeNotFoundException;
 use OCA\CMSPico\Service\FileService;
+use OCA\CMSPico\Service\PicoService;
 use OCA\CMSPico\Service\ThemesService;
 use OCA\CMSPico\Tests\Env;
+use PHPUnit\Exception as PHPUnitException;
 use PHPUnit\Framework\TestCase;
 
 class ThemesServiceTest extends TestCase
@@ -44,7 +46,7 @@ class ThemesServiceTest extends TestCase
 	/** @var ThemesService */
 	private $themesService;
 
-	protected function setUp(): void
+	protected function setUp()
 	{
 		Env::setUser(Env::ENV_TEST_USER1);
 		Env::logout();
@@ -57,7 +59,7 @@ class ThemesServiceTest extends TestCase
 		$this->settingsController = $container->query(SettingsController::class);
 	}
 
-	protected function tearDown(): void
+	protected function tearDown()
 	{
 		Env::setUser(Env::ENV_TEST_USER1);
 		Env::logout();
@@ -69,7 +71,9 @@ class ThemesServiceTest extends TestCase
 		$this->assertCount(0, $this->themesService->getCustomThemes());
 		$this->assertCount(0, $this->themesService->getNewCustomThemes());
 
-		mkdir($this->fileService->getAppDataFolderPath('themes') . 'this_is_a_test');
+		$this->fileService->getAppDataFolder(PicoService::DIR_THEMES)
+			->newFolder('this_is_a_test')
+			->newFile('index.twig');
 		$this->assertCount(1, $this->themesService->getThemes());
 		$this->assertCount(0, $this->themesService->getCustomThemes());
 		$this->assertCount(1, $this->themesService->getNewCustomThemes());
@@ -78,8 +82,10 @@ class ThemesServiceTest extends TestCase
 			$this->themesService->assertValidTheme('this_is_a_test');
 			$this->assertSame(true, false, 'should return an exception');
 		} catch (ThemeNotFoundException $e) {
+		} catch (PHPUnitException $e) {
+			throw $e;
 		} catch (\Exception $e) {
-			$this->assertSame(true, false, 'should return ThemeDoesNotExistException');
+			$this->assertSame(true, false, 'should return ThemeNotFoundException');
 		}
 
 		$this->settingsController->addCustomTheme('this_is_a_test');
@@ -94,7 +100,8 @@ class ThemesServiceTest extends TestCase
 		$this->assertCount(0, $this->themesService->getCustomThemes());
 		$this->assertCount(1, $this->themesService->getNewCustomThemes());
 
-		rmdir($this->fileService->getAppDataFolderPath('themes') . 'this_is_a_test');
+		$this->fileService->getAppDataFolder(PicoService::DIR_THEMES)
+			->getFolder('this_is_a_test')->delete();
 		$this->assertCount(1, $this->themesService->getThemes());
 		$this->assertCount(0, $this->themesService->getCustomThemes());
 		$this->assertCount(0, $this->themesService->getNewCustomThemes());
@@ -103,8 +110,10 @@ class ThemesServiceTest extends TestCase
 			$this->themesService->assertValidTheme('this_is_a_test');
 			$this->assertSame(true, false, 'should return an exception');
 		} catch (ThemeNotFoundException $e) {
+		} catch (PHPUnitException $e) {
+			throw $e;
 		} catch (\Exception $e) {
-			$this->assertSame(true, false, 'should return ThemeDoesNotExistException');
+			$this->assertSame(true, false, 'should return ThemeNotFoundException');
 		}
 	}
 }
