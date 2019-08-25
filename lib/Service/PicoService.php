@@ -236,40 +236,33 @@ class PicoService
 	 */
 	public function getRelativePath(Website $website, string $absolutePath): array
 	{
-		$folder = $this->getContentFolder($website);
-		$basePath = $this->getContentPath($website);
+		$folder = $website->getWebsiteFolder();
+		$basePath = $website->getWebsitePath();
 
 		try {
 			$relativePath = $this->miscService->getRelativePath($absolutePath, $basePath);
 		} catch (InvalidPathException $e) {
-			$folder = $this->assetsService->getAssetsFolder($website);
-			$basePath = $this->assetsService->getAssetsPath($website);
+			$folder = $this->pluginsService->getPluginsFolder();
+			$basePath = $this->pluginsService->getPluginsPath();
 
 			try {
 				$relativePath = $this->miscService->getRelativePath($absolutePath, $basePath);
 			} catch (InvalidPathException $e) {
-				$folder = $this->pluginsService->getPluginsFolder();
-				$basePath = $this->pluginsService->getPluginsPath();
+				$folder = $this->themesService->getThemesFolder();
+				$basePath = $this->themesService->getThemesPath();
 
 				try {
 					$relativePath = $this->miscService->getRelativePath($absolutePath, $basePath);
 				} catch (InvalidPathException $e) {
-					$folder = $this->themesService->getThemesFolder();
-					$basePath = $this->themesService->getThemesPath();
+					$folder = $this->getConfigFolder();
+					$basePath = $this->getConfigPath();
 
 					try {
 						$relativePath = $this->miscService->getRelativePath($absolutePath, $basePath);
 					} catch (InvalidPathException $e) {
-						$folder = $this->getConfigFolder();
-						$basePath = $this->getConfigPath();
-
-						try {
-							$relativePath = $this->miscService->getRelativePath($absolutePath, $basePath);
-						} catch (InvalidPathException $e) {
-							// the file is neither in the content nor assets, plugins, themes or config folder
-							// Pico mustn't have access to any other directory
-							throw new InvalidPathException();
-						}
+						// the file is neither in the content nor assets, plugins, themes or config folder
+						// Pico mustn't have access to any other directory
+						throw new InvalidPathException();
 					}
 				}
 			}
