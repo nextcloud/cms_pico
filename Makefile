@@ -1,3 +1,22 @@
+###
+# Creates and publishes a new release
+#
+# Defaults to version '1.0.0'. If you want to create and publish another
+# release, pass the 'version' environment variable.
+#
+# Requirements:
+# - Target 'sign'
+#       Requires OpenSSL and a RSA key for signing the release archive at
+#       '~/.nextcloud/certificates/$(app_name).key'
+# - Targets 'github-release' and 'github-upload'
+#       Requires https://github.com/aktau/github-release and the 'GITHUB_TOKEN'
+#       environment variable to be set to your GitHub API token
+# - Target 'nextcloud-publish'
+#       Requires a 'curlrc' file at '~/.nextcloud/curlrc' with an appropiate
+#       Authentication header for the Nextcloud App Store, e.g.
+#           header = "Authorization: Token [NEXTCLOUD_API_TOKEN]"
+#
+
 app_name=cms_pico
 version?=1.0.0
 prerelease?=false
@@ -24,24 +43,29 @@ composer:
 build: clean composer
 	mkdir -p "$(build_dir)"
 	rsync -a \
+		--exclude="/appdata/plugins/.gitignore" \
+		--exclude="/appdata/themes/.gitignore" \
+		--exclude="/appdata_public/plugins" \
+		--exclude="/appdata_public/themes" \
+		--exclude="/appdata_public/.gitignore" \
 		--exclude="/build" \
+		--exclude="/l10n/.gitignore" \
 		--exclude="/tests" \
+		--exclude="/nextcloud" \
 		--exclude="/vendor/picocms/pico/index.php" \
 		--exclude="/vendor/picocms/pico/index.php.dist" \
 		--exclude="/.tx" \
 		--exclude="/composer.json" \
 		--exclude="/composer.lock" \
 		--exclude="/Makefile" \
-		--exclude="/README.md" \
 		--exclude="/.drone.yml" \
+		--exclude="/.gitattributes" \
+		--exclude="/.gitignore" \
 		--exclude="/.phpcs.xml" \
 		--exclude="/.scrutinizer.yml" \
 		--exclude=".git" \
-		--exclude=".github" \
-		--exclude=".gitattributes" \
-		--exclude=".gitignore" \
 		./ "$(build_dir)/$(app_name)/"
-	tar czf "$(build_dir)/$(archive)" \
+	tar cfz "$(build_dir)/$(archive)" \
 		-C "$(build_dir)" "$(app_name)"
 
 sign: build

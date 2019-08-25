@@ -15,6 +15,7 @@ desktop.ini
 
 # Build
 /build
+/nextcloud
 
 # composer
 /composer.phar
@@ -26,3 +27,5 @@ desktop.ini
 
 # phpunit
 /phpunit.phar
+/tests/clover.xml
+/tests/.phpunit.result.cache

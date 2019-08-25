@@ -1,14 +1,44 @@
 build:
+  environment:
+    variables:
+      APP_NAME: cms_pico
   nodes:
     analysis:
+      environment:
+        php:
+          version: 7.1
       dependencies:
-        after:
-          - curl -L https://download.nextcloud.com/server/releases/latest.tar.bz2 | tar xj
+        override:
+          - curl -L -o ~/nextcloud.tar.bz2 https://download.nextcloud.com/server/releases/latest.tar.bz2
+          - curl -L -o ~/phpunit.phar https://phar.phpunit.de/phpunit-6.phar
+      project_setup:
+        override:
+          - make build
+          - cp build/$APP_NAME-*.tar.gz ~/$APP_NAME.tar.gz
+
+          - tar xfjv ~/nextcloud.tar.bz2
+
+          - tar xfjv ~/nextcloud.tar.bz2 -C ~
+          - tar xfzv ~/$APP_NAME.tar.gz -C ~/nextcloud/apps
+          - cp -rv tests ~/nextcloud/apps/$APP_NAME/tests
+
+          - cd ~/nextcloud
+          - php ./occ maintenance:install --database "sqlite" --admin-user "admin" --admin-pass "admin"
+          - php ./occ app:enable $APP_NAME
       tests:
         override:
-          - php-scrutinizer-run
+          - cd ~/build
+          - php-scrutinizer-run --enable-security-analysis
           - phpcs-run --standard=.phpcs.xml
           - js-scrutinizer-run
+
+          - cd ~/nextcloud
+#          - php ./occ app:check-code $APP_NAME -c private
+          - php ./occ app:check-code $APP_NAME -c strong-comparison
+          - php ./occ app:check-code $APP_NAME -c deprecation
+
+          - cd ~/nextcloud/apps/$APP_NAME
+          - php ~/phpunit.phar --configuration=tests/phpunit.xml
 
 checks:
   php: true
@@ -18,6 +48,7 @@ filter:
   excluded_paths:
     - appdata/plugins/
     - appdata/themes/
+    - build/
     - l10n/
     - tests/
   dependency_paths:
