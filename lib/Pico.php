@@ -203,7 +203,7 @@ class Pico extends \Pico
 	public function getHtmlPurifier()
 	{
 		if ($this->htmlPurifier === null) {
-			$htmlPurifierConfig = HTMLPurifier_HTML5Config::createDefault();;
+			$htmlPurifierConfig = HTMLPurifier_HTML5Config::createDefault();
 			$this->htmlPurifier = new HTMLPurifier($htmlPurifierConfig);
 
 			$this->triggerEvent('onHtmlPurifier', [ &$this->htmlPurifier ]);

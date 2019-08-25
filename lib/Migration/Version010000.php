@@ -29,7 +29,6 @@ use OC\Encryption\Manager as EncryptionManager;
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Db\CoreRequestBuilder;
 use OCA\CMSPico\Exceptions\ComposerException;
-use OCA\CMSPico\Exceptions\FilesystemNotLocalException;
 use OCA\CMSPico\Exceptions\FilesystemNotWritableException;
 use OCA\CMSPico\Model\Plugin;
 use OCA\CMSPico\Model\Theme;
