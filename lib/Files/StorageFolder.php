@@ -26,10 +26,8 @@ namespace OCA\CMSPico\Files;
 
 use OC\Files\Utils\Scanner;
 use OC\ForbiddenException;
-use OCP\Files\File as OCFile;
 use OCP\Files\Folder as OCFolder;
 use OCP\Files\InvalidPathException;
-use OCP\Files\Node as OCNode;
 use OCP\Files\NotPermittedException;
 use OCP\IDBConnection;
 use OCP\ILogger;
@@ -173,24 +171,6 @@ class StorageFolder extends AbstractStorageNode implements FolderInterface
 	public function isCreatable(): bool
 	{
 		return $this->node->isCreatable();
-	}
-
-	/**
-	 * @param OCNode      $node
-	 * @param string|null $basePath
-	 *
-	 * @return AbstractStorageNode
-	 * @throws InvalidPathException
-	 */
-	private function repackNode(OCNode $node, string $basePath = null): AbstractStorageNode
-	{
-		if ($node instanceof OCFile) {
-			return new StorageFile($node, $basePath);
-		} elseif ($node instanceof OCFolder) {
-			return new StorageFolder($node, $basePath);
-		} else {
-			throw new \UnexpectedValueException();
-		}
 	}
 
 	/**

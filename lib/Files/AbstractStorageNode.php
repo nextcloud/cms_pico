@@ -73,23 +73,7 @@ abstract class AbstractStorageNode extends AbstractNode implements NodeInterface
 	 */
 	public function rename(string $name): NodeInterface
 	{
-		$this->assertValidFileName($name);
-
-		$parentPath = $this->getParentNode();
-		if ($this->isFolder()) {
-			/** @var StorageFolder $this */
-			$target = $parentPath->newFolder($name);
-			foreach ($this as $child) {
-				$child->move($target);
-			}
-		} else {
-			/** @var StorageFile $this */
-			$target = $parentPath->newFile($name);
-			$target->putContent($this->getContent());
-		}
-
-		$this->delete();
-		return $target;
+		return $this->move($this->getParentNode(), $name);
 	}
 
 	/**
@@ -97,10 +81,14 @@ abstract class AbstractStorageNode extends AbstractNode implements NodeInterface
 	 */
 	public function copy(FolderInterface $targetPath, string $name = null): NodeInterface
 	{
-		if (($targetPath instanceof StorageFolder) && ($name === null)) {
+		if ($targetPath instanceof StorageFolder) {
+			if ($name !== null) {
+				$this->assertValidFileName($name);
+			}
+
 			/** @var OCFolder $ocNode */
-			$ocNode = $this->node->copy($targetPath->getOCNode()->getPath());
-			return new StorageFolder($ocNode, $targetPath->getPath());
+			$ocNode = $this->node->copy($targetPath->getOCNode()->getPath() . '/' . ($name ?: $this->getName()));
+			return $this->repackNode($ocNode, $targetPath->getPath());
 		} else {
 			return parent::copy($targetPath, $name);
 		}
@@ -111,10 +99,14 @@ abstract class AbstractStorageNode extends AbstractNode implements NodeInterface
 	 */
 	public function move(FolderInterface $targetPath, string $name = null): NodeInterface
 	{
-		if (($targetPath instanceof StorageFolder) && ($name === null)) {
+		if ($targetPath instanceof StorageFolder) {
+			if ($name !== null) {
+				$this->assertValidFileName($name);
+			}
+
 			/** @var OCFolder $ocNode */
-			$ocNode = $this->node->move($targetPath->getOCNode()->getPath());
-			return new StorageFolder($ocNode, $targetPath->getPath());
+			$ocNode = $this->node->move($targetPath->getOCNode()->getPath() . '/' . ($name ?: $this->getName()));
+			return $this->repackNode($ocNode, $targetPath->getPath());
 		} else {
 			return parent::move($targetPath, $name);
 		}
@@ -200,7 +192,9 @@ abstract class AbstractStorageNode extends AbstractNode implements NodeInterface
 				throw new InvalidPathException();
 			}
 
-			$this->parentFolder = new StorageFolder($ocNode, $this->path . '/../');
+			$parentBasePath = dirname($this->path);
+			$parentBasePath = ($parentBasePath !== '/') ? $parentBasePath : null;
+			$this->parentFolder = new StorageFolder($ocNode, $parentBasePath);
 		}
 
 		return $this->parentFolder;
@@ -243,6 +237,24 @@ abstract class AbstractStorageNode extends AbstractNode implements NodeInterface
 			return $this->node->getPermissions();
 		} catch (\Exception $e) {
 			return 0;
+		}
+	}
+
+	/**
+	 * @param OCNode      $node
+	 * @param string|null $basePath
+	 *
+	 * @return AbstractStorageNode
+	 * @throws InvalidPathException
+	 */
+	protected function repackNode(OCNode $node, string $basePath = null): AbstractStorageNode
+	{
+		if ($node instanceof OCFile) {
+			return new StorageFile($node, $basePath);
+		} elseif ($node instanceof OCFolder) {
+			return new StorageFolder($node, $basePath);
+		} else {
+			throw new \UnexpectedValueException();
 		}
 	}
 }
