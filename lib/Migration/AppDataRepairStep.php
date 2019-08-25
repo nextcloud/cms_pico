@@ -174,7 +174,7 @@ class AppDataRepairStep implements IRepairStep
 	private function publishThemes()
 	{
 		$publicThemesFolder = $this->fileService->getPublicFolder(PicoService::DIR_THEMES);
-		$publicThemesFolder->empty();
+		$publicThemesFolder->truncate();
 
 		$this->configService->deleteAppValue(ConfigService::THEMES_ETAG);
 
@@ -233,7 +233,7 @@ class AppDataRepairStep implements IRepairStep
 	private function publishPlugins()
 	{
 		$publicPluginsFolder = $this->fileService->getPublicFolder(PicoService::DIR_PLUGINS);
-		$publicPluginsFolder->empty();
+		$publicPluginsFolder->truncate();
 
 		$this->configService->deleteAppValue(ConfigService::PLUGINS_ETAG);
 

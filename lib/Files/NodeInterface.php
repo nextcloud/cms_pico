@@ -71,7 +71,7 @@ interface NodeInterface
 	 * @throws NotPermittedException
 	 * @throws GenericFileException
 	 */
-	public function empty();
+	public function truncate();
 
 	/**
 	 * @throws NotPermittedException

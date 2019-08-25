@@ -93,7 +93,7 @@ abstract class AbstractNode implements NodeInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function empty()
+	public function truncate()
 	{
 		if ($this->isFolder()) {
 			/** @var FolderInterface $this */
