@@ -347,14 +347,10 @@ class Website extends WebsiteCore
 	}
 
 	/**
-	 * @param string|null $folderName
-	 *
 	 * @return StorageFolder
 	 * @throws WebsiteInvalidFilesystemException
-	 * @throws InvalidPathException
-	 * @throws NotFoundException
 	 */
-	public function getWebsiteFolder(string $folderName = null): StorageFolder
+	public function getWebsiteFolder(): StorageFolder
 	{
 		if ($this->folder !== null) {
 			try {
@@ -363,7 +359,7 @@ class Website extends WebsiteCore
 				// this makes OCNode instances, which rely on mounts of different users than the current, unusable
 				// by calling OCFolder::get('') we can detect this situation and re-init the required mounts
 				$this->folder->get('');
-			} catch (NotFoundException $e) {
+			} catch (\Exception $e) {
 				$this->folder = null;
 			}
 		}
@@ -382,13 +378,22 @@ class Website extends WebsiteCore
 			}
 		}
 
-		if ($folderName) {
-			/** @var StorageFolder $folder */
-			$folder = $this->folder->getFolder($folderName);
-			return $folder;
-		}
-
 		return $this->folder;
+	}
+
+	/**
+	 * @return string
+	 * @throws WebsiteInvalidFilesystemException
+	 */
+	public function getWebsitePath(): string
+	{
+		try {
+			return $this->getWebsiteFolder()->getLocalPath() . '/';
+		} catch (InvalidPathException $e) {
+			throw new WebsiteInvalidFilesystemException($e);
+		} catch (NotFoundException $e) {
+			throw new WebsiteInvalidFilesystemException($e);
+		}
 	}
 
 	/**

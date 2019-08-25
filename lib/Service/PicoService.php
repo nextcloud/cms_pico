@@ -133,7 +133,7 @@ class PicoService
 			$this->themesService->assertValidTheme($website->getTheme());
 
 			$pico = new Pico(
-				$website->getWebsiteFolder()->getLocalPath(),
+				$website->getWebsitePath(),
 				$this->getConfigFolder()->getLocalPath(),
 				$this->pluginsService->getPluginsPath(),
 				$this->themesService->getThemesPath(),
@@ -288,7 +288,7 @@ class PicoService
 	{
 		try {
 			/** @var StorageFolder $websiteFolder */
-			$websiteFolder = $website->getWebsiteFolder(PicoService::DIR_CONTENT)->fakeRoot();
+			$websiteFolder = $website->getWebsiteFolder()->getFolder(PicoService::DIR_CONTENT)->fakeRoot();
 			return $websiteFolder;
 		} catch (InvalidPathException $e) {
 			throw new WebsiteInvalidFilesystemException($e);

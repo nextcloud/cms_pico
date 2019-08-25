@@ -90,7 +90,7 @@ class AssetsService
 	public function getAssetsFolder(Website $website): StorageFolder
 	{
 		try {
-			return $website->getWebsiteFolder(PicoService::DIR_ASSETS)->fakeRoot();
+			return $website->getWebsiteFolder()->getFolder(PicoService::DIR_ASSETS)->fakeRoot();
 		} catch (InvalidPathException $e) {
 			throw new WebsiteInvalidFilesystemException($e);
 		} catch (NotFoundException $e) {
