@@ -5,13 +5,14 @@ build:
         - zip
     variables:
       APP_NAME: cms_pico
+      NEXTCLOUD: releases/latest
   nodes:
     analysis:
       environment:
         php:
           version: 7.3
-        variables:
-          NEXTCLOUD: releases/latest
+          pecl_extensions:
+            - xdebug
       dependencies:
         override:
           - curl -L -o ~/nextcloud.tar.bz2 https://download.nextcloud.com/server/$NEXTCLOUD.tar.bz2
@@ -44,7 +45,10 @@ build:
           - php ./occ app:check-code $APP_NAME -c deprecation
 
           - cd ~/nextcloud/apps/$APP_NAME
-          - php ~/phpunit.phar --configuration=tests/phpunit.xml
+          - command: php ~/phpunit.phar --configuration tests/phpunit.xml --coverage-clover ~/build/tests/clover.xml
+            coverage:
+              file: tests/clover.xml
+              format: clover
 
     test-nc14-php70:
       environment:
@@ -77,7 +81,7 @@ build:
           - php ./occ app:check-code $APP_NAME -c deprecation
 
           - cd ~/nextcloud/apps/$APP_NAME
-          - php ~/phpunit.phar --configuration=tests/phpunit.xml
+          - php ~/phpunit.phar --configuration tests/phpunit.xml
 
     test-nc14-php71:
       environment:
@@ -110,7 +114,7 @@ build:
           - php ./occ app:check-code $APP_NAME -c deprecation
 
           - cd ~/nextcloud/apps/$APP_NAME
-          - php ~/phpunit.phar --configuration=tests/phpunit.xml
+          - php ~/phpunit.phar --configuration tests/phpunit.xml
 
     test-nc14-php72:
       environment:
@@ -143,7 +147,7 @@ build:
           - php ./occ app:check-code $APP_NAME -c deprecation
 
           - cd ~/nextcloud/apps/$APP_NAME
-          - php ~/phpunit.phar --configuration=tests/phpunit.xml
+          - php ~/phpunit.phar --configuration tests/phpunit.xml
 
     test-nc15-php70:
       environment:
@@ -176,7 +180,7 @@ build:
           - php ./occ app:check-code $APP_NAME -c deprecation
 
           - cd ~/nextcloud/apps/$APP_NAME
-          - php ~/phpunit.phar --configuration=tests/phpunit.xml
+          - php ~/phpunit.phar --configuration tests/phpunit.xml
 
     test-nc15-php71:
       environment:
@@ -209,7 +213,7 @@ build:
           - php ./occ app:check-code $APP_NAME -c deprecation
 
           - cd ~/nextcloud/apps/$APP_NAME
-          - php ~/phpunit.phar --configuration=tests/phpunit.xml
+          - php ~/phpunit.phar --configuration tests/phpunit.xml
 
     test-nc15-php72:
       environment:
@@ -242,7 +246,7 @@ build:
           - php ./occ app:check-code $APP_NAME -c deprecation
 
           - cd ~/nextcloud/apps/$APP_NAME
-          - php ~/phpunit.phar --configuration=tests/phpunit.xml
+          - php ~/phpunit.phar --configuration tests/phpunit.xml
 
     test-nc15-php73:
       environment:
@@ -275,7 +279,7 @@ build:
           - php ./occ app:check-code $APP_NAME -c deprecation
 
           - cd ~/nextcloud/apps/$APP_NAME
-          - php ~/phpunit.phar --configuration=tests/phpunit.xml
+          - php ~/phpunit.phar --configuration tests/phpunit.xml
 
     test-nc16-php71:
       environment:
@@ -308,7 +312,7 @@ build:
           - php ./occ app:check-code $APP_NAME -c deprecation
 
           - cd ~/nextcloud/apps/$APP_NAME
-          - php ~/phpunit.phar --configuration=tests/phpunit.xml
+          - php ~/phpunit.phar --configuration tests/phpunit.xml
 
     test-nc16-php72:
       environment:
@@ -341,7 +345,7 @@ build:
           - php ./occ app:check-code $APP_NAME -c deprecation
 
           - cd ~/nextcloud/apps/$APP_NAME
-          - php ~/phpunit.phar --configuration=tests/phpunit.xml
+          - php ~/phpunit.phar --configuration tests/phpunit.xml
 
     test-nc16-php73:
       environment:
@@ -374,7 +378,7 @@ build:
           - php ./occ app:check-code $APP_NAME -c deprecation
 
           - cd ~/nextcloud/apps/$APP_NAME
-          - php ~/phpunit.phar --configuration=tests/phpunit.xml
+          - php ~/phpunit.phar --configuration tests/phpunit.xml
 
     test-master-php71:
       environment:
@@ -407,7 +411,7 @@ build:
           - php ./occ app:check-code $APP_NAME -c deprecation
 
           - cd ~/nextcloud/apps/$APP_NAME
-          - php ~/phpunit.phar --configuration=tests/phpunit.xml
+          - php ~/phpunit.phar --configuration tests/phpunit.xml
 
     test-master-php72:
       environment:
@@ -440,7 +444,7 @@ build:
           - php ./occ app:check-code $APP_NAME -c deprecation
 
           - cd ~/nextcloud/apps/$APP_NAME
-          - php ~/phpunit.phar --configuration=tests/phpunit.xml
+          - php ~/phpunit.phar --configuration tests/phpunit.xml
 
     test-master-php73:
       environment:
@@ -473,7 +477,7 @@ build:
           - php ./occ app:check-code $APP_NAME -c deprecation
 
           - cd ~/nextcloud/apps/$APP_NAME
-          - php ~/phpunit.phar --configuration=tests/phpunit.xml
+          - php ~/phpunit.phar --configuration tests/phpunit.xml
 
 checks:
   php: true

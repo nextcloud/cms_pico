@@ -1,7 +1,7 @@
 # Pico CMS for Nextcloud
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nextcloud/cms_pico/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/nextcloud/cms_pico/?branch=master)
-[![codecov](https://codecov.io/gh/nextcloud/cms_pico/branch/master/graph/badge.svg)](https://codecov.io/gh/nextcloud/cms_pico)
+[![Code Coverage](https://scrutinizer-ci.com/g/nextcloud/cms_pico/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/nextcloud/cms_pico/?branch=master)
 [![Build Status](https://drone.nextcloud.com/api/badges/nextcloud/cms_pico/status.svg)](https://drone.nextcloud.com/nextcloud/cms_pico)
 
 ## About
