@@ -193,7 +193,7 @@ abstract class AbstractStorageNode extends AbstractNode implements NodeInterface
 			}
 
 			$parentBasePath = dirname($this->path);
-			$parentBasePath = ($parentBasePath !== '/') ? $parentBasePath : null;
+			$parentBasePath = ($parentBasePath !== '/') ? dirname($parentBasePath) : null;
 			$this->parentFolder = new StorageFolder($ocNode, $parentBasePath);
 		}
 
