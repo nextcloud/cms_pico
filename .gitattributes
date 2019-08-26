@@ -1,5 +1,4 @@
 /.tx              export-ignore
-/.drone.yml       export-ignore
 /.phpcs.xml       export-ignore
 /.scrutinizer.yml export-ignore
 .gitattributes    export-ignore

@@ -58,7 +58,6 @@ build: clean composer
 		--exclude="/composer.json" \
 		--exclude="/composer.lock" \
 		--exclude="/Makefile" \
-		--exclude="/.drone.yml" \
 		--exclude="/.gitattributes" \
 		--exclude="/.gitignore" \
 		--exclude="/.phpcs.xml" \

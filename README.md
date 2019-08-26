@@ -1,8 +1,10 @@
 # Pico CMS for Nextcloud
 
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+[![Latest Release](https://img.shields.io/github/v/release/nextcloud/cms_pico?sort=semver)](https://apps.nextcloud.com/apps/cms_pico)
+[![Build Status](https://scrutinizer-ci.com/g/nextcloud/cms_pico/badges/build.png?b=master)](https://scrutinizer-ci.com/g/nextcloud/cms_pico/build-status/master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nextcloud/cms_pico/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/nextcloud/cms_pico/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/nextcloud/cms_pico/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/nextcloud/cms_pico/?branch=master)
-[![Build Status](https://drone.nextcloud.com/api/badges/nextcloud/cms_pico/status.svg)](https://drone.nextcloud.com/nextcloud/cms_pico)
 
 ## About
 
