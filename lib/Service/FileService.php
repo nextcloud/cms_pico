@@ -180,4 +180,32 @@ class FileService
 
 		return rtrim($dataFolderPath, '/') . '/' . $baseAppDataFolderName . '/' . $appDataFolderPath . '/';
 	}
+
+	/**
+	 * @return void
+	 */
+	public function syncAppDataFolder()
+	{
+		$baseFolderName = 'appdata_' . $this->configService->getSystemValue('instanceid');
+		$appDataFolderName = Application::APP_NAME;
+
+		$rootFolder = new StorageFolder($this->rootFolder);
+		$rootFolder->sync(FolderInterface::SYNC_SHALLOW);
+
+		try {
+			$baseFolder = $rootFolder->getFolder($baseFolderName);
+			$baseFolder->sync(FolderInterface::SYNC_SHALLOW);
+		} catch (NotFoundException $e) {
+			$baseFolder = $rootFolder->newFolder($baseFolderName);
+		}
+
+		try {
+			$appDataFolder = $baseFolder->getFolder($appDataFolderName);
+			$appDataFolder->sync(FolderInterface::SYNC_RECURSIVE);
+		} catch (NotFoundException $e) {
+			$appDataFolder = $baseFolder->newFolder($appDataFolderName);
+		}
+
+		$this->appDataFolder = $appDataFolder->fakeRoot();
+	}
 }

@@ -109,7 +109,7 @@ class AppDataRepairStep implements IRepairStep
 	 */
 	private function syncAppDataFolder()
 	{
-		$this->fileService->getAppDataFolder()->sync();
+		$this->fileService->syncAppDataFolder();
 	}
 
 	/**
