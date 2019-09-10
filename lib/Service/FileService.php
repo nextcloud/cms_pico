@@ -29,7 +29,6 @@ use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Files\FolderInterface;
 use OCA\CMSPico\Files\LocalFolder;
 use OCA\CMSPico\Files\StorageFolder;
-use OCP\Files\Folder as OCFolder;
 use OCP\Files\InvalidPathException;
 use OCP\Files\IRootFolder;
 use OCP\Files\NotFoundException;
@@ -130,30 +129,24 @@ class FileService
 	public function getAppDataFolder(string $folderName = null): FolderInterface
 	{
 		if ($this->appDataFolder === null) {
-			$baseAppDataFolderName = 'appdata_' . $this->configService->getSystemValue('instanceid');
+			$baseFolderName = 'appdata_' . $this->configService->getSystemValue('instanceid');
 			$appDataFolderName = Application::APP_NAME;
 
+			$rootFolder = new StorageFolder($this->rootFolder);
+
 			try {
-				/** @var OCFolder $baseFolder */
-				$baseFolder = $this->rootFolder->get($baseAppDataFolderName);
-				if (!($baseFolder instanceof OCFolder)) {
-					throw new InvalidPathException();
-				}
+				$baseFolder = $rootFolder->getFolder($baseFolderName);
 			} catch (NotFoundException $e) {
-				$baseFolder = $this->rootFolder->newFolder($baseAppDataFolderName);
+				$baseFolder = $rootFolder->newFolder($baseFolderName);
 			}
 
 			try {
-				/** @var OCFolder $appDataFolder */
-				$appDataFolder = $baseFolder->get($appDataFolderName);
-				if (!($appDataFolder instanceof OCFolder)) {
-					throw new InvalidPathException();
-				}
+				$appDataFolder = $baseFolder->getFolder($appDataFolderName);
 			} catch (NotFoundException $e) {
 				$appDataFolder = $baseFolder->newFolder($appDataFolderName);
 			}
 
-			$this->appDataFolder = new StorageFolder($appDataFolder);
+			$this->appDataFolder = $appDataFolder->fakeRoot();
 		}
 
 		if ($folderName) {
