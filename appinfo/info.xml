@@ -45,7 +45,7 @@ You want to learn more about Pico CMS for Nextcloud? Easy! Just download and ena
 	<screenshot>https://raw.githubusercontent.com/nextcloud/cms_pico/master/screenshots/custom.png</screenshot>
 	<dependencies>
 		<php min-version="7.0.0"/>
-		<nextcloud min-version="14" max-version="17"/>
+		<nextcloud min-version="14" max-version="18"/>
 	</dependencies>
 	<repair-steps>
 		<post-migration>
