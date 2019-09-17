@@ -20,7 +20,7 @@ OC.L10N.register(
     "The address of the website can only contains alpha numeric chars" : "Adresa webové stránky může obsahovat pouze alfanumerické znaky",
     "The address of the website must be longer" : "Je třeba, aby adresa webové stránky byla delší",
     "The name of the website must be longer" : "Je třeba, aby název webové stránky byl delší",
-    "Path is malformed, please check." : "Popis umístění nemá správný formát, zkontrolujte to.",
+    "Path is malformed, please check." : "Cesta nemá správný formát, zkontrolujte ji.",
     "Template does not exist" : "Šablona neexistuje",
     "Cannot generate template file in this folder" : "Nedaří se vytvořit soubor šablony v této složce",
     "Theme does not exist" : "Motiv neexistuje",
