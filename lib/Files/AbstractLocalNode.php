@@ -264,15 +264,15 @@ abstract class AbstractLocalNode extends AbstractNode implements NodeInterface
 				if ($this->isFolder()) {
 					$this->permissions |= Constants::PERMISSION_CREATE;
 				}
+			}
 
-				try {
-					if (is_writable($this->getParentNode()->getLocalPath())) {
-						$this->permissions |= Constants::PERMISSION_DELETE;
-					}
-				} catch (\Exception $e) {
-					// this is either the root folder or we can't read the parent folder's local path
-					// in neither case we can delete this node
+			try {
+				if (is_writable($this->getParentNode()->getLocalPath())) {
+					$this->permissions |= Constants::PERMISSION_DELETE;
 				}
+			} catch (\Exception $e) {
+				// this is either the root folder or we can't read the parent folder's local path
+				// in neither case we can delete this node
 			}
 		}
 
