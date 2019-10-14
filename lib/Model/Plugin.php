@@ -26,6 +26,7 @@ namespace OCA\CMSPico\Model;
 
 use OCA\CMSPico\Exceptions\PluginNotCompatibleException;
 use OCA\CMSPico\Files\LocalFolder;
+use OCA\CMSPico\Pico;
 
 class Plugin implements \JsonSerializable
 {
@@ -34,6 +35,13 @@ class Plugin implements \JsonSerializable
 
 	/** @var int */
 	const PLUGIN_TYPE_CUSTOM = 2;
+
+	/** @var int[] */
+	const PLUGIN_API_VERSIONS = [
+		Pico::API_VERSION_1,
+		Pico::API_VERSION_2,
+		Pico::API_VERSION_3,
+	];
 
 	/** @var LocalFolder */
 	private $folder;
@@ -113,7 +121,7 @@ class Plugin implements \JsonSerializable
 
 		$includeClosure = static function (string $pluginFile) {
 			/** @noinspection PhpIncludeInspection */
-			require($pluginFile);
+			require_once($pluginFile);
 		};
 
 		try {
@@ -136,18 +144,21 @@ class Plugin implements \JsonSerializable
 				);
 			}
 
-			$apiVersion = 0;
+			$apiVersion = Pico::API_VERSION_0;
 			if (is_a($className, \PicoPluginInterface::class, true)) {
-				/** @noinspection PhpUndefinedFieldInspection */
-				$apiVersion = defined($className . '::API_VERSION') ? $className::API_VERSION : 1;
+				$apiVersion = Pico::API_VERSION_1;
+				if (defined($className . '::API_VERSION')) {
+					/** @noinspection PhpUndefinedFieldInspection */
+					$apiVersion = (int) $className::API_VERSION;
+				}
 			}
 
-			if ($apiVersion < \Pico::API_VERSION) {
+			if (!in_array($apiVersion, static::PLUGIN_API_VERSIONS, true)) {
 				throw new PluginNotCompatibleException(
 					$this->getName(),
-					'Incompatible plugin: Plugins for Pico CMS for Nextcloud must use API version {minApiVersion} '
-							. 'or later, but this plugin uses API version {apiVersion}.',
-					[ 'minApiVersion' => \Pico::API_VERSION, 'apiVersion' => $apiVersion ]
+					'Incompatible plugin: Plugins for Pico CMS for Nextcloud must use one of the API versions '
+							. '{compatApiVersions}, but this plugin uses API version {apiVersion}.',
+					[ 'compatApiVersions' => implode(', ', static::PLUGIN_API_VERSIONS), 'apiVersion' => $apiVersion ]
 				);
 			}
 

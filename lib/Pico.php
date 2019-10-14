@@ -41,6 +41,34 @@ use Symfony\Component\Yaml\Exception\ParseException;
 
 class Pico extends \Pico
 {
+	/**
+	 * API version 0, used by Pico 0.9 and earlier
+	 *
+	 * @var int
+	 */
+	const API_VERSION_0 = 0;
+
+	/**
+	 * API version 1, used by Pico 1.0
+	 *
+	 * @var int
+	 */
+	const API_VERSION_1 = 1;
+
+	/**
+	 * API version 2, used by Pico 2.0
+	 *
+	 * @var int
+	 */
+	const API_VERSION_2 = 2;
+
+	/**
+	 * API version 3, used by Pico 2.1
+	 *
+	 * @var int
+	 */
+	const API_VERSION_3 = 3;
+
 	/** @var PicoService */
 	private $picoService;
 

@@ -212,7 +212,7 @@ class PicoService
 	{
 		$includeClosure = static function (string $pluginFile) {
 			/** @noinspection PhpIncludeInspection */
-			require($pluginFile);
+			require_once($pluginFile);
 		};
 
 		$plugins = $this->pluginsService->getPlugins();

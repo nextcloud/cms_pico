@@ -26,6 +26,9 @@ namespace OCA\CMSPico\Model;
 
 use OCA\CMSPico\Exceptions\ThemeNotCompatibleException;
 use OCA\CMSPico\Files\LocalFolder;
+use OCA\CMSPico\Pico;
+use Symfony\Component\Yaml\Exception\ParseException as YamlParseException;
+use Symfony\Component\Yaml\Parser as YamlParser;
 
 class Theme implements \JsonSerializable
 {
@@ -34,6 +37,14 @@ class Theme implements \JsonSerializable
 
 	/** @var int */
 	const THEME_TYPE_CUSTOM = 2;
+
+	/** @var int[] */
+	const THEME_API_VERSIONS = [
+		Pico::API_VERSION_0,
+		Pico::API_VERSION_1,
+		Pico::API_VERSION_2,
+		Pico::API_VERSION_3,
+	];
 
 	/** @var LocalFolder */
 	private $folder;
@@ -117,6 +128,36 @@ class Theme implements \JsonSerializable
 					$this->getName(),
 					'Incompatible theme: Twig template "{file}" not found.',
 					[ 'file' => $this->getName() . '/index.twig' ]
+				);
+			}
+
+			$apiVersion = Pico::API_VERSION_0;
+			if (is_file($this->getFolder()->getLocalPath() . '/pico-theme.yml')) {
+				$loadConfigClosure = static function ($configFile) {
+					$yaml = file_get_contents($configFile);
+
+					try {
+						$config = (new YamlParser())->parse($yaml);
+						return is_array($config) ? $config : [];
+					} catch (YamlParseException $e) {
+						return [];
+					}
+				};
+
+				$themeConfig = $loadConfigClosure($this->getFolder()->getLocalPath() . '/pico-theme.yml');
+				if (isset($themeConfig['api_version'])) {
+					if (is_int($themeConfig['api_version']) || preg_match('/^[0-9]+$/', $themeConfig['api_version'])) {
+						$apiVersion = (int) $themeConfig['api_version'];
+					}
+				}
+			}
+
+			if (!in_array($apiVersion, static::THEME_API_VERSIONS, true)) {
+				throw new ThemeNotCompatibleException(
+					$this->getName(),
+					'Incompatible theme: Themes for Pico CMS for Nextcloud must use one of the API versions '
+					. '{compatApiVersions}, but this theme uses API version {apiVersion}.',
+					[ 'compatApiVersions' => implode(', ', static::THEME_API_VERSIONS), 'apiVersion' => $apiVersion ]
 				);
 			}
 

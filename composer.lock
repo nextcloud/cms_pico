@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e7c98ae3336f5816549289ed97924b32",
+    "content-hash": "5fc2a326d7e7b51c42026d8f5a8f69ed",
     "packages": [
         {
             "name": "erusev/parsedown",
@@ -207,12 +207,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/picocms/Pico.git",
-                "reference": "c9a3f846737ef18443b4efef4a216a2419932a37"
+                "reference": "d95c9d370807f231825a056a8646f88c97ab11e4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/picocms/Pico/zipball/c9a3f846737ef18443b4efef4a216a2419932a37",
-                "reference": "c9a3f846737ef18443b4efef4a216a2419932a37",
+                "url": "https://api.github.com/repos/picocms/Pico/zipball/d95c9d370807f231825a056a8646f88c97ab11e4",
+                "reference": "d95c9d370807f231825a056a8646f88c97ab11e4",
                 "shasum": ""
             },
             "require": {
@@ -222,10 +222,6 @@
                 "php": ">=5.3.6",
                 "symfony/yaml": "^2.8",
                 "twig/twig": "^1.36"
-            },
-            "require-dev": {
-                "phpdocumentor/phpdocumentor": "^2.9",
-                "squizlabs/php_codesniffer": "^2.9"
             },
             "suggest": {
                 "picocms/composer-installer": "This Composer plugin is responsible for installing Pico plugins and themes using the Composer package manager.",
@@ -253,8 +249,8 @@
             "authors": [
                 {
                     "name": "Gilbert Pellegrom",
-                    "role": "Project Founder",
-                    "email": "gilbert@pellegrom.me"
+                    "email": "gilbert@pellegrom.me",
+                    "role": "Project Founder"
                 },
                 {
                     "name": "The Pico Community",
@@ -282,7 +278,65 @@
                 "website",
                 "yaml"
             ],
-            "time": "2019-07-14T14:16:57+00:00"
+            "time": "2019-10-12T17:54:06+00:00"
+        },
+        {
+            "name": "picocms/pico-deprecated",
+            "version": "dev-pico-2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/picocms/pico-deprecated.git",
+                "reference": "154842761fc5f228572d22b27106f603b674b657"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/picocms/pico-deprecated/zipball/154842761fc5f228572d22b27106f603b674b657",
+                "reference": "154842761fc5f228572d22b27106f603b674b657",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0",
+                "picocms/pico": "self.version"
+            },
+            "type": "pico-plugin",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev",
+                    "dev-pico-2.1": "2.1.x-dev"
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "PicoDeprecated.php",
+                    "lib/",
+                    "plugins/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "The Pico Community",
+                    "homepage": "http://picocms.org/"
+                },
+                {
+                    "name": "Contributors",
+                    "homepage": "https://github.com/picocms/pico-deprecated/graphs/contributors"
+                }
+            ],
+            "description": "This is Pico's official PicoDeprecated plugin. Pico is a stupidly simple, blazing fast, flat file CMS.",
+            "homepage": "http://picocms.org/",
+            "keywords": [
+                "compatibility",
+                "deprecation",
+                "pico",
+                "pico-deprecated",
+                "picocms",
+                "picocms-plugin"
+            ],
+            "time": "2019-10-12T12:41:03+00:00"
         },
         {
             "name": "picocms/pico-theme",
@@ -290,12 +344,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/picocms/pico-theme.git",
-                "reference": "23a907d23be8f6aca49da37d12694f483e1ab70d"
+                "reference": "fc941aab0c93596a55094072edf2cd46fa7fbe9d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/picocms/pico-theme/zipball/23a907d23be8f6aca49da37d12694f483e1ab70d",
-                "reference": "23a907d23be8f6aca49da37d12694f483e1ab70d",
+                "url": "https://api.github.com/repos/picocms/pico-theme/zipball/fc941aab0c93596a55094072edf2cd46fa7fbe9d",
+                "reference": "fc941aab0c93596a55094072edf2cd46fa7fbe9d",
                 "shasum": ""
             },
             "require": {
@@ -332,7 +386,7 @@
                 "picocms",
                 "picocms-theme"
             ],
-            "time": "2019-07-14T13:37:20+00:00"
+            "time": "2019-10-12T17:51:34+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -565,7 +619,8 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "picocms/pico": 20,
-        "picocms/pico-theme": 20
+        "picocms/pico-theme": 20,
+        "picocms/pico-deprecated": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
