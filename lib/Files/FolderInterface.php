@@ -30,6 +30,15 @@ use OCP\Files\InvalidPathException;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 
+/**
+ * @method void            rewind()
+ * @method void            next()
+ * @method bool            valid()
+ * @method int             key()
+ * @method NodeInterface   current()
+ * @method bool            hasChildren()
+ * @method FolderInterface getChildren()
+ */
 interface FolderInterface extends NodeInterface, \RecursiveIterator
 {
 	/** @var bool */
