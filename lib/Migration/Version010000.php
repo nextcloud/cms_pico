@@ -30,7 +30,6 @@ use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Db\CoreRequestBuilder;
 use OCA\CMSPico\Exceptions\ComposerException;
 use OCA\CMSPico\Exceptions\FilesystemNotWritableException;
-use OCA\CMSPico\Model\Plugin;
 use OCA\CMSPico\Model\Template;
 use OCA\CMSPico\Model\Theme;
 use OCA\CMSPico\Model\WebsiteCore;
@@ -168,7 +167,6 @@ class Version010000 extends SimpleMigrationStep
 
 		$this->migrateCustomTemplates();
 		$this->migrateCustomThemes();
-		$this->migrateCustomPlugins();
 	}
 
 	/**
@@ -319,25 +317,5 @@ class Version010000 extends SimpleMigrationStep
 		}
 
 		$this->configService->setAppValue(ConfigService::CUSTOM_THEMES, json_encode($newCustomThemes));
-	}
-
-	/**
-	 * @return void
-	 */
-	private function migrateCustomPlugins()
-	{
-		$customPluginsJson = $this->configService->getAppValue(ConfigService::CUSTOM_PLUGINS);
-		$customPlugins = $customPluginsJson ? json_decode($customPluginsJson, true) : [];
-
-		$newCustomPlugins = [];
-		foreach ($customPlugins as $pluginName) {
-			$newCustomPlugins[$pluginName] = [
-				'name' => $pluginName,
-				'type' => Plugin::TYPE_CUSTOM,
-				'compat' => true
-			];
-		}
-
-		$this->configService->setAppValue(ConfigService::CUSTOM_PLUGINS, json_encode($newCustomPlugins));
 	}
 }
