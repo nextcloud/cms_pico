@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace OCA\CMSPico\Controller;
 
 use OCA\CMSPico\AppInfo\Application;
+use OCA\CMSPico\Exceptions\TemplateNotCompatibleException;
 use OCA\CMSPico\Exceptions\TemplateNotFoundException;
 use OCA\CMSPico\Exceptions\ThemeNotCompatibleException;
 use OCA\CMSPico\Exceptions\ThemeNotFoundException;
@@ -155,6 +156,8 @@ class SettingsController extends Controller
 				$data['form_error'] = [ 'field' => 'theme', 'message' => $this->l10n->t($e->getReason()) ];
 			} elseif ($e instanceof TemplateNotFoundException) {
 				$data['form_error'] = [ 'field' => 'template', 'message' => $this->l10n->t('Template not found.') ];
+			} elseif ($e instanceof TemplateNotCompatibleException) {
+				$data['form_error'] = [ 'field' => 'template', 'message' => $this->l10n->t($e->getReason()) ];
 			}
 
 			return $this->createErrorResponse($e, $data);
@@ -206,6 +209,8 @@ class SettingsController extends Controller
 				$data['form_error'] = [ 'field' => 'theme', 'message' => $this->l10n->t($e->getReason()) ];
 			} elseif ($e instanceof TemplateNotFoundException) {
 				$data['form_error'] = [ 'field' => 'template', 'message' => $this->l10n->t('Template not found.') ];
+			} elseif ($e instanceof TemplateNotCompatibleException) {
+				$data['form_error'] = [ 'field' => 'template', 'message' => $this->l10n->t($e->getReason()) ];
 			}
 
 			return $this->createErrorResponse($e, $data);
@@ -256,10 +261,7 @@ class SettingsController extends Controller
 	public function addCustomTemplate(string $item): DataResponse
 	{
 		try {
-			$customTemplates = $this->templatesService->getCustomTemplates();
-			$customTemplates[] = $item;
-
-			$this->configService->setAppValue(ConfigService::CUSTOM_TEMPLATES, json_encode($customTemplates));
+			$this->templatesService->registerCustomTemplate($item);
 
 			return $this->getTemplates();
 		} catch (\Exception $e) {
@@ -275,18 +277,7 @@ class SettingsController extends Controller
 	public function removeCustomTemplate(string $item): DataResponse
 	{
 		try {
-			$customTemplates = $this->templatesService->getCustomTemplates();
-
-			$newCustomTemplates = [];
-			foreach ($customTemplates as $customTemplate) {
-				if ($customTemplate === $item) {
-					continue;
-				}
-
-				$newCustomTemplates[] = $customTemplate;
-			}
-
-			$this->configService->setAppValue(ConfigService::CUSTOM_TEMPLATES, json_encode($newCustomTemplates));
+			$this->templatesService->removeCustomTemplate($item);
 
 			return $this->getTemplates();
 		} catch (\Exception $e) {

@@ -382,8 +382,10 @@ style(Application::APP_NAME, 'pico');
 					</div>
 					<div class="content">
 						<select id="picocms-website-new-template" class="input input-template" name="template">
-							<?php foreach ($_['templates'] as $template) { ?>
-								<option value="<?php p($template); ?>"><?php p($template); ?></option>
+							<?php foreach ($_['templates'] as $templateData) { ?>
+								<?php if ($templateData['compat']) { ?>
+									<option value="<?php p($templateData['name']); ?>"><?php p($templateData['name']); ?></option>
+								<?php } ?>
 							<?php } ?>
 						</select>
 						<p class="note">

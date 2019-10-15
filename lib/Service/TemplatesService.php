@@ -25,10 +25,12 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Service;
 
+use OCA\CMSPico\Exceptions\TemplateNotCompatibleException;
 use OCA\CMSPico\Exceptions\TemplateNotFoundException;
 use OCA\CMSPico\Files\FileInterface;
 use OCA\CMSPico\Files\FolderInterface;
 use OCA\CMSPico\Files\StorageFolder;
+use OCA\CMSPico\Model\Template;
 use OCA\CMSPico\Model\TemplateFile;
 use OCA\CMSPico\Model\Website;
 use OCP\Files\NotFoundException;
@@ -54,47 +56,47 @@ class TemplatesService
 	}
 
 	/**
-	 * check if template exist.
-	 *
-	 * @param string $template
+	 * @param string $templateName
 	 *
 	 * @throws TemplateNotFoundException
+	 * @throws TemplateNotCompatibleException
 	 */
-	public function assertValidTemplate($template)
+	public function assertValidTemplate(string $templateName)
 	{
-		if (!in_array($template, $this->getTemplates())) {
+		$templates = $this->getTemplates();
+
+		if (!isset($templates[$templateName])) {
 			throw new TemplateNotFoundException();
+		}
+
+		if (!$templates[$templateName]['compat']) {
+			throw new TemplateNotCompatibleException(
+				$templateName,
+				$templates[$templateName]['compatReason'],
+				$templates[$templateName]['compatReasonData']
+			);
 		}
 	}
 
 	/**
-	 * @return string[]
+	 * @return array[]
 	 */
 	public function getTemplates(): array
 	{
-		return array_merge($this->getSystemTemplates(), $this->getCustomTemplates());
+		return $this->getSystemTemplates() + $this->getCustomTemplates();
 	}
 
 	/**
-	 * @return string[]
+	 * @return array[]
 	 */
 	public function getSystemTemplates(): array
 	{
-		$systemTemplatesFolder = $this->fileService->getSystemFolder(PicoService::DIR_TEMPLATES);
-		$systemTemplatesFolder->sync(FolderInterface::SYNC_SHALLOW);
-
-		$systemTemplates = [];
-		foreach ($systemTemplatesFolder as $templateFolder) {
-			if ($templateFolder->isFolder()) {
-				$systemTemplates[] = $templateFolder->getName();
-			}
-		}
-
-		return $systemTemplates;
+		$json = $this->configService->getAppValue(ConfigService::SYSTEM_TEMPLATES);
+		return $json ? json_decode($json, true) : [];
 	}
 
 	/**
-	 * @return string[]
+	 * @return array[]
 	 */
 	public function getCustomTemplates(): array
 	{
@@ -107,20 +109,90 @@ class TemplatesService
 	 */
 	public function getNewCustomTemplates(): array
 	{
-		$currentTemplates = $this->getTemplates();
-
 		$customTemplatesFolder = $this->fileService->getAppDataFolder(PicoService::DIR_TEMPLATES);
 		$customTemplatesFolder->sync(FolderInterface::SYNC_SHALLOW);
 
-		$newTemplates = [];
+		$currentTemplates = $this->getTemplates();
+
+		$newCustomTemplates = [];
 		foreach ($customTemplatesFolder as $templateFolder) {
-			$template = $templateFolder->getName();
-			if ($templateFolder->isFolder() && !in_array($template, $currentTemplates)) {
-				$newTemplates[] = $template;
+			$templateName = $templateFolder->getName();
+			if ($templateFolder->isFolder() && !isset($currentTemplates[$templateName])) {
+				$newCustomTemplates[] = $templateName;
 			}
 		}
 
-		return $newTemplates;
+		return $newCustomTemplates;
+	}
+
+	/**
+	 * @param string $templateName
+	 *
+	 * @return Template
+	 * @throws TemplateNotFoundException
+	 */
+	public function registerSystemTemplate(string $templateName)
+	{
+		if (!$templateName) {
+			throw new TemplateNotFoundException();
+		}
+
+		$systemTemplatesFolder = $this->fileService->getSystemFolder(PicoService::DIR_TEMPLATES);
+		$systemTemplatesFolder->sync(FolderInterface::SYNC_SHALLOW);
+
+		try {
+			$templateFolder = $systemTemplatesFolder->getFolder($templateName);
+		} catch (NotFoundException $e) {
+			throw new TemplateNotFoundException();
+		}
+
+		$templates = $this->getSystemTemplates();
+		$templates[$templateName] = new Template($templateFolder, Template::TYPE_SYSTEM);
+		$this->configService->setAppValue(ConfigService::SYSTEM_TEMPLATES, json_encode($templates));
+
+		return $templates[$templateName];
+	}
+
+	/**
+	 * @param string $templateName
+	 *
+	 * @return Template
+	 * @throws TemplateNotFoundException
+	 */
+	public function registerCustomTemplate(string $templateName)
+	{
+		if (!$templateName) {
+			throw new TemplateNotFoundException();
+		}
+
+		$appDataTemplatesFolder = $this->fileService->getAppDataFolder(PicoService::DIR_TEMPLATES);
+		$appDataTemplatesFolder->sync(FolderInterface::SYNC_SHALLOW);
+
+		try {
+			$templateFolder = $appDataTemplatesFolder->getFolder($templateName);
+		} catch (NotFoundException $e) {
+			throw new TemplateNotFoundException();
+		}
+
+		$templates = $this->getCustomTemplates();
+		$templates[$templateName] = new Template($templateFolder, Template::TYPE_CUSTOM);
+		$this->configService->setAppValue(ConfigService::CUSTOM_TEMPLATES, json_encode($templates));
+
+		return $templates[$templateName];
+	}
+
+	/**
+	 * @param string $templateName
+	 */
+	public function removeCustomTemplate(string $templateName)
+	{
+		if (!$templateName) {
+			throw new TemplateNotFoundException();
+		}
+
+		$customTemplates = $this->getCustomTemplates();
+		unset($customTemplates[$templateName]);
+		$this->configService->setAppValue(ConfigService::CUSTOM_TEMPLATES, json_encode($customTemplates));
 	}
 
 	/**

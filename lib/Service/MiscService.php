@@ -177,4 +177,21 @@ class MiscService
 		$random = \OC::$server->getSecureRandom()->generate($length, $randomChars);
 		return ($prefix ? $prefix . '.' : '') . $random . ($suffix ? '.' . $suffix : '');
 	}
+
+	/**
+	 * @param \Exception $e
+	 * @param string     ...$classNames
+	 *
+	 * @throws \Exception
+	 */
+	public function consumeException(\Exception $e, string ...$classNames)
+	{
+		foreach ($classNames as $className) {
+			if (is_a($e, $className)) {
+				return;
+			}
+		}
+
+		throw $e;
+	}
 }

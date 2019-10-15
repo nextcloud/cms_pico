@@ -74,6 +74,8 @@ OC.L10N.register(
         "System template": "Integrierte Vorlage",
         "Custom template": "Benutzerdefinierte Vorlage",
         "Delete custom template": "Benutzerdefinierte Vorlage löschen",
+        "Incompatible template: Required directory \"{file}\" not found.": "Vorlage ist inkompatibel: Das Verzeichnis \"{file}\" konnte nicht gefunden werden.",
+        "Compatible template.": "Vorlage ist kompatibel.",
         "Settings": "Einstellungen",
         "Change Pico CMS for Nextcloud's behavior and manage optional features.": "Verändere das Verhalten von Pico CMS for Nextcloud und verwalte optionale Funktionen.",
         "Limit to groups": "Beschränke Nutzung auf Gruppen",

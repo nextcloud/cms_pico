@@ -29,6 +29,7 @@ use OCA\CMSPico\Service\ConfigService;
 use OCA\CMSPico\Service\FileService;
 use OCA\CMSPico\Service\PicoService;
 use OCA\CMSPico\Service\PluginsService;
+use OCA\CMSPico\Service\TemplatesService;
 use OCA\CMSPico\Service\ThemesService;
 use OCP\Files\NotFoundException;
 use OCP\ILogger;
@@ -43,6 +44,9 @@ class AppDataRepairStep implements IRepairStep
 	/** @var ConfigService */
 	private $configService;
 
+	/** @var TemplatesService */
+	private $templatesService;
+
 	/** @var ThemesService */
 	private $themesService;
 
@@ -55,21 +59,24 @@ class AppDataRepairStep implements IRepairStep
 	/**
 	 * AppDataRepairStep constructor.
 	 *
-	 * @param ILogger        $logger
-	 * @param ConfigService  $configService
-	 * @param ThemesService  $themesService
-	 * @param PluginsService $pluginsService
-	 * @param FileService    $fileService
+	 * @param ILogger          $logger
+	 * @param ConfigService    $configService
+	 * @param TemplatesService $templatesService
+	 * @param ThemesService    $themesService
+	 * @param PluginsService   $pluginsService
+	 * @param FileService      $fileService
 	 */
 	public function __construct(
 		ILogger $logger,
 		ConfigService $configService,
+		TemplatesService $templatesService,
 		ThemesService $themesService,
 		PluginsService $pluginsService,
 		FileService $fileService
 	) {
 		$this->logger = $logger;
 		$this->configService = $configService;
+		$this->templatesService = $templatesService;
 		$this->themesService = $themesService;
 		$this->pluginsService = $pluginsService;
 		$this->fileService = $fileService;
@@ -94,8 +101,8 @@ class AppDataRepairStep implements IRepairStep
 		$this->log('Copying Pico CMS config …');
 		$this->copyConfig();
 
-		$this->log('Copying Pico CMS templates …');
-		$this->copyTemplates();
+		$this->log('Registering Pico CMS templates …');
+		$this->registerTemplates();
 
 		$this->log('Publishing Pico CMS themes …');
 		$this->publishThemes();
@@ -143,29 +150,55 @@ class AppDataRepairStep implements IRepairStep
 	/**
 	 * @return void
 	 */
-	private function copyTemplates()
+	private function registerTemplates()
 	{
-		$appDataTemplatesFolder = $this->fileService->getAppDataFolder(PicoService::DIR_TEMPLATES);
+		$this->registerSystemTemplates();
+		$this->registerCustomTemplates();
+	}
+
+	/**
+	 * @return void
+	 */
+	private function registerSystemTemplates()
+	{
 		$systemTemplatesFolder = $this->fileService->getSystemFolder(PicoService::DIR_TEMPLATES);
 
+		$oldSystemTemplates = $this->templatesService->getSystemTemplates();
+		$this->configService->deleteAppValue(ConfigService::SYSTEM_TEMPLATES);
+
 		foreach ($systemTemplatesFolder as $templateFolder) {
-			$templateFileName = $templateFolder->getName();
-
-			if (!$templateFolder->isFolder()) {
-				continue;
+			$templateName = $templateFolder->getName();
+			if ($templateFolder->isFolder()) {
+				$this->templatesService->registerSystemTemplate($templateName);
 			}
-
-			try {
-				$appDataTemplatesFolder->getFolder($templateFileName)->delete();
-				$this->log(sprintf('Replacing %s "%s"', 'template', $templateFileName), ILogger::WARN);
-			} catch (NotFoundException $e) {
-				$this->log(sprintf('Adding %s "%s"', 'template', $templateFileName));
-			} catch (\Exception $e) {
-				$this->log(sprintf('Unable to create %s "%s"', 'template', $templateFileName), ILogger::ERROR);
-			}
-
-			$templateFolder->copy($appDataTemplatesFolder);
 		}
+
+		$newSystemTemplates = $this->templatesService->getSystemTemplates();
+		$this->logChanges('system template', array_keys($newSystemTemplates), array_keys($oldSystemTemplates));
+	}
+
+	/**
+	 * @return void
+	 */
+	private function registerCustomTemplates()
+	{
+		$appDataTemplatesFolder = $this->fileService->getAppDataFolder(PicoService::DIR_TEMPLATES);
+
+		$oldCustomTemplates = $this->templatesService->getCustomTemplates();
+		$this->configService->deleteAppValue(ConfigService::CUSTOM_TEMPLATES);
+
+		$systemTemplates = $this->templatesService->getSystemTemplates();
+		foreach ($appDataTemplatesFolder as $templateFolder) {
+			$templateName = $templateFolder->getName();
+			if ($templateFolder->isFolder()) {
+				if (isset($oldCustomTemplates[$templateName]) && !isset($systemTemplates[$templateName])) {
+					$this->templatesService->registerCustomTemplate($templateName);
+				}
+			}
+		}
+
+		$newCustomTemplates = $this->templatesService->getCustomTemplates();
+		$this->logChanges('custom template', array_keys($newCustomTemplates), array_keys($oldCustomTemplates));
 	}
 
 	/**

@@ -31,6 +31,7 @@ use OCA\CMSPico\Db\CoreRequestBuilder;
 use OCA\CMSPico\Exceptions\ComposerException;
 use OCA\CMSPico\Exceptions\FilesystemNotWritableException;
 use OCA\CMSPico\Model\Plugin;
+use OCA\CMSPico\Model\Template;
 use OCA\CMSPico\Model\Theme;
 use OCA\CMSPico\Model\WebsiteCore;
 use OCA\CMSPico\Service\ConfigService;
@@ -164,6 +165,8 @@ class Version010000 extends SimpleMigrationStep
 		$this->migratePrivateWebsites();
 		$this->checkComposer();
 		$this->createPublicFolder();
+
+		$this->migrateCustomTemplates();
 		$this->migrateCustomThemes();
 		$this->migrateCustomPlugins();
 	}
@@ -276,6 +279,26 @@ class Version010000 extends SimpleMigrationStep
 				[ $appDataPublicPath, $dataPath ]
 			));
 		}
+	}
+
+	/**
+	 * @return void
+	 */
+	private function migrateCustomTemplates()
+	{
+		$customTemplatesJson = $this->configService->getAppValue(ConfigService::CUSTOM_TEMPLATES);
+		$customTemplates = $customTemplatesJson ? json_decode($customTemplatesJson, true) : [];
+
+		$newCustomTemplates = [];
+		foreach ($customTemplates as $templateName) {
+			$newCustomTemplates[$templateName] = [
+				'name' => $templateName,
+				'type' => Template::TYPE_CUSTOM,
+				'compat' => true
+			];
+		}
+
+		$this->configService->setAppValue(ConfigService::CUSTOM_TEMPLATES, json_encode($newCustomTemplates));
 	}
 
 	/**

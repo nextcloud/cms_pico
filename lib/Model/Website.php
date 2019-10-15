@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace OCA\CMSPico\Model;
 
 use OCA\CMSPico\AppInfo\Application;
+use OCA\CMSPico\Exceptions\TemplateNotCompatibleException;
 use OCA\CMSPico\Exceptions\TemplateNotFoundException;
 use OCA\CMSPico\Exceptions\ThemeNotCompatibleException;
 use OCA\CMSPico\Exceptions\ThemeNotFoundException;
@@ -328,6 +329,7 @@ class Website extends WebsiteCore
 
 	/**
 	 * @throws TemplateNotFoundException
+	 * @throws TemplateNotCompatibleException
 	 */
 	public function assertValidTemplate()
 	{

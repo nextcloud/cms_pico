@@ -31,6 +31,9 @@ use OCP\IConfig;
 class ConfigService
 {
 	/** @var string */
+	const SYSTEM_TEMPLATES = 'system_templates';
+
+	/** @var string */
 	const CUSTOM_TEMPLATES = 'custom_templates';
 
 	/** @var string */
@@ -59,6 +62,7 @@ class ConfigService
 
 	/** @var array<string,mixed> */
 	private $defaults = [
+		self::SYSTEM_TEMPLATES => '',
 		self::CUSTOM_TEMPLATES => '',
 		self::SYSTEM_THEMES => '',
 		self::CUSTOM_THEMES => '',

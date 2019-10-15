@@ -74,6 +74,8 @@ OC.L10N.register(
         "System template": "System template",
         "Custom template": "Custom template",
         "Delete custom template": "Delete custom template",
+        "Incompatible template: Required directory \"{file}\" not found.": "Incompatible template: Required directory \"{file}\" not found.",
+        "Compatible template.": "Compatible template.",
         "Settings": "Settings",
         "Change Pico CMS for Nextcloud's behavior and manage optional features.": "Change Pico CMS for Nextcloud's behavior and manage optional features.",
         "Limit to groups": "Limit to groups",

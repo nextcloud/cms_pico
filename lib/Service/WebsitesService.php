@@ -34,6 +34,7 @@ use OCA\CMSPico\Exceptions\PageInvalidPathException;
 use OCA\CMSPico\Exceptions\PageNotFoundException;
 use OCA\CMSPico\Exceptions\PageNotPermittedException;
 use OCA\CMSPico\Exceptions\PicoRuntimeException;
+use OCA\CMSPico\Exceptions\TemplateNotCompatibleException;
 use OCA\CMSPico\Exceptions\TemplateNotFoundException;
 use OCA\CMSPico\Exceptions\ThemeNotCompatibleException;
 use OCA\CMSPico\Exceptions\ThemeNotFoundException;
@@ -120,6 +121,7 @@ class WebsitesService
 	 * @throws ThemeNotFoundException
 	 * @throws ThemeNotCompatibleException
 	 * @throws TemplateNotFoundException
+	 * @throws TemplateNotCompatibleException
 	 */
 	public function createWebsite(Website $website)
 	{
@@ -154,6 +156,7 @@ class WebsitesService
 	 * @throws ThemeNotFoundException
 	 * @throws ThemeNotCompatibleException
 	 * @throws TemplateNotFoundException
+	 * @throws TemplateNotCompatibleException
 	 */
 	public function updateWebsite(Website $website)
 	{
