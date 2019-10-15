@@ -25,18 +25,22 @@ declare(strict_types=1);
 namespace OCA\CMSPico\Model;
 
 use OCA\CMSPico\Exceptions\ThemeNotCompatibleException;
-use OCA\CMSPico\Files\LocalFolder;
+use OCA\CMSPico\Files\FolderInterface;
 use OCA\CMSPico\Pico;
+use OCA\CMSPico\Service\MiscService;
+use OCP\Files\InvalidPathException;
+use OCP\Files\NotFoundException;
+use OCP\Files\NotPermittedException;
 use Symfony\Component\Yaml\Exception\ParseException as YamlParseException;
 use Symfony\Component\Yaml\Parser as YamlParser;
 
 class Theme implements \JsonSerializable
 {
 	/** @var int */
-	const THEME_TYPE_SYSTEM = 1;
+	const TYPE_SYSTEM = 1;
 
 	/** @var int */
-	const THEME_TYPE_CUSTOM = 2;
+	const TYPE_CUSTOM = 2;
 
 	/** @var int[] */
 	const THEME_API_VERSIONS = [
@@ -46,7 +50,10 @@ class Theme implements \JsonSerializable
 		Pico::API_VERSION_3,
 	];
 
-	/** @var LocalFolder */
+	/** @var MiscService */
+	private $miscService;
+
+	/** @var FolderInterface */
 	private $folder;
 
 	/** @var int */
@@ -59,13 +66,15 @@ class Theme implements \JsonSerializable
 	private $compatException;
 
 	/**
-	 * Plugin constructor.
+	 * Theme constructor.
 	 *
-	 * @param LocalFolder $folder
-	 * @param int         $type
+	 * @param FolderInterface $folder
+	 * @param int             $type
 	 */
-	public function __construct(LocalFolder $folder, int $type = self::THEME_TYPE_SYSTEM)
+	public function __construct(FolderInterface $folder, int $type = self::TYPE_SYSTEM)
 	{
+		$this->miscService = \OC::$server->query(MiscService::class);
+
 		$this->folder = $folder;
 		$this->type = $type;
 	}
@@ -79,9 +88,9 @@ class Theme implements \JsonSerializable
 	}
 
 	/**
-	 * @return LocalFolder
+	 * @return FolderInterface
 	 */
-	public function getFolder(): LocalFolder
+	public function getFolder(): FolderInterface
 	{
 		return $this->folder;
 	}
@@ -123,7 +132,12 @@ class Theme implements \JsonSerializable
 		}
 
 		try {
-			if (!is_file($this->getFolder()->getLocalPath() . '/index.twig')) {
+			try {
+				$this->getFolder()->getFile('index.twig');
+			} catch (\Exception $e) {
+				/** @noinspection PhpUnhandledExceptionInspection */
+				$this->miscService->consumeException($e, InvalidPathException::class, NotFoundException::class);
+
 				throw new ThemeNotCompatibleException(
 					$this->getName(),
 					'Incompatible theme: Twig template "{file}" not found.',
@@ -131,24 +145,29 @@ class Theme implements \JsonSerializable
 				);
 			}
 
+			try {
+				$themeConfigFile = $this->getFolder()->getFile('pico-theme.yml');
+				$themeConfigYaml = $themeConfigFile->getContent();
+
+				$themeConfig = (new YamlParser())->parse($themeConfigYaml);
+				$themeConfig = is_array($themeConfig) ? $themeConfig : [];
+			} catch (\Exception $e) {
+				/** @noinspection PhpUnhandledExceptionInspection */
+				$this->miscService->consumeException(
+					$e,
+					NotFoundException::class,
+					InvalidPathException::class,
+					NotPermittedException::class,
+					YamlParseException::class
+				);
+
+				$themeConfig = [];
+			}
+
 			$apiVersion = Pico::API_VERSION_0;
-			if (is_file($this->getFolder()->getLocalPath() . '/pico-theme.yml')) {
-				$loadConfigClosure = static function ($configFile) {
-					$yaml = file_get_contents($configFile);
-
-					try {
-						$config = (new YamlParser())->parse($yaml);
-						return is_array($config) ? $config : [];
-					} catch (YamlParseException $e) {
-						return [];
-					}
-				};
-
-				$themeConfig = $loadConfigClosure($this->getFolder()->getLocalPath() . '/pico-theme.yml');
-				if (isset($themeConfig['api_version'])) {
-					if (is_int($themeConfig['api_version']) || preg_match('/^[0-9]+$/', $themeConfig['api_version'])) {
-						$apiVersion = (int) $themeConfig['api_version'];
-					}
+			if (isset($themeConfig['api_version'])) {
+				if (is_int($themeConfig['api_version']) || preg_match('/^[0-9]+$/', $themeConfig['api_version'])) {
+					$apiVersion = (int)$themeConfig['api_version'];
 				}
 			}
 

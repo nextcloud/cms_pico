@@ -38,13 +38,13 @@ class ThemeNotCompatibleException extends \Exception
 	/**
 	 * PluginNotCompatibleException constructor.
 	 *
-	 * @param string $pluginName
+	 * @param string $themeName
 	 * @param string $reason
 	 * @param array  $reasonData
 	 */
-	public function __construct(string $pluginName, string $reason = "", array $reasonData = [])
+	public function __construct(string $themeName, string $reason = "", array $reasonData = [])
 	{
-		$this->themeName = $pluginName;
+		$this->themeName = $themeName;
 		$this->reason = $reason;
 		$this->reasonData = $reasonData;
 

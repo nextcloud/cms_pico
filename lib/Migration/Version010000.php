@@ -313,7 +313,7 @@ class Version010000 extends SimpleMigrationStep
 		foreach ($customThemes as $themeName) {
 			$newCustomThemes[$themeName] = [
 				'name' => $themeName,
-				'type' => Theme::THEME_TYPE_CUSTOM,
+				'type' => Theme::TYPE_CUSTOM,
 				'compat' => true
 			];
 		}

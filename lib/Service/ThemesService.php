@@ -154,7 +154,7 @@ class ThemesService
 		}
 
 		$themes = $this->getSystemThemes();
-		$themes[$themeName] = $this->publishTheme($systemThemeFolder, Theme::THEME_TYPE_SYSTEM);
+		$themes[$themeName] = $this->publishTheme($systemThemeFolder, Theme::TYPE_SYSTEM);
 		$this->configService->setAppValue(ConfigService::SYSTEM_THEMES, json_encode($themes));
 
 		return $themes[$themeName];
@@ -182,7 +182,7 @@ class ThemesService
 		}
 
 		$themes = $this->getCustomThemes();
-		$themes[$themeName] = $this->publishTheme($appDataThemeFolder, Theme::THEME_TYPE_CUSTOM);
+		$themes[$themeName] = $this->publishTheme($appDataThemeFolder, Theme::TYPE_CUSTOM);
 		$this->configService->setAppValue(ConfigService::CUSTOM_THEMES, json_encode($themes));
 
 		return $themes[$themeName];
