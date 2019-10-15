@@ -333,7 +333,7 @@ class Version010000 extends SimpleMigrationStep
 		foreach ($customPlugins as $pluginName) {
 			$newCustomPlugins[$pluginName] = [
 				'name' => $pluginName,
-				'type' => Plugin::PLUGIN_TYPE_CUSTOM,
+				'type' => Plugin::TYPE_CUSTOM,
 				'compat' => true
 			];
 		}

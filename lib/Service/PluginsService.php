@@ -129,7 +129,7 @@ class PluginsService
 		}
 
 		$plugins = $this->getSystemPlugins();
-		$plugins[$pluginName] = $this->publishPlugin($systemPluginFolder, Plugin::PLUGIN_TYPE_SYSTEM);
+		$plugins[$pluginName] = $this->publishPlugin($systemPluginFolder, Plugin::TYPE_SYSTEM);
 		$this->configService->setAppValue(ConfigService::SYSTEM_PLUGINS, json_encode($plugins));
 
 		return $plugins[$pluginName];
@@ -157,7 +157,7 @@ class PluginsService
 		}
 
 		$plugins = $this->getCustomPlugins();
-		$plugins[$pluginName] = $this->publishPlugin($appDataPluginFolder, Plugin::PLUGIN_TYPE_CUSTOM);
+		$plugins[$pluginName] = $this->publishPlugin($appDataPluginFolder, Plugin::TYPE_CUSTOM);
 		$this->configService->setAppValue(ConfigService::CUSTOM_PLUGINS, json_encode($plugins));
 
 		return $plugins[$pluginName];

@@ -25,16 +25,19 @@ declare(strict_types=1);
 namespace OCA\CMSPico\Model;
 
 use OCA\CMSPico\Exceptions\PluginNotCompatibleException;
-use OCA\CMSPico\Files\LocalFolder;
+use OCA\CMSPico\Files\FolderInterface;
 use OCA\CMSPico\Pico;
+use OCA\CMSPico\Service\MiscService;
+use OCP\Files\InvalidPathException;
+use OCP\Files\NotFoundException;
 
 class Plugin implements \JsonSerializable
 {
 	/** @var int */
-	const PLUGIN_TYPE_SYSTEM = 1;
+	const TYPE_SYSTEM = 1;
 
 	/** @var int */
-	const PLUGIN_TYPE_CUSTOM = 2;
+	const TYPE_CUSTOM = 2;
 
 	/** @var int[] */
 	const PLUGIN_API_VERSIONS = [
@@ -43,7 +46,10 @@ class Plugin implements \JsonSerializable
 		Pico::API_VERSION_3,
 	];
 
-	/** @var LocalFolder */
+	/** @var MiscService */
+	private $miscService;
+
+	/** @var FolderInterface */
 	private $folder;
 
 	/** @var int */
@@ -58,11 +64,13 @@ class Plugin implements \JsonSerializable
 	/**
 	 * Plugin constructor.
 	 *
-	 * @param LocalFolder $folder
-	 * @param int         $type
+	 * @param FolderInterface $folder
+	 * @param int             $type
 	 */
-	public function __construct(LocalFolder $folder, int $type = self::PLUGIN_TYPE_SYSTEM)
+	public function __construct(FolderInterface $folder, int $type = self::TYPE_SYSTEM)
 	{
+		$this->miscService = \OC::$server->query(MiscService::class);
+
 		$this->folder = $folder;
 		$this->type = $type;
 	}
@@ -76,9 +84,9 @@ class Plugin implements \JsonSerializable
 	}
 
 	/**
-	 * @return LocalFolder
+	 * @return FolderInterface
 	 */
-	public function getFolder(): LocalFolder
+	public function getFolder(): FolderInterface
 	{
 		return $this->folder;
 	}
@@ -125,15 +133,19 @@ class Plugin implements \JsonSerializable
 		};
 
 		try {
-			if (!is_file($this->getFolder()->getLocalPath() . '/' . $this->getName() . '.php')) {
+			try {
+				$pluginFile = $this->getFolder()->getFile($this->getName() . '.php');
+				$includeClosure($pluginFile->getLocalPath());
+			} catch (\Exception $e) {
+				/** @noinspection PhpUnhandledExceptionInspection */
+				$this->miscService->consumeException($e, InvalidPathException::class, NotFoundException::class);
+
 				throw new PluginNotCompatibleException(
 					$this->getName(),
 					'Incompatible plugin: Plugin file "{file}" not found.',
 					[ 'file' => $this->getName() . '/' . $this->getName() . '.php' ]
 				);
 			}
-
-			$includeClosure($this->getFolder()->getLocalPath() . '/' . $this->getName() . '.php');
 
 			$className = $this->getName();
 			if (!class_exists($className, false)) {
