@@ -32,6 +32,7 @@ use OCA\CMSPico\Exceptions\ThemeNotFoundException;
 use OCA\CMSPico\Files\FolderInterface;
 use OCA\CMSPico\Files\LocalFolder;
 use OCA\CMSPico\Model\Theme;
+use OCP\Files\AlreadyExistsException;
 use OCP\Files\NotFoundException;
 
 class ThemesService
@@ -243,6 +244,43 @@ class ThemesService
 		$customThemes = $this->getCustomThemes();
 		unset($customThemes[$themeName]);
 		$this->configService->setAppValue(ConfigService::CUSTOM_THEMES, json_encode($customThemes));
+	}
+
+	/**
+	 * @param string $baseThemeName
+	 * @param string $themeName
+	 *
+	 * @return Theme
+	 * @throws ThemeNotFoundException
+	 * @throws ThemeAlreadyExistsException
+	 */
+	public function copyTheme(string $baseThemeName, string $themeName)
+	{
+		if (!$baseThemeName || !$themeName) {
+			throw new ThemeNotFoundException();
+		}
+
+		$systemThemes = $this->getSystemThemes();
+		$customThemes = $this->getCustomThemes();
+
+		if (isset($systemThemes[$themeName]) || isset($customThemes[$themeName])) {
+			throw new ThemeAlreadyExistsException();
+		}
+
+		try {
+			$baseThemeFolder = $this->getThemesFolder()->getFolder($baseThemeName);
+		} catch (NotFoundException $e) {
+			throw new ThemeNotFoundException();
+		}
+
+		try {
+			$appDataThemesFolder = $this->fileService->getAppDataFolder(PicoService::DIR_THEMES);
+			$baseThemeFolder->copy($appDataThemesFolder, $themeName);
+		} catch (AlreadyExistsException $e) {
+			throw new ThemeAlreadyExistsException();
+		}
+
+		return $this->publishCustomTheme($themeName);
 	}
 
 	/**

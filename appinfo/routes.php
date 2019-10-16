@@ -75,11 +75,13 @@ return [
 		[ 'name' => 'Settings#getTemplates', 'url' => '/admin/templates', 'verb' => 'GET' ],
 		[ 'name' => 'Settings#addCustomTemplate', 'url' => '/admin/templates', 'verb' => 'POST' ],
 		[ 'name' => 'Settings#removeCustomTemplate', 'url' => '/admin/templates/{item}', 'verb' => 'DELETE' ],
+		[ 'name' => 'Settings#copyTemplate', 'url' => '/admin/templates/{item}', 'verb' => 'CLONE' ],
 
 		[ 'name' => 'Settings#getThemes', 'url' => '/admin/themes', 'verb' => 'GET' ],
 		[ 'name' => 'Settings#addCustomTheme', 'url' => '/admin/themes', 'verb' => 'POST' ],
 		[ 'name' => 'Settings#updateCustomTheme', 'url' => '/admin/themes/{item}', 'verb' => 'POST' ],
 		[ 'name' => 'Settings#removeCustomTheme', 'url' => '/admin/themes/{item}', 'verb' => 'DELETE' ],
+		[ 'name' => 'Settings#copyTheme', 'url' => '/admin/themes/{item}', 'verb' => 'CLONE' ],
 
 		[ 'name' => 'Settings#getPlugins', 'url' => '/admin/plugins', 'verb' => 'GET' ],
 		[ 'name' => 'Settings#addCustomPlugin', 'url' => '/admin/plugins', 'verb' => 'POST' ],

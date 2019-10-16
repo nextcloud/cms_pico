@@ -38,6 +38,7 @@
 	 * @param {jQuery|string} [options.systemTemplate]
 	 * @param {jQuery|string} [options.customTemplate]
 	 * @param {jQuery|string} [options.newTemplate]
+	 * @param {jQuery|string} [options.copyTemplate]
 	 * @param {jQuery|string} [options.loadingTemplate]
 	 * @param {jQuery|string} [options.errorTemplate]
 	 */
@@ -58,6 +59,9 @@
 		/** @member {jQuery} */
 		$newTemplate: $(),
 
+		/** @member {jQuery} */
+		$copyTemplate: $(),
+
 		/**
 		 * @constructs
 		 *
@@ -68,6 +72,7 @@
 		 * @param {jQuery|string} [options.systemTemplate]
 		 * @param {jQuery|string} [options.customTemplate]
 		 * @param {jQuery|string} [options.newTemplate]
+		 * @param {jQuery|string} [options.copyTemplate]
 		 * @param {jQuery|string} [options.loadingTemplate]
 		 * @param {jQuery|string} [options.errorTemplate]
 		 */
@@ -77,12 +82,14 @@
 			options = $.extend({
 				systemTemplate: $element.data('systemTemplate'),
 				customTemplate: $element.data('customTemplate'),
-				newTemplate: $element.data('newTemplate')
+				newTemplate: $element.data('newTemplate'),
+				copyTemplate: $element.data('copyTemplate')
 			}, options);
 
 			this.$systemTemplate = $(options.systemTemplate);
 			this.$customTemplate = $(options.customTemplate);
 			this.$newTemplate = $(options.newTemplate);
+			this.$copyTemplate = $(options.copyTemplate);
 
 			var signature = 'OCA.CMSPico.AdminList.initialize()';
 			if (!this.$systemTemplate.length) throw signature + ': No valid system item template given';
@@ -186,6 +193,46 @@
 			$item.find('.action-sync').on('click.CMSPicoAdminList', function (event) {
 				event.preventDefault();
 				that._api('POST', itemData.name);
+			});
+
+			$item.find('.action-copy').each(function () {
+				var $this = $(this),
+					dialogId = 'picocms-dialog-copy',
+					dialogTitle = $this.data('originalTitle') || $this.prop('title') || $this.text();
+
+				var $dialog = that.$copyTemplate.octemplate({
+					id: dialogId,
+					title: dialogTitle,
+					source: itemData.name
+				});
+
+				var dialogButtons = [
+					{
+						text: t('cms_pico', 'Abort'),
+						click: function (event) {
+							$dialog.ocdialog('close');
+						}
+					},
+					{
+						text: t('cms_pico', 'Copy'),
+						defaultButton: true,
+						click: function (event) {
+							var value = $dialog.find('.input-name').val();
+							that._api('CLONE', itemData.name, { name: value });
+
+							$dialog.ocdialog('close');
+						}
+					}
+				];
+
+				$this.on('click.CMSPicoAdminList', function (event) {
+					event.preventDefault();
+
+					$('#' + dialogId).ocdialog('close');
+
+					$('#app-content').append($dialog);
+					$dialog.ocdialog({ buttons: dialogButtons });
+				});
 			});
 
 			$item.find('.action-delete').on('click.CMSPicoAdminList', function (event) {

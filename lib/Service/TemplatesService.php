@@ -34,6 +34,7 @@ use OCA\CMSPico\Files\StorageFolder;
 use OCA\CMSPico\Model\Template;
 use OCA\CMSPico\Model\TemplateFile;
 use OCA\CMSPico\Model\Website;
+use OCP\Files\AlreadyExistsException;
 use OCP\Files\NotFoundException;
 
 class TemplatesService
@@ -203,6 +204,39 @@ class TemplatesService
 		$customTemplates = $this->getCustomTemplates();
 		unset($customTemplates[$templateName]);
 		$this->configService->setAppValue(ConfigService::CUSTOM_TEMPLATES, json_encode($customTemplates));
+	}
+
+	/**
+	 * @param string $baseTemplateName
+	 * @param string $templateName
+	 *
+	 * @return Template
+	 * @throws TemplateNotFoundException
+	 * @throws TemplateAlreadyExistsException
+	 */
+	public function copyTemplate(string $baseTemplateName, string $templateName)
+	{
+		if (!$baseTemplateName || !$templateName) {
+			throw new TemplateNotFoundException();
+		}
+
+		$systemTemplates = $this->getSystemTemplates();
+		$customTemplates = $this->getCustomTemplates();
+
+		if (isset($systemTemplates[$templateName]) || isset($customTemplates[$templateName])) {
+			throw new TemplateAlreadyExistsException();
+		}
+
+		$baseTemplateFolder = $this->getTemplateFolder($baseTemplateName);
+		$appDataTemplatesFolder = $this->fileService->getAppDataFolder(PicoService::DIR_TEMPLATES);
+
+		try {
+			$baseTemplateFolder->copy($appDataTemplatesFolder, $templateName);
+		} catch (AlreadyExistsException $e) {
+			throw new TemplateAlreadyExistsException();
+		}
+
+		return $this->registerCustomTemplate($templateName);
 	}
 
 	/**

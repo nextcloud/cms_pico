@@ -60,6 +60,7 @@ style(Application::APP_NAME, 'pico');
 			data-system-template="#picocms-themes-template-system-item"
 			data-custom-template="#picocms-themes-template-custom-item"
 			data-new-template="#picocms-themes-template-new-item"
+			data-copy-template="#picocms-themes-template-copy-item"
 			data-loading-template="#picocms-themes-template-loading"
 			data-error-template="#picocms-themes-template-error">
 		<div class="app-content-loading message large">
@@ -101,6 +102,10 @@ style(Application::APP_NAME, 'pico');
 					</div>
 				</div>
 			</div>
+			<div class="action-copy icon-copy has-tooltip" data-placement="left"
+					title="<?php p($l->t('Copy system theme')); ?>">
+				<span class="hidden-visually"><?php p($l->t('Copy system theme')); ?></span>
+			</div>
 		</div>
 	</script>
 
@@ -120,6 +125,10 @@ style(Application::APP_NAME, 'pico');
 					title="<?php p($l->t('Reload custom theme')); ?>">
 				<span class="hidden-visually"><?php p($l->t('Reload custom theme')); ?></span>
 			</div>
+			<div class="action-copy icon-copy has-tooltip" data-placement="left"
+					title="<?php p($l->t('Copy custom theme')); ?>">
+				<span class="hidden-visually"><?php p($l->t('Copy custom theme')); ?></span>
+			</div>
 			<div class="action-delete icon-delete has-tooltip" data-placement="left"
 					title="<?php p($l->t('Delete custom theme')); ?>">
 				<span class="hidden-visually"><?php p($l->t('Delete custom theme')); ?></span>
@@ -130,6 +139,28 @@ style(Application::APP_NAME, 'pico');
 	<script id="picocms-themes-template-new-item" type="text/template"
 			data-append-to="#picocms-themes > .app-content-list > .app-content-list-add select">
 		<option name="{name}">{name}</option>
+	</script>
+
+	<script id="picocms-themes-template-copy-item" type="text/template">
+		<form id="{id}" title="{title}" class="form">
+			<fieldset>
+				<div class="label">
+					<label for="picocms-themes-copy-base"><?php p($l->t('Base theme')); ?></label>
+				</div>
+				<div class="content">
+					<span id="picocms-themes-copy-base" class="input">{source}</span>
+				</div>
+			</fieldset>
+			<fieldset>
+				<div class="label">
+					<label for="picocms-themes-copy-name"><?php p($l->t('Theme name')); ?></label>
+				</div>
+				<div class="content">
+					<input id="picocms-themes-copy-name" class="input input-name" type="text" name="name"
+							value="" placeholder="{source}" />
+				</div>
+			</fieldset>
+		</form>
 	</script>
 
 	<script id="picocms-themes-template-loading" type="text/template"
@@ -311,6 +342,7 @@ style(Application::APP_NAME, 'pico');
 			data-system-template="#picocms-templates-template-system-item"
 			data-custom-template="#picocms-templates-template-custom-item"
 			data-new-template="#picocms-templates-template-new-item"
+			data-copy-template="#picocms-templates-template-copy-item"
 			data-loading-template="#picocms-templates-template-loading"
 			data-error-template="#picocms-templates-template-error">
 		<div class="app-content-loading message large">
@@ -352,6 +384,10 @@ style(Application::APP_NAME, 'pico');
 					</div>
 				</div>
 			</div>
+			<div class="action-copy icon-copy has-tooltip" data-placement="left"
+					title="<?php p($l->t('Copy system template')); ?>">
+				<span class="hidden-visually"><?php p($l->t('Copy system template')); ?></span>
+			</div>
 		</div>
 	</script>
 
@@ -367,6 +403,10 @@ style(Application::APP_NAME, 'pico');
 					</div>
 				</div>
 			</div>
+			<div class="action-copy icon-copy has-tooltip" data-placement="left"
+					title="<?php p($l->t('Copy custom template')); ?>">
+				<span class="hidden-visually"><?php p($l->t('Copy custom template')); ?></span>
+			</div>
 			<div class="action-delete icon-delete has-tooltip" data-placement="left"
 					title="<?php p($l->t('Delete custom template')); ?>">
 				<span class="hidden-visually"><?php p($l->t('Delete custom template')); ?></span>
@@ -377,6 +417,28 @@ style(Application::APP_NAME, 'pico');
 	<script id="picocms-templates-template-new-item" type="text/template"
 			data-append-to="#picocms-templates > .app-content-list > .app-content-list-add select">
 		<option name="{name}">{name}</option>
+	</script>
+
+	<script id="picocms-templates-template-copy-item" type="text/template">
+		<form id="{id}" title="{title}" class="form">
+			<fieldset>
+				<div class="label">
+					<label for="picocms-templates-copy-base"><?php p($l->t('Base template')); ?></label>
+				</div>
+				<div class="content">
+					<span id="picocms-templates-copy-base" class="input">{source}</span>
+				</div>
+			</fieldset>
+			<fieldset>
+				<div class="label">
+					<label for="picocms-templates-copy-name"><?php p($l->t('Template name')); ?></label>
+				</div>
+				<div class="content">
+					<input id="picocms-templates-copy-name" class="input input-name" type="text" name="name"
+							value="" placeholder="{source}" />
+				</div>
+			</fieldset>
+		</form>
 	</script>
 
 	<script id="picocms-templates-template-loading" type="text/template"

@@ -286,6 +286,23 @@ class SettingsController extends Controller
 	}
 
 	/**
+	 * @param string $item
+	 * @param string $name
+	 *
+	 * @return DataResponse
+	 */
+	public function copyTemplate(string $item, string $name): DataResponse
+	{
+		try {
+			$this->templatesService->copyTemplate($item, $name);
+
+			return $this->getTemplates();
+		} catch (\Exception $e) {
+			return $this->createErrorResponse($e);
+		}
+	}
+
+	/**
 	 * @return DataResponse
 	 */
 	public function getThemes(): DataResponse
@@ -341,6 +358,23 @@ class SettingsController extends Controller
 	{
 		try {
 			$this->themesService->depublishCustomTheme($item);
+
+			return $this->getThemes();
+		} catch (\Exception $e) {
+			return $this->createErrorResponse($e);
+		}
+	}
+
+	/**
+	 * @param string $item
+	 * @param string $name
+	 *
+	 * @return DataResponse
+	 */
+	public function copyTheme(string $item, string $name): DataResponse
+	{
+		try {
+			$this->themesService->copyTheme($item, $name);
 
 			return $this->getThemes();
 		} catch (\Exception $e) {
