@@ -226,7 +226,7 @@ class TemplatesService
 
 		$websiteFolder = $userFolder->newFolder($website->getPath());
 
-		$templateFolder = $this->getTemplateFolder($website);
+		$templateFolder = $this->getTemplateFolder($website->getTemplateSource());
 		$templateFolder->sync();
 
 		$templateData = $this->getTemplateData($website);
@@ -262,14 +262,13 @@ class TemplatesService
 	}
 
 	/**
-	 * @param Website $website
+	 * @param string $templateName
 	 *
 	 * @return FolderInterface
 	 * @throws TemplateNotFoundException
 	 */
-	public function getTemplateFolder(Website $website): FolderInterface
+	public function getTemplateFolder(string $templateName): FolderInterface
 	{
-		$templateName = $website->getTemplateSource();
 		if (!$templateName) {
 			throw new TemplateNotFoundException();
 		}
