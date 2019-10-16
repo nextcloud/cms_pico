@@ -136,7 +136,7 @@
 					callback(data);
 				}
 			}).fail(function (jqXHR, textStatus, errorThrown) {
-				that._content(that.$errorTemplate);
+				that._error((jqXHR.responseJSON || {}).error);
 			});
 		},
 
@@ -163,6 +163,25 @@
 			$content.appendTo($baseElement);
 
 			return $content;
+		},
+
+		/**
+		 * @protected
+		 *
+		 * @param {string} [message]
+		 */
+		_error: function (message) {
+			var $error = this._content(this.$errorTemplate, { message: message || '' }),
+				that = this;
+
+			if (message) {
+				$error.find('.error-details').show();
+			}
+
+			$error.find('.action-reload').on('click.CMSPicoAdminList', function (event) {
+				event.preventDefault();
+				that.reload();
+			});
 		}
 	};
 

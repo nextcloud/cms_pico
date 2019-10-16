@@ -26,8 +26,12 @@ declare(strict_types=1);
 namespace OCA\CMSPico\Controller;
 
 use OCA\CMSPico\AppInfo\Application;
+use OCA\CMSPico\Exceptions\PluginAlreadyExistsException;
+use OCA\CMSPico\Exceptions\PluginNotFoundException;
+use OCA\CMSPico\Exceptions\TemplateAlreadyExistsException;
 use OCA\CMSPico\Exceptions\TemplateNotCompatibleException;
 use OCA\CMSPico\Exceptions\TemplateNotFoundException;
+use OCA\CMSPico\Exceptions\ThemeAlreadyExistsException;
 use OCA\CMSPico\Exceptions\ThemeNotCompatibleException;
 use OCA\CMSPico\Exceptions\ThemeNotFoundException;
 use OCA\CMSPico\Exceptions\WebsiteExistsException;
@@ -143,24 +147,24 @@ class SettingsController extends Controller
 
 			return $this->getPersonalWebsites();
 		} catch (\Exception $e) {
-			$data = [];
+			$error = [];
 			if ($e instanceof WebsiteExistsException) {
-				$data['form_error'] = [ 'field' => 'site', 'message' => $this->l10n->t('Website exists.') ];
+				$error['error'] = [ 'field' => 'site', 'message' => $this->l10n->t('Website exists.') ];
 			} elseif ($e instanceof WebsiteInvalidOwnerException) {
-				$data['form_error'] = [ 'field' => 'user', 'message' => $this->l10n->t('No permission.') ];
+				$error['error'] = [ 'field' => 'user', 'message' => $this->l10n->t('No permission.') ];
 			} elseif (($e instanceof WebsiteInvalidDataException) && $e->getField()) {
-				$data['form_error'] = [ 'field' => $e->getField(), 'message' => $e->getMessage() ];
+				$error['error'] = [ 'field' => $e->getField(), 'message' => $e->getMessage() ];
 			} elseif ($e instanceof ThemeNotFoundException) {
-				$data['form_error'] = [ 'field' => 'theme', 'message' => $this->l10n->t('Theme not found.') ];
+				$error['error'] = [ 'field' => 'theme', 'message' => $this->l10n->t('Theme not found.') ];
 			} elseif ($e instanceof ThemeNotCompatibleException) {
-				$data['form_error'] = [ 'field' => 'theme', 'message' => $this->l10n->t($e->getReason()) ];
+				$error['error'] = [ 'field' => 'theme', 'message' => $this->l10n->t($e->getReason()) ];
 			} elseif ($e instanceof TemplateNotFoundException) {
-				$data['form_error'] = [ 'field' => 'template', 'message' => $this->l10n->t('Template not found.') ];
+				$error['error'] = [ 'field' => 'template', 'message' => $this->l10n->t('Template not found.') ];
 			} elseif ($e instanceof TemplateNotCompatibleException) {
-				$data['form_error'] = [ 'field' => 'template', 'message' => $this->l10n->t($e->getReason()) ];
+				$error['error'] = [ 'field' => 'template', 'message' => $this->l10n->t($e->getReason()) ];
 			}
 
-			return $this->createErrorResponse($e, $data);
+			return $this->createErrorResponse($e, $error);
 		}
 	}
 
@@ -198,22 +202,22 @@ class SettingsController extends Controller
 
 			return $this->getPersonalWebsites();
 		} catch (\Exception $e) {
-			$data = [];
+			$error = [];
 			if (($e instanceof WebsiteNotFoundException) || ($e instanceof WebsiteForeignOwnerException)) {
-				$data['form_error'] = [ 'field' => 'identifier', 'message' => $this->l10n->t('Website not found.') ];
+				$error['error'] = [ 'field' => 'identifier', 'message' => $this->l10n->t('Website not found.') ];
 			} elseif ($e instanceof WebsiteInvalidDataException) {
-				$data['form_error'] = [ 'field' => $e->getField(), 'message' => $e->getMessage() ];
+				$error['error'] = [ 'field' => $e->getField(), 'message' => $e->getMessage() ];
 			} elseif ($e instanceof ThemeNotFoundException) {
-				$data['form_error'] = [ 'field' => 'theme', 'message' => $this->l10n->t('Theme not found.') ];
+				$error['error'] = [ 'field' => 'theme', 'message' => $this->l10n->t('Theme not found.') ];
 			} elseif ($e instanceof ThemeNotCompatibleException) {
-				$data['form_error'] = [ 'field' => 'theme', 'message' => $this->l10n->t($e->getReason()) ];
+				$error['error'] = [ 'field' => 'theme', 'message' => $this->l10n->t($e->getReason()) ];
 			} elseif ($e instanceof TemplateNotFoundException) {
-				$data['form_error'] = [ 'field' => 'template', 'message' => $this->l10n->t('Template not found.') ];
+				$error['error'] = [ 'field' => 'template', 'message' => $this->l10n->t('Template not found.') ];
 			} elseif ($e instanceof TemplateNotCompatibleException) {
-				$data['form_error'] = [ 'field' => 'template', 'message' => $this->l10n->t($e->getReason()) ];
+				$error['error'] = [ 'field' => 'template', 'message' => $this->l10n->t($e->getReason()) ];
 			}
 
-			return $this->createErrorResponse($e, $data);
+			return $this->createErrorResponse($e, $error);
 		}
 	}
 
@@ -234,6 +238,10 @@ class SettingsController extends Controller
 			$this->websitesService->deleteWebsite($website);
 
 			return $this->getPersonalWebsites();
+		} catch (WebsiteNotFoundException $e) {
+			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Website not found.') ]);
+		} catch (WebsiteForeignOwnerException $e) {
+			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Website not found.') ]);
 		} catch (\Exception $e) {
 			return $this->createErrorResponse($e);
 		}
@@ -264,6 +272,10 @@ class SettingsController extends Controller
 			$this->templatesService->registerCustomTemplate($item);
 
 			return $this->getTemplates();
+		} catch (TemplateNotFoundException $e) {
+			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Template not found.') ]);
+		} catch (TemplateAlreadyExistsException $e) {
+			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Template exists already.') ]);
 		} catch (\Exception $e) {
 			return $this->createErrorResponse($e);
 		}
@@ -280,6 +292,8 @@ class SettingsController extends Controller
 			$this->templatesService->removeCustomTemplate($item);
 
 			return $this->getTemplates();
+		} catch (TemplateNotFoundException $e) {
+			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Template not found.') ]);
 		} catch (\Exception $e) {
 			return $this->createErrorResponse($e);
 		}
@@ -297,6 +311,10 @@ class SettingsController extends Controller
 			$this->templatesService->copyTemplate($item, $name);
 
 			return $this->getTemplates();
+		} catch (TemplateNotFoundException $e) {
+			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Template not found.') ]);
+		} catch (TemplateAlreadyExistsException $e) {
+			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Template exists already.') ]);
 		} catch (\Exception $e) {
 			return $this->createErrorResponse($e);
 		}
@@ -327,6 +345,10 @@ class SettingsController extends Controller
 			$this->themesService->publishCustomTheme($item);
 
 			return $this->getThemes();
+		} catch (ThemeNotFoundException $e) {
+			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Theme not found.') ]);
+		} catch (ThemeAlreadyExistsException $e) {
+			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Theme exists already.') ]);
 		} catch (\Exception $e) {
 			return $this->createErrorResponse($e);
 		}
@@ -344,6 +366,8 @@ class SettingsController extends Controller
 			$this->themesService->publishCustomTheme($item);
 
 			return $this->getThemes();
+		} catch (ThemeNotFoundException $e) {
+			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Theme not found.') ]);
 		} catch (\Exception $e) {
 			return $this->createErrorResponse($e);
 		}
@@ -360,6 +384,8 @@ class SettingsController extends Controller
 			$this->themesService->depublishCustomTheme($item);
 
 			return $this->getThemes();
+		} catch (ThemeNotFoundException $e) {
+			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Theme not found.') ]);
 		} catch (\Exception $e) {
 			return $this->createErrorResponse($e);
 		}
@@ -377,6 +403,10 @@ class SettingsController extends Controller
 			$this->themesService->copyTheme($item, $name);
 
 			return $this->getThemes();
+		} catch (ThemeNotFoundException $e) {
+			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Theme not found.') ]);
+		} catch (ThemeAlreadyExistsException $e) {
+			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Theme exists already.') ]);
 		} catch (\Exception $e) {
 			return $this->createErrorResponse($e);
 		}
@@ -407,6 +437,10 @@ class SettingsController extends Controller
 			$this->pluginsService->publishCustomPlugin($item);
 
 			return $this->getPlugins();
+		} catch (PluginNotFoundException $e) {
+			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Plugin not found.') ]);
+		} catch (PluginAlreadyExistsException $e) {
+			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Plugin exists already.') ]);
 		} catch (\Exception $e) {
 			return $this->createErrorResponse($e);
 		}
@@ -424,6 +458,8 @@ class SettingsController extends Controller
 			$this->pluginsService->publishCustomPlugin($item);
 
 			return $this->getPlugins();
+		} catch (PluginNotFoundException $e) {
+			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Plugin not found.') ]);
 		} catch (\Exception $e) {
 			return $this->createErrorResponse($e);
 		}
@@ -440,6 +476,8 @@ class SettingsController extends Controller
 			$this->pluginsService->depublishCustomPlugin($item);
 
 			return $this->getPlugins();
+		} catch (PluginNotFoundException $e) {
+			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Plugin not found.') ]);
 		} catch (\Exception $e) {
 			return $this->createErrorResponse($e);
 		}
@@ -499,8 +537,8 @@ class SettingsController extends Controller
 		$data['status'] = 0;
 		if (\OC::$server->getSystemConfig()->getValue('debug', false)) {
 			$data['exception'] = get_class($exception);
-			$data['error'] = $exception->getMessage();
-			$data['code'] = $exception->getCode();
+			$data['exceptionMessage'] = $exception->getMessage();
+			$data['exceptionCode'] = $exception->getCode();
 		}
 
 		return new DataResponse($data, Http::STATUS_INTERNAL_SERVER_ERROR);

@@ -353,7 +353,7 @@
 			}).done(function (data, textStatus, jqXHR) {
 				that._success(data);
 			}).fail(function (jqXHR, textStatus, errorThrown) {
-				that._error(jqXHR.responseJSON || {});
+				that._formError((jqXHR.responseJSON || {}).error);
 
 				$submitButton.show();
 				$loadingButton.hide();
@@ -388,15 +388,15 @@
 		/**
 		 * @private
 		 *
-		 * @param {Object} data
+		 * @param {Object} errorData
 		 */
-		_error: function (data) {
-			if (data.form_error) {
-				var $errorInput = this.$element.find('.input-' + data.form_error.field + '-error');
+		_formError: function (errorData) {
+			if (errorData) {
+				var $errorInput = this.$element.find('.input-' + errorData.field + '-error');
 
 				if ($errorInput.length) {
 					$errorInput.closest('fieldset').addClass('form-error');
-					$errorInput.text(data.form_error.message);
+					$errorInput.text(errorData.message);
 					return;
 				}
 			}

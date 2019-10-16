@@ -181,6 +181,11 @@ style(Application::APP_NAME, 'pico');
 				<p><?php p($l->t(
 					'A unexpected error occured while performing this action. Please check Nextcloud\'s logs.'
 				)); ?></p>
+				<p class="error-details" style="display: none"><?php p($l->t('Error')); ?>: {message}</p>
+			</div>
+			<div class="action action-reload icon-redo-alt has-tooltip" data-placement="left"
+					title="<?php p($l->t('Reload themes list')); ?>">
+				<span class="hidden-visually"><?php p($l->t('Reload themes list')); ?></span>
 			</div>
 		</div>
 	</script>
@@ -307,6 +312,11 @@ style(Application::APP_NAME, 'pico');
 				<p><?php p($l->t(
 					'A unexpected error occured while performing this action. Please check Nextcloud\'s logs.'
 				)); ?></p>
+				<p class="error-details" style="display: none"><?php p($l->t('Error')); ?>: {message}</p>
+			</div>
+			<div class="action action-reload icon-redo-alt has-tooltip" data-placement="left"
+					title="<?php p($l->t('Reload plugins list')); ?>">
+				<span class="hidden-visually"><?php p($l->t('Reload plugins list')); ?></span>
 			</div>
 		</div>
 	</script>
@@ -459,6 +469,11 @@ style(Application::APP_NAME, 'pico');
 				<p><?php p($l->t(
 					'A unexpected error occured while performing this action. Please check Nextcloud\'s logs.'
 				)); ?></p>
+				<p class="error-details" style="display: none"><?php p($l->t('Error')); ?>: {message}</p>
+			</div>
+			<div class="action action-reload icon-redo-alt has-tooltip" data-placement="left"
+					title="<?php p($l->t('Reload templates list')); ?>">
+				<span class="hidden-visually"><?php p($l->t('Reload templates list')); ?></span>
 			</div>
 		</div>
 	</script>

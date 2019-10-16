@@ -444,6 +444,21 @@
 			}
 		}
 
+		> .action,
+		> [class^="action-"],
+		> [class*=" action-"] {
+			align-self: self-start;
+			margin: -7px;
+			padding: 22px;
+			opacity: 0.3;
+			cursor: pointer;
+
+			&:hover,
+			&:focus {
+				opacity: 0.7;
+			}
+		}
+
 		&.large {
 			min-height: 48px;
 
