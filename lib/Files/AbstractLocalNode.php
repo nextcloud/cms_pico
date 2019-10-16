@@ -114,7 +114,7 @@ abstract class AbstractLocalNode extends AbstractNode implements NodeInterface
 
 			return new LocalFile($targetPath->getPath() . '/' . $this->getName(), $targetPath->basePath);
 		} else {
-			return parent::copy($targetPath);
+			return parent::copy($targetPath, $name);
 		}
 	}
 
@@ -141,7 +141,7 @@ abstract class AbstractLocalNode extends AbstractNode implements NodeInterface
 
 			return new LocalFile($targetPath->getPath() . '/' . $this->getName(), $targetPath->getBasePath());
 		} else {
-			return parent::move($targetPath);
+			return parent::move($targetPath, $name);
 		}
 	}
 
