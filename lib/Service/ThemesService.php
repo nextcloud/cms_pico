@@ -26,12 +26,12 @@ declare(strict_types=1);
 namespace OCA\CMSPico\Service;
 
 use OCA\CMSPico\AppInfo\Application;
+use OCA\CMSPico\Exceptions\ThemeAlreadyExistsException;
 use OCA\CMSPico\Exceptions\ThemeNotCompatibleException;
 use OCA\CMSPico\Exceptions\ThemeNotFoundException;
 use OCA\CMSPico\Files\FolderInterface;
 use OCA\CMSPico\Files\LocalFolder;
 use OCA\CMSPico\Model\Theme;
-use OCP\Files\AlreadyExistsException;
 use OCP\Files\NotFoundException;
 
 class ThemesService
@@ -137,6 +137,7 @@ class ThemesService
 	 *
 	 * @return Theme
 	 * @throws ThemeNotFoundException
+	 * @throws ThemeAlreadyExistsException
 	 */
 	public function publishSystemTheme(string $themeName): Theme
 	{
@@ -165,11 +166,17 @@ class ThemesService
 	 *
 	 * @return Theme
 	 * @throws ThemeNotFoundException
+	 * @throws ThemeAlreadyExistsException
 	 */
 	public function publishCustomTheme(string $themeName): Theme
 	{
 		if (!$themeName) {
 			throw new ThemeNotFoundException();
+		}
+
+		$systemThemes = $this->getSystemThemes();
+		if (isset($systemThemes[$themeName])) {
+			throw new ThemeAlreadyExistsException();
 		}
 
 		$appDataThemesFolder = $this->fileService->getAppDataFolder(PicoService::DIR_THEMES);
@@ -193,6 +200,7 @@ class ThemesService
 	 * @param int             $themeType
 	 *
 	 * @return Theme
+	 * @throws ThemeAlreadyExistsException
 	 */
 	private function publishTheme(FolderInterface $themeSourceFolder, int $themeType): Theme
 	{
@@ -203,7 +211,7 @@ class ThemesService
 
 		try {
 			$publicThemesFolder->getFolder($themeName);
-			throw new AlreadyExistsException();
+			throw new ThemeAlreadyExistsException();
 		} catch (NotFoundException $e) {
 			// in fact we want the theme not to exist yet
 		}
@@ -215,6 +223,8 @@ class ThemesService
 
 	/**
 	 * @param string $themeName
+	 *
+	 * @throws ThemeNotFoundException
 	 */
 	public function depublishCustomTheme(string $themeName)
 	{

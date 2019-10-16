@@ -25,11 +25,11 @@ declare(strict_types=1);
 namespace OCA\CMSPico\Service;
 
 use OCA\CMSPico\AppInfo\Application;
+use OCA\CMSPico\Exceptions\PluginAlreadyExistsException;
 use OCA\CMSPico\Exceptions\PluginNotFoundException;
 use OCA\CMSPico\Files\FolderInterface;
 use OCA\CMSPico\Files\LocalFolder;
 use OCA\CMSPico\Model\Plugin;
-use OCP\Files\AlreadyExistsException;
 use OCP\Files\NotFoundException;
 
 class PluginsService
@@ -112,6 +112,7 @@ class PluginsService
 	 *
 	 * @return Plugin
 	 * @throws PluginNotFoundException
+	 * @throws PluginAlreadyExistsException
 	 */
 	public function publishSystemPlugin(string $pluginName): Plugin
 	{
@@ -140,11 +141,17 @@ class PluginsService
 	 *
 	 * @return Plugin
 	 * @throws PluginNotFoundException
+	 * @throws PluginAlreadyExistsException
 	 */
 	public function publishCustomPlugin(string $pluginName): Plugin
 	{
 		if (!$pluginName) {
 			throw new PluginNotFoundException();
+		}
+
+		$systemPlugins = $this->getSystemPlugins();
+		if (isset($systemPlugins[$pluginName])) {
+			throw new PluginAlreadyExistsException();
 		}
 
 		$appDataPluginsFolder = $this->fileService->getAppDataFolder(PicoService::DIR_PLUGINS);
@@ -168,6 +175,7 @@ class PluginsService
 	 * @param int             $pluginType
 	 *
 	 * @return Plugin
+	 * @throws PluginAlreadyExistsException
 	 */
 	private function publishPlugin(FolderInterface $pluginSourceFolder, int $pluginType): Plugin
 	{
@@ -178,7 +186,7 @@ class PluginsService
 
 		try {
 			$publicPluginsFolder->getFolder($pluginName);
-			throw new AlreadyExistsException();
+			throw new PluginAlreadyExistsException();
 		} catch (NotFoundException $e) {
 			// in fact we want the plugin not to exist yet
 		}
@@ -190,6 +198,8 @@ class PluginsService
 
 	/**
 	 * @param string $pluginName
+	 *
+	 * @throws PluginNotFoundException
 	 */
 	public function depublishCustomPlugin(string $pluginName)
 	{

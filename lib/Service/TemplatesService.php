@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Service;
 
+use OCA\CMSPico\Exceptions\TemplateAlreadyExistsException;
 use OCA\CMSPico\Exceptions\TemplateNotCompatibleException;
 use OCA\CMSPico\Exceptions\TemplateNotFoundException;
 use OCA\CMSPico\Files\FileInterface;
@@ -130,6 +131,7 @@ class TemplatesService
 	 *
 	 * @return Template
 	 * @throws TemplateNotFoundException
+	 * @throws TemplateAlreadyExistsException
 	 */
 	public function registerSystemTemplate(string $templateName)
 	{
@@ -158,11 +160,17 @@ class TemplatesService
 	 *
 	 * @return Template
 	 * @throws TemplateNotFoundException
+	 * @throws TemplateAlreadyExistsException
 	 */
 	public function registerCustomTemplate(string $templateName)
 	{
 		if (!$templateName) {
 			throw new TemplateNotFoundException();
+		}
+
+		$systemTemplates = $this->getSystemTemplates();
+		if (isset($systemTemplates[$templateName])) {
+			throw new TemplateAlreadyExistsException();
 		}
 
 		$appDataTemplatesFolder = $this->fileService->getAppDataFolder(PicoService::DIR_TEMPLATES);
@@ -183,6 +191,8 @@ class TemplatesService
 
 	/**
 	 * @param string $templateName
+	 *
+	 * @throws TemplateNotFoundException
 	 */
 	public function removeCustomTemplate(string $templateName)
 	{
