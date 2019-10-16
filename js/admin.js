@@ -50,6 +50,15 @@
 	 * @lends OCA.CMSPico.AdminList.prototype
 	 */
 	OCA.CMSPico.AdminList.prototype = $.extend({}, OCA.CMSPico.List.prototype, {
+		/** @member {Object[]|string[]} */
+		systemItems: [],
+
+		/** @member {Object[]|string[]} */
+		customItems: [],
+
+		/** @member {Object[]|string[]} */
+		newItems: [],
+
 		/** @member {jQuery} */
 		$systemTemplate: $(),
 
@@ -106,6 +115,10 @@
 		 */
 		update: function (data) {
 			var that = this;
+
+			this.systemItems = data.systemItems;
+			this.customItems = data.customItems;
+			this.newItems = data.newItems;
 
 			this._content(this.$template);
 
@@ -232,6 +245,7 @@
 
 					$('#app-content').append($dialog);
 					$dialog.ocdialog({ buttons: dialogButtons });
+					$dialog.find('.input-name').focus();
 				});
 			});
 

@@ -54,6 +54,9 @@
 	 * @lends OCA.CMSPico.WebsiteList.prototype
 	 */
 	OCA.CMSPico.WebsiteList.prototype = $.extend({}, OCA.CMSPico.List.prototype, {
+		/** @member {Object[]} */
+		websites: [],
+
 		/** @member {jQuery} */
 		$itemTemplate: $(),
 
@@ -129,6 +132,8 @@
 		 * @param {int}      data.websites[].creation
 		 */
 		update: function (data) {
+			this.websites = data.websites;
+
 			this._content(this.$template);
 
 			for (var i = 0, $website; i < data.websites.length; i++) {
