@@ -87,7 +87,6 @@
 			var signature = 'OCA.CMSPico.AdminList.initialize()';
 			if (!this.$systemTemplate.length) throw signature + ': No valid system item template given';
 			if (!this.$customTemplate.length) throw signature + ': No valid custom item template given';
-			if (!this.$newTemplate.length) throw signature + ': No valid new item template given';
 		},
 
 		/**
