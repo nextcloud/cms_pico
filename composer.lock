@@ -207,12 +207,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/picocms/Pico.git",
-                "reference": "d95c9d370807f231825a056a8646f88c97ab11e4"
+                "reference": "d2573c5df55712b22a1faf98d4dbe3e249f41bf2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/picocms/Pico/zipball/d95c9d370807f231825a056a8646f88c97ab11e4",
-                "reference": "d95c9d370807f231825a056a8646f88c97ab11e4",
+                "url": "https://api.github.com/repos/picocms/Pico/zipball/d2573c5df55712b22a1faf98d4dbe3e249f41bf2",
+                "reference": "d2573c5df55712b22a1faf98d4dbe3e249f41bf2",
                 "shasum": ""
             },
             "require": {
@@ -278,7 +278,7 @@
                 "website",
                 "yaml"
             ],
-            "time": "2019-10-12T17:54:06+00:00"
+            "time": "2019-10-20T17:17:42+00:00"
         },
         {
             "name": "picocms/pico-deprecated",
