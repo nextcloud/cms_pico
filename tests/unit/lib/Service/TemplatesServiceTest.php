@@ -29,6 +29,7 @@ use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Controller\SettingsController;
 use OCA\CMSPico\Exceptions\TemplateNotFoundException;
 use OCA\CMSPico\Service\FileService;
+use OCA\CMSPico\Service\PicoService;
 use OCA\CMSPico\Service\TemplatesService;
 use OCA\CMSPico\Tests\Env;
 use PHPUnit\Exception as PHPUnitException;
@@ -66,15 +67,15 @@ class TemplatesServiceTest extends TestCase
 
 	public function testTemplates()
 	{
-		if (file_exists($this->fileService->getAppDataFolderPath('templates') . 'this_is_a_template')) {
-			rmdir($this->fileService->getAppDataFolderPath('templates') . 'this_is_a_template');
-		}
-
 		$this->assertCount(2, $this->templatesService->getTemplates());
 		$this->assertCount(0, $this->templatesService->getCustomTemplates());
 		$this->assertCount(0, $this->templatesService->getNewCustomTemplates());
 
-		mkdir($this->fileService->getAppDataFolderPath('templates') . 'this_is_a_template');
+		$testTemplateFolder = $this->fileService->getAppDataFolder(PicoService::DIR_TEMPLATES)
+			->newFolder('this_is_a_template');
+		$testTemplateFolder->newFolder('content');
+		$testTemplateFolder->newFolder('assets');
+
 		$this->assertCount(2, $this->templatesService->getTemplates());
 		$this->assertCount(0, $this->templatesService->getCustomTemplates());
 		$this->assertCount(1, $this->templatesService->getNewCustomTemplates());
@@ -101,7 +102,7 @@ class TemplatesServiceTest extends TestCase
 		$this->assertCount(0, $this->templatesService->getCustomTemplates());
 		$this->assertCount(1, $this->templatesService->getNewCustomTemplates());
 
-		rmdir($this->fileService->getAppDataFolderPath('templates') . 'this_is_a_template');
+		$testTemplateFolder->delete();
 		$this->assertCount(2, $this->templatesService->getTemplates());
 		$this->assertCount(0, $this->templatesService->getCustomTemplates());
 		$this->assertCount(0, $this->templatesService->getNewCustomTemplates());
