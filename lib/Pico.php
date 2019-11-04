@@ -202,12 +202,13 @@ class Pico extends \Pico
 	 * Returns the parsed and purified contents of a page.
 	 *
 	 * @param string $markdown
+	 * @param bool   $singleLine
 	 *
 	 * @return string
 	 */
-	public function parseFileContent($markdown)
+	public function parseFileContent($markdown, $singleLine = false)
 	{
-		$content = parent::parseFileContent($markdown);
+		$content = parent::parseFileContent($markdown, $singleLine);
 		return $this->purifyFileContent($content);
 	}
 
