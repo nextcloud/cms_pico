@@ -1,6 +1,7 @@
 {
   "name": "nextcloud/cms_pico",
   "description": "Create websites using Pico CMS for Nextcloud",
+  "type": "project",
   "license": "agpl",
   "authors": [
     {
