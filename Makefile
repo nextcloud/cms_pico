@@ -25,6 +25,7 @@ build_dir=$(CURDIR)/build
 cert_dir=$(HOME)/.nextcloud/certificates
 curlrc=$(HOME)/.nextcloud/curlrc
 archive=$(app_name)-v$(version).tar.gz
+export=$(app_name)-export.tar.gz
 signature=$(app_name)-v$(version).tar.gz.sig
 github_owner=nextcloud
 github_repo=cms_pico
@@ -68,6 +69,10 @@ build: clean composer
 		./ "$(build_dir)/$(app_name)/"
 	tar cfz "$(build_dir)/$(archive)" \
 		-C "$(build_dir)" "$(app_name)"
+
+export:
+	mkdir -p "$(build_dir)"
+	git archive --prefix "$(app_name)/" -o "$(build_dir)/$(export)" HEAD
 
 sign: build
 	openssl dgst -sha512 \
