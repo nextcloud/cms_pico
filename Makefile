@@ -43,25 +43,27 @@ composer:
 build: clean composer
 	mkdir -p "$(build_dir)"
 	rsync -a \
+		--exclude="/.github" \
+		--exclude="/.idea" \
+		--exclude="/.tx" \
 		--exclude="/appdata/plugins/.gitignore" \
 		--exclude="/appdata/themes/.gitignore" \
-		--exclude="/appdata_public/plugins" \
-		--exclude="/appdata_public/themes" \
-		--exclude="/appdata_public/.gitignore" \
+		--exclude="/appdata_public/*" \
 		--exclude="/build" \
 		--exclude="/l10n/.gitignore" \
-		--exclude="/tests" \
 		--exclude="/nextcloud" \
+		--exclude="/screenshots" \
+		--exclude="/tests" \
 		--exclude="/vendor/picocms/pico/index.php" \
 		--exclude="/vendor/picocms/pico/index.php.dist" \
-		--exclude="/.tx" \
-		--exclude="/composer.json" \
-		--exclude="/composer.lock" \
-		--exclude="/Makefile" \
 		--exclude="/.gitattributes" \
 		--exclude="/.gitignore" \
 		--exclude="/.phpcs.xml" \
 		--exclude="/.scrutinizer.yml" \
+		--exclude="/composer.json" \
+		--exclude="/composer.lock" \
+		--exclude="/Makefile" \
+		--exclude="/*.phar" \
 		--exclude=".git" \
 		./ "$(build_dir)/$(app_name)/"
 	tar cfz "$(build_dir)/$(archive)" \
