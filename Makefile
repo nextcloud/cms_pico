@@ -5,13 +5,16 @@
 # release, pass the 'version' environment variable.
 #
 # Requirements:
+# - Target 'export'
+#       Requires the current working dir to be a Git repo to export the repo's
+#       current 'HEAD'
 # - Target 'sign'
 #       Requires OpenSSL and a RSA key for signing the release archive at
 #       '~/.nextcloud/certificates/$(app_name).key'
 # - Targets 'github-release' and 'github-upload'
 #       Requires https://github.com/aktau/github-release and the 'GITHUB_TOKEN'
 #       environment variable to be set to your GitHub API token
-# - Target 'nextcloud-publish'
+# - Target 'publish'
 #       Requires a 'curlrc' file at '~/.nextcloud/curlrc' with an appropiate
 #       Authentication header for the Nextcloud App Store, e.g.
 #           header = "Authorization: Token [NEXTCLOUD_API_TOKEN]"
@@ -39,7 +42,7 @@ clean:
 	rm -rf "$(build_dir)"
 
 composer:
-	composer install --no-dev --prefer-dist --optimize-autoloader
+	composer install --no-suggest --no-dev --prefer-dist --optimize-autoloader
 
 build: clean composer
 	mkdir -p "$(build_dir)"
@@ -95,7 +98,7 @@ github-upload: build github-release
 		--user "$(github_owner)" \
 		--repo "$(github_repo)" \
 		--tag "v$(version)" \
-		--name "$(archive)"
+		--name "$(archive)" \
 		--file "$(build_dir)/$(archive)"
 
 publish: sign github-upload
