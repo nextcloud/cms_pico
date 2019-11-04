@@ -41,10 +41,17 @@ all: build
 clean:
 	rm -rf "$(build_dir)"
 
+clean-build:
+	rm -rf "$(build_dir)/$(app_name)"
+	rm -f "$(build_dir)/$(archive)"
+
+clean-export:
+	rm -f "$(build_dir)/$(export)"
+
 composer:
 	composer install --no-suggest --no-dev --prefer-dist --optimize-autoloader
 
-build: clean composer
+build: clean-build composer
 	mkdir -p "$(build_dir)"
 	rsync -a \
 		--exclude="/.github" \
@@ -73,7 +80,7 @@ build: clean composer
 	tar cfz "$(build_dir)/$(archive)" \
 		-C "$(build_dir)" "$(app_name)"
 
-export:
+export: clean-export
 	mkdir -p "$(build_dir)"
 	git archive --prefix "$(app_name)/" -o "$(build_dir)/$(export)" HEAD
 
