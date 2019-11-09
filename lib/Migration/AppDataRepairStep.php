@@ -26,6 +26,7 @@ namespace OCA\CMSPico\Migration;
 
 use OCA\CMSPico\Service\ConfigService;
 use OCA\CMSPico\Service\FileService;
+use OCA\CMSPico\Service\MiscService;
 use OCA\CMSPico\Service\PicoService;
 use OCA\CMSPico\Service\PluginsService;
 use OCA\CMSPico\Service\TemplatesService;
@@ -54,6 +55,9 @@ class AppDataRepairStep implements IRepairStep
 	/** @var FileService */
 	private $fileService;
 
+	/** @var MiscService */
+	private $miscService;
+
 	/**
 	 * AppDataRepairStep constructor.
 	 *
@@ -63,6 +67,7 @@ class AppDataRepairStep implements IRepairStep
 	 * @param ThemesService    $themesService
 	 * @param PluginsService   $pluginsService
 	 * @param FileService      $fileService
+	 * @param MiscService      $miscService
 	 */
 	public function __construct(
 		ILogger $logger,
@@ -70,7 +75,8 @@ class AppDataRepairStep implements IRepairStep
 		TemplatesService $templatesService,
 		ThemesService $themesService,
 		PluginsService $pluginsService,
-		FileService $fileService
+		FileService $fileService,
+		MiscService $miscService
 	) {
 		$this->setLogger($logger);
 
@@ -79,6 +85,7 @@ class AppDataRepairStep implements IRepairStep
 		$this->themesService = $themesService;
 		$this->pluginsService = $pluginsService;
 		$this->fileService = $fileService;
+		$this->miscService = $miscService;
 	}
 
 	/**
@@ -95,6 +102,10 @@ class AppDataRepairStep implements IRepairStep
 	public function run(IOutput $output)
 	{
 		$this->setOutput($output);
+
+		$this->logInfo('Checking Pico CMS requirements …');
+		$this->miscService->checkComposer();
+		$this->miscService->checkPublicFolder();
 
 		$this->logInfo('Syncing Pico CMS app data folder …');
 		$this->syncAppDataFolder();

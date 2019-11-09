@@ -26,10 +26,7 @@ namespace OCA\CMSPico\Migration;
 
 use Doctrine\DBAL\Schema\SchemaException;
 use OC\Encryption\Manager as EncryptionManager;
-use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Db\CoreRequestBuilder;
-use OCA\CMSPico\Exceptions\ComposerException;
-use OCA\CMSPico\Exceptions\FilesystemNotWritableException;
 use OCA\CMSPico\Model\Template;
 use OCA\CMSPico\Model\Theme;
 use OCA\CMSPico\Model\WebsiteCore;
@@ -40,11 +37,7 @@ use OCA\CMSPico\Service\PicoService;
 use OCA\CMSPico\Service\TemplatesService;
 use OCA\CMSPico\Service\ThemesService;
 use OCP\DB\ISchemaWrapper;
-use OCP\Files\AlreadyExistsException;
-use OCP\Files\InvalidPathException;
-use OCP\Files\NotPermittedException;
 use OCP\IDBConnection;
-use OCP\IL10N;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
@@ -52,9 +45,6 @@ class Version010000 extends SimpleMigrationStep
 {
 	/** @var IDBConnection */
 	private $databaseConnection;
-
-	/** @var IL10N */
-	private $l10n;
 
 	/** @var EncryptionManager */
 	private $encryptionManager;
@@ -80,7 +70,6 @@ class Version010000 extends SimpleMigrationStep
 	public function __construct()
 	{
 		$this->databaseConnection = \OC::$server->getDatabaseConnection();
-		$this->l10n = \OC::$server->getL10N(Application::APP_NAME);
 		$this->encryptionManager = \OC::$server->getEncryptionManager();
 		$this->configService = \OC::$server->query(ConfigService::class);
 		$this->templatesService = \OC::$server->query(TemplatesService::class);
@@ -172,8 +161,8 @@ class Version010000 extends SimpleMigrationStep
 	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options)
 	{
 		// check app dependencies
-		$this->checkComposer();
-		$this->createPublicFolder();
+		$this->miscService->checkComposer();
+		$this->miscService->checkPublicFolder();
 
 		// update from cms_pico v0.9
 		// migrate the app config of custom templates and themes
@@ -186,80 +175,6 @@ class Version010000 extends SimpleMigrationStep
 
 		// migrate cms_pico_websites database table
 		$this->migratePrivateWebsites($themesMigrationMap);
-	}
-
-	/**
-	 * @throws ComposerException
-	 */
-	private function checkComposer()
-	{
-		$appPath = Application::getAppPath();
-		if (!is_file($appPath . '/vendor/autoload.php')) {
-			try {
-				$relativeAppPath = $this->miscService->getRelativePath($appPath) . '/';
-			} catch (InvalidPathException $e) {
-				$relativeAppPath = 'apps/' . Application::APP_NAME . '/';
-			}
-
-			throw new ComposerException($this->l10n->t(
-				'Failed to enable Pico CMS for Nextcloud: Couldn\'t find "%s". Make sure to install the app\'s '
-						. 'dependencies by executing `composer install` in the app\'s install directory below "%s". '
-						. 'Then try again enabling Pico CMS for Nextcloud.',
-				[ $relativeAppPath . 'vendor/autoload.php', $relativeAppPath ]
-			));
-		}
-	}
-
-	/**
-	 * @throws FilesystemNotWritableException
-	 */
-	private function createPublicFolder()
-	{
-		$publicFolder = $this->fileService->getPublicFolder();
-
-		try {
-			try {
-				$publicThemesFolder = $publicFolder->newFolder(PicoService::DIR_THEMES);
-			} catch (AlreadyExistsException $e) {
-				$publicThemesFolder = $publicFolder->getFolder(PicoService::DIR_THEMES);
-			}
-
-			$publicThemesTestFileName = $this->miscService->getRandom(10, 'tmp', Application::APP_NAME . '-test');
-			$publicThemesTestFile = $publicThemesFolder->newFile($publicThemesTestFileName);
-			$publicThemesTestFile->delete();
-
-			try {
-				$publicPluginsFolder = $publicFolder->newFolder(PicoService::DIR_PLUGINS);
-			} catch (AlreadyExistsException $e) {
-				$publicPluginsFolder = $publicFolder->getFolder(PicoService::DIR_PLUGINS);
-			}
-
-			$publicPluginsTestFileName = $this->miscService->getRandom(10, 'tmp', Application::APP_NAME . '-test');
-			$publicPluginsTestFile = $publicPluginsFolder->newFile($publicPluginsTestFileName);
-			$publicPluginsTestFile->delete();
-		} catch (NotPermittedException $e) {
-			try {
-				$appDataPublicPath = Application::getAppPath() . '/appdata_public';
-				$appDataPublicPath = $this->miscService->getRelativePath($appDataPublicPath) . '/';
-			} catch (InvalidPathException $e) {
-				$appDataPublicPath = 'apps/' . Application::APP_NAME . '/appdata_public/';
-			}
-
-			try {
-				$dataPath = $this->configService->getSystemValue('datadirectory', \OC::$SERVERROOT . '/data');
-				$dataPath = $this->miscService->getRelativePath($dataPath) . '/';
-			} catch (InvalidPathException $e) {
-				$dataPath = 'data/';
-			}
-
-			throw new FilesystemNotWritableException($this->l10n->t(
-				'Failed to enable Pico CMS for Nextcloud: The webserver has no permission to create files and '
-						. 'folders below "%s". Make sure to give the webserver write access to this directory by '
-						. 'changing its permissions and ownership to the same as of your "%s" directory. Then try '
-						. 'again enabling Pico CMS for Nextcloud.',
-				[ $appDataPublicPath, $dataPath ]
-			));
-		}
 	}
 
 	/**
