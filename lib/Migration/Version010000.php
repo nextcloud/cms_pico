@@ -26,37 +26,13 @@ namespace OCA\CMSPico\Migration;
 
 use Doctrine\DBAL\Schema\SchemaException;
 use OCA\CMSPico\Db\CoreRequestBuilder;
-use OCA\CMSPico\Model\Template;
-use OCA\CMSPico\Model\Theme;
-use OCA\CMSPico\Model\WebsiteCore;
-use OCA\CMSPico\Service\ConfigService;
-use OCA\CMSPico\Service\FileService;
 use OCA\CMSPico\Service\MiscService;
-use OCA\CMSPico\Service\PicoService;
-use OCA\CMSPico\Service\TemplatesService;
-use OCA\CMSPico\Service\ThemesService;
 use OCP\DB\ISchemaWrapper;
-use OCP\IDBConnection;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
 class Version010000 extends SimpleMigrationStep
 {
-	/** @var IDBConnection */
-	private $databaseConnection;
-
-	/** @var ConfigService */
-	private $configService;
-
-	/** @var TemplatesService */
-	private $templatesService;
-
-	/** @var ThemesService */
-	private $themesService;
-
-	/** @var FileService */
-	private $fileService;
-
 	/** @var MiscService */
 	private $miscService;
 
@@ -65,11 +41,6 @@ class Version010000 extends SimpleMigrationStep
 	 */
 	public function __construct()
 	{
-		$this->databaseConnection = \OC::$server->getDatabaseConnection();
-		$this->configService = \OC::$server->query(ConfigService::class);
-		$this->templatesService = \OC::$server->query(TemplatesService::class);
-		$this->themesService = \OC::$server->query(ThemesService::class);
-		$this->fileService = \OC::$server->query(FileService::class);
 		$this->miscService = \OC::$server->query(MiscService::class);
 	}
 
@@ -155,157 +126,7 @@ class Version010000 extends SimpleMigrationStep
 	 */
 	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options)
 	{
-		// check app dependencies
 		$this->miscService->checkComposer();
 		$this->miscService->checkPublicFolder();
-
-		// update from cms_pico v0.9
-		// migrate the app config of custom templates and themes
-		$this->migrateCustomTemplates();
-		$this->migrateCustomThemes();
-
-		// migrate old copies of system templates and themes in Nextcloud's data dir
-		$this->migrateSystemTemplates();
-		$themesMigrationMap = $this->migrateSystemThemes();
-
-		// migrate cms_pico_websites database table
-		$this->migratePrivateWebsites($themesMigrationMap);
-	}
-
-	/**
-	 * @return void
-	 */
-	private function migrateCustomTemplates()
-	{
-		$customTemplatesJson = $this->configService->getAppValue(ConfigService::CUSTOM_TEMPLATES);
-		$customTemplates = $customTemplatesJson ? json_decode($customTemplatesJson, true) : [];
-
-		$newCustomTemplates = [];
-		foreach ($customTemplates as $templateName) {
-			$newCustomTemplates[$templateName] = [
-				'name' => $templateName,
-				'type' => Template::TYPE_CUSTOM,
-				'compat' => true
-			];
-		}
-
-		$this->configService->setAppValue(ConfigService::CUSTOM_TEMPLATES, json_encode($newCustomTemplates));
-	}
-
-	/**
-	 * @return void
-	 */
-	private function migrateCustomThemes()
-	{
-		$customThemesJson = $this->configService->getAppValue(ConfigService::CUSTOM_THEMES);
-		$customThemes = $customThemesJson ? json_decode($customThemesJson, true) : [];
-
-		$newCustomThemes = [];
-		foreach ($customThemes as $themeName) {
-			$newCustomThemes[$themeName] = [
-				'name' => $themeName,
-				'type' => Theme::TYPE_CUSTOM,
-				'compat' => true
-			];
-		}
-
-		$this->configService->setAppValue(ConfigService::CUSTOM_THEMES, json_encode($newCustomThemes));
-	}
-
-	/**
-	 * @return array<string,string>
-	 */
-	private function migrateSystemTemplates()
-	{
-		$templatesFolder = $this->fileService->getAppDataFolder(PicoService::DIR_TEMPLATES);
-
-		$templates = $this->templatesService->getTemplates();
-		$systemTemplates = $this->templatesService->getSystemTemplates();
-
-		$templatesMigrationMap = [];
-		foreach ($templatesFolder as $templateFolder) {
-			$templateName = $templateFolder->getName();
-			if ($templateFolder->isFolder() && isset($systemTemplates[$templateName])) {
-				$newTemplateName = $templateName . '-v0.9';
-				for ($i = 1; isset($templates[$newTemplateName]) || $templatesFolder->exists($newTemplateName); $i++) {
-					$newTemplateName = $templateName . '-v0.9-dup' . $i;
-				}
-
-				$templateFolder->rename($newTemplateName);
-				$this->templatesService->registerCustomTemplate($newTemplateName);
-				$templatesMigrationMap[$templateName] = $newTemplateName;
-			}
-		}
-
-		return $templatesMigrationMap;
-	}
-
-	/**
-	 * @return array<string,string>
-	 */
-	private function migrateSystemThemes()
-	{
-		$themesFolder = $this->fileService->getAppDataFolder(PicoService::DIR_THEMES);
-
-		$themes = $this->themesService->getThemes();
-		$systemThemes = $this->themesService->getSystemThemes();
-
-		$themesMigrationMap = [];
-		foreach ($themesFolder as $themeFolder) {
-			$themeName = $themeFolder->getName();
-			if ($themeFolder->isFolder() && isset($systemThemes[$themeName])) {
-				$newThemeName = $themeName . '-v0.9';
-				for ($i = 1; isset($themes[$newThemeName]) || $themesFolder->exists($newThemeName); $i++) {
-					$newThemeName = $themeName . '-v0.9-dup' . $i;
-				}
-
-				$themeFolder->rename($newThemeName);
-				$this->themesService->publishCustomTheme($newThemeName);
-				$themesMigrationMap[$themeName] = $newThemeName;
-			}
-		}
-
-		return $themesMigrationMap;
-	}
-
-	/**
-	 * @param array $themesMigrationMap
-	 */
-	private function migratePrivateWebsites(array $themesMigrationMap)
-	{
-		$qbUpdate = $this->databaseConnection->getQueryBuilder();
-		$qbUpdate
-			->update(CoreRequestBuilder::TABLE_WEBSITES, 'w')
-			->set('w.theme', $qbUpdate->createParameter('theme'))
-			->set('w.type', $qbUpdate->createParameter('type'))
-			->set('w.options', $qbUpdate->createParameter('options'))
-			->where($qbUpdate->expr()->eq('w.id', $qbUpdate->createParameter('id')));
-
-		$selectCursor = $this->databaseConnection->getQueryBuilder()
-			->select('w.id', 'w.theme', 'w.type', 'w.options')
-			->from(CoreRequestBuilder::TABLE_WEBSITES, 'w')
-			->execute();
-
-		while ($data = $selectCursor->fetch()) {
-			$websiteTheme = $themesMigrationMap[$data['theme']] ?? $data['theme'];
-
-			$websiteType = $data['type'] ?: WebsiteCore::TYPE_PUBLIC;
-			$websiteOptions = $data['options'] ? json_decode($data['options'], true) : [];
-			if (isset($websiteOptions['private'])) {
-				$websiteType = $websiteOptions['private'] ? WebsiteCore::TYPE_PRIVATE : WebsiteCore::TYPE_PUBLIC;
-				unset($websiteOptions['private']);
-			}
-
-			$qbUpdate->setParameters([
-				'id' => $data['id'],
-				'theme' => $websiteTheme,
-				'type' => $websiteType,
-				'options' => json_encode($websiteOptions),
-			]);
-
-			$qbUpdate->execute();
-		}
-
-		$selectCursor->closeCursor();
 	}
 }
