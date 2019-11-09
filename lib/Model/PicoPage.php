@@ -82,8 +82,10 @@ class PicoPage
 		if ($requestFile) {
 			try {
 				$contentDir = $this->pico->getConfig('content_dir');
+				$relativePath = $this->miscService->getRelativePath($requestFile, $contentDir);
+
 				$contentExt = $this->pico->getConfig('content_ext');
-				return $this->miscService->getRelativePath($requestFile, $contentDir, $contentExt);
+				return $this->miscService->dropFileExtension($relativePath, $contentExt);
 			} catch (InvalidPathException $e) {
 				// fallback to the website's page
 			}

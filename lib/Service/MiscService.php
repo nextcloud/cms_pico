@@ -111,12 +111,11 @@ class MiscService
 	/**
 	 * @param string      $path
 	 * @param string|null $basePath
-	 * @param string|null $fileExtension
 	 *
 	 * @return string
 	 * @throws InvalidPathException
 	 */
-	public function getRelativePath(string $path, string $basePath = null, string $fileExtension = null): string
+	public function getRelativePath(string $path, string $basePath = null): string
 	{
 		if (!$basePath) {
 			$basePath = \OC::$SERVERROOT;
@@ -128,24 +127,30 @@ class MiscService
 		$path = $this->normalizePath($path);
 
 		if ($path === $basePath) {
-			$relativePath = '';
+			return '';
 		} elseif (substr($path, 0, $basePathLength + 1) === $basePath . '/') {
-			$relativePath = substr($path, $basePathLength + 1);
+			return substr($path, $basePathLength + 1);
 		} else {
 			throw new InvalidPathException();
 		}
+	}
 
-		if ($fileExtension) {
-			$fileName = basename($relativePath);
-			$fileExtensionPos = strrpos($fileName, '.');
-			if (($fileExtensionPos === false) || (substr($fileName, $fileExtensionPos) !== $fileExtension)) {
-				throw new InvalidPathException();
-			}
-
-			return substr($relativePath, 0, strlen($relativePath) - strlen($fileExtension));
+	/**
+	 * @param string $path
+	 * @param string $fileExtension
+	 *
+	 * @return false|string
+	 * @throws InvalidPathException
+	 */
+	public function dropFileExtension(string $path, string $fileExtension): string
+	{
+		$fileName = basename($path);
+		$fileExtensionPos = strrpos($fileName, '.');
+		if (($fileExtensionPos === false) || (substr($fileName, $fileExtensionPos) !== $fileExtension)) {
+			throw new InvalidPathException();
 		}
 
-		return $relativePath;
+		return substr($path, 0, strlen($path) - strlen($fileExtension));
 	}
 
 	/**
