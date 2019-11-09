@@ -59,7 +59,7 @@ endif
 
 lazy-check:
 	@:
-ifeq ($(or $(filter v$(appinfo_version),$(version)), $(filter true,$(nocheck))),)
+ifeq ($(or $(filter v$(appinfo_version) latest,$(version)), $(filter true,$(nocheck))),)
 	$(error Version mismatch: Building $(version), but $(appinfo) indicates v$(appinfo_version))
 endif
 

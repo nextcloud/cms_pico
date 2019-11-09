@@ -19,8 +19,8 @@ build:
           - curl -L -o ~/phpunit.phar https://phar.phpunit.de/phpunit-6.phar
       project_setup:
         override:
-          - make build
-          - cp build/$APP_NAME-*.tar.gz ~/$APP_NAME.tar.gz
+          - make build version=latest
+          - cp build/$APP_NAME-latest.tar.gz ~/$APP_NAME.tar.gz
 
           - tar xfjv ~/nextcloud.tar.bz2
 
@@ -62,8 +62,8 @@ build:
           - curl -L -o ~/phpunit.phar https://phar.phpunit.de/phpunit-6.phar
       project_setup:
         override:
-          - make build
-          - cp build/$APP_NAME-*.tar.gz ~/$APP_NAME.tar.gz
+          - make build version=latest
+          - cp build/$APP_NAME-latest.tar.gz ~/$APP_NAME.tar.gz
 
           - tar xfjv ~/nextcloud.tar.bz2 -C ~
           - tar xfzv ~/$APP_NAME.tar.gz -C ~/nextcloud/apps
@@ -95,8 +95,8 @@ build:
           - curl -L -o ~/phpunit.phar https://phar.phpunit.de/phpunit-6.phar
       project_setup:
         override:
-          - make build
-          - cp build/$APP_NAME-*.tar.gz ~/$APP_NAME.tar.gz
+          - make build version=latest
+          - cp build/$APP_NAME-latest.tar.gz ~/$APP_NAME.tar.gz
 
           - tar xfjv ~/nextcloud.tar.bz2 -C ~
           - tar xfzv ~/$APP_NAME.tar.gz -C ~/nextcloud/apps
@@ -128,8 +128,8 @@ build:
           - curl -L -o ~/phpunit.phar https://phar.phpunit.de/phpunit-6.phar
       project_setup:
         override:
-          - make build
-          - cp build/$APP_NAME-*.tar.gz ~/$APP_NAME.tar.gz
+          - make build version=latest
+          - cp build/$APP_NAME-latest.tar.gz ~/$APP_NAME.tar.gz
 
           - tar xfjv ~/nextcloud.tar.bz2 -C ~
           - tar xfzv ~/$APP_NAME.tar.gz -C ~/nextcloud/apps
@@ -161,8 +161,8 @@ build:
           - curl -L -o ~/phpunit.phar https://phar.phpunit.de/phpunit-6.phar
       project_setup:
         override:
-          - make build
-          - cp build/$APP_NAME-*.tar.gz ~/$APP_NAME.tar.gz
+          - make build version=latest
+          - cp build/$APP_NAME-latest.tar.gz ~/$APP_NAME.tar.gz
 
           - tar xfjv ~/nextcloud.tar.bz2 -C ~
           - tar xfzv ~/$APP_NAME.tar.gz -C ~/nextcloud/apps
@@ -194,8 +194,8 @@ build:
           - curl -L -o ~/phpunit.phar https://phar.phpunit.de/phpunit-6.phar
       project_setup:
         override:
-          - make build
-          - cp build/$APP_NAME-*.tar.gz ~/$APP_NAME.tar.gz
+          - make build version=latest
+          - cp build/$APP_NAME-latest.tar.gz ~/$APP_NAME.tar.gz
 
           - tar xfjv ~/nextcloud.tar.bz2 -C ~
           - tar xfzv ~/$APP_NAME.tar.gz -C ~/nextcloud/apps
@@ -227,8 +227,8 @@ build:
           - curl -L -o ~/phpunit.phar https://phar.phpunit.de/phpunit-6.phar
       project_setup:
         override:
-          - make build
-          - cp build/$APP_NAME-*.tar.gz ~/$APP_NAME.tar.gz
+          - make build version=latest
+          - cp build/$APP_NAME-latest.tar.gz ~/$APP_NAME.tar.gz
 
           - tar xfjv ~/nextcloud.tar.bz2 -C ~
           - tar xfzv ~/$APP_NAME.tar.gz -C ~/nextcloud/apps
@@ -260,8 +260,8 @@ build:
           - curl -L -o ~/phpunit.phar https://phar.phpunit.de/phpunit-6.phar
       project_setup:
         override:
-          - make build
-          - cp build/$APP_NAME-*.tar.gz ~/$APP_NAME.tar.gz
+          - make build version=latest
+          - cp build/$APP_NAME-latest.tar.gz ~/$APP_NAME.tar.gz
 
           - tar xfjv ~/nextcloud.tar.bz2 -C ~
           - tar xfzv ~/$APP_NAME.tar.gz -C ~/nextcloud/apps
@@ -293,8 +293,8 @@ build:
           - curl -L -o ~/phpunit.phar https://phar.phpunit.de/phpunit-6.phar
       project_setup:
         override:
-          - make build
-          - cp build/$APP_NAME-*.tar.gz ~/$APP_NAME.tar.gz
+          - make build version=latest
+          - cp build/$APP_NAME-latest.tar.gz ~/$APP_NAME.tar.gz
 
           - tar xfjv ~/nextcloud.tar.bz2 -C ~
           - tar xfzv ~/$APP_NAME.tar.gz -C ~/nextcloud/apps
@@ -326,8 +326,8 @@ build:
           - curl -L -o ~/phpunit.phar https://phar.phpunit.de/phpunit-6.phar
       project_setup:
         override:
-          - make build
-          - cp build/$APP_NAME-*.tar.gz ~/$APP_NAME.tar.gz
+          - make build version=latest
+          - cp build/$APP_NAME-latest.tar.gz ~/$APP_NAME.tar.gz
 
           - tar xfjv ~/nextcloud.tar.bz2 -C ~
           - tar xfzv ~/$APP_NAME.tar.gz -C ~/nextcloud/apps
@@ -359,8 +359,8 @@ build:
           - curl -L -o ~/phpunit.phar https://phar.phpunit.de/phpunit-6.phar
       project_setup:
         override:
-          - make build
-          - cp build/$APP_NAME-*.tar.gz ~/$APP_NAME.tar.gz
+          - make build version=latest
+          - cp build/$APP_NAME-latest.tar.gz ~/$APP_NAME.tar.gz
 
           - tar xfjv ~/nextcloud.tar.bz2 -C ~
           - tar xfzv ~/$APP_NAME.tar.gz -C ~/nextcloud/apps
@@ -392,8 +392,8 @@ build:
           - curl -L -o ~/phpunit.phar https://phar.phpunit.de/phpunit-6.phar
       project_setup:
         override:
-          - make build
-          - cp build/$APP_NAME-*.tar.gz ~/$APP_NAME.tar.gz
+          - make build version=latest
+          - cp build/$APP_NAME-latest.tar.gz ~/$APP_NAME.tar.gz
 
           - tar xfjv ~/nextcloud.tar.bz2 -C ~
           - tar xfzv ~/$APP_NAME.tar.gz -C ~/nextcloud/apps
@@ -425,8 +425,8 @@ build:
           - curl -L -o ~/phpunit.phar https://phar.phpunit.de/phpunit-6.phar
       project_setup:
         override:
-          - make build
-          - cp build/$APP_NAME-*.tar.gz ~/$APP_NAME.tar.gz
+          - make build version=latest
+          - cp build/$APP_NAME-latest.tar.gz ~/$APP_NAME.tar.gz
 
           - tar xfjv ~/nextcloud.tar.bz2 -C ~
           - tar xfzv ~/$APP_NAME.tar.gz -C ~/nextcloud/apps
@@ -458,8 +458,8 @@ build:
           - curl -L -o ~/phpunit.phar https://phar.phpunit.de/phpunit-6.phar
       project_setup:
         override:
-          - make build
-          - cp build/$APP_NAME-*.tar.gz ~/$APP_NAME.tar.gz
+          - make build version=latest
+          - cp build/$APP_NAME-latest.tar.gz ~/$APP_NAME.tar.gz
 
           - tar xfjv ~/nextcloud.tar.bz2 -C ~
           - tar xfzv ~/$APP_NAME.tar.gz -C ~/nextcloud/apps
@@ -491,8 +491,8 @@ build:
           - curl -L -o ~/phpunit.phar https://phar.phpunit.de/phpunit-6.phar
       project_setup:
         override:
-          - make build
-          - cp build/$APP_NAME-*.tar.gz ~/$APP_NAME.tar.gz
+          - make build version=latest
+          - cp build/$APP_NAME-latest.tar.gz ~/$APP_NAME.tar.gz
 
           - tar xfjv ~/nextcloud.tar.bz2 -C ~
           - tar xfzv ~/$APP_NAME.tar.gz -C ~/nextcloud/apps
@@ -524,8 +524,8 @@ build:
           - curl -L -o ~/phpunit.phar https://phar.phpunit.de/phpunit-6.phar
       project_setup:
         override:
-          - make build
-          - cp build/$APP_NAME-*.tar.gz ~/$APP_NAME.tar.gz
+          - make build version=latest
+          - cp build/$APP_NAME-latest.tar.gz ~/$APP_NAME.tar.gz
 
           - tar xfjv ~/nextcloud.tar.bz2 -C ~
           - tar xfzv ~/$APP_NAME.tar.gz -C ~/nextcloud/apps
@@ -557,8 +557,8 @@ build:
           - curl -L -o ~/phpunit.phar https://phar.phpunit.de/phpunit-6.phar
       project_setup:
         override:
-          - make build
-          - cp build/$APP_NAME-*.tar.gz ~/$APP_NAME.tar.gz
+          - make build version=latest
+          - cp build/$APP_NAME-latest.tar.gz ~/$APP_NAME.tar.gz
 
           - tar xfjv ~/nextcloud.tar.bz2 -C ~
           - tar xfzv ~/$APP_NAME.tar.gz -C ~/nextcloud/apps
