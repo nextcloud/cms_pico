@@ -56,6 +56,9 @@ class AppDataRepairStep implements IRepairStep
 	/** @var FileService */
 	private $fileService;
 
+	/** @var IOutput */
+	private $output;
+
 	/**
 	 * AppDataRepairStep constructor.
 	 *
@@ -95,19 +98,21 @@ class AppDataRepairStep implements IRepairStep
 	 */
 	public function run(IOutput $output)
 	{
-		$this->log('Syncing Pico CMS app data folder …');
+		$this->output = $output;
+
+		$this->logInfo('Syncing Pico CMS app data folder …');
 		$this->syncAppDataFolder();
 
-		$this->log('Copying Pico CMS config …');
+		$this->logInfo('Copying Pico CMS config …');
 		$this->copyConfig();
 
-		$this->log('Registering Pico CMS templates …');
+		$this->logInfo('Registering Pico CMS templates …');
 		$this->registerTemplates();
 
-		$this->log('Publishing Pico CMS themes …');
+		$this->logInfo('Publishing Pico CMS themes …');
 		$this->publishThemes();
 
-		$this->log('Publishing Pico CMS plugins …');
+		$this->logInfo('Publishing Pico CMS plugins …');
 		$this->publishPlugins();
 	}
 
@@ -136,11 +141,9 @@ class AppDataRepairStep implements IRepairStep
 
 			try {
 				$appDataConfigFolder->getFile($configFileName)->delete();
-				$this->log(sprintf('Replacing %s "%s"', 'config file', $configFileName), ILogger::WARN);
+				$this->logWarning('Replacing %s "%s"', 'config file', $configFileName);
 			} catch (NotFoundException $e) {
-				$this->log(sprintf('Adding %s "%s"', 'config file', $configFileName));
-			} catch (\Exception $e) {
-				$this->log(sprintf('Unable to create %s "%s"', 'config file', $configFileName), ILogger::ERROR);
+				$this->logInfo('Adding %s "%s"', 'config file', $configFileName);
 			}
 
 			$configFile->copy($appDataConfigFolder);
@@ -320,12 +323,25 @@ class AppDataRepairStep implements IRepairStep
 	}
 
 	/**
-	 * @param string $message
-	 * @param int    $level
+	 * @param string  $message
+	 * @param mixed[] ...$arguments
 	 */
-	private function log(string $message, int $level = ILogger::DEBUG)
+	private function logInfo(string $message, ...$arguments)
 	{
-		$this->logger->log($level, $message, [ 'app' => Application::APP_NAME ]);
+		$message = sprintf($message, ...$arguments);
+		$this->logger->log(ILogger::INFO, $message, [ 'app' => Application::APP_NAME ]);
+		$this->output->info($message);
+	}
+
+	/**
+	 * @param string $message
+	 * @param mixed[] ...$arguments
+	 */
+	private function logWarning(string $message, ...$arguments)
+	{
+		$message = sprintf($message, ...$arguments);
+		$this->logger->log(ILogger::WARN, $message, [ 'app' => Application::APP_NAME ]);
+		$this->output->warning($message);
 	}
 
 	/**
@@ -337,17 +353,17 @@ class AppDataRepairStep implements IRepairStep
 	{
 		$addedItems = array_diff($newItems, $oldItems);
 		foreach ($addedItems as $item) {
-			$this->log(sprintf('Adding %s "%s"', $title, $item));
+			$this->logInfo('Adding %s "%s"', $title, $item);
 		}
 
 		$updatedItems = array_intersect($newItems, $oldItems);
 		foreach ($updatedItems as $item) {
-			$this->log(sprintf('Replacing %s "%s"', $title, $item), ILogger::WARN);
+			$this->logWarning('Replacing %s "%s"', $title, $item);
 		}
 
 		$removedItems = array_diff($oldItems, $newItems);
 		foreach ($removedItems as $item) {
-			$this->log(sprintf('Removing %s "%s"', $title, $item), ILogger::WARN);
+			$this->logWarning('Removing %s "%s"', $title, $item);
 		}
 	}
 }
