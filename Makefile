@@ -1,16 +1,19 @@
 ###
 # Creates and publishes a new release
 #
-# Defaults to version '1.0.0'. If you want to create and publish another
-# release, pass the 'version' environment variable.
+# Defaults to building version 'v1.0.0'. If you want to create and publish
+# another release, pass the 'version' environment variable.
 #
 # Requirements:
 # - Target 'export'
 #       Requires the current working dir to be a Git repo to export the repo's
 #       current 'HEAD'
 # - Target 'sign'
-#       Requires OpenSSL and a RSA key for signing the release archive at
+#       Requires OpenSSL and a RSA key to sign the release archive at
 #       '~/.nextcloud/certificates/$(app_name).key'
+# - Target 'verify'
+#       Requires OpenSSL and a RSA public key to verify the release archive at
+#       '~/.nextcloud/certificates/$(app_name).pub'
 # - Targets 'github-release' and 'github-upload'
 #       Requires https://github.com/aktau/github-release and the 'GITHUB_TOKEN'
 #       environment variable to be set to your GitHub API token
@@ -24,6 +27,7 @@ app_name=cms_pico
 version?=v1.0.0
 prerelease?=false
 nocheck?=false
+verify?=$(build_dir)/$(archive)
 
 build_dir=$(CURDIR)/build
 cert_dir=$(HOME)/.nextcloud/certificates
@@ -104,6 +108,14 @@ sign: build
 		-sign "$(cert_dir)/$(app_name).key" \
 		"$(build_dir)/$(archive)" \
 			| openssl base64 -A > "$(build_dir)/$(signature)"
+
+verify:
+	openssl base64 -A -d \
+		< "$(verify).sig" \
+			| openssl dgst -sha512 \
+				-verify "$(cert_dir)/$(app_name).pub" \
+				-signature /dev/stdin \
+				"$(verify)"
 
 github-release: check
 	github-release release \
