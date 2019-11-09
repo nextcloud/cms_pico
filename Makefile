@@ -23,6 +23,7 @@
 app_name=cms_pico
 version?=v1.0.0
 prerelease?=false
+nocheck?=false
 
 build_dir=$(CURDIR)/build
 cert_dir=$(HOME)/.nextcloud/certificates
@@ -51,14 +52,21 @@ clean-export:
 	rm -f "$(build_dir)/$(export)"
 
 check:
-ifneq ($(version), v$(appinfo_version))
+	@:
+ifneq (v$(appinfo_version),$(version))
+	$(error Version mismatch: Building $(version), but $(appinfo) indicates v$(appinfo_version))
+endif
+
+lazy-check:
+	@:
+ifeq ($(or $(filter v$(appinfo_version),$(version)), $(filter true,$(nocheck))),)
 	$(error Version mismatch: Building $(version), but $(appinfo) indicates v$(appinfo_version))
 endif
 
 composer:
 	composer install --no-suggest --no-dev --prefer-dist --optimize-autoloader
 
-build: clean-build check composer
+build: lazy-check clean-build composer
 	mkdir -p "$(build_dir)"
 	rsync -a \
 		--exclude="/.github" \
@@ -97,7 +105,7 @@ sign: build
 		"$(build_dir)/$(archive)" \
 			| openssl base64 -A > "$(build_dir)/$(signature)"
 
-github-release:
+github-release: check
 	github-release release \
 		--user "$(github_owner)" \
 		--repo "$(github_repo)" \
@@ -105,9 +113,9 @@ github-release:
 		--target "$(github_branch)" \
 		--name "Pico CMS for Nextcloud $(version)" \
 		--description "Pico CMS for Nextcloud $(version)" \
-		$(if $(findstring true,$(prerelease)),--pre-release,)
+		$(if $(filter true,$(prerelease)),--pre-release,)
 
-github-upload: build github-release
+github-upload: check build github-release
 	github-release upload \
 		--user "$(github_owner)" \
 		--repo "$(github_repo)" \
@@ -115,9 +123,9 @@ github-upload: build github-release
 		--name "$(archive)" \
 		--file "$(build_dir)/$(archive)"
 
-publish: sign github-upload
+publish: check sign github-upload
 	php -r 'echo json_encode([ "download" => $$_SERVER["argv"][1], "signature" => file_get_contents($$_SERVER["argv"][2]), "nightly" => !!$$_SERVER["argv"][3] ]);' "" \
-		"$(download_url)" "$(build_dir)/$(signature)" "$(if $(findstring true,$(prerelease)),1,0)" \
+		"$(download_url)" "$(build_dir)/$(signature)" "$(if $(filter true,$(prerelease)),1,0)" \
 			| curl -K "$(curlrc)" \
 				-H "Content-Type: application/json" -d "@-" \
 				-X POST "$(publish_url)"
