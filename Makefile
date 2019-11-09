@@ -21,19 +21,19 @@
 #
 
 app_name=cms_pico
-version?=1.0.0
+version?=v1.0.0
 prerelease?=false
 
 build_dir=$(CURDIR)/build
 cert_dir=$(HOME)/.nextcloud/certificates
 curlrc=$(HOME)/.nextcloud/curlrc
-archive=$(app_name)-v$(version).tar.gz
+archive=$(app_name)-$(version).tar.gz
 export=$(app_name)-export.tar.gz
-signature=$(app_name)-v$(version).tar.gz.sig
+signature=$(app_name)-$(version).tar.gz.sig
 github_owner=nextcloud
 github_repo=cms_pico
 github_branch=master
-download_url=https://github.com/$(github_owner)/$(github_repo)/releases/download/v$(version)/$(archive)
+download_url=https://github.com/$(github_owner)/$(github_repo)/releases/download/$(version)/$(archive)
 publish_url=https://apps.nextcloud.com/api/v1/apps/releases
 appinfo=./appinfo/info.xml
 appinfo_version:=$(shell sed -ne 's/^.*<version>\(.*\)<\/version>.*$$/\1/p' $(appinfo))
@@ -51,8 +51,8 @@ clean-export:
 	rm -f "$(build_dir)/$(export)"
 
 check:
-ifneq ($(version), $(appinfo_version))
-	$(error Version mismatch: Building version $(version), but $(appinfo) indicates version $(appinfo_version))
+ifneq ($(version), v$(appinfo_version))
+	$(error Version mismatch: Building $(version), but $(appinfo) indicates v$(appinfo_version))
 endif
 
 composer:
@@ -101,17 +101,17 @@ github-release:
 	github-release release \
 		--user "$(github_owner)" \
 		--repo "$(github_repo)" \
-		--tag "v$(version)" \
+		--tag "$(version)" \
 		--target "$(github_branch)" \
-		--name "Pico CMS for Nextcloud v$(version)" \
-		--description "Pico CMS for Nextcloud v$(version)" \
+		--name "Pico CMS for Nextcloud $(version)" \
+		--description "Pico CMS for Nextcloud $(version)" \
 		$(if $(findstring true,$(prerelease)),--pre-release,)
 
 github-upload: build github-release
 	github-release upload \
 		--user "$(github_owner)" \
 		--repo "$(github_repo)" \
-		--tag "v$(version)" \
+		--tag "$(version)" \
 		--name "$(archive)" \
 		--file "$(build_dir)/$(archive)"
 
