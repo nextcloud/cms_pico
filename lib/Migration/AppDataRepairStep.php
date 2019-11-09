@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Migration;
 
-use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Service\ConfigService;
 use OCA\CMSPico\Service\FileService;
 use OCA\CMSPico\Service\PicoService;
@@ -38,8 +37,7 @@ use OCP\Migration\IRepairStep;
 
 class AppDataRepairStep implements IRepairStep
 {
-	/** @var ILogger */
-	private $logger;
+	use MigrationTrait;
 
 	/** @var ConfigService */
 	private $configService;
@@ -55,9 +53,6 @@ class AppDataRepairStep implements IRepairStep
 
 	/** @var FileService */
 	private $fileService;
-
-	/** @var IOutput */
-	private $output;
 
 	/**
 	 * AppDataRepairStep constructor.
@@ -77,7 +72,8 @@ class AppDataRepairStep implements IRepairStep
 		PluginsService $pluginsService,
 		FileService $fileService
 	) {
-		$this->logger = $logger;
+		$this->setLogger($logger);
+
 		$this->configService = $configService;
 		$this->templatesService = $templatesService;
 		$this->themesService = $themesService;
@@ -98,7 +94,7 @@ class AppDataRepairStep implements IRepairStep
 	 */
 	public function run(IOutput $output)
 	{
-		$this->output = $output;
+		$this->setOutput($output);
 
 		$this->logInfo('Syncing Pico CMS app data folder …');
 		$this->syncAppDataFolder();
@@ -178,7 +174,7 @@ class AppDataRepairStep implements IRepairStep
 
 		$oldSystemTemplates = array_keys($oldSystemTemplates);
 		$newSystemTemplates = array_keys($this->templatesService->getSystemTemplates());
-		$this->logChanges('Pico CMS system template', $newSystemTemplates, $oldSystemTemplates);
+		$this->logChanges('Pico CMS system template', $newSystemTemplates, $oldSystemTemplates, true);
 	}
 
 	/**
@@ -239,7 +235,7 @@ class AppDataRepairStep implements IRepairStep
 
 		$oldSystemThemes = array_keys($oldSystemThemes);
 		$newSystemThemes = array_keys($this->themesService->getSystemThemes());
-		$this->logChanges('Pico CMS system theme', $newSystemThemes, $oldSystemThemes);
+		$this->logChanges('Pico CMS system theme', $newSystemThemes, $oldSystemThemes, true);
 	}
 
 	/**
@@ -300,7 +296,7 @@ class AppDataRepairStep implements IRepairStep
 
 		$oldSystemPlugins = array_keys($oldSystemPlugins);
 		$newSystemPlugins = array_keys($this->pluginsService->getSystemPlugins());
-		$this->logChanges('Pico CMS system plugin', $newSystemPlugins, $oldSystemPlugins);
+		$this->logChanges('Pico CMS system plugin', $newSystemPlugins, $oldSystemPlugins, true);
 	}
 
 	/**
@@ -326,50 +322,5 @@ class AppDataRepairStep implements IRepairStep
 		$oldCustomPlugins = array_keys($oldCustomPlugins);
 		$newCustomPlugins = array_keys($this->pluginsService->getCustomPlugins());
 		$this->logChanges('Pico CMS custom plugin', $newCustomPlugins, $oldCustomPlugins);
-	}
-
-	/**
-	 * @param string  $message
-	 * @param mixed[] ...$arguments
-	 */
-	private function logInfo(string $message, ...$arguments)
-	{
-		$message = sprintf($message, ...$arguments);
-		$this->logger->log(ILogger::INFO, $message, [ 'app' => Application::APP_NAME ]);
-		$this->output->info($message);
-	}
-
-	/**
-	 * @param string $message
-	 * @param mixed[] ...$arguments
-	 */
-	private function logWarning(string $message, ...$arguments)
-	{
-		$message = sprintf($message, ...$arguments);
-		$this->logger->log(ILogger::WARN, $message, [ 'app' => Application::APP_NAME ]);
-		$this->output->warning($message);
-	}
-
-	/**
-	 * @param string $title
-	 * @param array  $newItems
-	 * @param array  $oldItems
-	 */
-	private function logChanges(string $title, array $newItems, array $oldItems)
-	{
-		$addedItems = array_diff($newItems, $oldItems);
-		foreach ($addedItems as $item) {
-			$this->logInfo('Adding %s "%s"', $title, $item);
-		}
-
-		$updatedItems = array_intersect($newItems, $oldItems);
-		foreach ($updatedItems as $item) {
-			$this->logWarning('Replacing %s "%s"', $title, $item);
-		}
-
-		$removedItems = array_diff($oldItems, $newItems);
-		foreach ($removedItems as $item) {
-			$this->logWarning('Removing %s "%s"', $title, $item);
-		}
 	}
 }
