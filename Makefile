@@ -35,6 +35,8 @@ github_repo=cms_pico
 github_branch=master
 download_url=https://github.com/$(github_owner)/$(github_repo)/releases/download/v$(version)/$(archive)
 publish_url=https://apps.nextcloud.com/api/v1/apps/releases
+appinfo=./appinfo/info.xml
+appinfo_version:=$(shell sed -ne 's/^.*<version>\(.*\)<\/version>.*$$/\1/p' $(appinfo))
 
 all: build
 
@@ -48,10 +50,15 @@ clean-build:
 clean-export:
 	rm -f "$(build_dir)/$(export)"
 
+check:
+ifneq ($(version), $(appinfo_version))
+	$(error Version mismatch: Building version $(version), but $(appinfo) indicates version $(appinfo_version))
+endif
+
 composer:
 	composer install --no-suggest --no-dev --prefer-dist --optimize-autoloader
 
-build: clean-build composer
+build: clean-build check composer
 	mkdir -p "$(build_dir)"
 	rsync -a \
 		--exclude="/.github" \
