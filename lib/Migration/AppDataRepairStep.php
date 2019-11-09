@@ -141,9 +141,9 @@ class AppDataRepairStep implements IRepairStep
 
 			try {
 				$appDataConfigFolder->getFile($configFileName)->delete();
-				$this->logWarning('Replacing %s "%s"', 'config file', $configFileName);
+				$this->logWarning('Replacing Pico CMS config file "%s"', $configFileName);
 			} catch (NotFoundException $e) {
-				$this->logInfo('Adding %s "%s"', 'config file', $configFileName);
+				$this->logInfo('Adding Pico CMS config file "%s"', $configFileName);
 			}
 
 			$configFile->copy($appDataConfigFolder);
@@ -176,8 +176,9 @@ class AppDataRepairStep implements IRepairStep
 			}
 		}
 
-		$newSystemTemplates = $this->templatesService->getSystemTemplates();
-		$this->logChanges('system template', array_keys($newSystemTemplates), array_keys($oldSystemTemplates));
+		$oldSystemTemplates = array_keys($oldSystemTemplates);
+		$newSystemTemplates = array_keys($this->templatesService->getSystemTemplates());
+		$this->logChanges('Pico CMS system template', $newSystemTemplates, $oldSystemTemplates);
 	}
 
 	/**
@@ -200,8 +201,9 @@ class AppDataRepairStep implements IRepairStep
 			}
 		}
 
-		$newCustomTemplates = $this->templatesService->getCustomTemplates();
-		$this->logChanges('custom template', array_keys($newCustomTemplates), array_keys($oldCustomTemplates));
+		$oldCustomTemplates = array_keys($oldCustomTemplates);
+		$newCustomTemplates = array_keys($this->templatesService->getCustomTemplates());
+		$this->logChanges('Pico CMS custom template', $newCustomTemplates, $oldCustomTemplates);
 	}
 
 	/**
@@ -235,8 +237,9 @@ class AppDataRepairStep implements IRepairStep
 			}
 		}
 
-		$newSystemThemes = $this->themesService->getSystemThemes();
-		$this->logChanges('system theme', array_keys($newSystemThemes), array_keys($oldSystemThemes));
+		$oldSystemThemes = array_keys($oldSystemThemes);
+		$newSystemThemes = array_keys($this->themesService->getSystemThemes());
+		$this->logChanges('Pico CMS system theme', $newSystemThemes, $oldSystemThemes);
 	}
 
 	/**
@@ -259,8 +262,9 @@ class AppDataRepairStep implements IRepairStep
 			}
 		}
 
-		$newCustomThemes = $this->themesService->getCustomThemes();
-		$this->logChanges('custom theme', array_keys($newCustomThemes), array_keys($oldCustomThemes));
+		$oldCustomThemes = array_keys($oldCustomThemes);
+		$newCustomThemes = array_keys($this->themesService->getCustomThemes());
+		$this->logChanges('Pico CMS custom theme', $newCustomThemes, $oldCustomThemes);
 	}
 
 	/**
@@ -294,8 +298,9 @@ class AppDataRepairStep implements IRepairStep
 			}
 		}
 
-		$newSystemPlugins = $this->pluginsService->getSystemPlugins();
-		$this->logChanges('system plugin', array_keys($newSystemPlugins), array_keys($oldSystemPlugins));
+		$oldSystemPlugins = array_keys($oldSystemPlugins);
+		$newSystemPlugins = array_keys($this->pluginsService->getSystemPlugins());
+		$this->logChanges('Pico CMS system plugin', $newSystemPlugins, $oldSystemPlugins);
 	}
 
 	/**
@@ -318,8 +323,9 @@ class AppDataRepairStep implements IRepairStep
 			}
 		}
 
-		$newCustomPlugins = $this->pluginsService->getCustomPlugins();
-		$this->logChanges('custom plugin', array_keys($newCustomPlugins), array_keys($oldCustomPlugins));
+		$oldCustomPlugins = array_keys($oldCustomPlugins);
+		$newCustomPlugins = array_keys($this->pluginsService->getCustomPlugins());
+		$this->logChanges('Pico CMS custom plugin', $newCustomPlugins, $oldCustomPlugins);
 	}
 
 	/**
