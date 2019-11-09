@@ -46,6 +46,7 @@ build:
 
           - cd ~/nextcloud/apps/$APP_NAME
           - command: php ~/phpunit.phar --configuration tests/phpunit.xml --coverage-clover ~/build/tests/clover.xml
+            idle_timeout: 900
             coverage:
               file: tests/clover.xml
               format: clover
