@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace OCA\CMSPico\Migration;
 
 use Doctrine\DBAL\Schema\SchemaException;
-use OC\Encryption\Manager as EncryptionManager;
 use OCA\CMSPico\Db\CoreRequestBuilder;
 use OCA\CMSPico\Model\Template;
 use OCA\CMSPico\Model\Theme;
@@ -45,9 +44,6 @@ class Version010000 extends SimpleMigrationStep
 {
 	/** @var IDBConnection */
 	private $databaseConnection;
-
-	/** @var EncryptionManager */
-	private $encryptionManager;
 
 	/** @var ConfigService */
 	private $configService;
@@ -70,7 +66,6 @@ class Version010000 extends SimpleMigrationStep
 	public function __construct()
 	{
 		$this->databaseConnection = \OC::$server->getDatabaseConnection();
-		$this->encryptionManager = \OC::$server->getEncryptionManager();
 		$this->configService = \OC::$server->query(ConfigService::class);
 		$this->templatesService = \OC::$server->query(TemplatesService::class);
 		$this->themesService = \OC::$server->query(ThemesService::class);
