@@ -503,11 +503,11 @@ style(Application::APP_NAME, 'pico');
 					</div>
 				</div>
 				<p class="note"><?php p($l->t(
-						'If you wish not to enable all of your users to create personal websites, you can limit Pico CMS '
-						. 'for Nextcloud to certain groups. Select the groups you want to limit access to. If you leave '
-						. 'this field empty, usage isn\'t limited. Revoking access for certain groups won\'t delete any '
-						. 'of a user\'s websites, however, they get inaccessible.'
-					)); ?></p>
+					'If you wish not to enable all of your users to create personal websites, you can limit Pico CMS '
+					. 'for Nextcloud to certain groups. Select the groups you want to limit access to. If you leave '
+					. 'this field empty, usage isn\'t limited. Revoking access for certain groups won\'t delete any '
+					. 'of a user\'s websites, however, they get inaccessible.'
+				)); ?></p>
 			</form>
 		</section>
 	</section>
