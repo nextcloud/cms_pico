@@ -123,7 +123,7 @@ github-release: check
 		--repo "$(github_repo)" \
 		--tag "$(version)" \
 		--target "$(github_branch)" \
-		--name "Pico CMS for Nextcloud $(version)" \
+		--name "$(version)" \
 		--description "Pico CMS for Nextcloud $(version)" \
 		$(if $(filter true,$(prerelease)),--pre-release,)
 
