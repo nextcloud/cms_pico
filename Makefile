@@ -150,3 +150,12 @@ github-upload-dev: github-upload
 
 publish-dev: prerelease=true
 publish-dev: publish
+
+.PHONY: all \
+	clean clean-build clean-export \
+	check lazy-check \
+	composer build export \
+	sign verify \
+	github-release github-release-dev \
+	github-upload github-upload-dev \
+	publish publish-dev
