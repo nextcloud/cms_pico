@@ -15,8 +15,9 @@
 #       Requires OpenSSL and a RSA public key to verify the release archive at
 #       '~/.nextcloud/certificates/$(app_name).pub'
 # - Targets 'github-release' and 'github-upload'
-#       Requires https://github.com/aktau/github-release and the 'GITHUB_TOKEN'
-#       environment variable to be set to your GitHub API token
+#       Requires https://github.com/aktau/github-release and a 'github-token'
+#       file at '~/.nextcloud/github-token' with an GitHub API token, e.g.
+#           deadbeefc001cafebaadf00dabad1deadeadcode
 # - Target 'publish'
 #       Requires a 'curlrc' file at '~/.nextcloud/curlrc' with an appropiate
 #       Authentication header for the Nextcloud App Store, e.g.
@@ -38,6 +39,7 @@ signature=$(app_name)-$(version).tar.gz.sig
 github_owner=nextcloud
 github_repo=cms_pico
 github_branch=master
+github_token:=$(shell cat $(HOME)/.nextcloud/github-token)
 download_url=https://github.com/$(github_owner)/$(github_repo)/releases/download/$(version)/$(archive)
 publish_url=https://apps.nextcloud.com/api/v1/apps/releases
 appinfo=./appinfo/info.xml
@@ -117,6 +119,7 @@ verify:
 				-signature /dev/stdin \
 				"$(verify)"
 
+github-release: export GITHUB_TOKEN="$(github_token)"
 github-release: check
 	github-release release \
 		--user "$(github_owner)" \
@@ -127,6 +130,7 @@ github-release: check
 		--description "Pico CMS for Nextcloud $(version)" \
 		$(if $(filter true,$(prerelease)),--pre-release,)
 
+github-upload: export GITHUB_TOKEN="$(github_token)"
 github-upload: check build github-release
 	github-release upload \
 		--user "$(github_owner)" \
