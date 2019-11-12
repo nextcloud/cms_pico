@@ -15,7 +15,7 @@ OC.L10N.register(
     "Website not found" : "Webová stránka nenalezena",
     "Webpage does not exist" : "Webová stránka neexistuje",
     "You are not the owner of this website" : "Nejste vlastníkem této webové stránky",
-    "Content Directory is not valid." : "Datový adresář je neplatný.",
+    "Content Directory is not valid." : "Adresář s obsahem není platný.",
     "Website is private. You do not have access to this website" : "Webová stránka je soukromá. Na tuto webovou stránku nemáte přístup",
     "The address of the website can only contains alpha numeric chars" : "Adresa webové stránky může obsahovat pouze alfanumerické znaky",
     "The address of the website must be longer" : "Je třeba, aby adresa webové stránky byla delší",
