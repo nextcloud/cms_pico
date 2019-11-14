@@ -134,14 +134,14 @@ style(Application::APP_NAME, 'pico');
 						<p>{name}</p>
 					</div>
 					<div class="actions">
-						<a class="action action-open has-tooltip" title="<?php p($l->t('Open website')); ?>">
+						<a class="action action-open has-tooltip" title="<?php p($l->t('Go to website')); ?>">
 							<span class="icon-link"></span>
-							<span class="hidden-visually"><?php p($l->t('Open website')); ?></span>
+							<span class="hidden-visually"><?php p($l->t('Go to website')); ?></span>
 						</a>
 						<a class="action action-files has-tooltip"
-								title="<?php p($l->t('Open website directory')); ?>">
+								title="<?php p($l->t('Go to website directory')); ?>">
 							<span class="icon-files-dark"></span>
-							<span class="hidden-visually"><?php p($l->t('Open website directory')); ?></span>
+							<span class="hidden-visually"><?php p($l->t('Go to website directory')); ?></span>
 						</a>
 						<a class="action action-private has-tooltip"
 								title="<?php p($l->t('Toggle private website')); ?>">
@@ -163,13 +163,13 @@ style(Application::APP_NAME, 'pico');
 								<li>
 									<a class="action-open">
 										<span class="icon-link"></span>
-										<span><?php p($l->t('Open website')); ?></span>
+										<span><?php p($l->t('Go to website')); ?></span>
 									</a>
 								</li>
 								<li>
 									<a class="action-files">
 										<span class="icon-files-dark"></span>
-										<span><?php p($l->t('Open website directory')); ?></span>
+										<span><?php p($l->t('Go to website directory')); ?></span>
 									</a>
 								</li>
 								<li>
@@ -204,9 +204,9 @@ style(Application::APP_NAME, 'pico');
 				</div>
 			</td>
 			<td class="path-column">
-				<a class="action action-files has-tooltip" title="<?php p($l->t('Open website directory')); ?>">
+				<a class="action action-files has-tooltip" title="<?php p($l->t('Go to website directory')); ?>">
 					<span class="icon-files-dark"></span>
-					<span class="hidden-visually"><?php p($l->t('Open website directory')); ?>:</span>
+					<span class="hidden-visually"><?php p($l->t('Go to website directory')); ?>:</span>
 					{path}
 				</a>
 			</td>

@@ -179,11 +179,11 @@
 		_setupItem: function ($website, websiteData) {
 			var that = this;
 
-			// open website
+			// go to website
 			var websiteUrl = this.websiteBaseUrl + websiteData.site;
 			this._clickRedirect($website.find('.action-open'), websiteUrl);
 
-			// open website directory
+			// go to website directory
 			var filesUrl = OC.generateUrl('/apps/files/') + '?dir=' + OC.encodePath(websiteData.path);
 			this._clickRedirect($website.find('.action-files'), filesUrl);
 
