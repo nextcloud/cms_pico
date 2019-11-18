@@ -42,7 +42,11 @@ You want to learn more about Pico CMS for Nextcloud? Easy! Just download and ena
 	<screenshot>https://raw.githubusercontent.com/nextcloud/cms_pico/master/screenshots/list_websites.png</screenshot>
 	<screenshot>https://raw.githubusercontent.com/nextcloud/cms_pico/master/screenshots/new_website.png</screenshot>
 	<screenshot>https://raw.githubusercontent.com/nextcloud/cms_pico/master/screenshots/website.png</screenshot>
-	<screenshot>https://raw.githubusercontent.com/nextcloud/cms_pico/master/screenshots/custom.png</screenshot>
+	<screenshot>https://raw.githubusercontent.com/nextcloud/cms_pico/master/screenshots/custom_themes.png</screenshot>
+	<screenshot>https://raw.githubusercontent.com/nextcloud/cms_pico/master/screenshots/custom_plugins.png</screenshot>
+	<screenshot>https://raw.githubusercontent.com/nextcloud/cms_pico/master/screenshots/custom_templates.png</screenshot>
+	<screenshot>https://raw.githubusercontent.com/nextcloud/cms_pico/master/screenshots/settings.png</screenshot>
+	<screenshot>https://raw.githubusercontent.com/nextcloud/cms_pico/master/screenshots/apache.png</screenshot>
 	<dependencies>
 		<php min-version="7.0.0"/>
 		<nextcloud min-version="15" max-version="18"/>
