@@ -221,15 +221,15 @@ class Version010000From000908 extends SimpleMigrationStep
 	{
 		$qbUpdate = $this->databaseConnection->getQueryBuilder();
 		$qbUpdate
-			->update(CoreRequestBuilder::TABLE_WEBSITES, 'w')
-			->set('w.theme', $qbUpdate->createParameter('theme'))
-			->set('w.type', $qbUpdate->createParameter('type'))
-			->set('w.options', $qbUpdate->createParameter('options'))
-			->where($qbUpdate->expr()->eq('w.id', $qbUpdate->createParameter('id')));
+			->update(CoreRequestBuilder::TABLE_WEBSITES)
+			->set('theme', $qbUpdate->createParameter('theme'))
+			->set('type', $qbUpdate->createParameter('type'))
+			->set('options', $qbUpdate->createParameter('options'))
+			->where($qbUpdate->expr()->eq('id', $qbUpdate->createParameter('id')));
 
 		$selectCursor = $this->databaseConnection->getQueryBuilder()
-			->select('w.id', 'w.site', 'w.theme', 'w.type', 'w.options')
-			->from(CoreRequestBuilder::TABLE_WEBSITES, 'w')
+			->select('id', 'site', 'theme', 'type', 'options')
+			->from(CoreRequestBuilder::TABLE_WEBSITES)
 			->execute();
 
 		while ($data = $selectCursor->fetch()) {

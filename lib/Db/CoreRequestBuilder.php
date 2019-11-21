@@ -37,9 +37,6 @@ class CoreRequestBuilder
 	/** @var IDBConnection */
 	protected $dbConnection;
 
-	/** @var string */
-	protected $defaultSelectAlias;
-
 	/**
 	 * CoreRequestBuilder constructor.
 	 *
@@ -90,7 +87,6 @@ class CoreRequestBuilder
 	 */
 	private function limitToDBField(IQueryBuilder $qb, string $field, $value)
 	{
-		$fieldPrefix = ($qb->getType() === QueryBuilder::SELECT) ? $this->defaultSelectAlias . '.' : '';
-		$qb->andWhere($qb->expr()->eq($fieldPrefix . $field, $qb->createNamedParameter($value)));
+		$qb->andWhere($qb->expr()->eq($field, $qb->createNamedParameter($value)));
 	}
 }
