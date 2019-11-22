@@ -27,7 +27,7 @@
 	'use strict';
 
 	if (!OCA.CMSPico) {
-		/** @namespace */
+		/** @namespace OCA.CMSPico */
 		OCA.CMSPico = {};
 	}
 
@@ -188,9 +188,9 @@
 	/**
 	 * @class
 	 *
-	 * @param {jQuery}        $element
-	 * @param {Object}        [options]
-	 * @param {string}        [options.route]
+	 * @param {jQuery} $element
+	 * @param {Object} [options]
+	 * @param {string} [options.route]
 	 */
 	OCA.CMSPico.Form = function ($element, options) {
 		this.initialize($element, options);
@@ -209,9 +209,9 @@
 		/**
 		 * @constructs
 		 *
-		 * @param {jQuery}        $element
-		 * @param {Object}        [options]
-		 * @param {string}        [options.route]
+		 * @param {jQuery} $element
+		 * @param {Object} [options]
+		 * @param {string} [options.route]
 		 */
 		initialize: function ($element, options) {
 			this.$element = $element;
@@ -255,10 +255,10 @@
 		}
 	};
 
-	/** @namespace */
+	/** @namespace OCA.CMSPico.Util */
 	OCA.CMSPico.Util = {
 		/**
-		 * @param string
+		 * @param {string} string
 		 *
 		 * @returns string
 		 */
