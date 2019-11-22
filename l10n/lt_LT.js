@@ -29,6 +29,8 @@ OC.L10N.register(
     "Address" : "Adresas",
     "Local directory" : "Vietinis katalogas",
     "Theme" : "Apipavidalinimas",
+    "Address of the site:" : "Svetainės adresas:",
+    "my_site" : "mano_svetainė",
     "Local directory:" : "Vietinis katalogas:",
     "Delete website" : "Ištrinti svetainę"
 },
