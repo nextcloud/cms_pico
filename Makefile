@@ -24,12 +24,13 @@
 #           header = "Authorization: Token [NEXTCLOUD_API_TOKEN]"
 #
 
-app_name=cms_pico
 version?=v1.0.0
 prerelease?=false
 nocheck?=false
 verify?=$(build_dir)/$(archive)
 
+app_name=cms_pico
+app_title=Pico CMS for Nextcloud
 build_dir=$(CURDIR)/build
 cert_dir=$(HOME)/.nextcloud/certificates
 curlrc=$(HOME)/.nextcloud/curlrc
@@ -39,11 +40,11 @@ signature=$(app_name)-$(version).tar.gz.sig
 github_owner=nextcloud
 github_repo=cms_pico
 github_branch=master
-github_token:=$(shell cat $(HOME)/.nextcloud/github-token)
+github_token:=$(shell cat "$(HOME)/.nextcloud/github-token")
 download_url=https://github.com/$(github_owner)/$(github_repo)/releases/download/$(version)/$(archive)
 publish_url=https://apps.nextcloud.com/api/v1/apps/releases
 appinfo=./appinfo/info.xml
-appinfo_version:=$(shell sed -ne 's/^.*<version>\(.*\)<\/version>.*$$/\1/p' $(appinfo))
+appinfo_version:=$(shell sed -ne 's/^.*<version>\(.*\)<\/version>.*$$/\1/p' "$(CURDIR)/$(appinfo)")
 
 all: build
 
@@ -127,7 +128,7 @@ github-release: check
 		--tag "$(version)" \
 		--target "$(github_branch)" \
 		--name "$(version)" \
-		--description "Pico CMS for Nextcloud $(version)" \
+		--description "$(app_title) $(version)" \
 		$(if $(filter true,$(prerelease)),--pre-release,)
 
 github-upload: export GITHUB_TOKEN="$(github_token)"

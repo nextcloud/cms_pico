@@ -2,7 +2,7 @@
   "name": "nextcloud/cms_pico",
   "description": "Create websites using Pico CMS for Nextcloud",
   "type": "project",
-  "license": "agpl",
+  "license": "AGPL-3.0-or-later",
   "authors": [
     {
       "name": "Maxence Lange",

@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Db;
 
-use Doctrine\DBAL\Query\QueryBuilder;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 
