@@ -1,9 +1,12 @@
 ##
 # Theme
 #
-twig_config:
-    autoescape: false               # Let Twig escape variables by default
+theme_config:                       # Additional theme-specific config
+    widescreen: false               # Default theme: Use more horizontal space (i.e. make the site container wider)
+twig_config:                        # Twig template engine config
+    autoescape: html                # Let Twig escape variables by default
     strict_variables: false         # If set to true, Twig will bail out when unset variables are being used
+    charset: utf-8                  # The charset used by Twig templates
     debug: ~                        # Enable Twig's debug mode
     cache: false                    # Enable Twig template caching by specifying a path to a writable directory
     auto_reload: ~                  # Recompile Twig templates whenever the source code changes
@@ -16,7 +19,7 @@ date_format: %D %T                  # Pico's default date format;
 pages_order_by_meta: author         # Sort pages by meta value "author" (set "pages_order_by" to "meta")
 pages_order_by: alpha               # Change how Pico sorts pages ("alpha" for alphabetical order, "date", or "meta")
 pages_order: asc                    # Sort pages in ascending ("asc") or descending ("desc") order
-content_config:
+content_config:                     # Parsedown Markdown parser config
     extra: true                     # Use the Parsedown Extra parser to support extended markup;
                                     #     See https://michelf.ca/projects/php-markdown/extra/ for more info
     breaks: false                   # A boolean indicating whether breaks in the markup should be reflected in the
