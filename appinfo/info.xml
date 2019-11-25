@@ -3,10 +3,10 @@
 		xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
 	<id>cms_pico</id>
 	<name>Pico CMS</name>
-	<summary>Create websites using Pico CMS for Nextcloud</summary>
+	<summary>Create and publish your own websites - with Pico CMS for Nextcloud!</summary>
 	<description><![CDATA[
 
-[Pico CMS for Nextcloud](https://github.com/nextcloud/cms_pico) combines the power of [**Pico**](http://picocms.org/) and [**Nextcloud**](https://nextcloud.com/) to create simple, secure, shareable and amazingly powerful websites with just a few clicks. Pico is a stupidly simple, blazing fast, flat file CMS - making the web easy!
+[Pico CMS for Nextcloud](https://github.com/nextcloud/cms_pico) combines the power of [**Pico**](http://picocms.org/) and [**Nextcloud**](https://nextcloud.com/) to create simple, secure, shareable and amazingly powerful websites with just a few clicks. Pico is a stupidly simple, blazing fast, flat file CMS - making the web easy.
 
 * Start a blog
 * Share your resume with the world
