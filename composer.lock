@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cf7629d04cbb9dff151256430266ac62",
+    "content-hash": "e22d074a040a75642b3cadaa79eaeccf",
     "packages": [
         {
             "name": "erusev/parsedown",
@@ -151,16 +151,16 @@
         },
         {
             "name": "picocms/composer-installer",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/picocms/composer-installer.git",
-                "reference": "67f53e73232c2c7a9b669e36c3fc716cf1f55b58"
+                "reference": "6b5036c83aa091ed76e2a76ed9335885f95a7db7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/picocms/composer-installer/zipball/67f53e73232c2c7a9b669e36c3fc716cf1f55b58",
-                "reference": "67f53e73232c2c7a9b669e36c3fc716cf1f55b58",
+                "url": "https://api.github.com/repos/picocms/composer-installer/zipball/6b5036c83aa091ed76e2a76ed9335885f95a7db7",
+                "reference": "6b5036c83aa091ed76e2a76ed9335885f95a7db7",
                 "shasum": ""
             },
             "type": "composer-installer",
@@ -177,6 +177,11 @@
                 "MIT"
             ],
             "authors": [
+                {
+                    "name": "Daniel Rudolf",
+                    "email": "picocms.org@daniel-rudolf.de",
+                    "role": "Lead Developer"
+                },
                 {
                     "name": "The Pico Community",
                     "homepage": "http://picocms.org/"
@@ -199,26 +204,25 @@
                 "picocms-plugin",
                 "picocms-theme"
             ],
-            "time": "2017-10-13T20:16:18+00:00"
+            "time": "2019-11-24T22:50:47+00:00"
         },
         {
             "name": "picocms/pico",
-            "version": "v2.1.0-beta.1",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/picocms/Pico.git",
-                "reference": "a04bc6c6b85a415ce6c593f2a3fec561f4cf243a"
+                "reference": "232a90bdf8dac5c2710c1a4b27a397bf28f9a75c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/picocms/Pico/zipball/a04bc6c6b85a415ce6c593f2a3fec561f4cf243a",
-                "reference": "a04bc6c6b85a415ce6c593f2a3fec561f4cf243a",
+                "url": "https://api.github.com/repos/picocms/Pico/zipball/232a90bdf8dac5c2710c1a4b27a397bf28f9a75c",
+                "reference": "232a90bdf8dac5c2710c1a4b27a397bf28f9a75c",
                 "shasum": ""
             },
             "require": {
                 "erusev/parsedown": "~1.8.0|1.8.0@beta",
                 "erusev/parsedown-extra": "~0.8.0|0.8.0@beta",
-                "ext-dom": "*",
                 "php": ">=5.3.6",
                 "symfony/yaml": "^2.8",
                 "twig/twig": "^1.36"
@@ -253,6 +257,11 @@
                     "role": "Project Founder"
                 },
                 {
+                    "name": "Daniel Rudolf",
+                    "email": "picocms.org@daniel-rudolf.de",
+                    "role": "Lead Developer"
+                },
+                {
                     "name": "The Pico Community",
                     "homepage": "http://picocms.org/"
                 },
@@ -278,20 +287,20 @@
                 "website",
                 "yaml"
             ],
-            "time": "2019-11-04T00:49:11+00:00"
+            "time": "2019-11-24T23:43:58+00:00"
         },
         {
             "name": "picocms/pico-deprecated",
-            "version": "v2.1.0-beta.1",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/picocms/pico-deprecated.git",
-                "reference": "7ba9c85c90c21448cfa4e482d301999656f69fe7"
+                "reference": "8693b27f906a982409a520a41710bb5c95218882"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/picocms/pico-deprecated/zipball/7ba9c85c90c21448cfa4e482d301999656f69fe7",
-                "reference": "7ba9c85c90c21448cfa4e482d301999656f69fe7",
+                "url": "https://api.github.com/repos/picocms/pico-deprecated/zipball/8693b27f906a982409a520a41710bb5c95218882",
+                "reference": "8693b27f906a982409a520a41710bb5c95218882",
                 "shasum": ""
             },
             "require": {
@@ -318,6 +327,11 @@
             ],
             "authors": [
                 {
+                    "name": "Daniel Rudolf",
+                    "email": "picocms.org@daniel-rudolf.de",
+                    "role": "Lead Developer"
+                },
+                {
                     "name": "The Pico Community",
                     "homepage": "http://picocms.org/"
                 },
@@ -336,20 +350,20 @@
                 "picocms",
                 "picocms-plugin"
             ],
-            "time": "2019-11-04T00:50:13+00:00"
+            "time": "2019-11-24T22:24:53+00:00"
         },
         {
             "name": "picocms/pico-theme",
-            "version": "v2.1.0-beta.1",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/picocms/pico-theme.git",
-                "reference": "6c0491a9188ed1cd5bee110e502e6a71cc219262"
+                "reference": "53a90f720917d32ae857f3ddf7eea5aae6b3759c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/picocms/pico-theme/zipball/6c0491a9188ed1cd5bee110e502e6a71cc219262",
-                "reference": "6c0491a9188ed1cd5bee110e502e6a71cc219262",
+                "url": "https://api.github.com/repos/picocms/pico-theme/zipball/53a90f720917d32ae857f3ddf7eea5aae6b3759c",
+                "reference": "53a90f720917d32ae857f3ddf7eea5aae6b3759c",
                 "shasum": ""
             },
             "require": {
@@ -369,6 +383,11 @@
             ],
             "authors": [
                 {
+                    "name": "Daniel Rudolf",
+                    "email": "picocms.org@daniel-rudolf.de",
+                    "role": "Lead Developer"
+                },
+                {
                     "name": "The Pico Community",
                     "homepage": "http://picocms.org/"
                 },
@@ -386,7 +405,7 @@
                 "picocms",
                 "picocms-theme"
             ],
-            "time": "2019-11-03T23:43:37+00:00"
+            "time": "2019-11-24T22:25:33+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -448,7 +467,7 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.8.50",
+            "version": "v2.8.52",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
@@ -498,16 +517,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.42.3",
+            "version": "v1.42.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "201baee843e0ffe8b0b956f336dd42b2a92fae4e"
+                "reference": "e587180584c3d2d6cb864a0454e777bb6dcb6152"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/201baee843e0ffe8b0b956f336dd42b2a92fae4e",
-                "reference": "201baee843e0ffe8b0b956f336dd42b2a92fae4e",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/e587180584c3d2d6cb864a0454e777bb6dcb6152",
+                "reference": "e587180584c3d2d6cb864a0454e777bb6dcb6152",
                 "shasum": ""
             },
             "require": {
@@ -560,7 +579,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2019-08-24T12:51:03+00:00"
+            "time": "2019-11-11T16:49:32+00:00"
         },
         {
             "name": "xemlock/htmlpurifier-html5",
@@ -617,11 +636,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "beta",
-    "stability-flags": {
-        "picocms/pico": 10,
-        "picocms/pico-theme": 10,
-        "picocms/pico-deprecated": 10
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
