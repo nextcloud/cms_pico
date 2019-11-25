@@ -89,7 +89,7 @@ As a common practice, we recommend you to separate your contents and assets
 by default. If you want to use some assets (e.g. a image) in one of your content
 files, use Pico's `assets` folder. You can then access them in your Markdown
 using the <code>&#37;assets_url&#37;</code> placeholder, for example:
-<code>!\[Image Title\](&#37;assets_url&#37;/assets/image.png)</code>
+<code>!\[Image Title\](&#37;assets_url&#37;/image.png)</code>
 
 ### Text File Markup
 
@@ -232,7 +232,8 @@ that URLs (e.g. `{{ base_url }}`) never include a trailing slash.
     * ...
 * `{{ content }}` - The content of the current page after it has been processed
                     through Markdown
-* `{{ prev_page }}` - The data of the previous page, relative to `current_page`
+* `{{ previous_page }}` - The data of the previous page, relative to
+                          `current_page`
 * `{{ current_page }}` - The data of the current page; refer to the "Pages"
                          section below for details
 * `{{ next_page }}` - The data of the next page, relative to `current_page`
@@ -245,8 +246,8 @@ including images and JavaScript files.
 
 Please note that Twig escapes HTML in all strings before outputting them. So
 for example, if you add `headline: My <strong>favorite</strong> color` to the
-YAML header of your page and output it using `{{ meta.headline }}`, you'll end
-up seeing `My <strong>favorite</strong> color` - yes, including the markup! To
+YAML header of a page and output it using `{{ meta.headline }}`, you'll end up
+seeing `My <strong>favorite</strong> color` - yes, including the markup! To
 actually get it parsed, you must use `{{ meta.headline|raw }}` (resulting in
 the expected <code>My **favorite** color</code>). Notable exceptions to this
 are Pico's `content` variable (e.g. `{{ content }}`), Pico's `content` filter
@@ -258,7 +259,7 @@ marked as HTML safe.
 There are several ways to access Pico's pages list. You can access the current
 page's data using the `current_page` variable, or use the `prev_page` and/or
 `next_page` variables to access the respective previous/next page in Pico's
-pages list. But more importantly there's the `pages` function. No matter how
+pages list. But more importantly there's the `pages()` function. No matter how
 you access a page, it will always consist of the following data:
 
 * `{{ id }}` - The relative path to the content file (unique ID)
@@ -301,11 +302,21 @@ Check out the following code snippet:
     </section>
 
 The `pages()` function is very powerful and also allows you to return not just
-a page's child pages by passing the `depth`, `depthOffset` and `offset` params.
-For example, if you pass `pages(depthOffset=-1)`, the list will also include
-Pico's main index page (i.e. `content/index.md`). This one is commonly used to
-create a theme's main navigation. If you want to learn more, head over to
-Pico's complete [`pages` function documentation][FeaturesPagesFunction].
+a page's child pages by passing the `depth` and `depthOffset` params. For
+example, if you pass `pages(depthOffset=-1)`, the list will also include Pico's
+main index page (i.e. `content/index.md`). This one is commonly used to create
+a theme's main navigation. If you want to learn more, head over to Pico's
+complete [`pages()` function documentation][FeaturesPagesFunction].
+
+If you want to access the data of a particular page, use Pico's `pages`
+variable. Just take `content/_meta.md` in Pico's sample contents for an
+example: `content/_meta.md` contains some meta data you might want to use in
+your theme. If you want to output the page's `tagline` meta value, use
+`{{ pages["_meta"].meta.logo }}`. Don't ever try to use Pico's `pages` variable
+as an replacement for Pico's `pages()` function. Its usage looks very similar,
+it will kinda work and you might even see it being used in old themes, but be
+warned: It slows down Pico. Always use Pico's `pages()` function when iterating
+Pico's page list (e.g. `{% for page in pages() %}…{% endfor %}`).
 
 #### Twig filters and functions
 
@@ -318,7 +329,7 @@ even easier.
 * You can replace URL placeholders (like <code>&#37;base_url&#37;</code>) in
   arbitrary strings using the `url` filter. This is helpful together with meta
   variables, e.g. if you add <code>image: &#37;assets_url&#37;/stock.jpg</code>
-  to the YAML header of your page, `{{ meta.image|url }}` will return
+  to the YAML header of a page, `{{ meta.image|url }}` will return
   `%assets_url%/stock.jpg`.
 * To get the parsed contents of a page, pass its unique ID to the `content`
   filter (e.g. `{{ "sub/page"|content }}`).
