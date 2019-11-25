@@ -1,12 +1,10 @@
 <?php
 /**
- * CMS Pico - Integration of Pico within your files to create websites.
+ * CMS Pico - Create websites using Pico CMS for Nextcloud.
  *
- * This file is licensed under the Affero General Public License version 3 or
- * later. See the COPYING file.
+ * @copyright Copyright (c) 2017, Maxence Lange (<maxence@artificial-owl.com>)
+ * @copyright Copyright (c) 2019, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
  *
- * @author Maxence Lange <maxence@artificial-owl.com>
- * @copyright 2017
  * @license GNU AGPL version 3 or any later version
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,24 +19,59 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
  */
+
+declare(strict_types=1);
 
 namespace OCA\CMSPico\Service;
 
 use OCA\CMSPico\AppInfo\Application;
 use OCP\IConfig;
-use OCP\Util;
 
-class ConfigService {
+class ConfigService
+{
+	/** @var string */
+	const SYSTEM_TEMPLATES = 'system_templates';
 
+	/** @var string */
 	const CUSTOM_TEMPLATES = 'custom_templates';
 
+	/** @var string */
+	const SYSTEM_THEMES = 'system_themes';
+
+	/** @var string */
 	const CUSTOM_THEMES = 'custom_themes';
 
+	/** @var string */
+	const THEMES_ETAG = 'themes_etag';
+
+	/** @var string */
+	const SYSTEM_PLUGINS = 'system_plugins';
+
+	/** @var string */
+	const CUSTOM_PLUGINS = 'custom_plugins';
+
+	/** @var string */
+	const PLUGINS_ETAG = 'plugins_etag';
+
+	/** @var string */
+	const LIMIT_GROUPS = 'limit_groups';
+
+	/** @var string */
+	const LINK_MODE = 'link_mode';
+
+	/** @var array<string,mixed> */
 	private $defaults = [
-		self::CUSTOM_THEMES    => '',
-		self::CUSTOM_TEMPLATES => ''
+		self::SYSTEM_TEMPLATES => '',
+		self::CUSTOM_TEMPLATES => '',
+		self::SYSTEM_THEMES => '',
+		self::CUSTOM_THEMES => '',
+		self::THEMES_ETAG => '',
+		self::SYSTEM_PLUGINS => '',
+		self::CUSTOM_PLUGINS => '',
+		self::PLUGINS_ETAG => '',
+		self::LIMIT_GROUPS => '',
+		self::LINK_MODE => WebsitesService::LINK_MODE_LONG,
 	];
 
 	/** @var IConfig */
@@ -47,151 +80,95 @@ class ConfigService {
 	/** @var string */
 	private $userId;
 
-	/** @var MiscService */
-	private $miscService;
-
 	/**
 	 * ConfigService constructor.
 	 *
-	 * @param IConfig $config
-	 * @param string $userId
-	 * @param MiscService $miscService
+	 * @param IConfig     $config
+	 * @param string      $userId
 	 */
-	public function __construct(IConfig $config, $userId, MiscService $miscService) {
+	public function __construct(IConfig $config, $userId)
+	{
 		$this->config = $config;
 		$this->userId = $userId;
-		$this->miscService = $miscService;
 	}
 
-
 	/**
-	 * Get a value by key
-	 *
 	 * @param string $key
 	 *
-	 * @return string
+	 * @return mixed
 	 */
-	public function getAppValue($key) {
+	public function getAppValue(string $key)
+	{
 		$defaultValue = $this->getDefaultValue($key);
-
 		return $this->config->getAppValue(Application::APP_NAME, $key, $defaultValue);
 	}
 
-
 	/**
-	 * Set a value by key
-	 *
 	 * @param string $key
-	 * @param string $value
-	 *
-	 * @return void
+	 * @param mixed $value
 	 */
-	public function setAppValue($key, $value) {
+	public function setAppValue(string $key, $value)
+	{
 		$this->config->setAppValue(Application::APP_NAME, $key, $value);
 	}
 
-
 	/**
-	 * remove a key
-	 *
 	 * @param string $key
-	 *
-	 * @return string
 	 */
-	public function deleteAppValue($key) {
-		return $this->config->deleteAppValue(Application::APP_NAME, $key);
+	public function deleteAppValue(string $key)
+	{
+		$this->config->deleteAppValue(Application::APP_NAME, $key);
 	}
 
-
 	/**
-	 * Get a user value by key
+	 * @param string      $key
+	 * @param string|null $userId
 	 *
-	 * @param string $key
-	 *
-	 * @return string
+	 * @return mixed
 	 */
-	public function getUserValue($key) {
+	public function getUserValue(string $key, string $userId = null)
+	{
 		$defaultValue = $this->getDefaultValue($key);
-
-		return $this->config->getUserValue(
-			$this->userId, Application::APP_NAME, $key, $defaultValue
-		);
+		return $this->config->getUserValue($userId ?? $this->userId, Application::APP_NAME, $key, $defaultValue);
 	}
-
 
 	/**
-	 * Set a user value by key
-	 *
-	 * @param string $key
-	 * @param string $value
-	 *
-	 * @return string
+	 * @param string      $key
+	 * @param mixed       $value
+	 * @param string|null $userId
 	 */
-	public function setUserValue($key, $value) {
-		return $this->config->setUserValue($this->userId, Application::APP_NAME, $key, $value);
+	public function setUserValue(string $key, $value, string $userId = null)
+	{
+		$this->config->setUserValue($userId ?? $this->userId, Application::APP_NAME, $key, $value);
 	}
-
 
 	/**
-	 * Get a user value by key and user
-	 *
-	 * @param string $userId
-	 * @param string $key
-	 *
-	 * @return string
+	 * @param string      $key
+	 * @param string|null $userId
 	 */
-	public function getValueForUser($userId, $key) {
-		return $this->config->getUserValue($userId, Application::APP_NAME, $key);
+	public function deleteUserValue(string $key, string $userId = null)
+	{
+		$this->config->deleteUserValue($userId ?? $this->userId, Application::APP_NAME, $key);
 	}
-
 
 	/**
-	 * Set a user value by key
-	 *
-	 * @param string $userId
 	 * @param string $key
-	 * @param string $value
+	 * @param mixed  $defaultValue
 	 *
-	 * @return string
+	 * @return mixed
 	 */
-	public function setValueForUser($userId, $key, $value) {
-		return $this->config->setUserValue($userId, Application::APP_NAME, $key, $value);
+	public function getSystemValue(string $key, $defaultValue = '')
+	{
+		return $this->config->getSystemValue($key, $defaultValue);
 	}
-
 
 	/**
 	 * @param string $key
 	 *
-	 * @return string
+	 * @return mixed
 	 */
-	private function getDefaultValue($key) {
-		if (array_key_exists($key, $this->defaults)) {
-			return (string)$this->defaults[$key];
-		}
-
-		return '';
-	}
-
-
-	public function getSystemValue($key, $default) {
-		return $this->config->getSystemValue($key, $default);
-	}
-
-	/**
-	 * return the cloud version.
-	 * if $complete is true, return a string x.y.z
-	 *
-	 * @param boolean $complete
-	 *
-	 * @return string|integer
-	 */
-	public function getCloudVersion($complete = false) {
-		$ver = Util::getVersion();
-
-		if ($complete) {
-			return implode('.', $ver);
-		}
-
-		return $ver[0];
+	private function getDefaultValue(string $key)
+	{
+		return $this->defaults[$key] ?? '';
 	}
 }

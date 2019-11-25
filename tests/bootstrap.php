@@ -1,12 +1,10 @@
 <?php
 /**
- * CMS Pico - Integration of Pico within your files to create websites.
+ * CMS Pico - Create websites using Pico CMS for Nextcloud.
  *
- * This file is licensed under the Affero General Public License version 3 or
- * later. See the COPYING file.
+ * @copyright Copyright (c) 2017, Maxence Lange (<maxence@artificial-owl.com>)
+ * @copyright Copyright (c) 2019, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
  *
- * @author Maxence Lange <maxence@artificial-owl.com>
- * @copyright 2017
  * @license GNU AGPL version 3 or any later version
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,22 +19,16 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 if (!defined('PHPUNIT_RUN')) {
 	define('PHPUNIT_RUN', 1);
 }
 
-require_once __DIR__ . '/../../../lib/base.php';
+require_once(__DIR__ . '/../../../lib/base.php');
 
 \OC::$loader->addValidRoot(OC::$SERVERROOT . '/tests');
 
 \OC_App::loadApp('cms_pico');
 
-if (!class_exists('PHPUnit_Framework_TestCase')) {
-	require_once('PHPUnit/Autoload.php');
-}
-
 OC_Hook::clear();
-

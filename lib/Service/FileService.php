@@ -1,12 +1,10 @@
 <?php
 /**
- * CMS Pico - Integration of Pico within your files to create websites.
+ * CMS Pico - Create websites using Pico CMS for Nextcloud.
  *
- * This file is licensed under the Affero General Public License version 3 or
- * later. See the COPYING file.
+ * @copyright Copyright (c) 2017, Maxence Lange (<maxence@artificial-owl.com>)
+ * @copyright Copyright (c) 2019, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
  *
- * @author Maxence Lange <maxence@artificial-owl.com>
- * @copyright 2017
  * @license GNU AGPL version 3 or any later version
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,22 +19,28 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
  */
+
+declare(strict_types=1);
 
 namespace OCA\CMSPico\Service;
 
-use DirectoryIterator;
-use Exception;
 use OCA\CMSPico\AppInfo\Application;
-use OCP\Files\Folder;
+use OCA\CMSPico\Files\FolderInterface;
+use OCA\CMSPico\Files\LocalFolder;
+use OCA\CMSPico\Files\StorageFolder;
+use OCP\Files\InvalidPathException;
 use OCP\Files\IRootFolder;
 use OCP\Files\NotFoundException;
+use OCP\Files\NotPermittedException;
 
-class FileService {
+class FileService
+{
+	/** @var string */
+	const APPDATA_PUBLIC = 'appdata_public';
 
-
-	const INSTALL_DIR = __DIR__ . '/../../Pico/';
+	/** @var string */
+	const APPDATA_SYSTEM = 'appdata';
 
 	/** @var IRootFolder */
 	private $rootFolder;
@@ -44,188 +48,157 @@ class FileService {
 	/** @var ConfigService */
 	private $configService;
 
-	/** @var MiscService */
-	private $miscService;
+	/** @var FolderInterface */
+	private $publicFolder;
 
-	/** @var Folder */
+	/** @var FolderInterface */
+	private $systemFolder;
+
+	/** @var FolderInterface */
 	private $appDataFolder;
 
-
 	/**
-	 * ConfigService constructor.
+	 * FileService constructor.
 	 *
 	 * @param IRootFolder $rootFolder
 	 * @param ConfigService $configService
-	 * @param MiscService $miscService
 	 */
-	public function __construct(
-		IRootFolder $rootFolder, ConfigService $configService, MiscService $miscService
-	) {
+	public function __construct(IRootFolder $rootFolder, ConfigService $configService)
+	{
 		$this->rootFolder = $rootFolder;
 		$this->configService = $configService;
-		$this->miscService = $miscService;
 	}
-
-
-//	public function getAppDataFolderContent($dir) {
-	public function getDirectoriesFromAppDataFolder($dir) {
-// do we still use DirectoryIterator as files are in DB ?
-		$all = [];
-
-		foreach (new DirectoryIterator($this->getAppDataFolderPath($dir, true)) as $file) {
-			if (!$file->isDir() || substr($file->getFilename(), 0, 1) === '.') {
-				continue;
-			}
-
-			$all[] = $file->getFilename();
-		}
-
-		return $all;
-	}
-
 
 	/**
-	 * @param string $base
-	 * @param string $dir
+	 * @param string|null $folderName
 	 *
-	 * @return string[]
+	 * @return FolderInterface
+	 * @throws InvalidPathException
+	 * @throws NotPermittedException
 	 */
-	public function getSourceFiles($base, $dir = '') {
-
-		$base = MiscService::endSlash($base);
-		$dir = MiscService::endSlash($dir);
-
-		$files = [];
-		foreach (new DirectoryIterator($base . $dir) as $file) {
-
-			if (substr($file->getFilename(), 0, 1) === '.') {
-				continue;
-			}
-
-			if ($file->isDir()) {
-				$files[] = $dir . $file->getFilename() . '/';
-				$files = array_merge($files, $this->getSourceFiles($base, $dir . $file->getFilename()));
-				continue;
-			}
-
-			$files[] = $dir . $file->getFilename();
+	public function getPublicFolder(string $folderName = null): FolderInterface
+	{
+		if ($this->publicFolder === null) {
+			$publicFolderBasePath = Application::getAppPath() . '/' . self::APPDATA_PUBLIC;
+			$this->publicFolder = new LocalFolder('/', $publicFolderBasePath);
 		}
 
-		return $files;
+		if ($folderName) {
+			try {
+				return $this->publicFolder->getFolder($folderName);
+			} catch (NotFoundException $e) {
+				return $this->publicFolder->newFolder($folderName);
+			}
+		}
+
+		return $this->publicFolder;
 	}
 
-
 	/**
-	 * // TODO: this function should use File from nc, not read on the filesystem
+	 * @param string|null $folderName
 	 *
-	 * @param string $base
-	 * @param string $dir
-	 *
-	 * @return string[]
+	 * @return FolderInterface
+	 * @throws InvalidPathException
+	 * @throws NotPermittedException
 	 */
-	public function getAppDataFiles($base, $dir = '') {
-
-		$base = MiscService::endSlash($base);
-		$dir = MiscService::endSlash($dir);
-
-		$files = [];
-		foreach (new DirectoryIterator($base . $dir) as $file) {
-
-			if (substr($file->getFilename(), 0, 1) === '.') {
-				continue;
-			}
-
-			if ($file->isDir()) {
-				$files[] = $dir . $file->getFilename() . '/';
-				$files = array_merge($files, $this->getSourceFiles($base, $dir . $file->getFilename()));
-				continue;
-			}
-
-			$files[] = $dir . $file->getFilename();
+	public function getSystemFolder(string $folderName = null): FolderInterface
+	{
+		if ($this->systemFolder === null) {
+			$systemFolderBasePath = Application::getAppPath() . '/' . self::APPDATA_SYSTEM;
+			$this->systemFolder = new LocalFolder('/', $systemFolderBasePath);
 		}
 
-		return $files;
-	}
-
-
-	/**
-	 * @param string $dir
-	 *
-	 * @param bool $absolute
-	 *
-	 * @return string
-	 */
-	public function getAppDataFolderPath($dir, $absolute = false) {
-
-		$appNode = $this->getAppDataFolder();
-
-		try {
-			$appNode->get($dir);
-		} catch (NotFoundException $e) {
-			$this->createAppDataFolder($appNode, $dir);
-		}
-
-		$appPath = '';
-		if ($absolute) {
-			$dataDir = $this->configService->getSystemValue('datadirectory', null);
-			$appPath .= MiscService::endSlash($dataDir);
-		}
-
-		$appPath .= MiscService::endSlash($appNode->getInternalPath());
-		$appPath .= MiscService::endSlash($dir);
-
-		return $appPath;
-	}
-
-
-	/**
-	 * Create Appdata Subfolder and duplicate the content from apps/cms_pico/Pico/
-	 *
-	 * @param Folder $appNode
-	 * @param string $dir
-	 */
-	private function createAppDataFolder(Folder $appNode, $dir) {
-		$appFolder = $appNode->newFolder($dir);
-
-		$files = $this->getSourceFiles(self::INSTALL_DIR . $dir);
-		foreach ($files as $file) {
-			if (substr($file, -1) === '/') {
-				$appFolder->newFolder($file);
-			} else {
-				$newFile = $appFolder->newFile($file);
-				$newFile->putContent(file_get_contents(self::INSTALL_DIR . $dir . '/' . $file));
+		if ($folderName) {
+			try {
+				return $this->systemFolder->getFolder($folderName);
+			} catch (NotFoundException $e) {
+				return $this->systemFolder->newFolder($folderName);
 			}
 		}
+
+		return $this->systemFolder;
 	}
 
-
 	/**
-	 * Get AppData Folder for this app, create it otherwise.
+	 * @param string|null $folderName
 	 *
-	 * @return Folder
+	 * @return FolderInterface
+	 * @throws InvalidPathException
+	 * @throws NotPermittedException
 	 */
-	private function getAppDataFolder() {
+	public function getAppDataFolder(string $folderName = null): FolderInterface
+	{
 		if ($this->appDataFolder === null) {
+			$baseFolderName = 'appdata_' . $this->configService->getSystemValue('instanceid');
+			$appDataFolderName = Application::APP_NAME;
 
-			$instanceId = $this->configService->getSystemValue('instanceid', null);
-			$name = 'appdata_' . $instanceId;
+			$rootFolder = new StorageFolder($this->rootFolder);
 
-			/** @var Folder $globalAppDataFolder */
 			try {
-				$globalAppDataFolder = $this->rootFolder->get($name);
+				$baseFolder = $rootFolder->getFolder($baseFolderName);
 			} catch (NotFoundException $e) {
-				$globalAppDataFolder = $this->rootFolder->newFolder($name);
+				$baseFolder = $rootFolder->newFolder($baseFolderName);
 			}
 
 			try {
-				$this->appDataFolder = $globalAppDataFolder->get(Application::APP_NAME);
+				$appDataFolder = $baseFolder->getFolder($appDataFolderName);
 			} catch (NotFoundException $e) {
-				$this->appDataFolder = $globalAppDataFolder->newFolder(Application::APP_NAME);
+				$appDataFolder = $baseFolder->newFolder($appDataFolderName);
+			}
+
+			$this->appDataFolder = $appDataFolder->fakeRoot();
+		}
+
+		if ($folderName) {
+			try {
+				return $this->appDataFolder->getFolder($folderName);
+			} catch (NotFoundException $e) {
+				return $this->appDataFolder->newFolder($folderName);
 			}
 		}
 
 		return $this->appDataFolder;
 	}
 
+	/**
+	 * @param string|null $folderName
+	 *
+	 * @return string
+	 */
+	public function getAppDataFolderPath(string $folderName = null): string
+	{
+		$dataFolderPath = $this->configService->getSystemValue('datadirectory', \OC::$SERVERROOT . '/data');
+		$baseAppDataFolderName = 'appdata_' . $this->configService->getSystemValue('instanceid');
+		$appDataFolderPath = Application::APP_NAME . ($folderName ? '/' . $folderName : '');
 
+		return rtrim($dataFolderPath, '/') . '/' . $baseAppDataFolderName . '/' . $appDataFolderPath . '/';
+	}
+
+	/**
+	 * @return void
+	 */
+	public function syncAppDataFolder()
+	{
+		$baseFolderName = 'appdata_' . $this->configService->getSystemValue('instanceid');
+		$appDataFolderName = Application::APP_NAME;
+
+		$rootFolder = new StorageFolder($this->rootFolder);
+		$rootFolder->sync(FolderInterface::SYNC_SHALLOW);
+
+		try {
+			$baseFolder = $rootFolder->getFolder($baseFolderName);
+			$baseFolder->sync(FolderInterface::SYNC_SHALLOW);
+		} catch (NotFoundException $e) {
+			$baseFolder = $rootFolder->newFolder($baseFolderName);
+		}
+
+		try {
+			$appDataFolder = $baseFolder->getFolder($appDataFolderName);
+			$appDataFolder->sync(FolderInterface::SYNC_RECURSIVE);
+		} catch (NotFoundException $e) {
+			$appDataFolder = $baseFolder->newFolder($appDataFolderName);
+		}
+
+		$this->appDataFolder = $appDataFolder->fakeRoot();
+	}
 }

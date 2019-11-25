@@ -1,12 +1,10 @@
 <?php
 /**
- * CMS Pico - Integration of Pico within your files to create websites.
+ * CMS Pico - Create websites using Pico CMS for Nextcloud.
  *
- * This file is licensed under the Affero General Public License version 3 or
- * later. See the COPYING file.
+ * @copyright Copyright (c) 2017, Maxence Lange (<maxence@artificial-owl.com>)
+ * @copyright Copyright (c) 2019, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
  *
- * @author Maxence Lange <maxence@artificial-owl.com>
- * @copyright 2017
  * @license GNU AGPL version 3 or any later version
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,21 +19,19 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
  */
+
+declare(strict_types=1);
 
 namespace OCA\CMSPico\Model;
 
-use OCA\CMSPico\Service\MiscService;
-
-class WebsiteCore implements \JsonSerializable {
-
+class WebsiteCore implements \JsonSerializable
+{
+	/** @var int */
 	const TYPE_PUBLIC = 1;
+
+	/** @var int */
 	const TYPE_PRIVATE = 2;
-
-	const SITE_LENGTH_MIN = 3;
-	const NAME_LENGTH_MIN = 5;
-
 
 	/** @var int */
 	private $id;
@@ -70,76 +66,43 @@ class WebsiteCore implements \JsonSerializable {
 	/** @var string */
 	private $viewer;
 
+	/** @var bool */
+	private $proxyRequest;
+
 	/** @var string */
 	private $templateSource;
 
-
-	public function __construct($data = '') {
-
+	/**
+	 * WebsiteCore constructor.
+	 *
+	 * @param array|string|null $data
+	 */
+	public function __construct($data = null)
+	{
 		if (is_array($data)) {
 			$this->fromArray($data);
-
-			return;
+		} elseif ($data !== null) {
+			$this->fromJSON($data);
 		}
-
-		$this->fromJSON($data);
 	}
-
 
 	/**
 	 * @param int $id
 	 *
 	 * @return $this
 	 */
-	public function setId($id) {
-		$this->id = (int)$id;
-
+	public function setId(int $id): self
+	{
+		$this->id = $id;
 		return $this;
 	}
 
 	/**
 	 * @return int
 	 */
-	public function getId() {
+	public function getId(): int
+	{
 		return $this->id;
-	}
-
-
-	/**
-	 * @param string $name
-	 *
-	 * @return $this
-	 */
-	public function setName($name) {
-		$this->name = $name;
-
-		return $this;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getName() {
-		return $this->name;
-	}
-
-
-	/**
-	 * @param $theme
-	 *
-	 * @return $this
-	 */
-	public function setTheme($theme) {
-		$this->theme = $theme;
-
-		return $this;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getTheme() {
-		return $this->theme;
 	}
 
 	/**
@@ -147,57 +110,99 @@ class WebsiteCore implements \JsonSerializable {
 	 *
 	 * @return $this
 	 */
-	public function setUserId($userId) {
+	public function setUserId(string $userId): self
+	{
 		$this->userId = $userId;
-
 		return $this;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getUserId() {
+	public function getUserId(): string
+	{
 		return $this->userId;
 	}
 
+	/**
+	 * @param string $name
+	 *
+	 * @return $this
+	 */
+	public function setName(string $name): self
+	{
+		$this->name = $name;
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getName(): string
+	{
+		return $this->name;
+	}
 
 	/**
 	 * @param string $site
 	 *
 	 * @return $this
 	 */
-	public function setSite($site) {
+	public function setSite(string $site): self
+	{
 		$this->site = $site;
-
 		return $this;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getSite() {
+	public function getSite(): string
+	{
 		return $this->site;
 	}
 
+	/**
+	 * @param string $theme
+	 *
+	 * @return $this
+	 */
+	public function setTheme(string $theme): self
+	{
+		$this->theme = $theme;
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getTheme(): string
+	{
+		return $this->theme;
+	}
 
 	/**
 	 * @param int $type
 	 *
 	 * @return $this
 	 */
-	public function setType($type) {
-		$this->type = $type;
+	public function setType(int $type): self
+	{
+		if (!in_array($type, [ self::TYPE_PUBLIC, self::TYPE_PRIVATE ], true)) {
+			throw new \UnexpectedValueException();
+		}
 
+		$this->type = $type;
 		return $this;
 	}
 
 	/**
 	 * @return int
 	 */
-	public function getType() {
+	public function getType(): int
+	{
 		return $this->type;
 	}
-
 
 	/**
 	 * @param string $key
@@ -205,9 +210,9 @@ class WebsiteCore implements \JsonSerializable {
 	 *
 	 * @return $this
 	 */
-	public function setOption($key, $value) {
+	public function setOption(string $key, string $value): self
+	{
 		$this->options[$key] = $value;
-
 		return $this;
 	}
 
@@ -216,17 +221,18 @@ class WebsiteCore implements \JsonSerializable {
 	 *
 	 * @return string
 	 */
-	public function getOption($key) {
-		return (string)MiscService::get($this->options, $key, '');
+	public function getOption($key): string
+	{
+		return $this->options[$key] ?? '';
 	}
-
 
 	/**
 	 * @param array|string $options
 	 *
 	 * @return $this
 	 */
-	public function setOptions($options) {
+	public function setOptions($options): self
+	{
 		if (!is_array($options)) {
 			$options = json_decode($options, true);
 		}
@@ -236,17 +242,16 @@ class WebsiteCore implements \JsonSerializable {
 		}
 
 		$this->options = $options;
-
 		return $this;
 	}
-
 
 	/**
 	 * @param bool $json
 	 *
-	 * @return array
+	 * @return array|string
 	 */
-	public function getOptions($json = false) {
+	public function getOptions(bool $json = false)
+	{
 		if ($json === true) {
 			return json_encode($this->options);
 		}
@@ -254,153 +259,183 @@ class WebsiteCore implements \JsonSerializable {
 		return $this->options;
 	}
 
-
 	/**
 	 * @param string $path
 	 *
 	 * @return $this
 	 */
-	public function setPath($path) {
-		$this->path = MiscService::endSlash($path);
-
+	public function setPath(string $path): self
+	{
+		$this->path = $path ? rtrim($path, '/') . '/' : '';
 		return $this;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getPath() {
+	public function getPath(): string
+	{
 		return $this->path;
 	}
-
-
-	/**
-	 * @param string $page
-	 *
-	 * @return $this
-	 */
-	public function setPage($page) {
-		$this->page = $page;
-
-		return $this;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getPage() {
-		return $this->page;
-	}
-
 
 	/**
 	 * @param int $creation
 	 *
 	 * @return $this
 	 */
-	public function setCreation($creation) {
+	public function setCreation(int $creation): self
+	{
 		$this->creation = $creation;
-
 		return $this;
 	}
 
 	/**
 	 * @return int
 	 */
-	public function getCreation() {
+	public function getCreation(): int
+	{
 		return $this->creation;
 	}
-
-
-	/**
-	 * @param string $viewer
-	 *
-	 * @return $this
-	 */
-	public function setViewer($viewer) {
-		$this->viewer = $viewer;
-
-		return $this;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getViewer() {
-		return $this->viewer;
-	}
-
 
 	/**
 	 * @param string $source
 	 *
 	 * @return $this
 	 */
-	public function setTemplateSource($source) {
+	public function setTemplateSource(string $source): self
+	{
 		$this->templateSource = $source;
-
 		return $this;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getTemplateSource() {
+	public function getTemplateSource(): string
+	{
 		return $this->templateSource;
 	}
 
+	/**
+	 * @param string $page
+	 *
+	 * @return $this
+	 */
+	public function setPage(string $page): self
+	{
+		$this->page = $page;
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getPage(): string
+	{
+		return $this->page;
+	}
+
+	/**
+	 * @param string $viewer
+	 *
+	 * @return $this
+	 */
+	public function setViewer(string $viewer): self
+	{
+		$this->viewer = $viewer;
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getViewer(): string
+	{
+		return $this->viewer;
+	}
+
+	/**
+	 * @param bool $proxyRequest
+	 *
+	 * @return $this
+	 */
+	public function setProxyRequest(bool $proxyRequest): self
+	{
+		$this->proxyRequest = $proxyRequest;
+		return $this;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function getProxyRequest(): bool
+	{
+		return $this->proxyRequest;
+	}
 
 	/**
 	 * @return array
 	 */
-	public function jsonSerialize() {
-		return array(
-			'id'       => $this->getId(),
-			'name'     => $this->getName(),
-			'user_id'  => $this->getUserId(),
-			'site'     => $this->getSite(),
-			'page'     => $this->getPage(),
-			'theme'    => $this->getTheme(),
-			'type'     => $this->getType(),
-			'options'  => $this->getOptions(),
-			'path'     => $this->getPath(),
-			'creation' => $this->getCreation()
-		);
+	public function jsonSerialize(): array
+	{
+		return [
+			'id' => $this->getId(),
+			'user_id' => $this->getUserId(),
+			'name' => $this->getName(),
+			'site' => $this->getSite(),
+			'theme' => $this->getTheme(),
+			'type' => $this->getType(),
+			'options' => $this->getOptions(),
+			'path' => $this->getPath(),
+			'creation' => $this->getCreation(),
+			'template' => $this->getTemplateSource(),
+			'page' => $this->getPage(),
+		];
 	}
-
 
 	/**
-	 * @param array $arr
+	 * @param array $data
 	 *
-	 * @return bool
+	 * @throws \UnexpectedValueException
 	 */
-	public function fromArray($arr) {
-		if (!is_array($arr)) {
-			return false;
+	public function fromArray(array $data)
+	{
+		if (!isset($data['user_id']) || !isset($data['name']) || !isset($data['site']) || !isset($data['path'])) {
+			throw new \UnexpectedValueException();
 		}
 
-		MiscService::mustContains($arr, ['name', 'user_id', 'site', 'type', 'path']);
+		$options = [];
+		if (!empty($data['options'])) {
+			$options = is_array($data['options']) ? $data['options'] : json_decode($data['options'], true);
+		}
 
-		$this->setId((int)MiscService::get($arr, 'id'))
-			 ->setName($arr['name'])
-			 ->setUserId($arr['user_id'])
-			 ->setSite($arr['site'])
-			 ->setPage(MiscService::get($arr, 'page'))
-			 ->setTheme(MiscService::get($arr, 'theme', 'default'))
-			 ->setType($arr['type'])
-			 ->setOptions(MiscService::get($arr, 'options'))
-			 ->setPath($arr['path'])
-			 ->setCreation((int)MiscService::get($arr, 'creation'));
+		$creation = 0;
+		if (!empty($data['creation'])) {
+			$creation = is_numeric($data['creation']) ? (int) $data['creation'] : strtotime($data['creation']);
+		}
 
-		return true;
+		$this->setId(isset($data['id']) ? (int) $data['id'] : 0)
+			->setUserId($data['user_id'])
+			->setName($data['name'])
+			->setSite($data['site'])
+			->setTheme($data['theme'] ?? 'default')
+			->setType(isset($data['type']) ? (int) $data['type'] : self::TYPE_PUBLIC)
+			->setOptions($options)
+			->setPath($data['path'])
+			->setCreation($creation)
+			->setTemplateSource($data['template'] ?? '')
+			->setPage($data['page'] ?? '')
+			->setViewer($data['viewer'] ?? '')
+			->setProxyRequest(!empty($data['proxyRequest']));
 	}
-
 
 	/**
 	 * @param string $json
+	 *
+	 * @throws \UnexpectedValueException
 	 */
-	public function fromJSON($json) {
+	public function fromJSON(string $json)
+	{
 		$this->fromArray(json_decode($json, true));
 	}
-
 }

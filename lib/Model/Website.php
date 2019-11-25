@@ -1,12 +1,10 @@
 <?php
 /**
- * CMS Pico - Integration of Pico within your files to create websites.
+ * CMS Pico - Create websites using Pico CMS for Nextcloud.
  *
- * This file is licensed under the Affero General Public License version 3 or
- * later. See the COPYING file.
+ * @copyright Copyright (c) 2017, Maxence Lange (<maxence@artificial-owl.com>)
+ * @copyright Copyright (c) 2019, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
  *
- * @author Maxence Lange <maxence@artificial-owl.com>
- * @copyright 2017
  * @license GNU AGPL version 3 or any later version
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,279 +19,398 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
  */
+
+declare(strict_types=1);
 
 namespace OCA\CMSPico\Model;
 
-use Exception;
-use OC\Files\View;
 use OCA\CMSPico\AppInfo\Application;
-use OCA\CMSPico\Exceptions\CheckCharsException;
-use OCA\CMSPico\Exceptions\ContentDirIsNotLocalException;
-use OCA\CMSPico\Exceptions\MinCharsException;
-use OCA\CMSPico\Exceptions\PathContainSpecificFoldersException;
-use OCA\CMSPico\Exceptions\UserIsNotOwnerException;
-use OCA\CMSPico\Exceptions\WebpageDoesNotExistException;
-use OCA\CMSPico\Exceptions\WebpageIsNotReadableException;
-use OCA\CMSPico\Exceptions\WebsiteIsPrivateException;
+use OCA\CMSPico\Exceptions\TemplateNotCompatibleException;
+use OCA\CMSPico\Exceptions\TemplateNotFoundException;
+use OCA\CMSPico\Exceptions\ThemeNotCompatibleException;
+use OCA\CMSPico\Exceptions\ThemeNotFoundException;
+use OCA\CMSPico\Exceptions\WebsiteForeignOwnerException;
+use OCA\CMSPico\Exceptions\WebsiteInvalidDataException;
+use OCA\CMSPico\Exceptions\WebsiteInvalidFilesystemException;
+use OCA\CMSPico\Exceptions\WebsiteInvalidOwnerException;
+use OCA\CMSPico\Exceptions\WebsiteNotPermittedException;
+use OCA\CMSPico\Files\StorageFile;
+use OCA\CMSPico\Files\StorageFolder;
 use OCA\CMSPico\Service\MiscService;
-use OCP\Files\IRootFolder;
+use OCA\CMSPico\Service\TemplatesService;
+use OCA\CMSPico\Service\ThemesService;
+use OCA\CMSPico\Service\WebsitesService;
+use OCP\Files\Folder as OCFolder;
+use OCP\Files\InvalidPathException;
+use OCP\Files\Node as OCNode;
 use OCP\Files\NotFoundException;
+use OCP\Files\NotPermittedException;
+use OCP\IConfig;
+use OCP\IGroupManager;
 use OCP\IL10N;
+use OCP\IURLGenerator;
+use OCP\IUserManager;
 
-class Website extends WebsiteCore {
-
-
-	const TYPE_PUBLIC = 1;
-	const TYPE_PRIVATE = 2;
-
+class Website extends WebsiteCore
+{
+	/** @var int */
 	const SITE_LENGTH_MIN = 3;
+
+	/** @var int */
+	const SITE_LENGTH_MAX = 255;
+
+	/** @var string */
+	const SITE_REGEX = '^[a-z][a-z0-9_-]+[a-z0-9]$';
+
+	/** @var int */
 	const NAME_LENGTH_MIN = 3;
+
+	/** @var int */
+	const NAME_LENGTH_MAX = 255;
+
+	/** @var IConfig */
+	private $config;
 
 	/** @var IL10N */
 	private $l10n;
 
-	/** @var IRootFolder */
-	private $rootFolder;
+	/** @var IUserManager */
+	private $userManager;
 
-	/** @var View */
-	private $ownerView;
+	/** @var IGroupManager */
+	private $groupManager;
 
+	/** @var IURLGenerator */
+	private $urlGenerator;
+
+	/** @var WebsitesService */
+	private $websitesService;
+
+	/** @var ThemesService */
+	private $themesService;
+
+	/** @var TemplatesService */
+	private $templatesService;
+
+	/** @var MiscService */
+	private $miscService;
+
+	/** @var StorageFolder */
+	private $folder;
 
 	/**
 	 * Website constructor.
 	 *
-	 * @param string $data
+	 * @param array|string|null $data
 	 */
-	public function __construct($data = '') {
+	public function __construct($data = null)
+	{
+		$this->config = \OC::$server->getConfig();
 		$this->l10n = \OC::$server->getL10N(Application::APP_NAME);
-		$this->rootFolder = \OC::$server->getRootFolder();
+		$this->userManager = \OC::$server->getUserManager();
+		$this->groupManager = \OC::$server->getGroupManager();
+		$this->urlGenerator = \OC::$server->getURLGenerator();
+		$this->websitesService = \OC::$server->query(WebsitesService::class);
+		$this->themesService = \OC::$server->query(ThemesService::class);
+		$this->templatesService = \OC::$server->query(TemplatesService::class);
+		$this->miscService = \OC::$server->query(MiscService::class);
 
 		parent::__construct($data);
 	}
 
-
 	/**
-	 *
-	 */
-	private function initSiteOwnerView() {
-
-		if ($this->ownerView !== null) {
-			return;
-		}
-
-		$this->ownerView = new View($this->getUserId() . '/files/');
-	}
-
-
-	/**
-	 * @param string $path
-	 * @param bool $end
-	 *
 	 * @return string
 	 */
-	public function getAbsolutePath($path = '', $end = true) {
-		if ($path === '') {
-			$path = $this->getPath();
-		}
-
-		$this->initSiteOwnerView();
-		$path = $this->ownerView->getLocalFile($path);
-
-		if ($end === false) {
-			return $path;
-		}
-
-		return MiscService::endSlash($path);
+	public function getTimeZone(): string
+	{
+		$serverTimeZone = date_default_timezone_get() ?: 'UTC';
+		return $this->config->getUserValue($this->getUserId(), 'core', 'timezone', $serverTimeZone);
 	}
-
-
-	/**
-	 * @param string $local
-	 *
-	 * @throws WebpageIsNotReadableException
-	 */
-	private function hasToBeReadableByViewer($local = '') {
-
-		$fileId = $this->getPageFileId($local);
-		$viewerFiles = $this->rootFolder->getUserFolder($this->getViewer())
-										->getById($fileId);
-
-		foreach ($viewerFiles as $file) {
-			if ($file->isReadable()) {
-				return;
-			}
-		}
-
-		throw new WebpageIsNotReadableException();
-	}
-
-
-	/**
-	 * @param string $local
-	 *
-	 * @return int
-	 * @throws WebpageDoesNotExistException
-	 */
-	public function getPageFileId($local = '') {
-
-		try {
-			$ownerFile = $this->rootFolder->getUserFolder($this->getUserId())
-										  ->get($this->getPath() . $local);
-
-			return $ownerFile->getId();
-		} catch (NotFoundException $e) {
-			throw new WebpageDoesNotExistException($this->l10n->t('Webpage does not exist'));
-		}
-	}
-
-
-	/**
-	 * @param string $userId
-	 *
-	 * @throws UserIsNotOwnerException
-	 */
-	public function hasToBeOwnedBy($userId) {
-		if ($this->getUserId() !== $userId) {
-			throw new UserIsNotOwnerException($this->l10n->t('You are not the owner of this website'));
-		}
-	}
-
 
 	/**
 	 * @param string $path
+	 * @param array  $meta
 	 *
-	 * @throws ContentDirIsNotLocalException
+	 * @throws InvalidPathException
+	 * @throws WebsiteInvalidFilesystemException
+	 * @throws WebsiteNotPermittedException
+	 * @throws NotPermittedException
 	 */
-	public function contentMustBeLocal($path) {
-
-		try {
-			$this->pathCantContainSpecificFolders($path);
-			if (strpos($path, $this->getAbsolutePath()) !== 0) {
-				throw new PathContainSpecificFoldersException();
-			}
-
-		} catch (PathContainSpecificFoldersException $e) {
-			throw new ContentDirIsNotLocalException($this->l10n->t('Content Directory is not valid.'));
-		}
-	}
-
-
-	/**
-	 * @param string $path
-	 *
-	 * @return bool|string
-	 */
-	public function getRelativePath($path) {
-		if (substr($path, 0, 1) !== '/') {
-			return $path;
-		}
-
-		return substr($path, strlen($this->getAbsolutePath()));
-	}
-
-
-	/**
-	 * @param string $path
-	 * @param array $meta
-	 *
-	 * @throws WebsiteIsPrivateException
-	 */
-	public function viewerMustHaveAccess($path, $meta = []) {
-
-		try {
-			if ($this->pageIsPublic($meta)) {
+	public function assertViewerAccess(string $path, array $meta = [])
+	{
+		$exceptionClass = WebsiteNotPermittedException::class;
+		if ($this->getType() === self::TYPE_PUBLIC) {
+			if (empty($meta['access'])) {
 				return;
 			}
 
+			$groupAccess = $meta['access'];
+			if (!is_array($groupAccess)) {
+				$groupAccess = explode(',', $groupAccess);
+			}
+
+			foreach ($groupAccess as $group) {
+				$group = trim($group);
+
+				if ($group === 'public') {
+					return;
+				} elseif ($group === 'private') {
+					continue;
+				}
+
+				if ($this->getViewer() && $this->groupManager->groupExists($group)) {
+					if ($this->groupManager->isInGroup($this->getViewer(), $group)) {
+						return;
+					}
+				}
+			}
+
+			$exceptionClass = NotPermittedException::class;
+		}
+
+		if ($this->getViewer()) {
 			if ($this->getViewer() === $this->getUserId()) {
 				return;
 			}
 
-			$this->hasToBeReadableByViewer($path);
+			/** @var OCFolder $viewerOCFolder */
+			$viewerOCFolder = \OC::$server->getUserFolder($this->getViewer());
+			$viewerAccessClosure = function (OCNode $node) use ($viewerOCFolder) {
+				$nodeId = $node->getId();
 
-		} catch (Exception $e) {
-			throw new WebsiteIsPrivateException(
-				$this->l10n->t('Website is private. You do not have access to this website')
-			);
-		}
-	}
+				$viewerNodes = $viewerOCFolder->getById($nodeId);
+				foreach ($viewerNodes as $viewerNode) {
+					if ($viewerNode->isReadable()) {
+						return true;
+					}
+				}
 
+				return false;
+			};
 
-	/**
-	 * @param array $meta
-	 *
-	 * @return bool
-	 */
-	private function pageIsPublic($meta) {
+			$websiteFolder = $this->getWebsiteFolder();
 
-		if (key_exists('access', $meta) && strtolower($meta['access']) === 'private') {
-			return false;
-		}
+			$path = $this->miscService->normalizePath($path);
+			while ($path && ($path !== '.')) {
+				try {
+					/** @var StorageFile|StorageFolder $file */
+					$file = $websiteFolder->get($path);
+				} catch (NotFoundException $e) {
+					$file = null;
+				}
 
-		if ($this->getOption('private') === '1') {
-			return false;
-		}
+				if ($file) {
+					if ($viewerAccessClosure($file->getOCNode())) {
+						return;
+					}
 
-		return true;
-	}
+					throw new $exceptionClass();
+				}
 
-
-	/**
-	 * @throws CheckCharsException
-	 * @throws MinCharsException
-	 * @throws PathContainSpecificFoldersException
-	 */
-	public function hasToBeFilledWithValidEntries() {
-
-		$this->hasToBeFilledWithNonEmptyValues();
-		$this->pathCantContainSpecificFolders();
-
-		if (MiscService::checkChars($this->getSite(), MiscService::ALPHA_NUMERIC_SCORES) === false) {
-			throw new CheckCharsException(
-				$this->l10n->t('The address of the website can only contains alpha numeric chars')
-			);
-		}
-	}
-
-
-	/**
-	 * @throws MinCharsException
-	 */
-	private function hasToBeFilledWithNonEmptyValues() {
-		if (strlen($this->getSite()) < self::SITE_LENGTH_MIN) {
-			throw new MinCharsException($this->l10n->t('The address of the website must be longer'));
-		}
-
-		if (strlen($this->getName()) < self::NAME_LENGTH_MIN) {
-			throw new MinCharsException($this->l10n->t('The name of the website must be longer'));
-		}
-	}
-
-
-	/**
-	 * this is overkill - NC does not allow to create directory outside of the users' filesystem
-	 * Not sure that there is a single use for this security check
-	 *
-	 * @param string $path
-	 *
-	 * @throws PathContainSpecificFoldersException
-	 */
-	public function pathCantContainSpecificFolders($path = '') {
-		if ($path === '') {
-			$path = $this->getPath();
-		}
-
-		$limit = ['.', '..'];
-
-		$folders = explode('/', $path);
-		foreach ($folders as $folder) {
-			if (in_array($folder, $limit)) {
-				throw new PathContainSpecificFoldersException(
-					$this->l10n->t('Path is malformed, please check.')
-				);
+				$path = dirname($path);
 			}
+
+			if ($viewerAccessClosure($websiteFolder->getOCNode())) {
+				return;
+			}
+		}
+
+		throw new $exceptionClass();
+	}
+
+	/**
+	 * @throws WebsiteInvalidOwnerException
+	 */
+	public function assertValidOwner()
+	{
+		$user = $this->userManager->get($this->getUserId());
+		if ($user === null) {
+			throw new WebsiteInvalidOwnerException();
+		}
+		if (!$user->isEnabled()) {
+			throw new WebsiteInvalidOwnerException();
+		}
+		if (!$this->websitesService->isUserAllowed($this->getUserId())) {
+			throw new WebsiteInvalidOwnerException();
+		}
+	}
+
+	/**
+	 * @throws WebsiteInvalidDataException
+	 */
+	public function assertValidName()
+	{
+		if (strlen($this->getName()) < self::NAME_LENGTH_MIN) {
+			throw new WebsiteInvalidDataException('name', $this->l10n->t('The name of the website must be longer.'));
+		}
+		if (strlen($this->getName()) > self::NAME_LENGTH_MAX) {
+			throw new WebsiteInvalidDataException('name', $this->l10n->t('The name of the website is too long.'));
+		}
+	}
+
+	/**
+	 * @throws WebsiteInvalidDataException
+	 */
+	public function assertValidSite()
+	{
+		if (strlen($this->getSite()) < self::SITE_LENGTH_MIN) {
+			$errorMessage = $this->l10n->t('The identifier of the website must be longer.');
+			throw new WebsiteInvalidDataException('site', $errorMessage);
+		}
+		if (strlen($this->getSite()) > self::SITE_LENGTH_MAX) {
+			$errorMessage = $this->l10n->t('The identifier of the website is too long.');
+			throw new WebsiteInvalidDataException('site', $errorMessage);
+		}
+		if (preg_match('/' . self::SITE_REGEX . '/', $this->getSite()) !== 1) {
+			$errorMessage = $this->l10n->t('The identifier of the website can only contains alpha numeric chars.');
+			throw new WebsiteInvalidDataException('site', $errorMessage);
+		}
+	}
+
+	/**
+	 * @throws WebsiteInvalidDataException
+	 */
+	public function assertValidPath()
+	{
+		try {
+			$path = $this->miscService->normalizePath($this->getPath());
+			if ($path === '') {
+				throw new InvalidPathException();
+			}
+		} catch (InvalidPathException $e) {
+			throw new WebsiteInvalidDataException(
+				'path',
+				$this->l10n->t('The path of the website is invalid.')
+			);
+		}
+
+		$userFolder = new StorageFolder(\OC::$server->getUserFolder($this->getUserId()));
+
+		try {
+			$websiteBaseFolder = $userFolder->getFolder(dirname($path));
+
+			try {
+				$websiteFolder = $websiteBaseFolder->getFolder(basename($path));
+
+				if (!$websiteFolder->isLocal()) {
+					throw new WebsiteInvalidDataException(
+						'path',
+						$this->l10n->t('The website\'s path is stored on a non-local storage.')
+					);
+				}
+			} catch (NotFoundException $e) {
+				if (!$websiteBaseFolder->isLocal()) {
+					throw new WebsiteInvalidDataException(
+						'path',
+						$this->l10n->t('The website\'s path is stored on a non-local storage.')
+					);
+				}
+			}
+		} catch (InvalidPathException $e) {
+			throw new WebsiteInvalidDataException(
+				'path',
+				$this->l10n->t('Parent folder of the website\'s path not found.')
+			);
+		} catch (NotFoundException $e) {
+			throw new WebsiteInvalidDataException(
+				'path',
+				$this->l10n->t('Parent folder of the website\'s path not found.')
+			);
+		}
+	}
+
+	/**
+	 * @throws ThemeNotFoundException
+	 * @throws ThemeNotCompatibleException
+	 */
+	public function assertValidTheme()
+	{
+		$this->themesService->assertValidTheme($this->getTheme());
+	}
+
+	/**
+	 * @throws TemplateNotFoundException
+	 * @throws TemplateNotCompatibleException
+	 */
+	public function assertValidTemplate()
+	{
+		$this->templatesService->assertValidTemplate($this->getTemplateSource());
+	}
+
+	/**
+	 * @param string $userId
+	 *
+	 * @throws WebsiteForeignOwnerException
+	 */
+	public function assertOwnedBy($userId)
+	{
+		if ($this->getUserId() !== $userId) {
+			throw new WebsiteForeignOwnerException();
+		}
+	}
+
+	/**
+	 * @return StorageFolder
+	 * @throws WebsiteInvalidFilesystemException
+	 */
+	public function getWebsiteFolder(): StorageFolder
+	{
+		if ($this->folder !== null) {
+			try {
+				// NC doesn't guarantee that mounts are present for the whole request lifetime
+				// for example, if you call \OC\Files\Utils\Scanner::scan(), all mounts are reset
+				// this makes OCNode instances, which rely on mounts of different users than the current, unusable
+				// by calling OCFolder::get('') we can detect this situation and re-init the required mounts
+				$this->folder->get('');
+			} catch (\Exception $e) {
+				$this->folder = null;
+			}
+		}
+
+		if ($this->folder === null) {
+			try {
+				$ocUserFolder = \OC::$server->getUserFolder($this->getUserId());
+				$userFolder = new StorageFolder($ocUserFolder);
+
+				$websiteFolder = $userFolder->getFolder($this->getPath());
+				$this->folder = $websiteFolder->fakeRoot();
+			} catch (InvalidPathException $e) {
+				throw new WebsiteInvalidFilesystemException($e);
+			} catch (NotFoundException $e) {
+				throw new WebsiteInvalidFilesystemException($e);
+			}
+		}
+
+		return $this->folder;
+	}
+
+	/**
+	 * @return string
+	 * @throws WebsiteInvalidFilesystemException
+	 */
+	public function getWebsitePath(): string
+	{
+		try {
+			return $this->getWebsiteFolder()->getLocalPath() . '/';
+		} catch (InvalidPathException $e) {
+			throw new WebsiteInvalidFilesystemException($e);
+		} catch (NotFoundException $e) {
+			throw new WebsiteInvalidFilesystemException($e);
+		}
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getWebsiteUrl(): string
+	{
+		if (!$this->getProxyRequest()) {
+			$route = Application::APP_NAME . '.Pico.getPage';
+			$parameters = [ 'site' => $this->getSite(), 'page' => '' ];
+			return $this->urlGenerator->linkToRoute($route, $parameters) . '/';
+		} else {
+			return \OC::$WEBROOT . '/sites/' . urlencode($this->getSite()) . '/';
 		}
 	}
 }

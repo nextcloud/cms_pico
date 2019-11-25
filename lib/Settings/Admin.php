@@ -1,12 +1,10 @@
 <?php
 /**
- * CMS Pico - Integration of Pico within your files to create websites.
+ * CMS Pico - Create websites using Pico CMS for Nextcloud.
  *
- * This file is licensed under the Affero General Public License version 3 or
- * later. See the COPYING file.
+ * @copyright Copyright (c) 2017, Maxence Lange (<maxence@artificial-owl.com>)
+ * @copyright Copyright (c) 2019, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
  *
- * @author Maxence Lange <maxence@artificial-owl.com>
- * @copyright 2017
  * @license GNU AGPL version 3 or any later version
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,64 +19,88 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
  */
+
+declare(strict_types=1);
 
 namespace OCA\CMSPico\Settings;
 
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Service\FileService;
+use OCA\CMSPico\Service\PicoService;
+use OCA\CMSPico\Service\WebsitesService;
 use OCP\AppFramework\Http\TemplateResponse;
-use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\Settings\ISettings;
 
-class Admin implements ISettings {
-
-	/** @var IL10N */
-	private $l10n;
-
+class Admin implements ISettings
+{
 	/** @var IURLGenerator */
 	private $urlGenerator;
+
+	/** @var WebsitesService */
+	private $websitesService;
 
 	/** @var FileService */
 	private $fileService;
 
-
 	/**
-	 * @param IL10N $l10n
-	 * @param IURLGenerator $urlGenerator
-	 * @param FileService $fileService
+	 * Admin constructor.
+	 *
+	 * @param IURLGenerator   $urlGenerator
+	 * @param WebsitesService $websitesService
+	 * @param FileService     $fileService
 	 */
-	public function __construct(IL10N $l10n, IURLGenerator $urlGenerator, FileService $fileService) {
-		$this->l10n = $l10n;
+	public function __construct(
+		IURLGenerator $urlGenerator,
+		WebsitesService $websitesService,
+		FileService $fileService
+	) {
 		$this->urlGenerator = $urlGenerator;
+		$this->websitesService = $websitesService;
 		$this->fileService = $fileService;
 	}
-
 
 	/**
 	 * @return TemplateResponse
 	 */
-	public function getForm() {
+	public function getForm(): TemplateResponse
+	{
+		$exampleSite = 'example_site';
+		$exampleProxyUrl = $this->urlGenerator->getBaseUrl() . '/sites/' . urlencode($exampleSite);
+		$exampleFullUrl = $this->urlGenerator->linkToRouteAbsolute(
+			Application::APP_NAME . '.Pico.getPage',
+			[ 'site' => $exampleSite, 'page' => '' ]
+		);
+
+		$internalBaseUrl = $this->urlGenerator->getBaseUrl() . '/index.php/apps/' . Application::APP_NAME;
+		$internalBasePath = \OC::$WEBROOT;
+
 		$data = [
-			'nchost'          => $this->urlGenerator->getBaseUrl(),
-			'ssl_enabled'     => (substr($this->urlGenerator->getBaseUrl(), 0, 5) === 'https'),
-			'pathToThemes'    => $this->fileService->getAppDataFolderPath('themes', true),
-			'pathToTemplates' => $this->fileService->getAppDataFolderPath('templates', true)
+			'exampleProxyUrl'  => $exampleProxyUrl . '/',
+			'exampleFullUrl'   => $exampleFullUrl . '/',
+			'internalProxyUrl' => $internalBaseUrl . '/pico_proxy/',
+			'internalFullUrl'  => $internalBaseUrl . '/pico/',
+			'internalPath'     => $internalBasePath . '/sites/',
+			'themesPath'       => $this->fileService->getAppDataFolderPath(PicoService::DIR_THEMES),
+			'pluginsPath'      => $this->fileService->getAppDataFolderPath(PicoService::DIR_PLUGINS),
+			'templatesPath'    => $this->fileService->getAppDataFolderPath(PicoService::DIR_TEMPLATES),
+			'limitGroups'      => $this->websitesService->getLimitGroups(),
+			'linkMode'         => $this->websitesService->getLinkMode(),
+			'linkModeLong'     => WebsitesService::LINK_MODE_LONG,
+			'linkModeShort'    => WebsitesService::LINK_MODE_SHORT,
 		];
 
 		return new TemplateResponse(Application::APP_NAME, 'settings.admin', $data);
 	}
 
-
 	/**
 	 * @return string the section ID, e.g. 'sharing'
 	 */
-	public function getSection() {
+	public function getSection(): string
+	{
 		return Application::APP_NAME;
 	}
-
 
 	/**
 	 * @return int whether the form should be rather on the top or bottom of
@@ -87,8 +109,8 @@ class Admin implements ISettings {
 	 *
 	 * keep the server setting at the top, right after "server settings"
 	 */
-	public function getPriority() {
+	public function getPriority(): int
+	{
 		return 0;
 	}
-
 }

@@ -1,4 +1,31 @@
+# Linux
+*~
+*.swp
 
-/vendor/
+# Windows
+Thumbs.db
+desktop.ini
 
-\.idea/
+# Mac OS X
+.DS_Store
+._*
+
+# IntelliJ IDEA
+/\.idea
+
+# Build
+/build
+/nextcloud
+
+# composer
+/composer.phar
+/vendor
+
+# PHP_Codesniffer
+/phpcs.phar
+/phpcbf.phar
+
+# phpunit
+/phpunit.phar
+/tests/clover.xml
+/tests/.phpunit.result.cache

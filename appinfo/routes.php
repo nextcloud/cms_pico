@@ -1,12 +1,10 @@
 <?php
 /**
- * CMS Pico - Integration of Pico within your files to create websites.
+ * CMS Pico - Create websites using Pico CMS for Nextcloud.
  *
- * This file is licensed under the Affero General Public License version 3 or
- * later. See the COPYING file.
+ * @copyright Copyright (c) 2017, Maxence Lange (<maxence@artificial-owl.com>)
+ * @copyright Copyright (c) 2019, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
  *
- * @author Maxence Lange <maxence@artificial-owl.com>
- * @copyright 2017
  * @license GNU AGPL version 3 or any later version
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,35 +19,76 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 return [
 	'routes' => [
 		[
-			'name' => 'Pico#getRoot', 'url' => '/pico/{site}/', 'verb' => 'GET'
+			'name' => 'Pico#getAsset',
+			'url' => '/pico/{site}/assets/{asset}',
+			'verb' => 'GET',
+			'requirements' => [ 'asset' => '.+' ]
 		],
 		[
-			'name'         => 'Pico#getPage', 'url' => '/pico/{site}/{page}', 'verb' => 'GET',
-			'requirements' => array('page' => '.+')
+			'name' => 'Pico#getAsset',
+			'postfix' => 'ETag',
+			'url' => '/pico/{site}/assets-{assetsETag}/{asset}',
+			'verb' => 'GET',
+			'requirements' => [ 'asset' => '.+' ]
 		],
-
-		['name' => 'Settings#getPersonalWebsites', 'url' => '/personal/websites', 'verb' => 'GET'],
-		['name' => 'Settings#createPersonalWebsite', 'url' => '/personal/website', 'verb' => 'PUT'],
-		['name' => 'Settings#removePersonalWebsite', 'url' => '/personal/website', 'verb' => 'DELETE'],
-		['name' => 'Settings#updateWebsiteTheme', 'url' => '/personal/website/{siteId}/theme', 'verb' => 'PUT'],
 		[
-			'name' => 'Settings#editPersonalWebsiteOption',
-			'url'  => '/personal/website/{siteId}/option/{option}', 'verb' => 'POST'
+			'name' => 'Pico#getPage',
+			'url' => '/pico/{site}/{page}',
+			'verb' => 'GET',
+			'defaults' => [ 'page' => '' ],
+			'requirements' => [ 'page' => '.*' ]
 		],
 
-		['name' => 'Settings#getSettingsAdmin', 'url' => '/admin/settings', 'verb' => 'GET'],
-		['name' => 'Settings#setSettingsAdmin', 'url' => '/admin/settings', 'verb' => 'POST'],
-		['name' => 'Settings#addCustomTemplate', 'url' => '/admin/templates', 'verb' => 'PUT'],
-		['name' => 'Settings#removeCustomTemplate', 'url' => '/admin/templates', 'verb' => 'DELETE'],
-		['name' => 'Settings#addCustomTheme', 'url' => '/admin/themes', 'verb' => 'PUT'],
-		['name' => 'Settings#removeCustomTheme', 'url' => '/admin/themes', 'verb' => 'DELETE']
+		[
+			'name' => 'Pico#getAsset',
+			'postfix' => 'Proxy',
+			'url' => '/pico_proxy/{site}/assets/{asset}',
+			'verb' => 'GET',
+			'requirements' => [ 'asset' => '.+' ]
+		],
+		[
+			'name' => 'Pico#getAsset',
+			'postfix' => 'ProxyETag',
+			'url' => '/pico_proxy/{site}/assets-{assetsETag}/{asset}',
+			'verb' => 'GET',
+			'requirements' => [ 'asset' => '.+' ]
+		],
+		[
+			'name' => 'Pico#getPage',
+			'postfix' => 'Proxy',
+			'url' => '/pico_proxy/{site}/{page}',
+			'verb' => 'GET',
+			'defaults' => [ 'page' => '', 'proxyRequest' => true ],
+			'requirements' => [ 'page' => '.*' ]
+		],
+
+		[ 'name' => 'Settings#getPersonalWebsites', 'url' => '/personal/websites', 'verb' => 'GET' ],
+		[ 'name' => 'Settings#createPersonalWebsite', 'url' => '/personal/websites', 'verb' => 'POST' ],
+		[ 'name' => 'Settings#updatePersonalWebsite', 'url' => '/personal/websites/{siteId}', 'verb' => 'POST' ],
+		[ 'name' => 'Settings#removePersonalWebsite', 'url' => '/personal/websites/{siteId}', 'verb' => 'DELETE' ],
+
+		[ 'name' => 'Settings#getTemplates', 'url' => '/admin/templates', 'verb' => 'GET' ],
+		[ 'name' => 'Settings#addCustomTemplate', 'url' => '/admin/templates', 'verb' => 'POST' ],
+		[ 'name' => 'Settings#removeCustomTemplate', 'url' => '/admin/templates/{item}', 'verb' => 'DELETE' ],
+		[ 'name' => 'Settings#copyTemplate', 'url' => '/admin/templates/{item}', 'verb' => 'CLONE' ],
+
+		[ 'name' => 'Settings#getThemes', 'url' => '/admin/themes', 'verb' => 'GET' ],
+		[ 'name' => 'Settings#addCustomTheme', 'url' => '/admin/themes', 'verb' => 'POST' ],
+		[ 'name' => 'Settings#updateCustomTheme', 'url' => '/admin/themes/{item}', 'verb' => 'POST' ],
+		[ 'name' => 'Settings#removeCustomTheme', 'url' => '/admin/themes/{item}', 'verb' => 'DELETE' ],
+		[ 'name' => 'Settings#copyTheme', 'url' => '/admin/themes/{item}', 'verb' => 'CLONE' ],
+
+		[ 'name' => 'Settings#getPlugins', 'url' => '/admin/plugins', 'verb' => 'GET' ],
+		[ 'name' => 'Settings#addCustomPlugin', 'url' => '/admin/plugins', 'verb' => 'POST' ],
+		[ 'name' => 'Settings#updateCustomPlugin', 'url' => '/admin/plugins/{item}', 'verb' => 'POST' ],
+		[ 'name' => 'Settings#removeCustomPlugin', 'url' => '/admin/plugins/{item}', 'verb' => 'DELETE' ],
+
+		[ 'name' => 'Settings#setLimitGroups', 'url' => '/admin/limit_groups', 'verb' => 'POST' ],
+		[ 'name' => 'Settings#setLinkMode', 'url' => '/admin/link_mode', 'verb' => 'POST' ],
 	]
 ];
-
-

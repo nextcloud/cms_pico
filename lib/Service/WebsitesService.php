@@ -1,12 +1,10 @@
 <?php
 /**
- * CMS Pico - Integration of Pico within your files to create websites.
+ * CMS Pico - Create websites using Pico CMS for Nextcloud.
  *
- * This file is licensed under the Affero General Public License version 3 or
- * later. See the COPYING file.
+ * @copyright Copyright (c) 2017, Maxence Lange (<maxence@artificial-owl.com>)
+ * @copyright Copyright (c) 2019, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
  *
- * @author Maxence Lange <maxence@artificial-owl.com>
- * @copyright 2017
  * @license GNU AGPL version 3 or any later version
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,31 +19,53 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
  */
+
+declare(strict_types=1);
 
 namespace OCA\CMSPico\Service;
 
-use Exception;
-use OC\Encryption\Manager;
 use OCA\CMSPico\Db\WebsitesRequest;
-use OCA\CMSPico\Exceptions\EncryptedFilesystemException;
+use OCA\CMSPico\Exceptions\AssetInvalidPathException;
+use OCA\CMSPico\Exceptions\AssetNotFoundException;
+use OCA\CMSPico\Exceptions\AssetNotPermittedException;
+use OCA\CMSPico\Exceptions\FilesystemNotLocalException;
+use OCA\CMSPico\Exceptions\PageInvalidPathException;
+use OCA\CMSPico\Exceptions\PageNotFoundException;
+use OCA\CMSPico\Exceptions\PageNotPermittedException;
 use OCA\CMSPico\Exceptions\PicoRuntimeException;
-use OCA\CMSPico\Exceptions\WebsiteAlreadyExistException;
-use OCA\CMSPico\Exceptions\WebsiteDoesNotExistException;
+use OCA\CMSPico\Exceptions\TemplateNotCompatibleException;
+use OCA\CMSPico\Exceptions\TemplateNotFoundException;
+use OCA\CMSPico\Exceptions\ThemeNotCompatibleException;
+use OCA\CMSPico\Exceptions\ThemeNotFoundException;
+use OCA\CMSPico\Exceptions\WebsiteExistsException;
+use OCA\CMSPico\Exceptions\WebsiteInvalidDataException;
+use OCA\CMSPico\Exceptions\WebsiteInvalidFilesystemException;
+use OCA\CMSPico\Exceptions\WebsiteInvalidOwnerException;
+use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
+use OCA\CMSPico\Exceptions\WebsiteNotPermittedException;
+use OCA\CMSPico\Model\PicoAsset;
+use OCA\CMSPico\Model\PicoPage;
 use OCA\CMSPico\Model\Website;
-use OCP\IL10N;
+use OCP\Files\InvalidPathException;
+use OCP\IGroupManager;
 
-class WebsitesService {
+class WebsitesService
+{
+	/** @var int */
+	const LINK_MODE_LONG = 1;
 
-	/** @var IL10N */
-	private $l10n;
-
-	/** @var Manager */
-	private $encryptionManager;
+	/** @var int */
+	const LINK_MODE_SHORT = 2;
 
 	/** @var WebsitesRequest */
 	private $websiteRequest;
+
+	/** @var IGroupManager */
+	private $groupManager;
+
+	/** @var ConfigService */
+	private $configService;
 
 	/** @var TemplatesService */
 	private $templatesService;
@@ -53,208 +73,323 @@ class WebsitesService {
 	/** @var PicoService */
 	private $picoService;
 
+	/** @var AssetsService */
+	private $assetsService;
+
 	/** @var MiscService */
 	private $miscService;
 
 	/**
 	 * WebsitesService constructor.
 	 *
-	 * @param IL10N $l10n
-	 * @param WebsitesRequest $websiteRequest
+	 * @param WebsitesRequest  $websiteRequest
+	 * @param IGroupManager    $groupManager
+	 * @param ConfigService    $configService
 	 * @param TemplatesService $templatesService
-	 * @param PicoService $picoService
-	 * @param MiscService $miscService
+	 * @param PicoService      $picoService
+	 * @param AssetsService    $assetsService
+	 * @param MiscService      $miscService
 	 *
 	 * @internal param Manager $encryptionManager
 	 */
-	function __construct(
-		IL10N $l10n, WebsitesRequest $websiteRequest, TemplatesService $templatesService,
-		PicoService $picoService, MiscService $miscService
+	public function __construct(
+		WebsitesRequest $websiteRequest,
+		IGroupManager $groupManager,
+		ConfigService $configService,
+		TemplatesService $templatesService,
+		PicoService $picoService,
+		AssetsService $assetsService,
+		MiscService $miscService
 	) {
-
-		$this->l10n = $l10n;
-		$this->encryptionManager = \OC::$server->getEncryptionManager();
 		$this->websiteRequest = $websiteRequest;
+		$this->groupManager = $groupManager;
+		$this->configService = $configService;
 		$this->templatesService = $templatesService;
 		$this->picoService = $picoService;
+		$this->assetsService = $assetsService;
 		$this->miscService = $miscService;
 	}
 
-
 	/**
-	 * createWebsite();
+	 * Creates a new website.
 	 *
-	 * create website using the templates file.
-	 * We check that the template exists and that the inputs are valid.
+	 * @param Website $website
 	 *
-	 * @param string $name
-	 * @param string $userId
-	 * @param string $site
-	 * @param string $path
-	 * @param string $template
-	 *
-	 * @throws WebsiteAlreadyExistException
+	 * @throws WebsiteExistsException
+	 * @throws WebsiteInvalidDataException
+	 * @throws WebsiteInvalidOwnerException
+	 * @throws ThemeNotFoundException
+	 * @throws ThemeNotCompatibleException
+	 * @throws TemplateNotFoundException
+	 * @throws TemplateNotCompatibleException
 	 */
-	public function createWebsite($name, $userId, $site, $path, $template) {
-		$this->templatesService->templateHasToExist($template);
-
-		$website = new Website();
-		$website->setName($name)
-				->setUserId($userId)
-				->setSite($site)
-				->setPath($path)
-				->setTemplateSource($template);
+	public function createWebsite(Website $website)
+	{
+		$website->assertValidOwner();
+		$website->assertValidName();
+		$website->assertValidSite();
+		$website->assertValidPath();
+		$website->assertValidTheme();
+		$website->assertValidTemplate();
 
 		try {
-			$website->hasToBeFilledWithValidEntries();
 			$website = $this->websiteRequest->getWebsiteFromSite($website->getSite());
-			throw new WebsiteAlreadyExistException($this->l10n->t('Website already exist.'));
-		} catch (WebsiteDoesNotExistException $e) {
-			// In fact we want the website to not exist (yet).
+			throw new WebsiteExistsException();
+		} catch (WebsiteNotFoundException $e) {
+			// in fact we want the website not to exist yet
 		}
 
-		$this->templatesService->installTemplates($website);
+		$this->templatesService->installTemplate($website);
 		$this->websiteRequest->create($website);
 	}
 
-
 	/**
-	 * deleteWebsite();
+	 * Updates a website.
 	 *
-	 * Delete a website regarding its Id and the userId
-	 *
-	 * @param int $siteId
-	 * @param string $userId
-	 */
-	public function deleteWebsite($siteId, $userId) {
-
-		$website = $this->getWebsiteFromId($siteId);
-		$website->hasToBeOwnedBy($userId);
-
-		$this->forceDeleteWebsite($website);
-	}
-
-
-	/**
-	 * forceDeleteWebsite();
-	 *
-	 * delete a website.
-	 *
-	 * Warning: this method does not check the ownership of the website.
-	 * Please use deleteWebsite().
+	 * Warning: This method does not check the ownership of the website!
+	 * Please use {@see Website::assertOwnedBy()} beforehand.
 	 *
 	 * @param Website $website
+	 *
+	 * @throws WebsiteNotFoundException
+	 * @throws WebsiteInvalidDataException
+	 * @throws ThemeNotFoundException
+	 * @throws ThemeNotCompatibleException
+	 * @throws TemplateNotFoundException
+	 * @throws TemplateNotCompatibleException
 	 */
-	public function forceDeleteWebsite(Website $website) {
+	public function updateWebsite(Website $website)
+	{
+		$originalWebsite = $this->websiteRequest->getWebsiteFromId($website->getId());
+
+		if ($website->getName() !== $originalWebsite->getName()) {
+			$website->assertValidName();
+		}
+		if ($website->getSite() !== $originalWebsite->getSite()) {
+			$website->assertValidSite();
+		}
+		if ($website->getPath() !== $originalWebsite->getPath()) {
+			$website->assertValidPath();
+		}
+		if ($website->getTheme() !== $originalWebsite->getTheme()) {
+			$website->assertValidTheme();
+		}
+		if ($website->getTemplateSource()) {
+			if ($website->getTemplateSource() !== $originalWebsite->getTemplateSource()) {
+				$website->assertValidTemplate();
+			}
+		}
+
+		$this->websiteRequest->update($website);
+	}
+
+	/**
+	 * Deletes a website.
+	 *
+	 * Warning: This method does not check the ownership of the website!
+	 * Please use {@see Website::assertOwnedBy()} beforehand.
+	 *
+	 * @param Website $website
+	 *
+	 * @throws WebsiteNotFoundException
+	 */
+	public function deleteWebsite(Website $website)
+	{
+		// check whether website actually exists
+		$this->websiteRequest->getWebsiteFromId($website->getId());
+
 		$this->websiteRequest->delete($website);
 	}
 
-
 	/**
-	 * Event onUserRemoved();
-	 *
-	 * Delete all website from the removed user.
-	 *
 	 * @param string $userId
 	 */
-	public function onUserRemoved($userId) {
+	public function onUserRemoved($userId)
+	{
 		$this->websiteRequest->deleteAllFromUser($userId);
 	}
 
-
 	/**
-	 * getWebsiteFromId();
-	 *
-	 * returns the website from its Id.
-	 *
 	 * @param int $siteId
 	 *
 	 * @return Website
+	 * @throws WebsiteNotFoundException
 	 */
-	public function getWebsiteFromId($siteId) {
+	public function getWebsiteFromId(int $siteId): Website
+	{
 		return $this->websiteRequest->getWebsiteFromId($siteId);
 	}
 
-
 	/**
-	 * updateWebsite();
+	 * @param string $site
 	 *
-	 * update a Website.
-	 *
-	 * @param Website $website
+	 * @return Website
+	 * @throws WebsiteNotFoundException
 	 */
-	public function updateWebsite(Website $website) {
-		$this->websiteRequest->update($website);
-
+	public function getWebsiteFromSite(string $site): Website
+	{
+		return $this->websiteRequest->getWebsiteFromSite($site);
 	}
 
 	/**
-	 * getWebsitesFromUser();
-	 *
-	 * returns all website from a user.
-	 *
 	 * @param string $userId
 	 *
 	 * @return Website[]
 	 */
-	public function getWebsitesFromUser($userId) {
-		$websites = $this->websiteRequest->getWebsitesFromUserId($userId);
-
-		return $websites;
+	public function getWebsitesFromUser(string $userId): array
+	{
+		return $this->websiteRequest->getWebsitesFromUserId($userId);
 	}
 
-
 	/**
-	 * getWebsiteFromSite();
+	 * @param string      $site
+	 * @param string      $page
+	 * @param string|null $viewer
+	 * @param bool        $proxyRequest
 	 *
-	 * returns website regarding its keyword/site.
-	 *
-	 * @param string $site
-	 *
-	 * @return Website
-	 */
-	public function getWebsiteFromSite($site) {
-
-		$website = $this->websiteRequest->getWebsiteFromSite($site);
-
-		return $website;
-	}
-
-
-	/**
-	 * getWebpageFromSite();
-	 *
-	 * Get the correct Page from Pico regarding its keyword/site.
-	 * We assign a viewer (current user) to manage private webpages.
-	 *
-	 * @param string $site
-	 * @param string $viewer
-	 * @param $page
-	 *
-	 * @return string
-	 * @throws Exception
+	 * @return PicoPage
+	 * @throws WebsiteNotFoundException
+	 * @throws WebsiteInvalidOwnerException
+	 * @throws WebsiteInvalidFilesystemException
+	 * @throws WebsiteNotPermittedException
+	 * @throws FilesystemNotLocalException
+	 * @throws PageInvalidPathException
+	 * @throws PageNotFoundException
+	 * @throws PageNotPermittedException
+	 * @throws ThemeNotFoundException
+	 * @throws ThemeNotCompatibleException
 	 * @throws PicoRuntimeException
 	 */
-	public function getWebpageFromSite($site, $viewer, $page) {
-
+	public function getPage(string $site, string $page, string $viewer = null, bool $proxyRequest = false): PicoPage
+	{
 		try {
-			$website = $this->websiteRequest->getWebsiteFromSite($site);
-			$website->setViewer($viewer);
-			$website->setPage($page);
-
-			if ($this->encryptionManager->isEnabled()) {
-				throw new EncryptedFilesystemException('cms_pico does not support encrypted filesystem');
-			}
-
-			return $this->picoService->getContent($website);
-		} catch (PicoRuntimeException $e) {
-			$this->miscService->log('Webpage cannot be rendered - ' . $e->getMessage());
-			throw new PicoRuntimeException("Webpage cannot be rendered");
-		} catch (Exception $e) {
-			throw $e;
+			$page = $this->miscService->normalizePath($page);
+		} catch (InvalidPathException $e) {
+			throw new PageInvalidPathException($e);
 		}
 
+		$website = $this->getWebsiteFromSite($site);
+		$website->setProxyRequest($proxyRequest);
+		$website->setViewer($viewer ?: '');
+		$website->setPage($page);
+
+		$website->assertValidOwner();
+
+		if (!$website->getWebsiteFolder()->isLocal()) {
+			throw new FilesystemNotLocalException();
+		}
+
+		return $this->picoService->getPage($website);
 	}
 
+	/**
+	 * @param string      $site
+	 * @param string      $asset
+	 * @param string|null $viewer
+	 *
+	 * @return PicoAsset
+	 * @throws WebsiteNotFoundException
+	 * @throws WebsiteInvalidOwnerException
+	 * @throws WebsiteInvalidFilesystemException
+	 * @throws WebsiteNotPermittedException
+	 * @throws FilesystemNotLocalException
+	 * @throws AssetInvalidPathException
+	 * @throws AssetNotFoundException
+	 * @throws AssetNotPermittedException
+	 */
+	public function getAsset(string $site, string $asset, string $viewer = null): PicoAsset
+	{
+		try {
+			$asset = $this->miscService->normalizePath($asset);
+			if ($asset === '') {
+				throw new InvalidPathException();
+			}
+		} catch (InvalidPathException $e) {
+			throw new AssetInvalidPathException($e);
+		}
 
+		$website = $this->getWebsiteFromSite($site);
+		$website->setViewer($viewer ?: '');
+		$website->setPage(PicoService::DIR_ASSETS . '/' . $asset);
+
+		$website->assertValidOwner();
+
+		if (!$website->getWebsiteFolder()->isLocal()) {
+			throw new FilesystemNotLocalException();
+		}
+
+		return $this->assetsService->getAsset($website);
+	}
+
+	/**
+	 * @param string[] $limitGroups
+	 *
+	 * @throws \UnexpectedValueException
+	 */
+	public function setLimitGroups(array $limitGroups)
+	{
+		foreach ($limitGroups as $group) {
+			if (!$this->groupManager->groupExists($group)) {
+				throw new \UnexpectedValueException();
+			}
+		}
+
+		$this->configService->setAppValue(ConfigService::LIMIT_GROUPS, json_encode($limitGroups));
+	}
+
+	/**
+	 * @return string[]
+	 */
+	public function getLimitGroups(): array
+	{
+		$json = $this->configService->getAppValue(ConfigService::LIMIT_GROUPS);
+		return $json ? json_decode($json, true) : [];
+	}
+
+	/**
+	 * @param string|null $userId
+	 *
+	 * @return bool
+	 */
+	public function isUserAllowed(string $userId = null)
+	{
+		if (!$userId) {
+			return false;
+		}
+
+		$limitGroups = $this->getLimitGroups();
+		if (empty($limitGroups)) {
+			return true;
+		}
+
+		foreach ($this->getLimitGroups() as $group) {
+			if ($this->groupManager->isInGroup($userId, $group)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * @param int $linkMode
+	 *
+	 * @throws \UnexpectedValueException
+	 */
+	public function setLinkMode(int $linkMode)
+	{
+		if (($linkMode !== self::LINK_MODE_LONG) && ($linkMode !== self::LINK_MODE_SHORT)) {
+			throw new \UnexpectedValueException();
+		}
+
+		$this->configService->setAppValue(ConfigService::LINK_MODE, $linkMode);
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getLinkMode(): int
+	{
+		return (int) $this->configService->getAppValue(ConfigService::LINK_MODE);
+	}
 }

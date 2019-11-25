@@ -1,12 +1,10 @@
 <?php
 /**
- * CMS Pico - Integration of Pico within your files to create websites.
+ * CMS Pico - Create websites using Pico CMS for Nextcloud.
  *
- * This file is licensed under the Affero General Public License version 3 or
- * later. See the COPYING file.
+ * @copyright Copyright (c) 2017, Maxence Lange (<maxence@artificial-owl.com>)
+ * @copyright Copyright (c) 2019, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
  *
- * @author Maxence Lange <maxence@artificial-owl.com>
- * @copyright 2017
  * @license GNU AGPL version 3 or any later version
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,8 +19,9 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
  */
+
+declare(strict_types=1);
 
 namespace OCA\CMSPico\Settings;
 
@@ -31,8 +30,8 @@ use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\Settings\IIconSection;
 
-class PersonalSection implements IIconSection {
-
+class PersonalSection implements IIconSection
+{
 	/** @var IL10N */
 	private $l10n;
 
@@ -40,11 +39,13 @@ class PersonalSection implements IIconSection {
 	private $urlGenerator;
 
 	/**
-	 * @param IL10N $l10n
+	 * PersonalSection constructor.
+	 *
+	 * @param IL10N         $l10n
 	 * @param IURLGenerator $urlGenerator
 	 */
-	public function __construct(IL10N $l10n,
-								IURLGenerator $urlGenerator) {
+	public function __construct(IL10N $l10n, IURLGenerator $urlGenerator)
+	{
 		$this->l10n = $l10n;
 		$this->urlGenerator = $urlGenerator;
 	}
@@ -52,28 +53,32 @@ class PersonalSection implements IIconSection {
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getID() {
+	public function getID(): string
+	{
 		return Application::APP_NAME;
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getName() {
+	public function getName(): string
+	{
 		return $this->l10n->t('Pico CMS');
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getPriority() {
+	public function getPriority(): int
+	{
 		return 75;
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getIcon() {
+	public function getIcon(): string
+	{
 		return $this->urlGenerator->imagePath(Application::APP_NAME, 'pico_cms.svg');
 	}
 }

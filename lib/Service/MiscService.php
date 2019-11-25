@@ -1,12 +1,10 @@
 <?php
 /**
- * CMS Pico - Integration of Pico within your files to create websites.
+ * CMS Pico - Create websites using Pico CMS for Nextcloud.
  *
- * This file is licensed under the Affero General Public License version 3 or
- * later. See the COPYING file.
+ * @copyright Copyright (c) 2017, Maxence Lange (<maxence@artificial-owl.com>)
+ * @copyright Copyright (c) 2019, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
  *
- * @author Maxence Lange <maxence@artificial-owl.com>
- * @copyright 2017
  * @license GNU AGPL version 3 or any later version
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,149 +19,280 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 namespace OCA\CMSPico\Service;
 
 use OCA\CMSPico\AppInfo\Application;
-use OCA\CMSPico\Exceptions\MissingKeyInArrayException;
-use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\DataResponse;
-use OCP\ILogger;
-use OCP\Util;
+use OCA\CMSPico\Exceptions\ComposerException;
+use OCA\CMSPico\Exceptions\FilesystemNotWritableException;
+use OCA\CMSPico\Files\FileInterface;
+use OCP\Files\AlreadyExistsException;
+use OCP\Files\GenericFileException;
+use OCP\Files\InvalidPathException;
+use OCP\Files\NotPermittedException;
+use OCP\IL10N;
+use OCP\Security\ISecureRandom;
 
-class MiscService {
+class MiscService
+{
+	/** @var IL10N */
+	private $l10n;
 
-	const ALPHA = 'abcdefghijklmnopqrstuvwxyz';
-	const ALPHA_NUMERIC = 'abcdefghijklmnopqrstuvwxyz0123456789';
-	const ALPHA_NUMERIC_SCORES = 'abcdefghijklmnopqrstuvwxyz0123456789_-';
+	/** @var ConfigService */
+	private $configService;
 
-	/** @var ILogger */
-	private $logger;
+	/** @var FileService */
+	private $fileService;
 
-	public function __construct(ILogger $logger) {
-		$this->logger = $logger;
-	}
+	/** @var string[] */
+	private $textFileMagic;
+
+	/** @var string[] */
+	private $binaryFileMagic;
 
 	/**
-	 * @param string $message
-	 * @param int $level
+	 * MiscService constructor.
+	 *
+	 * @param IL10N         $l10n
+	 * @param ConfigService $configService
+	 * @param FileService   $fileService
 	 */
-	public function log($message, $level = 2) {
-		$data = array(
-			'app'   => Application::APP_NAME,
-			'level' => $level
-		);
+	public function __construct(IL10N $l10n, ConfigService $configService, FileService $fileService)
+	{
+		$this->l10n = $l10n;
+		$this->configService = $configService;
+		$this->fileService = $fileService;
 
-		$this->logger->log($level, $message, $data);
+		$this->textFileMagic = [
+			hex2bin('EFBBBF'),
+			hex2bin('0000FEFF'),
+			hex2bin('FFFE0000'),
+			hex2bin('FEFF'),
+			hex2bin('FFFE')
+		];
+
+		$this->binaryFileMagic = [
+			'%PDF',
+			hex2bin('89') . 'PNG'
+		];
 	}
-
 
 	/**
 	 * @param string $path
 	 *
 	 * @return string
+	 * @throws InvalidPathException
 	 */
-	public static function endSlash($path) {
-		if ($path === '') {
-			return '';
+	public function normalizePath(string $path): string
+	{
+		$path = str_replace('\\', '/', $path);
+		$pathParts = explode('/', $path);
+
+		$resultParts = [];
+		foreach ($pathParts as $pathPart) {
+			if (($pathPart === '') || ($pathPart === '.')) {
+				continue;
+			} elseif ($pathPart === '..') {
+				if (empty($resultParts)) {
+					throw new InvalidPathException();
+				}
+
+				array_pop($resultParts);
+				continue;
+			}
+
+			$resultParts[] = $pathPart;
 		}
 
-		if (substr($path, -1, 1) !== '/') {
-			$path .= '/';
-		}
-
-		return $path;
+		return implode('/', $resultParts);
 	}
-
 
 	/**
-	 * @param $arr
-	 * @param $k
+	 * @param string      $path
+	 * @param string|null $basePath
 	 *
-	 * @param string $default
-	 *
-	 * @return array|string|integer
+	 * @return string
+	 * @throws InvalidPathException
 	 */
-	public static function get($arr, $k, $default = '') {
-		if (!key_exists($k, $arr)) {
-			return $default;
+	public function getRelativePath(string $path, string $basePath = null): string
+	{
+		if (!$basePath) {
+			$basePath = \OC::$SERVERROOT;
 		}
 
-		return $arr[$k];
+		$basePath = $this->normalizePath($basePath);
+		$basePathLength = strlen($basePath);
+
+		$path = $this->normalizePath($path);
+
+		if ($path === $basePath) {
+			return '';
+		} elseif (substr($path, 0, $basePathLength + 1) === $basePath . '/') {
+			return substr($path, $basePathLength + 1);
+		} else {
+			throw new InvalidPathException();
+		}
 	}
 
-
-	public static function mustContains($data, $arr) {
-		if (!is_array($arr)) {
-			$arr = [$arr];
+	/**
+	 * @param string $path
+	 * @param string $fileExtension
+	 *
+	 * @return false|string
+	 * @throws InvalidPathException
+	 */
+	public function dropFileExtension(string $path, string $fileExtension): string
+	{
+		$fileName = basename($path);
+		$fileExtensionPos = strrpos($fileName, '.');
+		if (($fileExtensionPos === false) || (substr($fileName, $fileExtensionPos) !== $fileExtension)) {
+			throw new InvalidPathException();
 		}
 
-		foreach ($arr as $k) {
-			if (!key_exists($k, $data)) {
-				throw new MissingKeyInArrayException('missing_key_in_array');
-			}
-		}
+		return substr($path, 0, strlen($path) - strlen($fileExtension));
 	}
 
+	/**
+	 * @param FileInterface $file
+	 *
+	 * @return bool
+	 * @throws NotPermittedException
+	 * @throws GenericFileException
+	 */
+	public function isBinaryFile(FileInterface $file): bool
+	{
+		try {
+			$buffer = file_get_contents($file->getLocalPath(), false, null, 0, 1024);
+		} catch (\Exception $e) {
+			$buffer = false;
+		}
 
-	public static function checkChars($line, $chars) {
-		for ($i = 0; $i < strlen($line); $i++) {
-			if (strpos($chars, substr($line, $i, 1)) === false) {
+		if ($buffer === false) {
+			$buffer = substr($file->getContent(), 0, 1024);
+		}
+
+		if ($buffer === '') {
+			return false;
+		}
+
+		foreach ($this->textFileMagic as $textFileMagic) {
+			if (substr_compare($buffer, $textFileMagic, 0, strlen($textFileMagic)) === 0) {
 				return false;
 			}
 		}
 
-		return true;
-	}
-
-	/**
-	 * @param array $data
-	 *
-	 * @return DataResponse
-	 */
-	public function fail($data) {
-		$this->log(json_encode($data));
-
-		return new DataResponse(
-			array_merge($data, array('status' => 0)),
-			Http::STATUS_NON_AUTHORATIVE_INFORMATION
-		);
-	}
-
-
-	/**
-	 * @param array $data
-	 *
-	 * @return DataResponse
-	 */
-	public function success($data) {
-		return new DataResponse(
-			array_merge($data, array('status' => 1)),
-			Http::STATUS_CREATED
-		);
-	}
-
-
-	/**
-	 * return the cloud version.
-	 * if $complete is true, return a string x.y.z
-	 *
-	 * @param boolean $complete
-	 *
-	 * @return string|integer
-	 */
-	public function getCloudVersion($complete = false) {
-		$ver = Util::getVersion();
-
-		if ($complete) {
-			return implode('.', $ver);
+		foreach ($this->binaryFileMagic as $binaryFileMagic) {
+			if (substr_compare($buffer, $binaryFileMagic, 0, strlen($binaryFileMagic)) === 0) {
+				return true;
+			}
 		}
 
-		return $ver[0];
+		return (strpos($buffer, "\0") !== false);
 	}
 
+	/**
+	 * @param int    $length
+	 * @param string $prefix
+	 * @param string $suffix
+	 *
+	 * @return string
+	 */
+	public function getRandom(int $length = 10, string $prefix = '', string $suffix = ''): string
+	{
+		$randomChars = ISecureRandom::CHAR_UPPER . ISecureRandom::CHAR_LOWER . ISecureRandom::CHAR_DIGITS;
+		$random = \OC::$server->getSecureRandom()->generate($length, $randomChars);
+		return ($prefix ? $prefix . '.' : '') . $random . ($suffix ? '.' . $suffix : '');
+	}
 
+	/**
+	 * @param \Exception $e
+	 * @param string     ...$classNames
+	 *
+	 * @throws \Exception
+	 */
+	public function consumeException(\Exception $e, string ...$classNames)
+	{
+		foreach ($classNames as $className) {
+			if (is_a($e, $className)) {
+				return;
+			}
+		}
+
+		throw $e;
+	}
+
+	/**
+	 * @throws ComposerException
+	 */
+	public function checkComposer()
+	{
+		$appPath = Application::getAppPath();
+		if (!is_file($appPath . '/vendor/autoload.php')) {
+			try {
+				$relativeAppPath = $this->getRelativePath($appPath) . '/';
+			} catch (InvalidPathException $e) {
+				$relativeAppPath = 'apps/' . Application::APP_NAME . '/';
+			}
+
+			throw new ComposerException($this->l10n->t(
+				'Failed to enable Pico CMS for Nextcloud: Couldn\'t find "%s". Make sure to install the app\'s '
+				. 'dependencies by executing `composer install` in the app\'s install directory below "%s". '
+				. 'Then try again enabling Pico CMS for Nextcloud.',
+				[ $relativeAppPath . 'vendor/autoload.php', $relativeAppPath ]
+			));
+		}
+	}
+
+	/**
+	 * @throws FilesystemNotWritableException
+	 */
+	public function checkPublicFolder()
+	{
+		$publicFolder = $this->fileService->getPublicFolder();
+
+		try {
+			try {
+				$publicThemesFolder = $publicFolder->newFolder(PicoService::DIR_THEMES);
+			} catch (AlreadyExistsException $e) {
+				$publicThemesFolder = $publicFolder->getFolder(PicoService::DIR_THEMES);
+			}
+
+			$publicThemesTestFileName = $this->getRandom(10, 'tmp', Application::APP_NAME . '-test');
+			$publicThemesTestFile = $publicThemesFolder->newFile($publicThemesTestFileName);
+			$publicThemesTestFile->delete();
+
+			try {
+				$publicPluginsFolder = $publicFolder->newFolder(PicoService::DIR_PLUGINS);
+			} catch (AlreadyExistsException $e) {
+				$publicPluginsFolder = $publicFolder->getFolder(PicoService::DIR_PLUGINS);
+			}
+
+			$publicPluginsTestFileName = $this->getRandom(10, 'tmp', Application::APP_NAME . '-test');
+			$publicPluginsTestFile = $publicPluginsFolder->newFile($publicPluginsTestFileName);
+			$publicPluginsTestFile->delete();
+		} catch (NotPermittedException $e) {
+			try {
+				$appDataPublicPath = Application::getAppPath() . '/appdata_public';
+				$appDataPublicPath = $this->getRelativePath($appDataPublicPath) . '/';
+			} catch (InvalidPathException $e) {
+				$appDataPublicPath = 'apps/' . Application::APP_NAME . '/appdata_public/';
+			}
+
+			try {
+				$dataPath = $this->configService->getSystemValue('datadirectory', \OC::$SERVERROOT . '/data');
+				$dataPath = $this->getRelativePath($dataPath) . '/';
+			} catch (InvalidPathException $e) {
+				$dataPath = 'data/';
+			}
+
+			throw new FilesystemNotWritableException($this->l10n->t(
+				'Failed to enable Pico CMS for Nextcloud: The webserver has no permission to create files and '
+				. 'folders below "%s". Make sure to give the webserver write access to this directory by '
+				. 'changing its permissions and ownership to the same as of your "%s" directory. Then try '
+				. 'again enabling Pico CMS for Nextcloud.',
+				[ $appDataPublicPath, $dataPath ]
+			));
+		}
+	}
 }
-

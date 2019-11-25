@@ -1,49 +1,68 @@
 <?xml version="1.0"?>
 <info xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	  xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
+		xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
 	<id>cms_pico</id>
 	<name>Pico CMS</name>
-	<summary>Integrate Pico and let your users manage their own websites</summary>
+	<summary>Create websites using Pico CMS for Nextcloud</summary>
 	<description><![CDATA[
 
-With **cms_pico** you can build your own website in Nextcloud!
+[Pico CMS for Nextcloud](https://github.com/nextcloud/cms_pico) combines the power of [**Pico**](http://picocms.org/) and [**Nextcloud**](https://nextcloud.com/) to create simple, secure, shareable and amazingly powerful websites with just a few clicks. Pico is a stupidly simple, blazing fast, flat file CMS - making the web easy!
 
-* start a blog
-* share your resume with the world
-* create a plan for world domination and only share with the right friends
-* built a knowledge sharing site and let the smart ones among your colleagues help out
+* :notebook: Start a blog
+* :rocket: Share your resume with the world
+* :smiling_imp: Create a plan for world domination and only share with the right friends
+* :neckbeard: Build a knowledge base and let the smart ones among your colleagues help out
 
-You can make the pages viewable for everyone or only for users or groups on your Nextcloud . You can also share the files that the website consists of so you can collaborate with others maintaining the pages.
+Installing Pico CMS for Nextcloud allows your users to create and manage their own websites. Creating a new page with Pico is no more than creating a simple text file in a users' Nextcloud files. No config is required, no utterly complex management interfaces - just files. It's the perfect match with Nextcloud. Secure Sharing, Collaboration, Access Control - not just for your files, but also your websites, all made possible by Pico CMS for Nextcloud! Breaking the boundaries between your Mobile & Desktop devices and your Server.
 
-The app uses [Pico](https://picocms.org/) to allow your users to create and manage their own websites with address like: https://cloud.example.com/sites/my_site/. The source of the website will be stored in the users' files and the **Markdown** will be formatted by **Pico** to generate the pages.
+Websites will be accessible through URLs like https://cloud.example.com/sites/my_site/ and consist of just a bunch of `.md` text files in a user's Nextcloud files. `.md` stands for [**Markdown**](https://www.markdownguide.org/) - a super simple and intuitive markup to create headings, paragraphs, text formatting, lists, images and links. But don't despair - you don't have to learn yet another language if you don't want to. Consider enabling Nextcloud's [Text](https://apps.nextcloud.com/apps/text) or [Markdown Editor](https://apps.nextcloud.com/apps/files_markdown) apps to make easy things stupidly simple. But what about meta data like a page's title or release date? Guess right, it's all in one place. At the top of your Markdown files you can place a block with such meta data - called the [**YAML**](https://en.wikipedia.org/wiki/YAML) Front Matter. Creating websites can't be easier…
 
-Because Pico is using the **Markdown** format, you should consider enabling the [Markdown Editor](https://apps.nextcloud.com/apps/files_markdown) app.
+But that wasn't everything… Pico CMS for Nextcloud is highly customizable. You can change Pico’s appearance by using custom themes and add new functionality by using custom plugins. For security reasons users can neither add custom themes nor plugins on their own - but as an admin you can. Plugins and themes aren’t just new "skins" or "widgets", the underlying technologies are powerful frameworks you can leverage to make your users' websites truly unique. However, with great power comes great responsibility. Pico CMS for Nextcloud does its best to prevent users from including scripts into websites, since this might bear security risks (so called "Cross Scripting"). Since this risk doesn't apply to Pico itself, 3rd-party developers of plugins and themes might not be aware of this issue - so be careful when installing custom plugins and themes.
 
+You want to learn more about Pico CMS for Nextcloud? Easy! Just download and enable the app from [Nextcloud's App Store](https://apps.nextcloud.com/apps/cms_pico) and create your first personal website using the "sample_pico" template. Pico's sample contents will explain all you need to know… :wave:
 
 ]]>
 	</description>
-	<version>0.9.8</version>
+	<version>1.0.0</version>
 	<licence>agpl</licence>
-	<author>Maxence Lange</author>
+	<author homepage="https://github.com/daita">Maxence Lange</author>
+	<author homepage="https://github.com/PhrozenByte">Daniel Rudolf</author>
 	<namespace>CMSPico</namespace>
 	<documentation>
-		<admin>https://github.com/nextcloud/cms_pico/wiki</admin>
 		<user>https://github.com/nextcloud/cms_pico/wiki</user>
+		<admin>https://github.com/nextcloud/cms_pico/wiki</admin>
 	</documentation>
+	<category>social</category>
+	<category>integration</category>
 	<category>tools</category>
 	<website>https://github.com/nextcloud/cms_pico</website>
+	<discussion>https://help.nextcloud.com/c/apps/cms-pico</discussion>
 	<bugs>https://github.com/nextcloud/cms_pico/issues</bugs>
 	<repository>https://github.com/nextcloud/cms_pico.git</repository>
 	<screenshot>https://raw.githubusercontent.com/nextcloud/cms_pico/master/screenshots/list_websites.png</screenshot>
+	<screenshot>https://raw.githubusercontent.com/nextcloud/cms_pico/master/screenshots/new_website.png</screenshot>
+	<screenshot>https://raw.githubusercontent.com/nextcloud/cms_pico/master/screenshots/website.png</screenshot>
+	<screenshot>https://raw.githubusercontent.com/nextcloud/cms_pico/master/screenshots/custom_themes.png</screenshot>
+	<screenshot>https://raw.githubusercontent.com/nextcloud/cms_pico/master/screenshots/custom_plugins.png</screenshot>
+	<screenshot>https://raw.githubusercontent.com/nextcloud/cms_pico/master/screenshots/custom_templates.png</screenshot>
+	<screenshot>https://raw.githubusercontent.com/nextcloud/cms_pico/master/screenshots/settings.png</screenshot>
+	<screenshot>https://raw.githubusercontent.com/nextcloud/cms_pico/master/screenshots/apache.png</screenshot>
 	<dependencies>
-		<nextcloud min-version="12" max-version="16"/>
+		<php min-version="7.0.0"/>
+		<nextcloud min-version="15" max-version="18"/>
 	</dependencies>
-
+	<repair-steps>
+		<post-migration>
+			<step>OCA\CMSPico\Migration\AppDataRepairStep</step>
+		</post-migration>
+		<install>
+			<step>OCA\CMSPico\Migration\AppDataRepairStep</step>
+		</install>
+	</repair-steps>
 	<settings>
 		<admin>OCA\CMSPico\Settings\Admin</admin>
 		<admin-section>OCA\CMSPico\Settings\AdminSection</admin-section>
 		<personal>OCA\CMSPico\Settings\Personal</personal>
 		<personal-section>OCA\CMSPico\Settings\PersonalSection</personal-section>
 	</settings>
-
 </info>

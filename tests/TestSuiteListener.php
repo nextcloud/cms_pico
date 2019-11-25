@@ -1,13 +1,10 @@
 <?php
-
 /**
- * CMS Pico - Integration of Pico within your files to create websites.
+ * CMS Pico - Create websites using Pico CMS for Nextcloud.
  *
- * This file is licensed under the Affero General Public License version 3 or
- * later. See the COPYING file.
+ * @copyright Copyright (c) 2017, Maxence Lange (<maxence@artificial-owl.com>)
+ * @copyright Copyright (c) 2019, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
  *
- * @author Maxence Lange <maxence@artificial-owl.com>
- * @copyright 2017
  * @license GNU AGPL version 3 or any later version
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,14 +19,21 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
  */
+
+declare(strict_types=1);
 
 namespace OCA\CMSPico\Tests;
 
+use PHPUnit\Framework\AssertionFailedError;
+use PHPUnit\Framework\BaseTestListener;
+use PHPUnit\Framework\Test;
+use PHPUnit\Framework\TestListener;
+use PHPUnit\Framework\TestSuite;
+use PHPUnit\Framework\Warning;
 
-class Env implements \PHPUnit_Framework_TestListener {
-
+class Env extends BaseTestListener implements TestListener
+{
 	const ENV_TEST_USER1 = 'testpico1';
 	const ENV_TEST_USER2 = 'testpico2';
 	const ENV_TEST_USER3 = 'testpico3';
@@ -37,89 +41,56 @@ class Env implements \PHPUnit_Framework_TestListener {
 	/** @var array<string> */
 	private $users;
 
-	public function addError(\PHPUnit_Framework_Test $test, \Exception $e, $time) {
-	}
-
-	public function addFailure(
-		\PHPUnit_Framework_Test $test, \PHPUnit_Framework_AssertionFailedError $e, $time
-	) {
-	}
-
-	public function addIncompleteTest(\PHPUnit_Framework_Test $test, \Exception $e, $time) {
-	}
-
-	public function addRiskyTest(\PHPUnit_Framework_Test $test, \Exception $e, $time) {
-	}
-
-	public function addSkippedTest(\PHPUnit_Framework_Test $test, \Exception $e, $time) {
-	}
-
-	public function startTest(\PHPUnit_Framework_Test $test) {
-	}
-
-	public function endTest(\PHPUnit_Framework_Test $test, $time) {
-	}
-
-	public function startTestSuite(\PHPUnit_Framework_TestSuite $suite) {
+	public function startTestSuite(TestSuite $suite)
+	{
 		$userManager = \OC::$server->getUserManager();
 		$this->users = self::listUsers();
 
-		foreach ($this->users AS $UID) {
-			if ($userManager->userExists($UID) === false) {
-				$userManager->createUser($UID, $UID);
+		foreach ($this->users AS $uid) {
+			if ($userManager->userExists($uid) === false) {
+				$userManager->createUser($uid, $uid);
 			}
 		}
 	}
 
-	public function endTestSuite(\PHPUnit_Framework_TestSuite $suite) {
-		if ($suite->getName() !== '.') {
-			return;
-		}
-
-		foreach ($this->users AS $UID) {
-			$user = \OC::$server->getUserManager()
-								->get($UID);
+	public function endTestSuite(TestSuite $suite)
+	{
+		foreach ($this->users AS $uid) {
+			$user = \OC::$server->getUserManager()->get($uid);
 			if ($user !== null) {
 				$user->delete();
 			}
 		}
 	}
 
-	public function addWarning(\PHPUnit_Framework_Test $test, \PHPUnit_Framework_Warning $e, $time
-	) {
-	}
-
-	public static function setUser($which) {
+	public static function setUser($which)
+	{
+		$user = \OC::$server->getUserManager()->get($which);
 
 		$userSession = \OC::$server->getUserSession();
-		$userSession->setUser(
-			\OC::$server->getUserManager()
-						->get($which)
-		);
+		$userSession->setUser($user);
 
-		return $userSession->getUser()
-						   ->getUID();
+		return $user->getUID();
 	}
 
-	public static function currentUser() {
+	public static function currentUser()
+	{
 		$userSession = \OC::$server->getUserSession();
-		return $userSession->getUser()
-					->getUID();
+		return $userSession->getUser()->getUID();
 	}
 
-	public static function logout() {
+	public static function logout()
+	{
 		$userSession = \OC::$server->getUserSession();
 		$userSession->setUser(null);
 	}
 
-	public static function listUsers() {
+	public static function listUsers()
+	{
 		return [
 			self::ENV_TEST_USER1,
 			self::ENV_TEST_USER2,
 			self::ENV_TEST_USER3
 		];
 	}
-
 }
-
-

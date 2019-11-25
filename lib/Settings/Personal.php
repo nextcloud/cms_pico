@@ -1,12 +1,10 @@
 <?php
 /**
- * CMS Pico - Integration of Pico within your files to create websites.
+ * CMS Pico - Create websites using Pico CMS for Nextcloud.
  *
- * This file is licensed under the Affero General Public License version 3 or
- * later. See the COPYING file.
+ * @copyright Copyright (c) 2017, Maxence Lange (<maxence@artificial-owl.com>)
+ * @copyright Copyright (c) 2019, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
  *
- * @author Maxence Lange <maxence@artificial-owl.com>
- * @copyright 2017
  * @license GNU AGPL version 3 or any later version
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,40 +19,84 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
  */
+
+declare(strict_types=1);
 
 namespace OCA\CMSPico\Settings;
 
 use OCA\CMSPico\AppInfo\Application;
+use OCA\CMSPico\Model\Website;
 use OCA\CMSPico\Service\TemplatesService;
+use OCA\CMSPico\Service\ThemesService;
+use OCA\CMSPico\Service\WebsitesService;
 use OCP\AppFramework\Http\TemplateResponse;
-use OCP\IL10N;
+use OCP\IURLGenerator;
 use OCP\Settings\ISettings;
 
-class Personal implements ISettings {
+class Personal implements ISettings
+{
+	/** @var string|null */
+	private $userId;
 
-	/** @var IL10N */
-	private $l10n;
+	/** @var IURLGenerator */
+	private $urlGenerator;
+
+	/** @var WebsitesService */
+	private $websitesService;
+
+	/** @var ThemesService */
+	private $themesService;
 
 	/** @var TemplatesService */
 	private $templatesService;
 
 	/**
-	 * @param IL10N $l10n
+	 * Personal constructor.
+	 *
+	 * @param string|null      $userId
+	 * @param IURLGenerator    $urlGenerator
+	 * @param WebsitesService  $websitesService
+	 * @param ThemesService    $themesService
 	 * @param TemplatesService $templatesService
 	 */
-	public function __construct(IL10N $l10n, TemplatesService $templatesService) {
-		$this->l10n = $l10n;
+	public function __construct(
+		$userId,
+		IURLGenerator $urlGenerator,
+		WebsitesService $websitesService,
+		ThemesService $themesService,
+		TemplatesService $templatesService
+	) {
+		$this->userId = $userId;
+		$this->urlGenerator = $urlGenerator;
+		$this->websitesService = $websitesService;
+		$this->themesService = $themesService;
 		$this->templatesService = $templatesService;
 	}
 
 	/**
 	 * @return TemplateResponse
 	 */
-	public function getForm() {
+	public function getForm(): TemplateResponse
+	{
+		$exampleSite = 'example_site';
+
+		$baseUrl = $this->urlGenerator->getBaseUrl() . '/index.php/apps/' . Application::APP_NAME . '/pico/';
+		if ($this->websitesService->getLinkMode() === WebsitesService::LINK_MODE_SHORT) {
+			$baseUrl = $this->urlGenerator->getBaseUrl() . '/sites/';
+		}
+
 		$data = [
-			'templates' => $this->templatesService->getTemplatesList()
+			'exampleSite' => $exampleSite,
+			'baseUrl' => $baseUrl,
+			'nameLengthMin' => Website::NAME_LENGTH_MIN,
+			'nameLengthMax' => Website::NAME_LENGTH_MAX,
+			'siteLengthMin' => Website::SITE_LENGTH_MIN,
+			'siteLengthMax' => Website::SITE_LENGTH_MAX,
+			'siteRegex' => Website::SITE_REGEX,
+			'themes' => $this->themesService->getThemes(),
+			'templates' => $this->templatesService->getTemplates(),
+			'limitedUser' => !$this->websitesService->isUserAllowed($this->userId),
 		];
 
 		return new TemplateResponse(Application::APP_NAME, 'settings.personal', $data);
@@ -63,7 +105,8 @@ class Personal implements ISettings {
 	/**
 	 * @return string the section ID, e.g. 'sharing'
 	 */
-	public function getSection() {
+	public function getSection(): string
+	{
 		return Application::APP_NAME;
 	}
 
@@ -74,8 +117,8 @@ class Personal implements ISettings {
 	 *
 	 * keep the server setting at the top, right after "server settings"
 	 */
-	public function getPriority() {
+	public function getPriority(): int
+	{
 		return 0;
 	}
-
 }

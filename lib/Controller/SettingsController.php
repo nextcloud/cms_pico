@@ -1,12 +1,10 @@
 <?php
 /**
- * CMS Pico - Integration of Pico within your files to create websites.
+ * CMS Pico - Create websites using Pico CMS for Nextcloud.
  *
- * This file is licensed under the Affero General Public License version 3 or
- * later. See the COPYING file.
+ * @copyright Copyright (c) 2017, Maxence Lange (<maxence@artificial-owl.com>)
+ * @copyright Copyright (c) 2019, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
  *
- * @author Maxence Lange <maxence@artificial-owl.com>
- * @copyright 2017
  * @license GNU AGPL version 3 or any later version
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,28 +19,49 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
  */
+
+declare(strict_types=1);
 
 namespace OCA\CMSPico\Controller;
 
-use Exception;
 use OCA\CMSPico\AppInfo\Application;
+use OCA\CMSPico\Exceptions\PluginAlreadyExistsException;
+use OCA\CMSPico\Exceptions\PluginNotFoundException;
+use OCA\CMSPico\Exceptions\TemplateAlreadyExistsException;
+use OCA\CMSPico\Exceptions\TemplateNotCompatibleException;
+use OCA\CMSPico\Exceptions\TemplateNotFoundException;
+use OCA\CMSPico\Exceptions\ThemeAlreadyExistsException;
+use OCA\CMSPico\Exceptions\ThemeNotCompatibleException;
+use OCA\CMSPico\Exceptions\ThemeNotFoundException;
+use OCA\CMSPico\Exceptions\WebsiteExistsException;
+use OCA\CMSPico\Exceptions\WebsiteForeignOwnerException;
+use OCA\CMSPico\Exceptions\WebsiteInvalidDataException;
+use OCA\CMSPico\Exceptions\WebsiteInvalidOwnerException;
+use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
+use OCA\CMSPico\Model\Website;
 use OCA\CMSPico\Service\ConfigService;
-use OCA\CMSPico\Service\MiscService;
+use OCA\CMSPico\Service\PluginsService;
 use OCA\CMSPico\Service\TemplatesService;
 use OCA\CMSPico\Service\ThemesService;
 use OCA\CMSPico\Service\WebsitesService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
-use OCP\AppFramework\Http\TemplateResponse;
+use OCP\IL10N;
+use OCP\ILogger;
 use OCP\IRequest;
 
-class SettingsController extends Controller {
-
+class SettingsController extends Controller
+{
 	/** @var string */
 	private $userId;
+
+	/** @var IL10N */
+	private $l10n;
+
+	/** @var ILogger */
+	private $logger;
 
 	/** @var ConfigService */
 	private $configService;
@@ -53,267 +72,475 @@ class SettingsController extends Controller {
 	/** @var ThemesService */
 	private $themesService;
 
+	/** @var PluginsService */
+	private $pluginsService;
+
 	/** @var WebsitesService */
 	private $websitesService;
-
-	/** @var MiscService */
-	private $miscService;
-
 
 	/**
 	 * SettingsController constructor.
 	 *
-	 * @param IRequest $request
-	 * @param string $userId
-	 * @param ConfigService $configService
+	 * @param IRequest         $request
+	 * @param string           $userId
+	 * @param IL10N            $l10n
+	 * @param ILogger          $logger
+	 * @param ConfigService    $configService
 	 * @param TemplatesService $templatesService
-	 * @param ThemesService $themesService
-	 * @param WebsitesService $websitesService
-	 * @param MiscService $miscService
+	 * @param ThemesService    $themesService
+	 * @param PluginsService   $pluginsService
+	 * @param WebsitesService  $websitesService
 	 */
-	function __construct(
-		IRequest $request, $userId, ConfigService $configService, TemplatesService $templatesService,
-		ThemesService $themesService, WebsitesService $websitesService,
-		MiscService $miscService
+	public function __construct(
+		IRequest $request,
+		$userId,
+		IL10N $l10n,
+		ILogger $logger,
+		ConfigService $configService,
+		TemplatesService $templatesService,
+		ThemesService $themesService,
+		PluginsService $pluginsService,
+		WebsitesService $websitesService
 	) {
 		parent::__construct(Application::APP_NAME, $request);
+
 		$this->userId = $userId;
+		$this->l10n = $l10n;
+		$this->logger = $logger;
 		$this->configService = $configService;
 		$this->templatesService = $templatesService;
 		$this->themesService = $themesService;
+		$this->pluginsService = $pluginsService;
 		$this->websitesService = $websitesService;
-		$this->miscService = $miscService;
 	}
-
 
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param array $data
-	 *
 	 * @return DataResponse
 	 */
-	public function createPersonalWebsite($data) {
-
-		try {
-			$this->websitesService->createWebsite(
-				$data['name'], $this->userId, $data['website'], $data['path'], $data['template']
-			);
-
-			return $this->miscService->success(
-				[
-					'name'     => $data['name'],
-					'websites' => $this->websitesService->getWebsitesFromUser($this->userId)
-				]
-			);
-		} catch (Exception $e) {
-			return $this->miscService->fail(['name' => $data['name'], 'error' => $e->getMessage()]);
-		}
+	public function getPersonalWebsites(): DataResponse
+	{
+		$data = [ 'websites' => $this->websitesService->getWebsitesFromUser($this->userId) ];
+		return new DataResponse($data, Http::STATUS_OK);
 	}
-
 
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param $data
+	 * @param array<string,string> $data
 	 *
 	 * @return DataResponse
 	 */
-	public function removePersonalWebsite($data) {
-
+	public function createPersonalWebsite(array $data): DataResponse
+	{
 		try {
-			$this->websitesService->deleteWebsite($data['id'], $this->userId);
+			$website = (new Website())
+				->setName($data['name'])
+				->setUserId($this->userId)
+				->setSite($data['site'])
+				->setTheme($data['theme'])
+				->setPath($data['path'])
+				->setTemplateSource($data['template']);
 
-			return $this->miscService->success(
-				[
-					'name'     => $data['name'],
-					'websites' => $this->websitesService->getWebsitesFromUser($this->userId)
-				]
-			);
-		} catch (Exception $e) {
-			return $this->miscService->fail(['name' => $data['name'], 'error' => $e->getMessage()]);
+			$this->websitesService->createWebsite($website);
+
+			return $this->getPersonalWebsites();
+		} catch (\Exception $e) {
+			$error = [];
+			if ($e instanceof WebsiteExistsException) {
+				$error['error'] = [ 'field' => 'site', 'message' => $this->l10n->t('Website exists.') ];
+			} elseif ($e instanceof WebsiteInvalidOwnerException) {
+				$error['error'] = [ 'field' => 'user', 'message' => $this->l10n->t('No permission.') ];
+			} elseif (($e instanceof WebsiteInvalidDataException) && $e->getField()) {
+				$error['error'] = [ 'field' => $e->getField(), 'message' => $e->getMessage() ];
+			} elseif ($e instanceof ThemeNotFoundException) {
+				$error['error'] = [ 'field' => 'theme', 'message' => $this->l10n->t('Theme not found.') ];
+			} elseif ($e instanceof ThemeNotCompatibleException) {
+				$error['error'] = [ 'field' => 'theme', 'message' => $this->l10n->t($e->getReason()) ];
+			} elseif ($e instanceof TemplateNotFoundException) {
+				$error['error'] = [ 'field' => 'template', 'message' => $this->l10n->t('Template not found.') ];
+			} elseif ($e instanceof TemplateNotCompatibleException) {
+				$error['error'] = [ 'field' => 'template', 'message' => $this->l10n->t($e->getReason()) ];
+			}
+
+			return $this->createErrorResponse($e, $error);
 		}
 	}
 
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @param int     $siteId
+	 * @param mixed[] $data
+	 *
+	 * @return DataResponse
+	 */
+	public function updatePersonalWebsite(int $siteId, array $data): DataResponse
+	{
+		try {
+			$website = $this->websitesService->getWebsiteFromId($siteId);
+
+			$website->assertOwnedBy($this->userId);
+
+			foreach ($data as $key => $value) {
+				switch ($key) {
+					case 'type':
+						$website->setType((int) $value);
+						break;
+
+					case 'theme':
+						$website->setTheme($value);
+						break;
+
+					default:
+						throw new WebsiteInvalidDataException();
+				}
+			}
+
+			$this->websitesService->updateWebsite($website);
+
+			return $this->getPersonalWebsites();
+		} catch (\Exception $e) {
+			$error = [];
+			if (($e instanceof WebsiteNotFoundException) || ($e instanceof WebsiteForeignOwnerException)) {
+				$error['error'] = [ 'field' => 'identifier', 'message' => $this->l10n->t('Website not found.') ];
+			} elseif ($e instanceof WebsiteInvalidDataException) {
+				$error['error'] = [ 'field' => $e->getField(), 'message' => $e->getMessage() ];
+			} elseif ($e instanceof ThemeNotFoundException) {
+				$error['error'] = [ 'field' => 'theme', 'message' => $this->l10n->t('Theme not found.') ];
+			} elseif ($e instanceof ThemeNotCompatibleException) {
+				$error['error'] = [ 'field' => 'theme', 'message' => $this->l10n->t($e->getReason()) ];
+			} elseif ($e instanceof TemplateNotFoundException) {
+				$error['error'] = [ 'field' => 'template', 'message' => $this->l10n->t('Template not found.') ];
+			} elseif ($e instanceof TemplateNotCompatibleException) {
+				$error['error'] = [ 'field' => 'template', 'message' => $this->l10n->t($e->getReason()) ];
+			}
+
+			return $this->createErrorResponse($e, $error);
+		}
+	}
 
 	/**
 	 * @NoAdminRequired
 	 *
 	 * @param int $siteId
-	 * @param string $theme
 	 *
 	 * @return DataResponse
 	 */
-	public function updateWebsiteTheme($siteId, $theme) {
-
+	public function removePersonalWebsite(int $siteId): DataResponse
+	{
 		try {
 			$website = $this->websitesService->getWebsiteFromId($siteId);
 
-			$website->hasToBeOwnedBy($this->userId);
-			$website->setTheme((string)$theme);
+			$website->assertOwnedBy($this->userId);
 
-			$this->themesService->hasToBeAValidTheme($theme);
-			$this->websitesService->updateWebsite($website);
+			$this->websitesService->deleteWebsite($website);
 
-			return $this->miscService->success(
-				['websites' => $this->websitesService->getWebsitesFromUser($this->userId)]
-			);
-		} catch (Exception $e) {
-			return $this->miscService->fail(['error' => $e->getMessage()]);
+			return $this->getPersonalWebsites();
+		} catch (WebsiteNotFoundException $e) {
+			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Website not found.') ]);
+		} catch (WebsiteForeignOwnerException $e) {
+			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Website not found.') ]);
+		} catch (\Exception $e) {
+			return $this->createErrorResponse($e);
 		}
 	}
-
-
-	/**
-	 * @NoAdminRequired
-	 *
-	 * @param int $siteId
-	 * @param string $option
-	 * @param string $value
-	 *
-	 * @return DataResponse
-	 */
-	public function editPersonalWebsiteOption($siteId, $option, $value) {
-
-		try {
-			$website = $this->websitesService->getWebsiteFromId($siteId);
-
-			$website->hasToBeOwnedBy($this->userId);
-			$website->setOption((string)$option, (string)$value);
-
-			$this->websitesService->updateWebsite($website);
-
-			return $this->miscService->success(
-				['websites' => $this->websitesService->getWebsitesFromUser($this->userId)]
-			);
-		} catch (Exception $e) {
-			return $this->miscService->fail(['error' => $e->getMessage()]);
-		}
-	}
-
-
-	/**
-	 * @NoAdminRequired
-	 *
-	 * @return DataResponse
-	 */
-	public function getPersonalWebsites() {
-		try {
-			$websites = $this->websitesService->getWebsitesFromUser($this->userId);
-
-			return $this->miscService->success(
-				[
-					'themes'   => $this->themesService->getThemesList(),
-					'websites' => $websites
-				]
-			);
-		} catch (Exception $e) {
-			return $this->miscService->fail(['error' => $e->getMessage()]);
-		}
-	}
-
 
 	/**
 	 * @return DataResponse
 	 */
-	public function getSettingsAdmin() {
+	public function getTemplates(): DataResponse
+	{
 		$data = [
-			'templates'     => $this->templatesService->getTemplatesList(true),
-			'templates_new' => $this->templatesService->getNewTemplatesList(),
-			'themes'        => $this->themesService->getThemesList(true),
-			'themes_new'    => $this->themesService->getNewThemesList()
+			'systemItems' => $this->templatesService->getSystemTemplates(),
+			'customItems' => $this->templatesService->getCustomTemplates(),
+			'newItems' => $this->templatesService->getNewCustomTemplates(),
 		];
 
 		return new DataResponse($data, Http::STATUS_OK);
 	}
 
-
 	/**
-	 * @return DataResponse
-	 */
-	public function setSettingsAdmin() {
-		return $this->getSettingsAdmin();
-	}
-
-
-	/**
-	 * @param string $template
+	 * @param string $item
 	 *
 	 * @return DataResponse
 	 */
-	public function addCustomTemplate($template) {
+	public function addCustomTemplate(string $item): DataResponse
+	{
+		try {
+			$this->templatesService->registerCustomTemplate($item);
 
-		$custom = $this->templatesService->getTemplatesList(true);
-		array_push($custom, $template);
-		$this->configService->setAppValue(ConfigService::CUSTOM_TEMPLATES, json_encode($custom));
-
-		return $this->getSettingsAdmin();
-	}
-
-	/**
-	 * @param string $template
-	 *
-	 * @return DataResponse
-	 */
-	public function removeCustomTemplate($template) {
-
-		$custom = $this->templatesService->getTemplatesList(true);
-
-		$k = array_search($template, $custom);
-		if ($k !== false) {
-			unset($custom[$k]);
+			return $this->getTemplates();
+		} catch (TemplateNotFoundException $e) {
+			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Template not found.') ]);
+		} catch (TemplateAlreadyExistsException $e) {
+			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Template exists already.') ]);
+		} catch (\Exception $e) {
+			return $this->createErrorResponse($e);
 		}
-
-		$this->configService->setAppValue(ConfigService::CUSTOM_TEMPLATES, json_encode($custom));
-
-		return $this->getSettingsAdmin();
-	}
-
-
-	/**
-	 * @param string $theme
-	 *
-	 * @return DataResponse
-	 */
-	public function addCustomTheme($theme) {
-
-		$custom = $this->themesService->getThemesList(true);
-		array_push($custom, $theme);
-		$this->configService->setAppValue(ConfigService::CUSTOM_THEMES, json_encode($custom));
-
-		return $this->getSettingsAdmin();
 	}
 
 	/**
-	 * @param string $theme
+	 * @param string $item
 	 *
 	 * @return DataResponse
 	 */
-	public function removeCustomTheme($theme) {
+	public function removeCustomTemplate(string $item): DataResponse
+	{
+		try {
+			$this->templatesService->removeCustomTemplate($item);
 
-		$custom = $this->themesService->getThemesList(true);
-
-		$k = array_search($theme, $custom);
-		if ($k !== false) {
-			unset($custom[$k]);
+			return $this->getTemplates();
+		} catch (TemplateNotFoundException $e) {
+			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Template not found.') ]);
+		} catch (\Exception $e) {
+			return $this->createErrorResponse($e);
 		}
-
-		$this->configService->setAppValue(ConfigService::CUSTOM_THEMES, json_encode($custom));
-
-		return $this->getSettingsAdmin();
 	}
 
+	/**
+	 * @param string $item
+	 * @param string $name
+	 *
+	 * @return DataResponse
+	 */
+	public function copyTemplate(string $item, string $name): DataResponse
+	{
+		try {
+			$this->templatesService->copyTemplate($item, $name);
+
+			return $this->getTemplates();
+		} catch (TemplateNotFoundException $e) {
+			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Template not found.') ]);
+		} catch (TemplateAlreadyExistsException $e) {
+			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Template exists already.') ]);
+		} catch (\Exception $e) {
+			return $this->createErrorResponse($e);
+		}
+	}
 
 	/**
-	 * compat NC 12 and lower
-	 *
-	 * @return TemplateResponse
+	 * @return DataResponse
 	 */
-	public function nc12personal() {
+	public function getThemes(): DataResponse
+	{
 		$data = [
-			'templates' => $this->templatesService->getTemplatesList()
+			'systemItems' => $this->themesService->getSystemThemes(),
+			'customItems' => $this->themesService->getCustomThemes(),
+			'newItems' => $this->themesService->getNewCustomThemes(),
 		];
 
-		return new TemplateResponse(Application::APP_NAME, 'settings.personal', $data, '');
+		return new DataResponse($data, Http::STATUS_OK);
+	}
+
+	/**
+	 * @param string $item
+	 *
+	 * @return DataResponse
+	 */
+	public function addCustomTheme(string $item): DataResponse
+	{
+		try {
+			$this->themesService->publishCustomTheme($item);
+
+			return $this->getThemes();
+		} catch (ThemeNotFoundException $e) {
+			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Theme not found.') ]);
+		} catch (ThemeAlreadyExistsException $e) {
+			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Theme exists already.') ]);
+		} catch (\Exception $e) {
+			return $this->createErrorResponse($e);
+		}
+	}
+
+	/**
+	 * @param string $item
+	 *
+	 * @return DataResponse
+	 */
+	public function updateCustomTheme(string $item): DataResponse
+	{
+		try {
+			$this->themesService->depublishCustomTheme($item);
+			$this->themesService->publishCustomTheme($item);
+
+			return $this->getThemes();
+		} catch (ThemeNotFoundException $e) {
+			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Theme not found.') ]);
+		} catch (\Exception $e) {
+			return $this->createErrorResponse($e);
+		}
+	}
+
+	/**
+	 * @param string $item
+	 *
+	 * @return DataResponse
+	 */
+	public function removeCustomTheme(string $item): DataResponse
+	{
+		try {
+			$this->themesService->depublishCustomTheme($item);
+
+			return $this->getThemes();
+		} catch (ThemeNotFoundException $e) {
+			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Theme not found.') ]);
+		} catch (\Exception $e) {
+			return $this->createErrorResponse($e);
+		}
+	}
+
+	/**
+	 * @param string $item
+	 * @param string $name
+	 *
+	 * @return DataResponse
+	 */
+	public function copyTheme(string $item, string $name): DataResponse
+	{
+		try {
+			$this->themesService->copyTheme($item, $name);
+
+			return $this->getThemes();
+		} catch (ThemeNotFoundException $e) {
+			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Theme not found.') ]);
+		} catch (ThemeAlreadyExistsException $e) {
+			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Theme exists already.') ]);
+		} catch (\Exception $e) {
+			return $this->createErrorResponse($e);
+		}
+	}
+
+	/**
+	 * @return DataResponse
+	 */
+	public function getPlugins(): DataResponse
+	{
+		$data = [
+			'systemItems' => $this->pluginsService->getSystemPlugins(),
+			'customItems' => $this->pluginsService->getCustomPlugins(),
+			'newItems' => $this->pluginsService->getNewCustomPlugins(),
+		];
+
+		return new DataResponse($data, Http::STATUS_OK);
+	}
+
+	/**
+	 * @param string $item
+	 *
+	 * @return DataResponse
+	 */
+	public function addCustomPlugin(string $item): DataResponse
+	{
+		try {
+			$this->pluginsService->publishCustomPlugin($item);
+
+			return $this->getPlugins();
+		} catch (PluginNotFoundException $e) {
+			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Plugin not found.') ]);
+		} catch (PluginAlreadyExistsException $e) {
+			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Plugin exists already.') ]);
+		} catch (\Exception $e) {
+			return $this->createErrorResponse($e);
+		}
+	}
+
+	/**
+	 * @param string $item
+	 *
+	 * @return DataResponse
+	 */
+	public function updateCustomPlugin(string $item): DataResponse
+	{
+		try {
+			$this->pluginsService->depublishCustomPlugin($item);
+			$this->pluginsService->publishCustomPlugin($item);
+
+			return $this->getPlugins();
+		} catch (PluginNotFoundException $e) {
+			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Plugin not found.') ]);
+		} catch (\Exception $e) {
+			return $this->createErrorResponse($e);
+		}
+	}
+
+	/**
+	 * @param string $item
+	 *
+	 * @return DataResponse
+	 */
+	public function removeCustomPlugin(string $item): DataResponse
+	{
+		try {
+			$this->pluginsService->depublishCustomPlugin($item);
+
+			return $this->getPlugins();
+		} catch (PluginNotFoundException $e) {
+			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Plugin not found.') ]);
+		} catch (\Exception $e) {
+			return $this->createErrorResponse($e);
+		}
+	}
+
+	/**
+	 * @param array $data
+	 *
+	 * @return DataResponse
+	 */
+	public function setLimitGroups(array $data): DataResponse
+	{
+		try {
+			if (!isset($data['limit_groups'])) {
+				throw new \UnexpectedValueException();
+			}
+
+			$limitGroups = $data['limit_groups'] ? explode('|', $data['limit_groups']) : [];
+			$this->websitesService->setLimitGroups($limitGroups);
+
+			return new DataResponse();
+		} catch (\Exception $e) {
+			return $this->createErrorResponse($e);
+		}
+	}
+
+	/**
+	 * @param array $data
+	 *
+	 * @return DataResponse
+	 */
+	public function setLinkMode(array $data): DataResponse
+	{
+		try {
+			if (!isset($data['link_mode'])) {
+				throw new \UnexpectedValueException();
+			}
+
+			$this->websitesService->setLinkMode((int) $data['link_mode']);
+
+			return new DataResponse();
+		} catch (\Exception $e) {
+			return $this->createErrorResponse($e);
+		}
+	}
+
+	/**
+	 * @param \Exception $exception
+	 * @param array      $data
+	 *
+	 * @return DataResponse
+	 */
+	private function createErrorResponse(\Exception $exception, array $data = []): DataResponse
+	{
+		$this->logger->logException($exception, [ 'app' => Application::APP_NAME, 'level' => 2 ]);
+
+		$data['status'] = 0;
+		if (\OC::$server->getSystemConfig()->getValue('debug', false)) {
+			$data['exception'] = get_class($exception);
+			$data['exceptionMessage'] = $exception->getMessage();
+			$data['exceptionCode'] = $exception->getCode();
+		}
+
+		return new DataResponse($data, Http::STATUS_INTERNAL_SERVER_ERROR);
 	}
 }

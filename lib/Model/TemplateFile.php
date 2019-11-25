@@ -1,12 +1,10 @@
 <?php
 /**
- * CMS Pico - Integration of Pico within your files to create websites.
+ * CMS Pico - Create websites using Pico CMS for Nextcloud.
  *
- * This file is licensed under the Affero General Public License version 3 or
- * later. See the COPYING file.
+ * @copyright Copyright (c) 2017, Maxence Lange (<maxence@artificial-owl.com>)
+ * @copyright Copyright (c) 2019, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
  *
- * @author Maxence Lange <maxence@artificial-owl.com>
- * @copyright 2017
  * @license GNU AGPL version 3 or any later version
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,69 +19,167 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
  */
+
+declare(strict_types=1);
 
 namespace OCA\CMSPico\Model;
 
+use OCA\CMSPico\Files\AbstractNode;
+use OCA\CMSPico\Files\FileInterface;
+use OCA\CMSPico\Files\FolderInterface;
+use OCA\CMSPico\Files\NodeInterface;
+use OCP\Constants;
+use OCP\Files\GenericFileException;
+use OCP\Files\InvalidPathException;
+use OCP\Files\NotFoundException;
+use OCP\Files\NotPermittedException;
 
-class TemplateFile {
+class TemplateFile extends AbstractNode implements FileInterface
+{
+	/** @var FileInterface */
+	private $file;
 
-	/** @var string */
-	private $base;
+	/** @var bool */
+	private $isBinary;
 
-	/** @var string */
-	private $filename;
-
-	/** @var string */
-	private $content;
-
+	/** @var array<string,string> */
+	private $data = [];
 
 	/**
 	 * TemplateFile constructor.
 	 *
-	 * @param string $base
-	 * @param string $filename
+	 * @param FileInterface $file
 	 */
-	function __construct($base, $filename) {
-		$this->base = $base;
-		$this->filename = $filename;
+	public function __construct(FileInterface $file)
+	{
+		parent::__construct();
 
-		// TODO: get the content from File
-		$this->content = file_get_contents($base . $filename);
-	}
-
-
-	/**
-	 * @return string
-	 */
-	public function getFilename() {
-		return $this->filename;
-	}
-
-
-	/**
-	 * @param string $content
-	 */
-	public function setContent($content) {
-		$this->content = $content;
+		$this->file = $file;
 	}
 
 	/**
-	 * @return string
+	 * {@inheritDoc}
 	 */
-	public function getContent() {
-		return $this->content;
+	public function rename(string $name): NodeInterface
+	{
+		throw new NotPermittedException();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public function delete()
+	{
+		// nothing to do
+	}
 
-	public function applyData($data) {
-		$ak = array_keys($data);
-		$temp = $this->getContent();
-		foreach ($ak as $k) {
-			$temp = str_replace('%%' . $k . '%%', $data[$k], $temp);
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getPath(): string
+	{
+		return $this->file->getPath();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getLocalPath(): string
+	{
+		throw new NotFoundException();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getName(): string
+	{
+		return $this->file->getName();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getParent(): string
+	{
+		return $this->file->getParent();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getParentNode(): FolderInterface
+	{
+		throw new InvalidPathException();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function isLocal(): bool
+	{
+		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getPermissions(): int
+	{
+		return Constants::PERMISSION_READ | Constants::PERMISSION_DELETE;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getExtension(): string
+	{
+		return $this->file->getExtension();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getContent(): string
+	{
+		if ($this->isBinary() || empty($this->data)) {
+			return $this->file->getContent();
 		}
 
-		$this->setContent($temp);
+		return str_replace(array_keys($this->data), $this->data, $this->file->getContent());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function putContent(string $data)
+	{
+		throw new NotPermittedException();
+	}
+
+	/**
+	 * @return bool
+	 * @throws NotPermittedException
+	 * @throws GenericFileException
+	 */
+	public function isBinary(): bool
+	{
+		if ($this->isBinary === null) {
+			$this->isBinary = $this->miscService->isBinaryFile($this->file);
+		}
+
+		return $this->isBinary;
+	}
+
+	/**
+	 * @param array<string,string> $data
+	 */
+	public function setTemplateData(array $data)
+	{
+		$this->data = [];
+		foreach ($data as $key => $value) {
+			$this->data['%%' . $key . '%%'] = $value;
+		}
 	}
 }

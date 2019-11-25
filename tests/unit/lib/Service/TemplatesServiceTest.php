@@ -1,12 +1,10 @@
 <?php
 /**
- * CMS Pico - Integration of Pico within your files to create websites.
+ * CMS Pico - Create websites using Pico CMS for Nextcloud.
  *
- * This file is licensed under the Affero General Public License version 3 or
- * later. See the COPYING file.
+ * @copyright Copyright (c) 2017, Maxence Lange (<maxence@artificial-owl.com>)
+ * @copyright Copyright (c) 2019, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
  *
- * @author Maxence Lange <maxence@artificial-owl.com>
- * @copyright 2017
  * @license GNU AGPL version 3 or any later version
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,22 +19,24 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
  */
+
+declare(strict_types=1);
 
 namespace OCA\CMSPico\Tests\Service;
 
-use Exception;
 use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Controller\SettingsController;
-use OCA\CMSPico\Exceptions\TemplateDoesNotExistException;
+use OCA\CMSPico\Exceptions\TemplateNotFoundException;
 use OCA\CMSPico\Service\FileService;
+use OCA\CMSPico\Service\PicoService;
 use OCA\CMSPico\Service\TemplatesService;
 use OCA\CMSPico\Tests\Env;
+use PHPUnit\Exception as PHPUnitException;
+use PHPUnit\Framework\TestCase;
 
-
-class TemplatesServiceTest extends \PHPUnit_Framework_TestCase {
-
+class TemplatesServiceTest extends TestCase
+{
 	/** @var FileService */
 	private $fileService;
 
@@ -46,13 +46,8 @@ class TemplatesServiceTest extends \PHPUnit_Framework_TestCase {
 	/** @var TemplatesService */
 	private $templatesService;
 
-
-	/**
-	 * setUp() is initiated before each test.
-	 *
-	 * @throws Exception
-	 */
-	protected function setUp() {
+	protected function setUp()
+	{
 		Env::setUser(Env::ENV_TEST_USER1);
 		Env::logout();
 
@@ -64,69 +59,62 @@ class TemplatesServiceTest extends \PHPUnit_Framework_TestCase {
 		$this->settingsController = $container->query(SettingsController::class);
 	}
 
-
-	/**
-	 * tearDown() is initiated after each test.
-	 *
-	 * @throws Exception
-	 */
-	protected function tearDown() {
+	protected function tearDown()
+	{
 		Env::setUser(Env::ENV_TEST_USER1);
 		Env::logout();
 	}
 
+	public function testTemplates()
+	{
+		$this->assertCount(2, $this->templatesService->getTemplates());
+		$this->assertCount(0, $this->templatesService->getCustomTemplates());
+		$this->assertCount(0, $this->templatesService->getNewCustomTemplates());
 
-	/**
-	 *
-	 */
-	public function testTemplates() {
+		$testTemplateFolder = $this->fileService->getAppDataFolder(PicoService::DIR_TEMPLATES)
+			->newFolder('this_is_a_template');
+		$testTemplateFolder->newFolder('content');
+		$testTemplateFolder->newFolder('assets');
 
-		if (file_exists($this->fileService->getAppDataFolderPath('templates', true) . 'this_is_a_template')) {
-			rmdir($this->fileService->getAppDataFolderPath('templates', true) . 'this_is_a_template');
-		}
-
-		$this->assertCount(2, $this->templatesService->getTemplatesList());
-		$this->assertCount(0, $this->templatesService->getTemplatesList(true));
-		$this->assertCount(0, $this->templatesService->getNewTemplatesList());
-
-		mkdir($this->fileService->getAppDataFolderPath('templates', true) . 'this_is_a_template');
-		$this->assertCount(2, $this->templatesService->getTemplatesList());
-		$this->assertCount(0, $this->templatesService->getTemplatesList(true));
-		$this->assertCount(1, $this->templatesService->getNewTemplatesList());
+		$this->assertCount(2, $this->templatesService->getTemplates());
+		$this->assertCount(0, $this->templatesService->getCustomTemplates());
+		$this->assertCount(1, $this->templatesService->getNewCustomTemplates());
 
 		try {
-			$this->templatesService->templateHasToExist('this_is_a_template');
+			$this->templatesService->assertValidTemplate('this_is_a_template');
 			$this->assertSame(true, false, 'should return an exception');
-		} catch (TemplateDoesNotExistException $e) {
-		} catch (Exception $e) {
-			$this->assertSame(true, false, 'should return TemplateDoesNotExistException');
+		} catch (TemplateNotFoundException $e) {
+		} catch (PHPUnitException $e) {
+			throw $e;
+		} catch (\Exception $e) {
+			$this->assertSame(true, false, 'should return TemplateNotFoundException');
 		}
 
 		$this->settingsController->addCustomTemplate('this_is_a_template');
-		$this->assertCount(3, $this->templatesService->getTemplatesList());
-		$this->assertCount(1, $this->templatesService->getTemplatesList(true));
-		$this->assertCount(0, $this->templatesService->getNewTemplatesList());
+		$this->assertCount(3, $this->templatesService->getTemplates());
+		$this->assertCount(1, $this->templatesService->getCustomTemplates());
+		$this->assertCount(0, $this->templatesService->getNewCustomTemplates());
 
-		$this->templatesService->templateHasToExist('this_is_a_template');
+		$this->templatesService->assertValidTemplate('this_is_a_template');
 
 		$this->settingsController->removeCustomTemplate('this_is_a_template');
-		$this->assertCount(2, $this->templatesService->getTemplatesList());
-		$this->assertCount(0, $this->templatesService->getTemplatesList(true));
-		$this->assertCount(1, $this->templatesService->getNewTemplatesList());
+		$this->assertCount(2, $this->templatesService->getTemplates());
+		$this->assertCount(0, $this->templatesService->getCustomTemplates());
+		$this->assertCount(1, $this->templatesService->getNewCustomTemplates());
 
-		rmdir($this->fileService->getAppDataFolderPath('templates', true) . 'this_is_a_template');
-		$this->assertCount(2, $this->templatesService->getTemplatesList());
-		$this->assertCount(0, $this->templatesService->getTemplatesList(true));
-		$this->assertCount(0, $this->templatesService->getNewTemplatesList());
+		$testTemplateFolder->delete();
+		$this->assertCount(2, $this->templatesService->getTemplates());
+		$this->assertCount(0, $this->templatesService->getCustomTemplates());
+		$this->assertCount(0, $this->templatesService->getNewCustomTemplates());
 
 		try {
-			$this->templatesService->templateHasToExist('this_is_a_template');
+			$this->templatesService->assertValidTemplate('this_is_a_template');
 			$this->assertSame(true, false, 'should return an exception');
-		} catch (TemplateDoesNotExistException $e) {
-		} catch (Exception $e) {
-			$this->assertSame(true, false, 'should return TemplateDoesNotExistException');
+		} catch (TemplateNotFoundException $e) {
+		} catch (PHPUnitException $e) {
+			throw $e;
+		} catch (\Exception $e) {
+			$this->assertSame(true, false, 'should return TemplateNotFoundException');
 		}
-
 	}
-
 }
