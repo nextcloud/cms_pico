@@ -637,7 +637,7 @@ style(Application::APP_NAME, 'pico');
 		<section>
 			<p class="code">
 				<code>
-					location <?php p($_['internalPath']); ?> {<br/>
+					location ^~ <?php p($_['internalPath']); ?> {<br/>
 					&nbsp;&nbsp;&nbsp;&nbsp;proxy_set_header X-Forwarded-Host $host:$server_port;<br/>
 					&nbsp;&nbsp;&nbsp;&nbsp;proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;<br/>
 					&nbsp;&nbsp;&nbsp;&nbsp;proxy_set_header X-Forwarded-Server $host;<br/>
