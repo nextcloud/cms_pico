@@ -120,7 +120,7 @@ verify:
 				-signature /dev/stdin \
 				"$(verify)"
 
-github-release: export GITHUB_TOKEN="$(github_token)"
+github-release: export GITHUB_TOKEN=$(github_token)
 github-release: check
 	github-release release \
 		--user "$(github_owner)" \
@@ -131,7 +131,7 @@ github-release: check
 		--description "$(app_title) $(version)" \
 		$(if $(filter true,$(prerelease)),--pre-release,)
 
-github-upload: export GITHUB_TOKEN="$(github_token)"
+github-upload: export GITHUB_TOKEN=$(github_token)
 github-upload: check build github-release
 	github-release upload \
 		--user "$(github_owner)" \
@@ -141,7 +141,7 @@ github-upload: check build github-release
 		--file "$(build_dir)/$(archive)"
 
 publish: check sign github-upload
-	php -r 'echo json_encode([ "download" => $$_SERVER["argv"][1], "signature" => file_get_contents($$_SERVER["argv"][2]), "nightly" => !!$$_SERVER["argv"][3] ]);' "" \
+	php -r 'echo json_encode([ "download" => $$_SERVER["argv"][1], "signature" => file_get_contents($$_SERVER["argv"][2]), "nightly" => !!$$_SERVER["argv"][3] ]);' \
 		"$(download_url)" "$(build_dir)/$(signature)" "$(if $(filter true,$(prerelease)),1,0)" \
 			| curl -K "$(curlrc)" \
 				-H "Content-Type: application/json" -d "@-" \
