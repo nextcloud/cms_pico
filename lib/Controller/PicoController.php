@@ -117,7 +117,7 @@ class PicoController extends Controller
 			));
 		} catch (WebsiteInvalidFilesystemException $e) {
 			return new InternalServerErrorResponse($this->l10n->t(
-				'The file and directory structure of this website appears to be broken und thus could not be accessed.'
+				'The file and directory structure of this website appears to be broken and thus could not be accessed.'
 			));
 		} catch (WebsiteNotPermittedException $e) {
 			return new NotPermittedResponse($this->l10n->t(
