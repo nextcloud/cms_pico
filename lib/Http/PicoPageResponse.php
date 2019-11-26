@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace OCA\CMSPico\Http;
 
 use OCA\CMSPico\Model\PicoPage;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\EmptyContentSecurityPolicy;
 use OCP\AppFramework\Http\Response;
 
@@ -44,9 +45,9 @@ class PicoPageResponse extends Response
 
 		$this->addHeader('Content-Disposition', 'inline; filename=""');
 		$this->setContentSecurityPolicy(new PicoContentSecurityPolicy());
-		if ($page->is404Content())
-		{
-			$this->setStatus(404);
+
+		if ($page->is404Content()) {
+			$this->setStatus(Http::STATUS_NOT_FOUND);
 		}
 	}
 
