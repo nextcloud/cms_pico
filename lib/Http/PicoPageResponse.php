@@ -44,6 +44,10 @@ class PicoPageResponse extends Response
 
 		$this->addHeader('Content-Disposition', 'inline; filename=""');
 		$this->setContentSecurityPolicy(new PicoContentSecurityPolicy());
+		if ($page->is404Content())
+		{
+			$this->setStatus(404);
+		}
 	}
 
 	/**
