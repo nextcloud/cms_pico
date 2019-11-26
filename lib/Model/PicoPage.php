@@ -125,4 +125,12 @@ class PicoPage
 	{
 		return $this->output;
 	}
+
+	/**
+	 * @return bool
+	 */
+	public function is404Content(): bool
+	{
+		return $this->pico->is404Content();
+	}
 }
