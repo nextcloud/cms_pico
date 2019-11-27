@@ -4,6 +4,7 @@ OC.L10N.register(
     "Abort" : "Annuler",
     "Copy" : "Copier",
     "Confirm website deletion" : "Confirmer la suppression du site web",
+    "Website exists." : "Le site web existe.",
     "No permission." : "Aucun droit.",
     "Theme not found." : "Thème non trouvé.",
     "Template not found." : "Modèle non trouvé.",

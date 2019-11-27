@@ -3,11 +3,12 @@ OC.L10N.register(
     {
     "Abort" : "Interrompi",
     "Copy" : "Copia",
-    "Confirm website deletion" : "Conferma eliminazione del sito",
+    "Confirm website deletion" : "Conferma eliminazione del sito web",
     "This operation will delete the website \"{name}\". However, all of its contents will still be available in your Nextcloud." : "Questa operazione eliminerà il sito web \"{name}\". Tuttavia, tutto il suo contenuto sarà ancora disponibile nel tuo Nextcloud.",
     "Choose website directory" : "Scegli cartella del sito web",
     "A unexpected error occured while performing this action. Please check Nextcloud's logs." : "Si è verificato un errore imprevisto eseguendo questa azione. Controlla i log di Nextcloud.",
-    "The requested website could not be found on the server. Maybe the website was deleted?" : "Il sito richiesto non è stato trovato sul server. Forse il sito è stato eliminato?",
+    "The requested website could not be found on the server. Maybe the website was deleted?" : "Il sito web richiesto non è stato trovato sul server. Forse il sito è stato eliminato?",
+    "The file and directory structure of this website appears to be broken and thus could not be accessed." : "La struttura dei file e delle cartelle di questo sito sembra danneggiata e quindi potrebbe non essere accessibile.",
     "You don't have access to this private website. Maybe the share was deleted or has expired?" : "Non hai accesso a questo sito web privato. Forse la condivisione è stata annullata o è scaduta?",
     "This website is hosted on a non-local storage and thus could not be accessed." : "Questo sito web è ospitato su un'archiviazione non locale e quindi non è accessibile.",
     "This website uses a theme that could not be found on the server and thus could not be built." : "Questo sito web usa un tema che non è stato trovato sul server e quindi non è possibile crearlo.",
@@ -38,6 +39,7 @@ OC.L10N.register(
     "Failed to enable Pico CMS for Nextcloud: Couldn't find \"%s\". Make sure to install the app's dependencies by executing `composer install` in the app's install directory below \"%s\". Then try again enabling Pico CMS for Nextcloud." : "Attivazione di Pico CMS per Nextcloud fallita: impossibile trovare \"%s\". Assicurati di installare le dipendenze dell'app eseguendo `composer install` nella cartella di installazione dell'app sotto \"%s\". Poi riprova ad attivare Pico CMS per Nextcloud.",
     "Failed to enable Pico CMS for Nextcloud: The webserver has no permission to create files and folders below \"%s\". Make sure to give the webserver write access to this directory by changing its permissions and ownership to the same as of your \"%s\" directory. Then try again enabling Pico CMS for Nextcloud." : "Attivazione di Pico CMS per Nextcloud fallita: il server web non ha il permesso di creare file e cartelle sotto \"%s\". Assicurati di dare i permessi di scrittura al server web per questa cartella cambiando le sue autorizzazioni e lo stesso proprietario della cartella \"%s\". Poi riprova ad attivare Pico CMS per Nextcloud.",
     "Pico CMS" : "Pico CMS",
+    "Create and publish your own websites - with Pico CMS for Nextcloud!" : "Crea e pubblica i tuoi siti web con Pico CMS per Nextcloud!",
     "Access forbidden" : "Accesso negato",
     "Back to %s" : "Torna a %s",
     "Not found" : "Non trovato",
@@ -102,8 +104,14 @@ OC.L10N.register(
     "Short website URLs" : "URL sito abbreviati",
     "Name" : "Nome",
     "Theme" : "Tema",
+    "Go to website" : "Vai al sito web",
+    "Go to website directory" : "Vai alla cartella del sito web",
     "Delete website" : "Elimina sito web",
+    "Actions" : "Azioni",
     "Create a new website" : "Crea un nuovo sito",
-    "Address" : "Indirizzo"
+    "Address" : "Indirizzo",
+    "Template" : "Modello",
+    "Create new website" : "Crea nuovo sito web",
+    "Loading…" : "Caricamento…"
 },
 "nplurals=2; plural=(n != 1);");
