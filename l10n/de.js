@@ -48,7 +48,7 @@ OC.L10N.register(
     "The server was unable to complete your request." : "Der Server konnte die Anfrage nicht fertig stellen.",
     "If this happens again, please send the technical details below to the server administrator." : "Sollte dies erneut auftreten, sende bitte die nachfolgenden technischen Einzelheiten an deinen Server-Administrator.",
     "Remote Address: %s" : "Entfernte Adresse: %s",
-    "Request ID: %s" : "Anfragekennung: %s",
+    "Request ID: %s" : "Anfrage-ID: %s",
     "More details can be found in the server log." : "Weitere Details können im Server-Protokoll gefunden werden.",
     "Technical details" : "Technische Details",
     "Type: %s" : "Typ: %s",
@@ -150,7 +150,7 @@ OC.L10N.register(
     "When creating a new website, Pico CMS for Nextcloud copies the website template to the following new directory in your Nextcloud." : "Wenn Du eine neue Webseite erstellst, wird Pico CMS für Nextcloud die unten ausgewählte Vorlage in dieses Verzeichnis kopieren.",
     "You can use one of the provided themes for some greater individuality and style. If you want to use another theme, ask your Nextcloud admin - it might be possible to add your favourite theme, too!" : "Du kannst deiner Webseite einen etwas anderen Look geben indem du hier ein Design auswählst. Wenn du gerne ein anderes Design verwenden möchtest, frage deinen Nextcloud Administrator - vielleicht fügt er auch dein Lieblings-Design hinzu.",
     "Template" : "Vorlage",
-    "Templates act as a starting point when creating a new website. All templates consist of a \"content\" directory (for your pages) and a \"assets\" directory (for your website's assets), which will be copied to the above folder in your Nextcloud." : "Vorlagen helfen dir dabei eine neue Webseite zu erstellen. Alle Vorlagen bestehen aus einem \"content\"-Verzeichnis, in dem du die Inhalte deiner Seiten und einem \"assets\"-Verzeichnis, in dem du weitere Dateien (bspw. Bilder) ablegen kannst. Die Dateien der Vorlage werden hierzu in deine Nextcloud kopiert.",
+    "Templates act as a starting point when creating a new website. All templates consist of a \"content\" directory (for your pages) and a \"assets\" directory (for your website's assets), which will be copied to the above folder in your Nextcloud." : "Vorlagen helfen Dir dabei eine neue Webseite zu erstellen. Alle Vorlagen bestehen aus einem \"content\"-Verzeichnis, in dem die Inhalte Deiner Seiten und einem \"assets\"-Verzeichnis, in dem weitere Dateien (bspw. Bilder) abgelegt werden können. Die Dateien der Vorlage werden hierzu in Deine Nextcloud kopiert.",
     "Create new website" : "Webseite erstellen",
     "Loading…" : "Lade …"
 },
