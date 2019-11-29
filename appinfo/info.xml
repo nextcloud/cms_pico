@@ -28,10 +28,6 @@ You want to learn more about Pico CMS for Nextcloud? Easy! Just download and ena
 	<author homepage="https://github.com/daita">Maxence Lange</author>
 	<author homepage="https://github.com/PhrozenByte">Daniel Rudolf</author>
 	<namespace>CMSPico</namespace>
-	<documentation>
-		<user>https://github.com/nextcloud/cms_pico/wiki</user>
-		<admin>https://github.com/nextcloud/cms_pico/wiki</admin>
-	</documentation>
 	<category>social</category>
 	<category>integration</category>
 	<category>tools</category>
