@@ -58,6 +58,9 @@ class AppDataRepairStep implements IRepairStep
 	/** @var MiscService */
 	private $miscService;
 
+	/** @var bool */
+	private $locked = false;
+
 	/**
 	 * AppDataRepairStep constructor.
 	 *
@@ -102,6 +105,15 @@ class AppDataRepairStep implements IRepairStep
 	public function run(IOutput $output)
 	{
 		$this->setOutput($output);
+
+		// never run AppDataRepairStep multiple times for the same session
+		// this might happen if you update and enable the app at the same time
+		if ($this->locked) {
+			$this->logInfo('Pico CMS\' app data has been prepared already, skipping …');
+			return;
+		}
+
+		$this->locked = true;
 
 		$this->logInfo('Checking Pico CMS requirements …');
 		$this->miscService->checkComposer();
