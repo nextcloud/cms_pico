@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\AppInfo;
 
+use OCA\CMSPico\ExternalStorage\BackendProvider;
+use OCA\Files_External\Service\BackendService;
 use OCP\App\AppPathNotFoundException;
 use OCP\App\IAppManager;
 use OCP\AppFramework\App;
@@ -44,6 +46,7 @@ class Application extends App
 
 		$this->registerAutoloader();
 		$this->registerHooks();
+		$this->registerExternalStorage();
 	}
 
 	/**
@@ -62,6 +65,15 @@ class Application extends App
 	public function registerHooks()
 	{
 		Util::connectHook('OC_User', 'post_deleteUser', '\OCA\CMSPico\Hooks\UserHooks', 'onUserDeleted');
+	}
+
+	/**
+	 * Registers a unencrypted storage backend.
+	 */
+	public function registerExternalStorage()
+	{
+		$backendService = \OC::$server->query(BackendService::class);
+		$backendService->registerBackendProvider(new BackendProvider());
 	}
 
 	/**
