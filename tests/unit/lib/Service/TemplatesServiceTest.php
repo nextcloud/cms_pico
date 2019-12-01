@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace OCA\CMSPico\Tests\Service;
 
 use OCA\CMSPico\AppInfo\Application;
-use OCA\CMSPico\Controller\SettingsController;
+use OCA\CMSPico\Controller\TemplatesController;
 use OCA\CMSPico\Exceptions\TemplateNotFoundException;
 use OCA\CMSPico\Service\FileService;
 use OCA\CMSPico\Service\PicoService;
@@ -40,8 +40,8 @@ class TemplatesServiceTest extends TestCase
 	/** @var FileService */
 	private $fileService;
 
-	/** @var SettingsController */
-	private $settingsController;
+	/** @var TemplatesController */
+	private $templatesController;
 
 	/** @var TemplatesService */
 	private $templatesService;
@@ -56,7 +56,7 @@ class TemplatesServiceTest extends TestCase
 
 		$this->fileService = $container->query(FileService::class);
 		$this->templatesService = $container->query(TemplatesService::class);
-		$this->settingsController = $container->query(SettingsController::class);
+		$this->templatesController = $container->query(TemplatesController::class);
 	}
 
 	protected function tearDown()
@@ -90,14 +90,14 @@ class TemplatesServiceTest extends TestCase
 			$this->assertSame(true, false, 'should return TemplateNotFoundException');
 		}
 
-		$this->settingsController->addCustomTemplate('this_is_a_template');
+		$this->templatesController->addCustomTemplate('this_is_a_template');
 		$this->assertCount(3, $this->templatesService->getTemplates());
 		$this->assertCount(1, $this->templatesService->getCustomTemplates());
 		$this->assertCount(0, $this->templatesService->getNewCustomTemplates());
 
 		$this->templatesService->assertValidTemplate('this_is_a_template');
 
-		$this->settingsController->removeCustomTemplate('this_is_a_template');
+		$this->templatesController->removeCustomTemplate('this_is_a_template');
 		$this->assertCount(2, $this->templatesService->getTemplates());
 		$this->assertCount(0, $this->templatesService->getCustomTemplates());
 		$this->assertCount(1, $this->templatesService->getNewCustomTemplates());

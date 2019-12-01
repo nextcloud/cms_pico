@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace OCA\CMSPico\Tests\Service;
 
 use OCA\CMSPico\AppInfo\Application;
-use OCA\CMSPico\Controller\SettingsController;
+use OCA\CMSPico\Controller\ThemesController;
 use OCA\CMSPico\Exceptions\ThemeNotFoundException;
 use OCA\CMSPico\Service\FileService;
 use OCA\CMSPico\Service\PicoService;
@@ -40,8 +40,8 @@ class ThemesServiceTest extends TestCase
 	/** @var FileService */
 	private $fileService;
 
-	/** @var SettingsController */
-	private $settingsController;
+	/** @var ThemesController */
+	private $themesController;
 
 	/** @var ThemesService */
 	private $themesService;
@@ -56,7 +56,7 @@ class ThemesServiceTest extends TestCase
 
 		$this->fileService = $container->query(FileService::class);
 		$this->themesService = $container->query(ThemesService::class);
-		$this->settingsController = $container->query(SettingsController::class);
+		$this->themesController = $container->query(ThemesController::class);
 	}
 
 	protected function tearDown()
@@ -88,14 +88,14 @@ class ThemesServiceTest extends TestCase
 			$this->assertSame(true, false, 'should return ThemeNotFoundException');
 		}
 
-		$this->settingsController->addCustomTheme('this_is_a_test');
+		$this->themesController->addCustomTheme('this_is_a_test');
 		$this->assertCount(2, $this->themesService->getThemes());
 		$this->assertCount(1, $this->themesService->getCustomThemes());
 		$this->assertCount(0, $this->themesService->getNewCustomThemes());
 
 		$this->themesService->assertValidTheme('this_is_a_test');
 
-		$this->settingsController->removeCustomTheme('this_is_a_test');
+		$this->themesController->removeCustomTheme('this_is_a_test');
 		$this->assertCount(1, $this->themesService->getThemes());
 		$this->assertCount(0, $this->themesService->getCustomThemes());
 		$this->assertCount(1, $this->themesService->getNewCustomThemes());
