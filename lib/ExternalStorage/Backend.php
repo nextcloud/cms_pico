@@ -2,7 +2,6 @@
 /**
  * CMS Pico - Create websites using Pico CMS for Nextcloud.
  *
- * @copyright Copyright (c) 2017, Maxence Lange (<maxence@artificial-owl.com>)
  * @copyright Copyright (c) 2019, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
  *
  * @license GNU AGPL version 3 or any later version
@@ -21,12 +20,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use OCA\CMSPico\AppInfo\Application;
+declare(strict_types=1);
 
-if (is_file(__DIR__ . '/../vendor/autoload.php')) {
-	require_once(__DIR__ . '/../vendor/autoload.php');
+namespace OCA\CMSPico\ExternalStorage;
+
+use OCA\Files_External\Lib\Backend\Backend as CommonBackend;
+use OCA\Files_External\Lib\DefinitionParameter;
+use OCA\Files_External\Service\BackendService;
+use OCP\IL10N;
+
+class Backend extends CommonBackend
+{
+	public function __construct(IL10N $l10n)
+	{
+		$this
+			->setIdentifier('local_unencrypted')
+			->setStorageClass('\OCA\CMSPico\ExternalStorage\Storage')
+			->setAllowedVisibility(BackendService::VISIBILITY_ADMIN)
+			->setText($l10n->t('Local (unencrypted)'))
+			->addParameters([
+				new DefinitionParameter('datadir', $l10n->t('Location')),
+			]);
+	}
 }
-
-$app = new Application();
-$app->registerHooks();
-$app->registerExternalStorage();

@@ -25,10 +25,13 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\AppInfo;
 
+use OCA\CMSPico\ExternalStorage\BackendProvider;
+use OCA\Files_External\Service\BackendService;
 use OCP\App\AppPathNotFoundException;
 use OCP\App\IAppManager;
 use OCP\AppFramework\App;
 use OCP\Util;
+use Symfony\Component\EventDispatcher\Event;
 
 class Application extends App
 {
@@ -49,6 +52,23 @@ class Application extends App
 	public function registerHooks()
 	{
 		Util::connectHook('OC_User', 'post_deleteUser', '\OCA\CMSPico\Hooks\UserHooks', 'onUserDeleted');
+	}
+
+	/**
+	 * Registers a unencrypted storage backend.
+	 */
+	public function registerExternalStorage()
+	{
+		\OC::$server->getEventDispatcher()->addListener(
+			'OCA\\Files_External::loadAdditionalBackends',
+			function (Event $event) {
+				$encryptionManager = \OC::$server->getEncryptionManager();
+				if ($encryptionManager->isEnabled()) {
+					$backendService = \OC::$server->query(BackendService::class);
+					$backendService->registerBackendProvider(new BackendProvider());
+				}
+			}
+		);
 	}
 
 	/**
