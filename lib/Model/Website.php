@@ -255,16 +255,16 @@ class Website extends WebsiteCore
 	public function assertValidSite()
 	{
 		if (strlen($this->getSite()) < self::SITE_LENGTH_MIN) {
-			$errorMessage = $this->l10n->t('The identifier of the website must be longer.');
-			throw new WebsiteInvalidDataException('site', $errorMessage);
+			$error = $this->l10n->t('The identifier of the website must be longer.');
+			throw new WebsiteInvalidDataException('site', $error);
 		}
 		if (strlen($this->getSite()) > self::SITE_LENGTH_MAX) {
-			$errorMessage = $this->l10n->t('The identifier of the website is too long.');
-			throw new WebsiteInvalidDataException('site', $errorMessage);
+			$error = $this->l10n->t('The identifier of the website is too long.');
+			throw new WebsiteInvalidDataException('site', $error);
 		}
 		if (preg_match('/' . self::SITE_REGEX . '/', $this->getSite()) !== 1) {
-			$errorMessage = $this->l10n->t('The identifier of the website can only contains alpha numeric chars.');
-			throw new WebsiteInvalidDataException('site', $errorMessage);
+			$error = $this->l10n->t('The identifier of the website can only contain lowercase alpha numeric chars.');
+			throw new WebsiteInvalidDataException('site', $error);
 		}
 	}
 
