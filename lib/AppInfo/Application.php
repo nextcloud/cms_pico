@@ -41,19 +41,6 @@ class Application extends App
 	public function __construct(array $params = [])
 	{
 		parent::__construct(self::APP_NAME, $params);
-
-		$this->registerAutoloader();
-		$this->registerHooks();
-	}
-
-	/**
-	 * Register autoloader.
-	 */
-	public function registerAutoloader()
-	{
-		if (is_file(self::getAppPath() . '/vendor/autoload.php')) {
-			require_once(self::getAppPath() . '/vendor/autoload.php');
-		}
 	}
 
 	/**
