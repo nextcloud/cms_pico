@@ -72,8 +72,12 @@ class Application extends App
 	 */
 	public function registerExternalStorage()
 	{
-		$backendService = \OC::$server->query(BackendService::class);
-		$backendService->registerBackendProvider(new BackendProvider());
+		$encryptionManager = \OC::$server->getEncryptionManager();
+		$appManager = \OC::$server->getAppManager();
+		if ($encryptionManager->isEnabled() && $appManager->isInstalled('files_external')) {
+			$backendService = \OC::$server->query(BackendService::class);
+			$backendService->registerBackendProvider(new BackendProvider());
+		}
 	}
 
 	/**
