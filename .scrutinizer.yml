@@ -381,39 +381,6 @@ build:
           - cd ~/nextcloud/apps/$APP_NAME
           - php ~/phpunit.phar --configuration tests/phpunit.xml
 
-    test-master-php71:
-      environment:
-        php:
-          version: 7.1
-        variables:
-          NEXTCLOUD: daily/latest-master
-      dependencies:
-        override:
-          - curl -L -o ~/nextcloud.tar.bz2 https://download.nextcloud.com/server/$NEXTCLOUD.tar.bz2
-          - curl -L -o ~/phpunit.phar https://phar.phpunit.de/phpunit-6.phar
-      project_setup:
-        override:
-          - make build version=latest
-          - cp build/$APP_NAME-latest.tar.gz ~/$APP_NAME.tar.gz
-
-          - tar xfjv ~/nextcloud.tar.bz2 -C ~
-          - tar xfzv ~/$APP_NAME.tar.gz -C ~/nextcloud/apps
-          - cp -rv tests ~/nextcloud/apps/$APP_NAME/tests
-
-          - cd ~/nextcloud
-          - php ./occ --version
-          - php ./occ maintenance:install --database "sqlite" --admin-user "admin" --admin-pass "admin"
-          - php ./occ app:enable $APP_NAME
-      tests:
-        override:
-          - cd ~/nextcloud
-#          - php ./occ app:check-code $APP_NAME -c private
-          - php ./occ app:check-code $APP_NAME -c strong-comparison
-          - php ./occ app:check-code $APP_NAME -c deprecation
-
-          - cd ~/nextcloud/apps/$APP_NAME
-          - php ~/phpunit.phar --configuration tests/phpunit.xml
-
     test-master-php72:
       environment:
         php:
@@ -451,6 +418,39 @@ build:
       environment:
         php:
           version: 7.3
+        variables:
+          NEXTCLOUD: daily/latest-master
+      dependencies:
+        override:
+          - curl -L -o ~/nextcloud.tar.bz2 https://download.nextcloud.com/server/$NEXTCLOUD.tar.bz2
+          - curl -L -o ~/phpunit.phar https://phar.phpunit.de/phpunit-6.phar
+      project_setup:
+        override:
+          - make build version=latest
+          - cp build/$APP_NAME-latest.tar.gz ~/$APP_NAME.tar.gz
+
+          - tar xfjv ~/nextcloud.tar.bz2 -C ~
+          - tar xfzv ~/$APP_NAME.tar.gz -C ~/nextcloud/apps
+          - cp -rv tests ~/nextcloud/apps/$APP_NAME/tests
+
+          - cd ~/nextcloud
+          - php ./occ --version
+          - php ./occ maintenance:install --database "sqlite" --admin-user "admin" --admin-pass "admin"
+          - php ./occ app:enable $APP_NAME
+      tests:
+        override:
+          - cd ~/nextcloud
+#          - php ./occ app:check-code $APP_NAME -c private
+          - php ./occ app:check-code $APP_NAME -c strong-comparison
+          - php ./occ app:check-code $APP_NAME -c deprecation
+
+          - cd ~/nextcloud/apps/$APP_NAME
+          - php ~/phpunit.phar --configuration tests/phpunit.xml
+
+    test-master-php74:
+      environment:
+        php:
+          version: 7.4
         variables:
           NEXTCLOUD: daily/latest-master
       dependencies:
