@@ -4,6 +4,7 @@ OC.L10N.register(
     "Pico CMS" : "Pico CMS",
     "Custom themes" : "自定义主题",
     "Add custom theme" : "添加自定义主题",
+    "System theme" : "系统主题",
     "Delete custom theme" : "删除自定义主题",
     "Custom templates" : "自定义模板",
     "Add custom template" : "添加自定义模板",
