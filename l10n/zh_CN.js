@@ -1,18 +1,27 @@
 OC.L10N.register(
     "cms_pico",
     {
+    "The requested website could not be found on the server. Maybe the website was deleted?" : "请求的网站无法在服务器上找到。可能网站已被删除？",
+    "This website uses a incompatible theme and thus could not be built." : "此网站使用了不兼容的主题，因此无法被构建。",
+    "The file and directory structure of this website appears to be broken und thus could not be accessed." : "此网站的文件和目录结构似乎已损坏，因而无法访问。",
+    "Parent folder of the website's path not found." : "无法找到网站路径的父文件夹。",
+    "Failed to enable Pico CMS for Nextcloud: Couldn't find \"%s\". Make sure to install the app's dependencies by executing `composer install` in the app's install directory below \"%s\". Then try again enabling Pico CMS for Nextcloud." : "无法启用Pico CMS for Nextcloud：无法找到 \"%s\"。请确保通过在 \"%s\" 下的应用安装目录执行 `composer install` 来安装应用的依赖，然后再次尝试启用Pico CMS for Nextcloud。",
     "Pico CMS" : "Pico CMS",
     "Custom themes" : "自定义主题",
     "Add custom theme" : "添加自定义主题",
     "System theme" : "系统主题",
     "Delete custom theme" : "删除自定义主题",
+    "Theme name" : "主题名称",
     "Custom templates" : "自定义模板",
     "Add custom template" : "添加自定义模板",
     "Delete custom template" : "删除自定义模板",
+    "Using nginx's rewrite" : "使用nginx的rewrite",
     "Name" : "名字",
     "Theme" : "主题",
     "Delete website" : "删除网站",
     "Create a new website" : "创建一个新的网站",
-    "Address" : "地址"
+    "Address" : "地址",
+    "When creating a new website, Pico CMS for Nextcloud copies the website template to the following new directory in your Nextcloud." : "当创建新的网站时，Pico CMS for Nextcloud会将网站模板复制到您Nextcloud的以下新目录中。",
+    "Templates act as a starting point when creating a new website. All templates consist of a \"content\" directory (for your pages) and a \"assets\" directory (for your website's assets), which will be copied to the above folder in your Nextcloud." : "模板是创建一个新网站的起点。所有的模板都包含一个\"content\"目录（存放您的网页）和一个\"assets\"目录（存放您网站的资产文件），这些目录将被复制到您Nextcloud的上述文件夹中。"
 },
 "nplurals=1; plural=0;");
