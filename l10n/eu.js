@@ -1,6 +1,7 @@
 OC.L10N.register(
     "cms_pico",
     {
+    "Local (unencrypted)" : "Lokala (deszifratua)",
     "Pico CMS" : "Pico CMS",
     "Custom templates" : "Txantiloi pertsonalizatuak",
     "Add custom template" : "Gehitu txantiloi  pertsonalizatua",
