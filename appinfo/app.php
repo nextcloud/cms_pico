@@ -27,6 +27,7 @@ if (is_file(__DIR__ . '/../vendor/autoload.php')) {
 	require_once(__DIR__ . '/../vendor/autoload.php');
 }
 
+// TODO >= NC 18: Replace by \OC::$server->query(Application::class)
 $app = new Application();
 $app->registerHooks();
 $app->registerExternalStorage();

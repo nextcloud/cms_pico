@@ -94,6 +94,8 @@ class Application extends App
 	 */
 	public static function getAppWebPath(): string
 	{
+		// TODO >= NC 18: Replace by \OC::$server->getAppManager()->getAppWebPath() and
+		//                enable private API code checks in .scrutinizer.yml
 		return \OC_App::getAppWebPath(self::APP_NAME) ?: '';
 	}
 }
