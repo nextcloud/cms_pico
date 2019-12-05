@@ -70,6 +70,10 @@ ifeq ($(or $(filter v$(appinfo_version) latest,$(version)), $(filter true,$(noch
 	$(error Version mismatch: Building $(version), but $(appinfo) indicates v$(appinfo_version))
 endif
 
+check-composer:
+	composer update --no-suggest --no-dev --dry-run 2>&1 \
+		| grep --quiet '^Nothing to install or update$$'
+
 composer:
 	composer install --no-suggest --no-dev --prefer-dist --optimize-autoloader
 
@@ -132,7 +136,7 @@ github-release: check
 		$(if $(filter true,$(prerelease)),--pre-release,)
 
 github-upload: export GITHUB_TOKEN=$(github_token)
-github-upload: check build github-release
+github-upload: check check-composer build github-release
 	github-release upload \
 		--user "$(github_owner)" \
 		--repo "$(github_repo)" \
@@ -140,7 +144,7 @@ github-upload: check build github-release
 		--name "$(archive)" \
 		--file "$(build_dir)/$(archive)"
 
-publish: check sign github-upload
+publish: check check-composer sign github-upload
 	php -r 'echo json_encode([ "download" => $$_SERVER["argv"][1], "signature" => file_get_contents($$_SERVER["argv"][2]), "nightly" => !!$$_SERVER["argv"][3] ]);' \
 		"$(download_url)" "$(build_dir)/$(signature)" "$(if $(filter true,$(prerelease)),1,0)" \
 			| curl -K "$(curlrc)" \
@@ -158,7 +162,7 @@ publish-dev: publish
 
 .PHONY: all \
 	clean clean-build clean-export \
-	check lazy-check \
+	check lazy-check check-composer \
 	composer build export \
 	sign verify \
 	github-release github-release-dev \
