@@ -233,6 +233,8 @@ class Pico extends \Pico
 	{
 		if ($this->htmlPurifier === null) {
 			$htmlPurifierConfig = HTMLPurifier_HTML5Config::createDefault();
+			$htmlPurifierConfig->set('Attr.EnableID', true);
+
 			$this->htmlPurifier = new HTMLPurifier($htmlPurifierConfig);
 
 			$this->triggerEvent('onHtmlPurifier', [ &$this->htmlPurifier ]);
