@@ -9,6 +9,7 @@ OC.L10N.register(
     "The requested website could not be found on the server. Maybe the website was deleted?" : "请求的网站无法在服务器上找到。可能网站已被删除？",
     "You don't have access to this private website. Maybe the share was deleted or has expired?" : "您没有权限访问此私有网站。共享可能已被删除或过期了？",
     "This website is hosted on a non-local storage and thus could not be accessed." : "此网站托管在非本地存储上，因此无法访问。",
+    "This website uses a theme that could not be found on the server and thus could not be built." : "此网站使用了在服务器上无法找到的主题，因此无法被构建。",
     "This website uses a incompatible theme and thus could not be built." : "此网站使用了不兼容的主题，因此无法被构建。",
     "The file and directory structure of this website appears to be broken und thus could not be accessed." : "此网站的文件和目录结构似乎已损坏，因而无法访问。",
     "The requested website asset could not be found on the server. Maybe the asset was deleted?" : "请求的网站资产无法在服务器上找到。可能资产已被删除？",
