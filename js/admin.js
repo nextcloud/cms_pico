@@ -209,43 +209,32 @@
 			});
 
 			$item.find('.action-copy').each(function () {
-				var $this = $(this),
-					dialogId = 'picocms-dialog-copy',
-					dialogTitle = $this.data('originalTitle') || $this.prop('title') || $this.text();
+				var $this = $(this);
 
-				var $dialog = that.$copyTemplate.octemplate({
-					id: dialogId,
-					title: dialogTitle,
-					source: itemData.name
+				var dialog = new OCA.CMSPico.Dialog(that.$copyTemplate, {
+					title: $this.data('originalTitle') || $this.prop('title') || $this.text(),
+					templateData: { source: itemData.name },
+					buttons: [
+						{ type: OCA.CMSPico.Dialog.BUTTON_ABORT },
+						{
+							type: OCA.CMSPico.Dialog.BUTTON_SUBMIT,
+							text: t('cms_pico', 'Copy')
+						}
+					]
 				});
 
-				var dialogButtons = [
-					{
-						text: t('cms_pico', 'Abort'),
-						click: function (event) {
-							$dialog.ocdialog('close');
-						}
-					},
-					{
-						text: t('cms_pico', 'Copy'),
-						defaultButton: true,
-						click: function (event) {
-							var value = $dialog.find('.input-name').val();
-							that._api('CLONE', itemData.name, { name: value });
+				dialog.on('open.CMSPicoAdminList', function () {
+					this.$element.find('.input-name').focus();
+				});
 
-							$dialog.ocdialog('close');
-						}
-					}
-				];
+				dialog.on('submit.CMSPicoAdminList', function () {
+					var value = this.$element.find('.input-name').val();
+					that._api('CLONE', itemData.name, { name: value });
+				});
 
 				$this.on('click.CMSPicoAdminList', function (event) {
 					event.preventDefault();
-
-					$('#' + dialogId).ocdialog('close');
-
-					$('#app-content').append($dialog);
-					$dialog.ocdialog({ buttons: dialogButtons });
-					$dialog.find('.input-name').focus();
+					dialog.open();
 				});
 			});
 
