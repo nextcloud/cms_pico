@@ -206,12 +206,17 @@ class WebsiteCore implements \JsonSerializable
 
 	/**
 	 * @param string $key
-	 * @param string $value
+	 * @param mixed $value
 	 *
 	 * @return $this
 	 */
-	public function setOption(string $key, string $value): self
+	public function setOption(string $key, $value): self
 	{
+		if ($value === null) {
+			unset($this->options[$key]);
+			return $this;
+		}
+
 		$this->options[$key] = $value;
 		return $this;
 	}
@@ -219,11 +224,11 @@ class WebsiteCore implements \JsonSerializable
 	/**
 	 * @param string $key
 	 *
-	 * @return string
+	 * @return mixed
 	 */
-	public function getOption($key): string
+	public function getOption($key)
 	{
-		return $this->options[$key] ?? '';
+		return $this->options[$key] ?? null;
 	}
 
 	/**
@@ -233,7 +238,7 @@ class WebsiteCore implements \JsonSerializable
 	 */
 	public function setOptions($options): self
 	{
-		if (!is_array($options)) {
+		if (is_string($options)) {
 			$options = json_decode($options, true);
 		}
 
