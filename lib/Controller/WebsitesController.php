@@ -159,6 +159,20 @@ class WebsitesController extends Controller
 						$website->setTheme($value);
 						break;
 
+					case 'options':
+						foreach ($value as $optionKey => $optionValue) {
+							switch ($optionKey) {
+								case 'group_access':
+									$groupAccess = $optionValue ? explode('|', $optionValue) : [];
+									$website->setOption($optionKey, $groupAccess ?: null);
+									break;
+
+								default:
+									throw new WebsiteInvalidDataException();
+							}
+						}
+						break;
+
 					default:
 						throw new WebsiteInvalidDataException();
 				}

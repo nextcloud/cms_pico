@@ -145,12 +145,12 @@ class Website extends WebsiteCore
 				return;
 			}
 
-			$groupAccess = $meta['access'];
-			if (!is_array($groupAccess)) {
-				$groupAccess = explode(',', $groupAccess);
+			$groupPageAccess = $meta['access'];
+			if (!is_array($groupPageAccess)) {
+				$groupPageAccess = explode(',', $groupPageAccess);
 			}
 
-			foreach ($groupAccess as $group) {
+			foreach ($groupPageAccess as $group) {
 				$group = trim($group);
 
 				if ($group === 'public') {
@@ -172,6 +172,15 @@ class Website extends WebsiteCore
 		if ($this->getViewer()) {
 			if ($this->getViewer() === $this->getUserId()) {
 				return;
+			}
+
+			$groupAccess = $this->getOption('group_access') ?? [];
+			foreach ($groupAccess as $group) {
+				if ($this->groupManager->groupExists($group)) {
+					if ($this->groupManager->isInGroup($this->getViewer(), $group)) {
+						return;
+					}
+				}
 			}
 
 			/** @var OCFolder $viewerOCFolder */
