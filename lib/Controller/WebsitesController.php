@@ -102,12 +102,12 @@ class WebsitesController extends Controller
 	{
 		try {
 			$website = (new Website())
-				->setName($data['name'])
+				->setName($data['name'] ?? '')
 				->setUserId($this->userId)
-				->setSite($data['site'])
-				->setTheme($data['theme'])
-				->setPath($data['path'])
-				->setTemplateSource($data['template']);
+				->setSite($data['site'] ?? '')
+				->setTheme($data['theme'] ?? '')
+				->setPath($data['path'] ?? '')
+				->setTemplateSource($data['template'] ?? '');
 
 			$this->websitesService->createWebsite($website);
 

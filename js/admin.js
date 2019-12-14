@@ -154,7 +154,7 @@
 			if ($newItem.val()) {
 				$newItemButton.on('click.CMSPicoAdminList', function (event) {
 					event.preventDefault();
-					that._api('POST', '', {item: $newItem.val()});
+					that._api('POST', '', { item: $newItem.val() });
 				});
 			} else {
 				$newItemButton.add($newItem).prop('disabled', true);
