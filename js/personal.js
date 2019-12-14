@@ -333,17 +333,8 @@
 			var $form = this.$element.find('form'),
 				$submitButton = this.$element.find('.form-submit'),
 				$loadingButton = this.$element.find('.form-submit-loading'),
-				that = this,
-				data = {};
-
-			$form.find(':input').each(function () {
-				var name = this.name,
-					value = $(this).val();
-
-				if (name) {
-					data[name] = value;
-				}
-			});
+				data = OCA.CMSPico.Util.serialize($form),
+				that = this;
 
 			$form.find('fieldset.form-error')
 				.removeClass('form-error');

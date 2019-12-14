@@ -528,6 +528,56 @@
 				.replace(/&gt;/g, '>')
 				.replace(/&quot;/g, '"')
 				.replace(/&#039;/g, "'");
+		},
+
+		/**
+		 * @param {jQuery} $element
+		 *
+		 * @returns {object}
+		 */
+		serialize: function ($element) {
+			var dataArray = $element.serializeArray(),
+				dataObject = {};
+
+			$element.find('input[type="button"]').each(function () {
+				var $button = $(this);
+				dataArray.push({ name: $button.prop('name'), value: $button.val() });
+			});
+
+			$.each(dataArray, function (_, data) {
+				var key = data.name,
+					matches = key.match(/^([a-z_][a-z0-9_]*)\[(\d*|[a-z0-9_]+)\]/i);
+
+				if (matches === null) {
+					dataObject[key] = data.value;
+				} else {
+					if (typeof dataObject[matches[1]] !== 'object') {
+						dataObject[matches[1]] = {};
+					}
+
+					var result = dataObject[matches[1]],
+						subKey = matches[2];
+
+					key = key.substr(matches[0].length);
+					matches = key.match(/^\[(\d*|[a-z0-9_]+)\]/i);
+
+					while (matches !== null) {
+						if (typeof result[matches[1]] !== 'object') {
+							result[matches[1]] = {};
+						}
+
+						result = result[subKey];
+						subKey = matches[1];
+
+						key = key.substr(matches[0].length);
+						matches = key.match(/^\[(\d*|[a-z0-9_]+)\]/i);
+					}
+
+					result[subKey] = data.value;
+				}
+			});
+
+			return dataObject;
 		}
 	};
 })(document, jQuery, OC, OCA);
