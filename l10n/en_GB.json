@@ -1,10 +1,10 @@
 { "translations": {
-    "Abort" : "Abort",
     "Copy" : "Copy",
     "Confirm website deletion" : "Confirm website deletion",
     "This operation will delete the website \"{name}\". However, all of its contents will still be available in your Nextcloud." : "This operation will delete the website \"{name}\". However, all of its contents will still be available in your Nextcloud.",
     "Choose website directory" : "Choose website directory",
     "A unexpected error occured while performing this action. Please check Nextcloud's logs." : "A unexpected error occured while performing this action. Please check Nextcloud's logs.",
+    "Abort" : "Abort",
     "The requested website could not be found on the server. Maybe the website was deleted?" : "The requested website could not be found on the server. Maybe the website was deleted?",
     "You don't have access to this private website. Maybe the share was deleted or has expired?" : "You don't have access to this private website. Maybe the share was deleted or has expired?",
     "This website is hosted on a non-local storage and thus could not be accessed." : "This website is hosted on a non-local storage and thus could not be accessed.",

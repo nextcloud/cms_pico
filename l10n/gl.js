@@ -1,12 +1,12 @@
 OC.L10N.register(
     "cms_pico",
     {
-    "Abort" : "Interromper",
     "Copy" : "Copiar",
     "Confirm website deletion" : "Confirmar a eliminación do sitio web",
     "This operation will delete the website \"{name}\". However, all of its contents will still be available in your Nextcloud." : "Esta operación eliminará o sitio web «{name}». Non obstante, todo o contido aínda estará dispoñíbel no seu Nextcloud.",
     "Choose website directory" : "Escolla o directorio do sitio web",
     "A unexpected error occured while performing this action. Please check Nextcloud's logs." : "Produciuse un erro inesperado ao realizar esta acción. Verifique os rexistros de Nextcloud.",
+    "Abort" : "Interromper",
     "The requested website could not be found on the server. Maybe the website was deleted?" : "Non se atopou o sitio web solicitado no servidor. Quizais foi eliminado o sitio web.",
     "The file and directory structure of this website appears to be broken and thus could not be accessed." : "A estrutura de ficheiros e directorios deste sitio web semella estar rachada  polo que non se pode acceder a ela.",
     "You don't have access to this private website. Maybe the share was deleted or has expired?" : "Non ten acceso a este sitio privado. Quizais a acción foi eliminada ou caducou.",

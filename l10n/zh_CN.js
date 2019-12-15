@@ -1,12 +1,12 @@
 OC.L10N.register(
     "cms_pico",
     {
-    "Abort" : "中止",
     "Copy" : "复制",
     "Confirm website deletion" : "确认网站删除",
     "This operation will delete the website \"{name}\". However, all of its contents will still be available in your Nextcloud." : "此操作将删除网站“ {name}”。 但是，其所有内容仍将在您的 Nextcloud 中可用。",
     "Choose website directory" : "选择网站目录",
     "A unexpected error occured while performing this action. Please check Nextcloud's logs." : "执行此操作时发生意外错误。请检查Nextcloud的日志。",
+    "Abort" : "中止",
     "The requested website could not be found on the server. Maybe the website was deleted?" : "请求的网站无法在服务器上找到。可能网站已被删除？",
     "The file and directory structure of this website appears to be broken and thus could not be accessed." : "该网站的文件和目录结构似乎已损坏，因此无法访问。",
     "You don't have access to this private website. Maybe the share was deleted or has expired?" : "您没有权限访问此私有网站。共享可能已被删除或过期了？",

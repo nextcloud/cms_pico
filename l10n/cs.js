@@ -1,12 +1,12 @@
 OC.L10N.register(
     "cms_pico",
     {
-    "Abort" : "Přerušit",
     "Copy" : "Zkopírovat",
     "Confirm website deletion" : "Potvrďte smazání webu",
     "This operation will delete the website \"{name}\". However, all of its contents will still be available in your Nextcloud." : "Tato operace smaže web „{name}“. Nicméně veškerý obsah, kterým byl tvořen, pořád zůstane ve vašem Nextcloud.",
     "Choose website directory" : "Zvolte adresář webové stránky",
     "A unexpected error occured while performing this action. Please check Nextcloud's logs." : "Při provádění této akce došlo k neočekávané chybě. Nahlédněte do záznamu událostí v Nextcloud.",
+    "Abort" : "Přerušit",
     "The requested website could not be found on the server. Maybe the website was deleted?" : "Požadovaný web se na serveru nepodařilo nalézt. Možná byl web smazán?",
     "The file and directory structure of this website appears to be broken and thus could not be accessed." : "Souborová a adresářová struktura tohoto webu se zdá být poškozená a proto k němu nelze přistupovat.",
     "You don't have access to this private website. Maybe the share was deleted or has expired?" : "Nemáte přístup k tomuto soukromému webu. Nejspíš bylo sdílení smazáno nebo jeho platnost skončila?",

@@ -1,10 +1,10 @@
 { "translations": {
-    "Abort" : "Ματαίωση",
     "Copy" : "Αντιγραφή",
     "Confirm website deletion" : "Επιβεβαίωση διαγραφής της ιστοσελίδας",
     "This operation will delete the website \"{name}\". However, all of its contents will still be available in your Nextcloud." : "Η ενέργεια θα διαγράψει την ιστοσελίδα \"{name}\". Αλλά το περιεχόμενό του θα είναι διαθέσιμο στο Nextclound.",
     "Choose website directory" : "Επιλογή καταλόγου ιστοσελίδας",
     "A unexpected error occured while performing this action. Please check Nextcloud's logs." : "Παρουσιάστηκε σφάλμα. Παρακαλώ ελέγξτε το αρχείο καταγραφών του Nextclound.",
+    "Abort" : "Ματαίωση",
     "The requested website could not be found on the server. Maybe the website was deleted?" : "Η ιστοσελίδα δεν βρέθηκε στον διακομιστή. Ίσως η ιστοσελίδα διαγράφηκε?",
     "Plugin not found." : "Η επέκταση δεν βρέθηκε.",
     "Plugin exists already." : "Η επέκταση υπάρχει ήδη.",

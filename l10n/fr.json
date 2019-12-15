@@ -1,10 +1,10 @@
 { "translations": {
-    "Abort" : "Annuler",
     "Copy" : "Copier",
     "Confirm website deletion" : "Confirmer la suppression du site web",
     "This operation will delete the website \"{name}\". However, all of its contents will still be available in your Nextcloud." : "Cette opération supprimera le site Web \"{name}\". Cependant, tout son contenu sera toujours disponible dans votre Nextcloud.",
     "Choose website directory" : "Sélectionnez le répertoire du site Web",
     "A unexpected error occured while performing this action. Please check Nextcloud's logs." : "Une erreur inattendue s'est produite lors de l'exécution de cette action. Veuillez vérifier les journaux de Nextcloud.",
+    "Abort" : "Annuler",
     "The requested website could not be found on the server. Maybe the website was deleted?" : "Le site Web demandé est introuvable sur le serveur. Peut-être que le site a été supprimé ?",
     "The file and directory structure of this website appears to be broken and thus could not be accessed." : "La structure des fichiers et des répertoires de ce site Web semble être endommagée ce qui, par conséquent, le rend inaccessible.",
     "You don't have access to this private website. Maybe the share was deleted or has expired?" : "Vous n'avez pas accès à ce site Web privé. Peut-être que le partage a été supprimé ou a expiré ?",

@@ -1,8 +1,8 @@
 OC.L10N.register(
     "cms_pico",
     {
-    "Abort" : "Afbryd",
     "Copy" : "Kopiér",
+    "Abort" : "Afbryd",
     "Pico CMS" : "Pico CMS",
     "Custom themes" : "Brugerdefineret skabelon",
     "Add custom theme" : "Tilføj brugerdefineret tema",
