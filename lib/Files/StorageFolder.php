@@ -26,6 +26,7 @@ namespace OCA\CMSPico\Files;
 
 use OC\Files\Utils\Scanner;
 use OC\ForbiddenException;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\Folder as OCFolder;
 use OCP\Files\InvalidPathException;
 use OCP\Files\NotPermittedException;
@@ -51,6 +52,9 @@ class StorageFolder extends AbstractStorageNode implements FolderInterface
 
 	/** @var ILogger */
 	private $logger;
+
+	/** @var IEventDispatcher|null */
+	private $eventDispatcher;
 
 	/**
 	 * StorageFolder constructor.
@@ -156,7 +160,17 @@ class StorageFolder extends AbstractStorageNode implements FolderInterface
 	 */
 	public function sync(bool $recursive = FolderInterface::SYNC_RECURSIVE)
 	{
-		$scanner = new Scanner(null, $this->connection, $this->logger);
+		// TODO >= NC 18: Remove version switch
+		list($majorVersion) = \OC_Util::getVersion();
+		if ($majorVersion >= 18) {
+			if ($this->eventDispatcher === null) {
+				$this->eventDispatcher = \OC::$server->query(IEventDispatcher::class);
+			}
+
+			$scanner = new Scanner(null, $this->connection, $this->eventDispatcher, $this->logger);
+		} else {
+			$scanner = new Scanner(null, $this->connection, $this->logger);
+		}
 
 		try {
 			$scanner->scan($this->node->getPath(), $recursive);
