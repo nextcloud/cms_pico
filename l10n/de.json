@@ -5,6 +5,7 @@
     "Choose website directory" : "Wähle das Verzeichnis Deiner Webseite",
     "A unexpected error occured while performing this action. Please check Nextcloud's logs." : "Bei der Ausführung dieser Aktion ist ein unerwarteter Fehler aufgetreten. Bitte prüfe das Protokoll von Nextcloud.",
     "Abort" : "Abbrechen",
+    "Save" : "Speichern",
     "The requested website could not be found on the server. Maybe the website was deleted?" : "Die angeforderte Webseite konnte nicht gefunden werden. Vielleicht wurde sie zwischenzeitlich gelöscht?",
     "The file and directory structure of this website appears to be broken and thus could not be accessed." : "Die Datei- und Ordnerstruktur dieser Webseite scheint fehlerhaft und ist deshalb nicht zugänglich.",
     "You don't have access to this private website. Maybe the share was deleted or has expired?" : "Du hast keinen Zugriff auf diese private Webseite. Vielleicht wurde die Freigabe zwischenzeitlich aufgehoben oder ist abgelaufen?",

@@ -7,6 +7,7 @@ OC.L10N.register(
     "Choose website directory" : "选择网站目录",
     "A unexpected error occured while performing this action. Please check Nextcloud's logs." : "执行此操作时发生意外错误。请检查Nextcloud的日志。",
     "Abort" : "中止",
+    "Save" : "保存",
     "The requested website could not be found on the server. Maybe the website was deleted?" : "请求的网站无法在服务器上找到。可能网站已被删除？",
     "The file and directory structure of this website appears to be broken and thus could not be accessed." : "该网站的文件和目录结构似乎已损坏，因此无法访问。",
     "You don't have access to this private website. Maybe the share was deleted or has expired?" : "您没有权限访问此私有网站。共享可能已被删除或过期了？",
