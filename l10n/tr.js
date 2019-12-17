@@ -7,6 +7,7 @@ OC.L10N.register(
     "Choose website directory" : "Web sitesi klasörünü seçin",
     "A unexpected error occured while performing this action. Please check Nextcloud's logs." : "Bu işlem yapılırken bir sorun çıktı. Lütfen Nextcloud günlük kayıtlarına bakın.",
     "Abort" : "Vazgeç",
+    "Save" : "Kaydet",
     "The requested website could not be found on the server. Maybe the website was deleted?" : "İstenilen web sitesi sunucu üzerinde bulunamadı. Web sitesi silinmiş olabilir mi?",
     "The file and directory structure of this website appears to be broken and thus could not be accessed." : "Bu web sitesinin dosya ve klasör yapısı bozulmuş gibi görünüyor. Bu nedenle web sitesine erişilemiyor.",
     "You don't have access to this private website. Maybe the share was deleted or has expired?" : "Bu özel web sitesine erişme izniniz yok. Paylaşım silinmiş ya da süresi geçmiş olabilir mi?",

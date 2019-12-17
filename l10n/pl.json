@@ -5,6 +5,7 @@
     "Choose website directory" : "Wybierz katalog strony internetowej",
     "A unexpected error occured while performing this action. Please check Nextcloud's logs." : "Wystąpił nieoczekiwany błąd podczas wykonywania tej czynności. Sprawdź dzienniki Nextcloud.",
     "Abort" : "Anuluj",
+    "Save" : "Zapisz",
     "The requested website could not be found on the server. Maybe the website was deleted?" : "Nie można znaleźć żądanej strony internetowej na serwerze. Może strona została usunięta?",
     "The file and directory structure of this website appears to be broken and thus could not be accessed." : "Struktura plików i katalogów tej strony internetowej wydaje się być uszkodzona i dlatego nie można uzyskać do niej dostępu.",
     "You don't have access to this private website. Maybe the share was deleted or has expired?" : "Nie masz dostępu do tej prywatnej strony internetowej. Może udostępnienie zostało usunięte lub wygasło?",

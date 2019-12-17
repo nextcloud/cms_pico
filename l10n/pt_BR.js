@@ -7,6 +7,7 @@ OC.L10N.register(
     "Choose website directory" : "Escolher o diretório do site",
     "A unexpected error occured while performing this action. Please check Nextcloud's logs." : "Ocorreu um erro inesperado ao executar esta ação. Verifique os logs do Nextcloud.",
     "Abort" : "Interromper",
+    "Save" : "Salvar",
     "The requested website could not be found on the server. Maybe the website was deleted?" : "Não foi possível encontrar o site solicitado. Talvez tenha sido excluído.",
     "The file and directory structure of this website appears to be broken and thus could not be accessed." : "A estrutura de arquivos e diretórios deste site parece estar com problemas e não pôde ser acessada.",
     "You don't have access to this private website. Maybe the share was deleted or has expired?" : "Você não tem acesso a este site privado. Talvez o compartilhamento tenha sido excluído ou tenha expirado.",
