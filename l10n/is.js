@@ -6,6 +6,7 @@ OC.L10N.register(
     "This operation will delete the website \"{name}\". However, all of its contents will still be available in your Nextcloud." : "Þessi aðgerð mun eyða vefsvæðinu \"{name}\", en efni þess verður áfram til taks í Nextcloud tilvikinu þínu.",
     "Choose website directory" : "Veldu möppu undir vefsvæði",
     "Abort" : "Hætta við",
+    "Save" : "Vista",
     "Plugin not found." : "Viðbót fannst ekki.",
     "Plugin exists already." : "Viðbót er þegar til.",
     "Template not found." : "Sniðmát fannst ekki.",
@@ -67,6 +68,7 @@ OC.L10N.register(
     "Identifier" : "Auðkenni",
     "Address" : "Slóð",
     "Template" : "Sniðmát",
-    "Create new website" : "Búa til nýtt vefsvæði"
+    "Create new website" : "Búa til nýtt vefsvæði",
+    "Loading…" : "Hleð inn…"
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");

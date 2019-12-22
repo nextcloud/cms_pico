@@ -1,0 +1,26 @@
+{ "translations": {
+    "Copy" : "คัดลอก",
+    "Abort" : "ยกเลิก",
+    "Save" : "บันทึก",
+    "Location" : "ตำแหน่งที่อยู่",
+    "Access forbidden" : "การเข้าถึงถูกหวงห้าม",
+    "Internal Server Error" : "เกิดข้อผิดพลาดภายในเซิร์ฟเวอร์",
+    "Remote Address: %s" : "ที่อยู่รีโมท: %s",
+    "Request ID: %s" : "คำขอ ID: %s",
+    "More details can be found in the server log." : "รายละเอียดเพิ่มเติมสามารถดูได้ที่บันทึกของระบบเซิร์ฟเวอร์",
+    "Technical details" : "รายละเอียดทางเทคนิค",
+    "Type: %s" : "ชนิด: %s",
+    "Code: %s" : "โค้ด: %s",
+    "Message: %s" : "ข้อความ: %s",
+    "File: %s" : "ไฟล์: %s",
+    "Line: %s" : "ไลน์: %s",
+    "Trace" : "ร่องรอย",
+    "Error" : "ข้อผิดพลาด",
+    "Settings" : "ตั้งค่า",
+    "Name" : "ชื่อ",
+    "Path" : "เส้นทาง",
+    "Actions" : "การกระทำ",
+    "Address" : "ที่อยู่",
+    "Loading…" : "กำลังโหลด..."
+},"pluralForm" :"nplurals=1; plural=0;"
+}

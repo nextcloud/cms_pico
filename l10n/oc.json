@@ -1,0 +1,11 @@
+{ "translations": {
+    "Abort" : "Anullar",
+    "Save" : "Salvar",
+    "Location" : "Emplaçament",
+    "Error" : "Error",
+    "Settings" : "Paramètres",
+    "Name" : "Nom",
+    "Address" : "Adreça",
+    "Loading…" : "Cargament..."
+},"pluralForm" :"nplurals=2; plural=(n > 1);"
+}

@@ -1,0 +1,28 @@
+{ "translations": {
+    "Copy" : "Salin",
+    "Abort" : "Batal",
+    "Save" : "Simpan",
+    "Location" : "Lokasi",
+    "Access forbidden" : "Akses ditolak",
+    "Internal Server Error" : "Galat Server Internal",
+    "Remote Address: %s" : "Alamat remote: %s",
+    "Request ID: %s" : "ID Permintaan: %s",
+    "More details can be found in the server log." : "Rincian lebih lengkap dapat ditemukan di log server.",
+    "Technical details" : "Rincian teknis",
+    "Type: %s" : "Tipe: %s",
+    "Code: %s" : "Kode: %s",
+    "Message: %s" : "Pesan: %s",
+    "File: %s" : "Berkas: %s",
+    "Line: %s" : "Baris: %s",
+    "Trace" : "Jejak",
+    "Error" : "Kesalahan",
+    "Settings" : "Setelan",
+    "Limit to groups" : "Batasi ke grup",
+    "Name" : "Nama",
+    "Path" : "Jalur",
+    "Created" : "Dibuat",
+    "Actions" : "Tindakan",
+    "Address" : "Alamat",
+    "Loading…" : "Memuat…"
+},"pluralForm" :"nplurals=1; plural=0;"
+}

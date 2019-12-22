@@ -1,0 +1,13 @@
+{ "translations": {
+    "Save" : "Späicheren",
+    "Location" : "Uert",
+    "Access forbidden" : "Zougrëff net erlaabt",
+    "Error" : "Fehler",
+    "Settings" : "Astellungen",
+    "Name" : "Numm",
+    "Path" : "Pad",
+    "Actions" : "Aktiounen",
+    "Address" : "Adress",
+    "Loading…" : "Et gëtt gelueden"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}

@@ -59,6 +59,7 @@ OC.L10N.register(
     "Message: %s" : "Zpráva: %s",
     "File: %s" : "Soubor: %s",
     "Line: %s" : "Řádek: %s",
+    "Trace" : "Trace",
     "Custom themes" : "Vlastní motiv",
     "Add custom themes for greater individuality and style." : "Přidejte uživatelsky určené šablony pro individualitu a styl.",
     "Pico CMS for Nextcloud allows you to add custom themes for some greater individuality and style. However, for security reasons, users can't add custom themes on their own. Before you can add a new custom theme using the \"Add custom theme\" button below, you'll have to upload all of its files to the data folder of your Nextcloud instance. After uploading the theme it will show up in the form below to actually allow users to use the custom theme." : "Pico CMS pro Nextcloud umožňuje přidat uživatelsky určené motivy vzhledu pro posílení individiality a stylu. Nicméně, z bezpečnostních důvodů, uživatelé si nemohou vlastní motivy vzhledu přidávat sami. Než budete moci níže uvedeným tlačítkem „Přidat uživatelsky určený motiv vzhledu“ přidat nový uživatelsky určený motiv vzhledu, bude třeba nahrát všechny jeho soubory do složky data vaší instance Nextcloud. Po nahrání se motiv vzhledu objeví v níže uvedeném formuláři a uživatelé budou moci uživatelsky určený motiv vzhledu použít.",
