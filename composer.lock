@@ -208,21 +208,21 @@
         },
         {
             "name": "picocms/pico",
-            "version": "v2.1.0",
+            "version": "v2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/picocms/Pico.git",
-                "reference": "232a90bdf8dac5c2710c1a4b27a397bf28f9a75c"
+                "reference": "b49936fb3a389b89c1bca659b7841f34c04b95bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/picocms/Pico/zipball/232a90bdf8dac5c2710c1a4b27a397bf28f9a75c",
-                "reference": "232a90bdf8dac5c2710c1a4b27a397bf28f9a75c",
+                "url": "https://api.github.com/repos/picocms/Pico/zipball/b49936fb3a389b89c1bca659b7841f34c04b95bd",
+                "reference": "b49936fb3a389b89c1bca659b7841f34c04b95bd",
                 "shasum": ""
             },
             "require": {
-                "erusev/parsedown": "~1.8.0|1.8.0@beta",
-                "erusev/parsedown-extra": "~0.8.0|0.8.0@beta",
+                "erusev/parsedown": "1.8.0-beta-7",
+                "erusev/parsedown-extra": "0.8.0-beta-1",
                 "php": ">=5.3.6",
                 "symfony/yaml": "^2.8",
                 "twig/twig": "^1.36"
@@ -287,20 +287,20 @@
                 "website",
                 "yaml"
             ],
-            "time": "2019-11-24T23:43:58+00:00"
+            "time": "2019-12-31T15:33:55+00:00"
         },
         {
             "name": "picocms/pico-deprecated",
-            "version": "v2.1.0",
+            "version": "v2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/picocms/pico-deprecated.git",
-                "reference": "8693b27f906a982409a520a41710bb5c95218882"
+                "reference": "9554c025626bcba4f9160d3f2dabf18376402a1f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/picocms/pico-deprecated/zipball/8693b27f906a982409a520a41710bb5c95218882",
-                "reference": "8693b27f906a982409a520a41710bb5c95218882",
+                "url": "https://api.github.com/repos/picocms/pico-deprecated/zipball/9554c025626bcba4f9160d3f2dabf18376402a1f",
+                "reference": "9554c025626bcba4f9160d3f2dabf18376402a1f",
                 "shasum": ""
             },
             "require": {
@@ -350,20 +350,20 @@
                 "picocms",
                 "picocms-plugin"
             ],
-            "time": "2019-11-24T22:24:53+00:00"
+            "time": "2019-12-31T15:36:04+00:00"
         },
         {
             "name": "picocms/pico-theme",
-            "version": "v2.1.0",
+            "version": "v2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/picocms/pico-theme.git",
-                "reference": "53a90f720917d32ae857f3ddf7eea5aae6b3759c"
+                "reference": "a79b9875b1d2dd182617454ad73af3c7caa47682"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/picocms/pico-theme/zipball/53a90f720917d32ae857f3ddf7eea5aae6b3759c",
-                "reference": "53a90f720917d32ae857f3ddf7eea5aae6b3759c",
+                "url": "https://api.github.com/repos/picocms/pico-theme/zipball/a79b9875b1d2dd182617454ad73af3c7caa47682",
+                "reference": "a79b9875b1d2dd182617454ad73af3c7caa47682",
                 "shasum": ""
             },
             "require": {
@@ -405,7 +405,7 @@
                 "picocms",
                 "picocms-theme"
             ],
-            "time": "2019-11-24T22:25:33+00:00"
+            "time": "2019-12-31T15:37:35+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
