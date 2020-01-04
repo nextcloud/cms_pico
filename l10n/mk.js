@@ -23,7 +23,7 @@ OC.L10N.register(
     "Trace" : "Следи",
     "Error" : "Грешка",
     "Settings" : "Параметри",
-    "Limit to groups" : "Огранилчвање на групи",
+    "Limit to groups" : "Ограничување на групи",
     "Name" : "Име",
     "Path" : "Патека",
     "Theme" : "Тема",
