@@ -21,6 +21,7 @@ OC.L10N.register(
     "Trace" : "ردیابی",
     "Error" : "خطا",
     "Settings" : "تنظیمات",
+    "Limit to groups" : "محدود کردن به گروه ها",
     "Name" : "نام",
     "Path" : "مسیر",
     "Theme" : "زمینه",
