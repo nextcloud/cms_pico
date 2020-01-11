@@ -7,6 +7,7 @@ OC.L10N.register(
     "Location" : "Ubicación",
     "Pico CMS" : "Pico CMS",
     "Access forbidden" : "Acceso denegado",
+    "Back to %s" : "Volver a %s",
     "Internal Server Error" : "Error Interno del Servidor",
     "Remote Address: %s" : "Dirección remota: %s",
     "Request ID: %s" : "ID de solicitud: %s",
