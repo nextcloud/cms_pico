@@ -42,7 +42,7 @@ class WebsitesRequest extends WebsitesRequestBuilder
 			->setValue('site', $qb->createNamedParameter($website->getSite()))
 			->setValue('theme', $qb->createNamedParameter($website->getTheme()))
 			->setValue('type', $qb->createNamedParameter($website->getType()))
-			->setValue('options', $qb->createNamedParameter($website->getOptions(true)))
+			->setValue('options', $qb->createNamedParameter($website->getOptionsJSON()))
 			->setValue('path', $qb->createNamedParameter($website->getPath()));
 
 		$qb->execute();
@@ -60,7 +60,7 @@ class WebsitesRequest extends WebsitesRequestBuilder
 			->set('site', $qb->createNamedParameter($website->getSite()))
 			->set('theme', $qb->createNamedParameter($website->getTheme()))
 			->set('type', $qb->createNamedParameter($website->getType()))
-			->set('options', $qb->createNamedParameter($website->getOptions(true)))
+			->set('options', $qb->createNamedParameter($website->getOptionsJSON()))
 			->set('path', $qb->createNamedParameter($website->getPath()));
 
 		$this->limitToId($qb, $website->getId());

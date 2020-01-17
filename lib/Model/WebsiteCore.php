@@ -251,17 +251,19 @@ class WebsiteCore implements \JsonSerializable
 	}
 
 	/**
-	 * @param bool $json
-	 *
-	 * @return array|string
+	 * @return array
 	 */
-	public function getOptions(bool $json = false)
+	public function getOptions(): array
 	{
-		if ($json === true) {
-			return json_encode($this->options);
-		}
-
 		return $this->options;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getOptionsJSON(): string
+	{
+		return json_encode($this->options);
 	}
 
 	/**
