@@ -79,7 +79,7 @@ class PicoController extends Controller
 	 */
 	public function __construct(
 		IRequest $request,
-		$userId,
+		?string $userId,
 		IL10N $l10n,
 		WebsitesService $websitesService,
 		FileService $fileService
@@ -107,11 +107,7 @@ class PicoController extends Controller
 		try {
 			$picoPage = $this->websitesService->getPage($site, $page, $this->userId, $proxyRequest);
 			return new PicoPageResponse($picoPage);
-		} catch (WebsiteNotFoundException $e) {
-			return new NotFoundResponse($this->l10n->t(
-				'The requested website could not be found on the server. Maybe the website was deleted?'
-			));
-		} catch (WebsiteInvalidOwnerException $e) {
+		} catch (WebsiteNotFoundException | WebsiteInvalidOwnerException $e) {
 			return new NotFoundResponse($this->l10n->t(
 				'The requested website could not be found on the server. Maybe the website was deleted?'
 			));
@@ -135,11 +131,7 @@ class PicoController extends Controller
 			return new InternalServerErrorResponse($this->l10n->t(
 				'This website uses a incompatible theme and thus could not be built.'
 			));
-		} catch (PageInvalidPathException $e) {
-			return new NotFoundResponse($this->l10n->t(
-				'The requested website page could not be found on the server. Maybe the page was deleted?'
-			));
-		} catch (PageNotFoundException $e) {
+		} catch (PageInvalidPathException | PageNotFoundException $e) {
 			return new NotFoundResponse($this->l10n->t(
 				'The requested website page could not be found on the server. Maybe the page was deleted?'
 			));
@@ -182,11 +174,7 @@ class PicoController extends Controller
 			}
 
 			return $response;
-		} catch (WebsiteNotFoundException $e) {
-			return new NotFoundResponse($this->l10n->t(
-				'The requested website could not be found on the server. Maybe the website was deleted?'
-			));
-		} catch (WebsiteInvalidOwnerException $e) {
+		} catch (WebsiteNotFoundException | WebsiteInvalidOwnerException $e) {
 			return new NotFoundResponse($this->l10n->t(
 				'The requested website could not be found on the server. Maybe the website was deleted?'
 			));
@@ -202,11 +190,7 @@ class PicoController extends Controller
 			return new InternalServerErrorResponse($this->l10n->t(
 				'This website is hosted on a non-local storage and thus could not be accessed.'
 			));
-		} catch (AssetInvalidPathException $e) {
-			return new NotFoundResponse($this->l10n->t(
-				'The requested website asset could not be found on the server. Maybe the asset was deleted?'
-			));
-		} catch (AssetNotFoundException $e) {
+		} catch (AssetInvalidPathException | AssetNotFoundException $e) {
 			return new NotFoundResponse($this->l10n->t(
 				'The requested website asset could not be found on the server. Maybe the asset was deleted?'
 			));

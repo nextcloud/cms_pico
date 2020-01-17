@@ -37,13 +37,13 @@ use Symfony\Component\Yaml\Parser as YamlParser;
 class Theme implements \JsonSerializable
 {
 	/** @var int */
-	const TYPE_SYSTEM = 1;
+	public const TYPE_SYSTEM = 1;
 
 	/** @var int */
-	const TYPE_CUSTOM = 2;
+	public const TYPE_CUSTOM = 2;
 
 	/** @var int[] */
-	const THEME_API_VERSIONS = [
+	public const THEME_API_VERSIONS = [
 		Pico::API_VERSION_0,
 		Pico::API_VERSION_1,
 		Pico::API_VERSION_2,
@@ -123,7 +123,7 @@ class Theme implements \JsonSerializable
 	/**
 	 * @throws ThemeNotCompatibleException
 	 */
-	public function checkCompatibility()
+	public function checkCompatibility(): void
 	{
 		if ($this->compat === false) {
 			throw $this->compatException;
@@ -134,10 +134,7 @@ class Theme implements \JsonSerializable
 		try {
 			try {
 				$this->getFolder()->getFile('index.twig');
-			} catch (\Exception $e) {
-				/** @noinspection PhpUnhandledExceptionInspection */
-				$this->miscService->consumeException($e, InvalidPathException::class, NotFoundException::class);
-
+			} catch (InvalidPathException | NotFoundException $e) {
 				throw new ThemeNotCompatibleException(
 					$this->getName(),
 					'Incompatible theme: Twig template "{file}" not found.',
@@ -151,16 +148,7 @@ class Theme implements \JsonSerializable
 
 				$themeConfig = (new YamlParser())->parse($themeConfigYaml);
 				$themeConfig = is_array($themeConfig) ? $themeConfig : [];
-			} catch (\Exception $e) {
-				/** @noinspection PhpUnhandledExceptionInspection */
-				$this->miscService->consumeException(
-					$e,
-					NotFoundException::class,
-					InvalidPathException::class,
-					NotPermittedException::class,
-					YamlParseException::class
-				);
-
+			} catch (InvalidPathException | NotFoundException | NotPermittedException | YamlParseException $e) {
 				$themeConfig = [];
 			}
 

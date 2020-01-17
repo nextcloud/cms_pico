@@ -59,7 +59,7 @@ class LocalFolder extends AbstractLocalNode implements FolderInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function delete()
+	public function delete(): void
 	{
 		if (!$this->isDeletable()) {
 			throw new NotPermittedException();
@@ -230,7 +230,7 @@ class LocalFolder extends AbstractLocalNode implements FolderInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function sync(bool $recursive = self::SYNC_RECURSIVE)
+	public function sync(bool $recursive = self::SYNC_RECURSIVE): void
 	{
 		// nothing to do
 	}
@@ -248,7 +248,7 @@ class LocalFolder extends AbstractLocalNode implements FolderInterface
 	 *
 	 * @return AbstractLocalNode|null
 	 */
-	private function createNode(string $path)
+	private function createNode(string $path): ?AbstractLocalNode
 	{
 		try {
 			if ($path === '/') {

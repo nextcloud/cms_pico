@@ -42,10 +42,10 @@ use OCP\Files\NotPermittedException;
 interface FolderInterface extends NodeInterface, \RecursiveIterator
 {
 	/** @var bool */
-	const SYNC_SHALLOW = false;
+	public const SYNC_SHALLOW = false;
 
 	/** @var bool */
-	const SYNC_RECURSIVE = true;
+	public const SYNC_RECURSIVE = true;
 
 	/**
 	 * @return NodeInterface[]
@@ -126,7 +126,7 @@ interface FolderInterface extends NodeInterface, \RecursiveIterator
 	 * @throws NotPermittedException
 	 * @throws GenericFileException
 	 */
-	public function sync(bool $recursive = self::SYNC_RECURSIVE);
+	public function sync(bool $recursive = self::SYNC_RECURSIVE): void;
 
 	/**
 	 * @return bool

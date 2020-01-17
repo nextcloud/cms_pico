@@ -69,7 +69,7 @@ class TemplateFile extends AbstractNode implements FileInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function delete()
+	public function delete(): void
 	{
 		// nothing to do
 	}
@@ -153,7 +153,7 @@ class TemplateFile extends AbstractNode implements FileInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function putContent(string $data)
+	public function putContent(string $data): void
 	{
 		throw new NotPermittedException();
 	}
@@ -175,7 +175,7 @@ class TemplateFile extends AbstractNode implements FileInterface
 	/**
 	 * @param array<string,string> $data
 	 */
-	public function setTemplateData(array $data)
+	public function setTemplateData(array $data): void
 	{
 		$this->data = [];
 		foreach ($data as $key => $value) {

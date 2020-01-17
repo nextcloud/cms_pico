@@ -93,7 +93,7 @@ abstract class AbstractNode implements NodeInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function truncate()
+	public function truncate(): void
 	{
 		if ($this->isFolder()) {
 			/** @var FolderInterface $this */
@@ -159,7 +159,7 @@ abstract class AbstractNode implements NodeInterface
 	 *
 	 * @throws InvalidPathException
 	 */
-	protected function assertValidFileName(string $name)
+	protected function assertValidFileName(string $name): void
 	{
 		if (in_array($name, [ '', '.', '..' ], true)) {
 			throw new InvalidPathException();

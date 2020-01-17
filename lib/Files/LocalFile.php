@@ -77,7 +77,7 @@ class LocalFile extends AbstractLocalNode implements FileInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function putContent(string $data)
+	public function putContent(string $data): void
 	{
 		if (!$this->isUpdateable()) {
 			throw new NotPermittedException();

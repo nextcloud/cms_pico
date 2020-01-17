@@ -201,7 +201,7 @@ class PluginsService
 	 *
 	 * @throws PluginNotFoundException
 	 */
-	public function depublishCustomPlugin(string $pluginName)
+	public function depublishCustomPlugin(string $pluginName): void
 	{
 		if (!$pluginName) {
 			throw new PluginNotFoundException();

@@ -53,10 +53,10 @@ use OCP\IGroupManager;
 class WebsitesService
 {
 	/** @var int */
-	const LINK_MODE_LONG = 1;
+	public const LINK_MODE_LONG = 1;
 
 	/** @var int */
-	const LINK_MODE_SHORT = 2;
+	public const LINK_MODE_SHORT = 2;
 
 	/** @var WebsitesRequest */
 	private $websiteRequest;
@@ -123,7 +123,7 @@ class WebsitesService
 	 * @throws TemplateNotFoundException
 	 * @throws TemplateNotCompatibleException
 	 */
-	public function createWebsite(Website $website)
+	public function createWebsite(Website $website): void
 	{
 		$website->assertValidOwner();
 		$website->assertValidName();
@@ -158,7 +158,7 @@ class WebsitesService
 	 * @throws TemplateNotFoundException
 	 * @throws TemplateNotCompatibleException
 	 */
-	public function updateWebsite(Website $website)
+	public function updateWebsite(Website $website): void
 	{
 		$originalWebsite = $this->websiteRequest->getWebsiteFromId($website->getId());
 
@@ -193,7 +193,7 @@ class WebsitesService
 	 *
 	 * @throws WebsiteNotFoundException
 	 */
-	public function deleteWebsite(Website $website)
+	public function deleteWebsite(Website $website): void
 	{
 		// check whether website actually exists
 		$this->websiteRequest->getWebsiteFromId($website->getId());
@@ -204,7 +204,7 @@ class WebsitesService
 	/**
 	 * @param string $userId
 	 */
-	public function onUserRemoved($userId)
+	public function onUserRemoved(string $userId): void
 	{
 		$this->websiteRequest->deleteAllFromUser($userId);
 	}
@@ -260,7 +260,7 @@ class WebsitesService
 	 * @throws ThemeNotCompatibleException
 	 * @throws PicoRuntimeException
 	 */
-	public function getPage(string $site, string $page, string $viewer = null, bool $proxyRequest = false): PicoPage
+	public function getPage(string $site, string $page, ?string $viewer, bool $proxyRequest = false): PicoPage
 	{
 		try {
 			$page = $this->miscService->normalizePath($page);
@@ -297,7 +297,7 @@ class WebsitesService
 	 * @throws AssetNotFoundException
 	 * @throws AssetNotPermittedException
 	 */
-	public function getAsset(string $site, string $asset, string $viewer = null): PicoAsset
+	public function getAsset(string $site, string $asset, ?string $viewer): PicoAsset
 	{
 		try {
 			$asset = $this->miscService->normalizePath($asset);
@@ -326,7 +326,7 @@ class WebsitesService
 	 *
 	 * @throws \UnexpectedValueException
 	 */
-	public function setLimitGroups(array $limitGroups)
+	public function setLimitGroups(array $limitGroups): void
 	{
 		foreach ($limitGroups as $group) {
 			if (!$this->groupManager->groupExists($group)) {
@@ -351,7 +351,7 @@ class WebsitesService
 	 *
 	 * @return bool
 	 */
-	public function isUserAllowed(string $userId = null)
+	public function isUserAllowed(?string $userId): bool
 	{
 		if (!$userId) {
 			return false;
@@ -376,7 +376,7 @@ class WebsitesService
 	 *
 	 * @throws \UnexpectedValueException
 	 */
-	public function setLinkMode(int $linkMode)
+	public function setLinkMode(int $linkMode): void
 	{
 		if (($linkMode !== self::LINK_MODE_LONG) && ($linkMode !== self::LINK_MODE_SHORT)) {
 			throw new \UnexpectedValueException();

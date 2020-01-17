@@ -55,19 +55,19 @@ use OCP\IUserManager;
 class Website extends WebsiteCore
 {
 	/** @var int */
-	const SITE_LENGTH_MIN = 3;
+	public const SITE_LENGTH_MIN = 3;
 
 	/** @var int */
-	const SITE_LENGTH_MAX = 255;
+	public const SITE_LENGTH_MAX = 255;
 
 	/** @var string */
-	const SITE_REGEX = '^[a-z0-9][a-z0-9_-]+[a-z0-9]$';
+	public const SITE_REGEX = '^[a-z0-9][a-z0-9_-]+[a-z0-9]$';
 
 	/** @var int */
-	const NAME_LENGTH_MIN = 3;
+	public const NAME_LENGTH_MIN = 3;
 
 	/** @var int */
-	const NAME_LENGTH_MAX = 255;
+	public const NAME_LENGTH_MAX = 255;
 
 	/** @var IConfig */
 	private $config;
@@ -137,7 +137,7 @@ class Website extends WebsiteCore
 	 * @throws WebsiteNotPermittedException
 	 * @throws NotPermittedException
 	 */
-	public function assertViewerAccess(string $path, array $meta = [])
+	public function assertViewerAccess(string $path, array $meta = []): void
 	{
 		$exceptionClass = WebsiteNotPermittedException::class;
 		if ($this->getType() === self::TYPE_PUBLIC) {
@@ -222,7 +222,7 @@ class Website extends WebsiteCore
 	/**
 	 * @throws WebsiteInvalidOwnerException
 	 */
-	public function assertValidOwner()
+	public function assertValidOwner(): void
 	{
 		$user = $this->userManager->get($this->getUserId());
 		if ($user === null) {
@@ -239,7 +239,7 @@ class Website extends WebsiteCore
 	/**
 	 * @throws WebsiteInvalidDataException
 	 */
-	public function assertValidName()
+	public function assertValidName(): void
 	{
 		if (strlen($this->getName()) < self::NAME_LENGTH_MIN) {
 			throw new WebsiteInvalidDataException('name', $this->l10n->t('The name of the website must be longer.'));
@@ -252,7 +252,7 @@ class Website extends WebsiteCore
 	/**
 	 * @throws WebsiteInvalidDataException
 	 */
-	public function assertValidSite()
+	public function assertValidSite(): void
 	{
 		if (strlen($this->getSite()) < self::SITE_LENGTH_MIN) {
 			$error = $this->l10n->t('The identifier of the website must be longer.');
@@ -271,7 +271,7 @@ class Website extends WebsiteCore
 	/**
 	 * @throws WebsiteInvalidDataException
 	 */
-	public function assertValidPath()
+	public function assertValidPath(): void
 	{
 		try {
 			$path = $this->miscService->normalizePath($this->getPath());
@@ -307,12 +307,7 @@ class Website extends WebsiteCore
 					);
 				}
 			}
-		} catch (InvalidPathException $e) {
-			throw new WebsiteInvalidDataException(
-				'path',
-				$this->l10n->t('Parent folder of the website\'s path not found.')
-			);
-		} catch (NotFoundException $e) {
+		} catch (InvalidPathException | NotFoundException $e) {
 			throw new WebsiteInvalidDataException(
 				'path',
 				$this->l10n->t('Parent folder of the website\'s path not found.')
@@ -324,7 +319,7 @@ class Website extends WebsiteCore
 	 * @throws ThemeNotFoundException
 	 * @throws ThemeNotCompatibleException
 	 */
-	public function assertValidTheme()
+	public function assertValidTheme(): void
 	{
 		$this->themesService->assertValidTheme($this->getTheme());
 	}
@@ -333,7 +328,7 @@ class Website extends WebsiteCore
 	 * @throws TemplateNotFoundException
 	 * @throws TemplateNotCompatibleException
 	 */
-	public function assertValidTemplate()
+	public function assertValidTemplate(): void
 	{
 		$this->templatesService->assertValidTemplate($this->getTemplateSource());
 	}
@@ -343,7 +338,7 @@ class Website extends WebsiteCore
 	 *
 	 * @throws WebsiteForeignOwnerException
 	 */
-	public function assertOwnedBy($userId)
+	public function assertOwnedBy(string $userId): void
 	{
 		if ($this->getUserId() !== $userId) {
 			throw new WebsiteForeignOwnerException();
@@ -375,9 +370,7 @@ class Website extends WebsiteCore
 
 				$websiteFolder = $userFolder->getFolder($this->getPath());
 				$this->folder = $websiteFolder->fakeRoot();
-			} catch (InvalidPathException $e) {
-				throw new WebsiteInvalidFilesystemException($e);
-			} catch (NotFoundException $e) {
+			} catch (InvalidPathException | NotFoundException $e) {
 				throw new WebsiteInvalidFilesystemException($e);
 			}
 		}
@@ -393,9 +386,7 @@ class Website extends WebsiteCore
 	{
 		try {
 			return $this->getWebsiteFolder()->getLocalPath() . '/';
-		} catch (InvalidPathException $e) {
-			throw new WebsiteInvalidFilesystemException($e);
-		} catch (NotFoundException $e) {
+		} catch (InvalidPathException | NotFoundException $e) {
 			throw new WebsiteInvalidFilesystemException($e);
 		}
 	}

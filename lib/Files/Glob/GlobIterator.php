@@ -48,7 +48,7 @@ class GlobIterator implements \Iterator
 	/**
 	 * @return void
 	 */
-	private function init()
+	private function init(): void
 	{
 		$this->folders = [ $this->folder ];
 		$this->current = $this->folder;
@@ -62,7 +62,7 @@ class GlobIterator implements \Iterator
 	 * @throws NotPermittedException
 	 * @throws GenericFileException
 	 */
-	public function rewind()
+	public function rewind(): void
 	{
 		$this->init();
 
@@ -72,7 +72,7 @@ class GlobIterator implements \Iterator
 	/**
 	 * @return void
 	 */
-	public function next()
+	public function next(): void
 	{
 		$this->current->next();
 	}
@@ -129,7 +129,7 @@ class GlobIterator implements \Iterator
 	/**
 	 * @param FolderInterface $folder
 	 */
-	private function descend(FolderInterface $folder)
+	private function descend(FolderInterface $folder): void
 	{
 		$this->folders[] = $folder;
 		$this->depth++;
@@ -141,7 +141,7 @@ class GlobIterator implements \Iterator
 	/**
 	 * @return void
 	 */
-	private function ascend()
+	private function ascend(): void
 	{
 		array_pop($this->folders);
 		$this->depth--;
@@ -153,7 +153,7 @@ class GlobIterator implements \Iterator
 	/**
 	 * @param FileInterface $file
 	 */
-	private function set(FileInterface $file)
+	private function set(FileInterface $file): void
 	{
 		$this->currentValue = $file;
 		$this->currentKey++;

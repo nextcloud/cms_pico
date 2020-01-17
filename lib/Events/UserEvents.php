@@ -45,7 +45,7 @@ class UserEvents
 	/**
 	 * @param array $params
 	 */
-	public function onUserDeleted(array $params)
+	public function onUserDeleted(array $params): void
 	{
 		$userId = $params['uid'];
 		$this->websitesService->onUserRemoved($userId);

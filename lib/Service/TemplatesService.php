@@ -63,7 +63,7 @@ class TemplatesService
 	 * @throws TemplateNotFoundException
 	 * @throws TemplateNotCompatibleException
 	 */
-	public function assertValidTemplate(string $templateName)
+	public function assertValidTemplate(string $templateName): void
 	{
 		$templates = $this->getTemplates();
 
@@ -134,7 +134,7 @@ class TemplatesService
 	 * @throws TemplateNotFoundException
 	 * @throws TemplateAlreadyExistsException
 	 */
-	public function registerSystemTemplate(string $templateName)
+	public function registerSystemTemplate(string $templateName): Template
 	{
 		if (!$templateName) {
 			throw new TemplateNotFoundException();
@@ -163,7 +163,7 @@ class TemplatesService
 	 * @throws TemplateNotFoundException
 	 * @throws TemplateAlreadyExistsException
 	 */
-	public function registerCustomTemplate(string $templateName)
+	public function registerCustomTemplate(string $templateName): Template
 	{
 		if (!$templateName) {
 			throw new TemplateNotFoundException();
@@ -195,7 +195,7 @@ class TemplatesService
 	 *
 	 * @throws TemplateNotFoundException
 	 */
-	public function removeCustomTemplate(string $templateName)
+	public function removeCustomTemplate(string $templateName): void
 	{
 		if (!$templateName) {
 			throw new TemplateNotFoundException();
@@ -214,7 +214,7 @@ class TemplatesService
 	 * @throws TemplateNotFoundException
 	 * @throws TemplateAlreadyExistsException
 	 */
-	public function copyTemplate(string $baseTemplateName, string $templateName)
+	public function copyTemplate(string $baseTemplateName, string $templateName): Template
 	{
 		if (!$baseTemplateName || !$templateName) {
 			throw new TemplateNotFoundException();
@@ -244,7 +244,7 @@ class TemplatesService
 	 *
 	 * @throws TemplateNotFoundException
 	 */
-	public function installTemplate(Website $website)
+	public function installTemplate(Website $website): void
 	{
 		$userFolder = new StorageFolder(\OC::$server->getUserFolder($website->getUserId()));
 

@@ -69,7 +69,7 @@ class ThemesService
 	 * @throws ThemeNotFoundException
 	 * @throws ThemeNotCompatibleException
 	 */
-	public function assertValidTheme(string $themeName)
+	public function assertValidTheme(string $themeName): void
 	{
 		$themes = $this->getThemes();
 
@@ -227,7 +227,7 @@ class ThemesService
 	 *
 	 * @throws ThemeNotFoundException
 	 */
-	public function depublishCustomTheme(string $themeName)
+	public function depublishCustomTheme(string $themeName): void
 	{
 		if (!$themeName) {
 			throw new ThemeNotFoundException();
@@ -254,7 +254,7 @@ class ThemesService
 	 * @throws ThemeNotFoundException
 	 * @throws ThemeAlreadyExistsException
 	 */
-	public function copyTheme(string $baseThemeName, string $themeName)
+	public function copyTheme(string $baseThemeName, string $themeName): Theme
 	{
 		if (!$baseThemeName || !$themeName) {
 			throw new ThemeNotFoundException();

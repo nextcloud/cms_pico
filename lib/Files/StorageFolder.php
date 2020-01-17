@@ -167,10 +167,10 @@ class StorageFolder extends AbstractStorageNode implements FolderInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function sync(bool $recursive = FolderInterface::SYNC_RECURSIVE)
+	public function sync(bool $recursive = FolderInterface::SYNC_RECURSIVE): void
 	{
 		// TODO >= NC 18: Remove version switch
-		list($majorVersion) = \OC_Util::getVersion();
+		[ $majorVersion ] = \OC_Util::getVersion();
 		if ($majorVersion >= 18) {
 			if ($this->eventDispatcher === null) {
 				$this->eventDispatcher = \OC::$server->query(IEventDispatcher::class);
@@ -202,7 +202,7 @@ class StorageFolder extends AbstractStorageNode implements FolderInterface
 	 * @return string|null
 	 * @throws InvalidPathException
 	 */
-	private function getBasePath(string $path)
+	private function getBasePath(string $path): ?string
 	{
 		$path = $this->normalizePath($this->getPath() . '/' . $path);
 		return ($path !== '/') ? dirname($path) : null;

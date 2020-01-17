@@ -92,9 +92,7 @@ class AssetsService
 	{
 		try {
 			return $website->getWebsiteFolder()->getFolder(PicoService::DIR_ASSETS)->fakeRoot();
-		} catch (InvalidPathException $e) {
-			throw new WebsiteInvalidFilesystemException($e);
-		} catch (NotFoundException $e) {
+		} catch (InvalidPathException | NotFoundException $e) {
 			throw new WebsiteInvalidFilesystemException($e);
 		}
 	}
@@ -109,9 +107,7 @@ class AssetsService
 	{
 		try {
 			return $this->getAssetsFolder($website)->getLocalPath() . '/';
-		} catch (InvalidPathException $e) {
-			throw new WebsiteInvalidFilesystemException($e);
-		} catch (NotFoundException $e) {
+		} catch (InvalidPathException | NotFoundException $e) {
 			throw new WebsiteInvalidFilesystemException($e);
 		}
 	}

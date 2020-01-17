@@ -124,7 +124,7 @@ class Version010000 extends SimpleMigrationStep
 	 * @param \Closure $schemaClosure
 	 * @param array    $options
 	 */
-	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options)
+	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options): void
 	{
 		$this->miscService->checkComposer();
 		$this->miscService->checkPublicFolder();
