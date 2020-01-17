@@ -31,7 +31,7 @@ use OCP\IDBConnection;
 class CoreRequestBuilder
 {
 	/** @var string */
-	const TABLE_WEBSITES = 'cms_pico_websites';
+	public const TABLE_WEBSITES = 'cms_pico_websites';
 
 	/** @var IDBConnection */
 	protected $dbConnection;
@@ -52,7 +52,7 @@ class CoreRequestBuilder
 	 * @param IQueryBuilder $qb
 	 * @param int           $id
 	 */
-	protected function limitToId(IQueryBuilder $qb, int $id)
+	protected function limitToId(IQueryBuilder $qb, int $id): void
 	{
 		$this->limitToDBField($qb, 'id', $id);
 	}
@@ -63,7 +63,7 @@ class CoreRequestBuilder
 	 * @param IQueryBuilder $qb
 	 * @param string        $userId
 	 */
-	protected function limitToUserId(IQueryBuilder $qb, string $userId)
+	protected function limitToUserId(IQueryBuilder $qb, string $userId): void
 	{
 		$this->limitToDBField($qb, 'user_id', $userId);
 	}
@@ -74,7 +74,7 @@ class CoreRequestBuilder
 	 * @param IQueryBuilder $qb
 	 * @param string        $userId
 	 */
-	protected function limitToSite(IQueryBuilder $qb, string $userId)
+	protected function limitToSite(IQueryBuilder $qb, string $userId): void
 	{
 		$this->limitToDBField($qb, 'site', $userId);
 	}
@@ -84,7 +84,7 @@ class CoreRequestBuilder
 	 * @param string        $field
 	 * @param mixed         $value
 	 */
-	private function limitToDBField(IQueryBuilder $qb, string $field, $value)
+	private function limitToDBField(IQueryBuilder $qb, string $field, $value): void
 	{
 		$qb->andWhere($qb->expr()->eq($field, $qb->createNamedParameter($value)));
 	}

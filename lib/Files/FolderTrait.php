@@ -80,11 +80,10 @@ trait FolderTrait
 	abstract protected function getGenerator(): \Generator;
 
 	/**
-	 * @return void
 	 * @throws NotPermittedException
 	 * @throws GenericFileException
 	 */
-	public function rewind()
+	public function rewind(): void
 	{
 		$this->generator = $this->getGenerator();
 	}
@@ -92,7 +91,7 @@ trait FolderTrait
 	/**
 	 * @return void
 	 */
-	public function next()
+	public function next(): void
 	{
 		$this->generator->next();
 	}

@@ -206,26 +206,9 @@ class MiscService
 	}
 
 	/**
-	 * @param \Exception $e
-	 * @param string     ...$classNames
-	 *
-	 * @throws \Exception
-	 */
-	public function consumeException(\Exception $e, string ...$classNames)
-	{
-		foreach ($classNames as $className) {
-			if (is_a($e, $className)) {
-				return;
-			}
-		}
-
-		throw $e;
-	}
-
-	/**
 	 * @throws ComposerException
 	 */
-	public function checkComposer()
+	public function checkComposer(): void
 	{
 		$appPath = Application::getAppPath();
 		if (!is_file($appPath . '/vendor/autoload.php')) {
@@ -247,7 +230,7 @@ class MiscService
 	/**
 	 * @throws FilesystemNotWritableException
 	 */
-	public function checkPublicFolder()
+	public function checkPublicFolder(): void
 	{
 		$publicFolder = $this->fileService->getPublicFolder();
 

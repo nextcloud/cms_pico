@@ -46,28 +46,28 @@ class Pico extends \Pico
 	 *
 	 * @var int
 	 */
-	const API_VERSION_0 = 0;
+	public const API_VERSION_0 = 0;
 
 	/**
 	 * API version 1, used by Pico 1.0
 	 *
 	 * @var int
 	 */
-	const API_VERSION_1 = 1;
+	public const API_VERSION_1 = 1;
 
 	/**
 	 * API version 2, used by Pico 2.0
 	 *
 	 * @var int
 	 */
-	const API_VERSION_2 = 2;
+	public const API_VERSION_2 = 2;
 
 	/**
 	 * API version 3, used by Pico 2.1
 	 *
 	 * @var int
 	 */
-	const API_VERSION_3 = 3;
+	public const API_VERSION_3 = 3;
 
 	/** @var PicoService */
 	private $picoService;
@@ -156,7 +156,7 @@ class Pico extends \Pico
 		/** @var FolderInterface $folder */
 		/** @var string $basePath */
 		/** @var string $relativePath */
-		list($folder, $basePath, $relativePath) = $this->picoService->getRelativePath($this->website, $absolutePath);
+		[ $folder, $basePath, $relativePath ] = $this->picoService->getRelativePath($this->website, $absolutePath);
 
 		$file = $folder->getFile($relativePath);
 		return $file->getContent();
@@ -184,7 +184,7 @@ class Pico extends \Pico
 	 *
 	 * @return array
 	 */
-	protected function purifyFileMeta(array $meta)
+	protected function purifyFileMeta(array $meta): array
 	{
 		$newMeta = [];
 		foreach ($meta as $key => $value) {
@@ -219,7 +219,7 @@ class Pico extends \Pico
 	 *
 	 * @return string
 	 */
-	protected function purifyFileContent(string $content)
+	protected function purifyFileContent(string $content): string
 	{
 		return $this->getHtmlPurifier()->purify($content);
 	}
@@ -229,7 +229,7 @@ class Pico extends \Pico
 	 *
 	 * @return HTMLPurifier
 	 */
-	public function getHtmlPurifier()
+	public function getHtmlPurifier(): HTMLPurifier
 	{
 		if ($this->htmlPurifier === null) {
 			$htmlPurifierConfig = HTMLPurifier_HTML5Config::createDefault();
@@ -257,7 +257,7 @@ class Pico extends \Pico
 		/** @var FolderInterface $folder */
 		/** @var string $basePath */
 		/** @var string $relativePath */
-		list($folder, $basePath, $relativePath) = $this->picoService->getRelativePath($this->website, $absolutePath);
+		[ $folder, $basePath, $relativePath ] = $this->picoService->getRelativePath($this->website, $absolutePath);
 
 		if ($folder->isLocal()) {
 			return parent::getFiles($absolutePath, $fileExtension, $order);
@@ -309,7 +309,7 @@ class Pico extends \Pico
 		/** @var FolderInterface $folder */
 		/** @var string $basePath */
 		/** @var string $pattern */
-		list($folder, $basePath, $pattern) = $this->picoService->getRelativePath($this->website, $absolutePathPattern);
+		[ $folder, $basePath, $pattern ] = $this->picoService->getRelativePath($this->website, $absolutePathPattern);
 
 		if ($folder->isLocal()) {
 			return parent::getFilesGlob($absolutePathPattern, $order);

@@ -33,7 +33,7 @@ class WebsitesRequest extends WebsitesRequestBuilder
 	/**
 	 * @param Website $website
 	 */
-	public function create(Website $website)
+	public function create(Website $website): void
 	{
 		$qb = $this->getWebsitesInsertSql();
 		$qb
@@ -51,7 +51,7 @@ class WebsitesRequest extends WebsitesRequestBuilder
 	/**
 	 * @param Website $website
 	 */
-	public function update(Website $website)
+	public function update(Website $website): void
 	{
 		$qb = $this->getWebsitesUpdateSql();
 		$qb
@@ -71,7 +71,7 @@ class WebsitesRequest extends WebsitesRequestBuilder
 	/**
 	 * @param Website $website
 	 */
-	public function delete(Website $website)
+	public function delete(Website $website): void
 	{
 		$qb = $this->getWebsitesDeleteSql();
 		$this->limitToId($qb, $website->getId());
@@ -82,7 +82,7 @@ class WebsitesRequest extends WebsitesRequestBuilder
 	/**
 	 * @param string $userId
 	 */
-	public function deleteAllFromUser(string $userId)
+	public function deleteAllFromUser(string $userId): void
 	{
 		$qb = $this->getWebsitesDeleteSql();
 		$this->limitToUserId($qb, $userId);

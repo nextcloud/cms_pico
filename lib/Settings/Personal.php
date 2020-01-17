@@ -61,7 +61,7 @@ class Personal implements ISettings
 	 * @param TemplatesService $templatesService
 	 */
 	public function __construct(
-		$userId,
+		?string $userId,
 		IURLGenerator $urlGenerator,
 		WebsitesService $websitesService,
 		ThemesService $themesService,

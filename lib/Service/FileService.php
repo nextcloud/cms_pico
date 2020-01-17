@@ -37,10 +37,10 @@ use OCP\Files\NotPermittedException;
 class FileService
 {
 	/** @var string */
-	const APPDATA_PUBLIC = 'appdata_public';
+	private const APPDATA_PUBLIC = 'appdata_public';
 
 	/** @var string */
-	const APPDATA_SYSTEM = 'appdata';
+	private const APPDATA_SYSTEM = 'appdata';
 
 	/** @var IRootFolder */
 	private $rootFolder;
@@ -177,7 +177,7 @@ class FileService
 	/**
 	 * @return void
 	 */
-	public function syncAppDataFolder()
+	public function syncAppDataFolder(): void
 	{
 		$baseFolderName = 'appdata_' . $this->configService->getSystemValue('instanceid');
 		$appDataFolderName = Application::APP_NAME;

@@ -64,8 +64,8 @@ class StorageFile extends AbstractStorageNode implements FileInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function putContent(string $data)
+	public function putContent(string $data): void
 	{
-		return $this->node->putContent($data);
+		$this->node->putContent($data);
 	}
 }

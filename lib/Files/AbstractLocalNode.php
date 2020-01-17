@@ -148,7 +148,7 @@ abstract class AbstractLocalNode extends AbstractNode implements NodeInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function delete()
+	public function delete(): void
 	{
 		if (!$this->isDeletable()) {
 			throw new NotPermittedException();

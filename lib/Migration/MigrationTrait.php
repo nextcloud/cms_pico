@@ -39,7 +39,7 @@ trait MigrationTrait
 	/**
 	 * @param ILogger $logger
 	 */
-	protected function setLogger(ILogger $logger)
+	protected function setLogger(ILogger $logger): void
 	{
 		$this->logger = $logger;
 	}
@@ -47,7 +47,7 @@ trait MigrationTrait
 	/**
 	 * @param IOutput $output
 	 */
-	protected function setOutput(IOutput $output)
+	protected function setOutput(IOutput $output): void
 	{
 		$this->output = $output;
 	}
@@ -56,7 +56,7 @@ trait MigrationTrait
 	 * @param string  $message
 	 * @param mixed[] ...$arguments
 	 */
-	protected function logInfo(string $message, ...$arguments)
+	protected function logInfo(string $message, ...$arguments): void
 	{
 		if (!$this->logger || !$this->output) {
 			throw new \LogicException('No logger or output instance set');
@@ -71,7 +71,7 @@ trait MigrationTrait
 	 * @param string $message
 	 * @param mixed[] ...$arguments
 	 */
-	protected function logWarning(string $message, ...$arguments)
+	protected function logWarning(string $message, ...$arguments): void
 	{
 		if (!$this->logger || !$this->output) {
 			throw new \LogicException('No logger or output instance set');
@@ -88,7 +88,7 @@ trait MigrationTrait
 	 * @param array  $oldItems
 	 * @param bool   $warnUpdates
 	 */
-	protected function logChanges(string $title, array $newItems, array $oldItems, bool $warnUpdates = false)
+	protected function logChanges(string $title, array $newItems, array $oldItems, bool $warnUpdates = false): void
 	{
 		if (!$this->logger || !$this->output) {
 			throw new \LogicException('No logger or output instance set');

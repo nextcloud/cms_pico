@@ -47,5 +47,5 @@ interface FileInterface extends NodeInterface
 	 * @throws NotPermittedException
 	 * @throws GenericFileException
 	 */
-	public function putContent(string $data);
+	public function putContent(string $data): void;
 }

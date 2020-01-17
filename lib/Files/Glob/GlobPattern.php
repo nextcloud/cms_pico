@@ -27,13 +27,13 @@ namespace OCA\CMSPico\Files\Glob;
 class GlobPattern
 {
 	/** @var int */
-	const TYPE_NONE = 0;
+	protected const TYPE_NONE = 0;
 
 	/** @var int */
-	const TYPE_STATIC = 1;
+	protected const TYPE_STATIC = 1;
 
 	/** @var int */
-	const TYPE_REGEX = 2;
+	protected const TYPE_REGEX = 2;
 
 	/** @var string */
 	protected $delimiter = '~';
@@ -86,7 +86,7 @@ class GlobPattern
 	{
 		/** @var int $componentType */
 		/** @var string $componentPattern */
-		list($componentType, $componentPattern) = $this->getComponent($depth);
+		[ $componentType, $componentPattern ] = $this->getComponent($depth);
 
 		if ($componentType === self::TYPE_STATIC) {
 			return ($fileName === $componentPattern);
@@ -118,7 +118,7 @@ class GlobPattern
 	/**
 	 * @return void
 	 */
-	private function evaluateComponent()
+	private function evaluateComponent(): void
 	{
 		$this->resetComponent();
 
@@ -149,7 +149,7 @@ class GlobPattern
 	/**
 	 * @param string $char
 	 */
-	private function evaluateComponentChar(string $char)
+	private function evaluateComponentChar(string $char): void
 	{
 		$i = &$this->patternPos;
 
@@ -205,7 +205,7 @@ class GlobPattern
 	/**
 	 * @return void
 	 */
-	private function commitComponent()
+	private function commitComponent(): void
 	{
 		if ($this->context['inGroup']) {
 			throw new \InvalidArgumentException('Invalid glob: Missing "]": ' . $this->pattern);
@@ -222,7 +222,7 @@ class GlobPattern
 	/**
 	 * @return void
 	 */
-	private function resetComponent()
+	private function resetComponent(): void
 	{
 		$this->current = '';
 		$this->context = [

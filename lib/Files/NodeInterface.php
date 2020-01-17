@@ -71,13 +71,13 @@ interface NodeInterface
 	 * @throws NotPermittedException
 	 * @throws GenericFileException
 	 */
-	public function truncate();
+	public function truncate(): void;
 
 	/**
 	 * @throws NotPermittedException
 	 * @throws GenericFileException
 	 */
-	public function delete();
+	public function delete(): void;
 
 	/**
 	 * @return string

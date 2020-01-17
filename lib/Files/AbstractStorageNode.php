@@ -115,7 +115,7 @@ abstract class AbstractStorageNode extends AbstractNode implements NodeInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function delete()
+	public function delete(): void
 	{
 		$this->node->delete();
 	}

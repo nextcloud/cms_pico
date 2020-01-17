@@ -46,25 +46,25 @@ use OCP\ILogger;
 class PicoService
 {
 	/** @var string */
-	const DIR_TEMPLATES = 'templates';
+	public const DIR_TEMPLATES = 'templates';
 
 	/** @var string */
-	const DIR_CONFIG = 'config';
+	public const DIR_CONFIG = 'config';
 
 	/** @var string */
-	const DIR_PLUGINS = 'plugins';
+	public const DIR_PLUGINS = 'plugins';
 
 	/** @var string */
-	const DIR_THEMES = 'themes';
+	public const DIR_THEMES = 'themes';
 
 	/** @var string */
-	const DIR_CONTENT = 'content';
+	public const DIR_CONTENT = 'content';
 
 	/** @var string */
-	const DIR_ASSETS = 'assets';
+	public const DIR_ASSETS = 'assets';
 
 	/** @var string */
-	const CONTENT_EXT = '.md';
+	public const CONTENT_EXT = '.md';
 
 	/** @var ILogger */
 	private $logger;
@@ -147,11 +147,7 @@ class PicoService
 				$output = $pico->run();
 			} catch (WebsiteInvalidFilesystemException $e) {
 				throw $e;
-			} catch (InvalidPathException $e) {
-				throw $e;
-			} catch (NotFoundException $e) {
-				throw $e;
-			} catch (NotPermittedException $e) {
+			} catch (InvalidPathException | NotFoundException | NotPermittedException $e) {
 				throw $e;
 			} catch (\Exception $e) {
 				$exception = new PicoRuntimeException($e);
@@ -181,7 +177,7 @@ class PicoService
 	 *
 	 * @throws WebsiteInvalidFilesystemException
 	 */
-	private function setupPico(Website $website, Pico $pico, string $page)
+	private function setupPico(Website $website, Pico $pico, string $page): void
 	{
 		$pico->setRequestUrl($page);
 		$pico->setNextcloudWebsite($website);
@@ -208,7 +204,7 @@ class PicoService
 	/**
 	 * @param Pico $pico
 	 */
-	private function loadPicoPlugins(Pico $pico)
+	private function loadPicoPlugins(Pico $pico): void
 	{
 		$includeClosure = static function (string $pluginFile) {
 			/** @noinspection PhpIncludeInspection */
@@ -282,9 +278,7 @@ class PicoService
 			/** @var StorageFolder $websiteFolder */
 			$websiteFolder = $website->getWebsiteFolder()->getFolder(PicoService::DIR_CONTENT)->fakeRoot();
 			return $websiteFolder;
-		} catch (InvalidPathException $e) {
-			throw new WebsiteInvalidFilesystemException($e);
-		} catch (NotFoundException $e) {
+		} catch (InvalidPathException | NotFoundException $e) {
 			throw new WebsiteInvalidFilesystemException($e);
 		}
 	}
@@ -299,9 +293,7 @@ class PicoService
 	{
 		try {
 			return $this->getContentFolder($website)->getLocalPath() . '/';
-		} catch (InvalidPathException $e) {
-			throw new WebsiteInvalidFilesystemException($e);
-		} catch (NotFoundException $e) {
+		} catch (InvalidPathException | NotFoundException $e) {
 			throw new WebsiteInvalidFilesystemException($e);
 		}
 	}

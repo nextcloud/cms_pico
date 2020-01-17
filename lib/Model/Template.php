@@ -33,10 +33,10 @@ use OCP\Files\NotFoundException;
 class Template implements \JsonSerializable
 {
 	/** @var int */
-	const TYPE_SYSTEM = 1;
+	public const TYPE_SYSTEM = 1;
 
 	/** @var int */
-	const TYPE_CUSTOM = 2;
+	public const TYPE_CUSTOM = 2;
 
 	/** @var MiscService */
 	private $miscService;
@@ -111,7 +111,7 @@ class Template implements \JsonSerializable
 	/**
 	 * @throws TemplateNotCompatibleException
 	 */
-	public function checkCompatibility()
+	public function checkCompatibility(): void
 	{
 		if ($this->compat === false) {
 			throw $this->compatException;
@@ -122,10 +122,7 @@ class Template implements \JsonSerializable
 		try {
 			try {
 				$this->folder->getFolder('assets');
-			} catch (\Exception $e) {
-				/** @noinspection PhpUnhandledExceptionInspection */
-				$this->miscService->consumeException($e, InvalidPathException::class, NotFoundException::class);
-
+			} catch (InvalidPathException | NotFoundException $e) {
 				throw new TemplateNotCompatibleException(
 					$this->getName(),
 					'Incompatible template: Required directory "{file}" not found.',
@@ -135,10 +132,7 @@ class Template implements \JsonSerializable
 
 			try {
 				$this->folder->getFolder('content');
-			} catch (\Exception $e) {
-				/** @noinspection PhpUnhandledExceptionInspection */
-				$this->miscService->consumeException($e, InvalidPathException::class, NotFoundException::class);
-
+			} catch (InvalidPathException | NotFoundException $e) {
 				throw new TemplateNotCompatibleException(
 					$this->getName(),
 					'Incompatible template: Required directory "{file}" not found.',

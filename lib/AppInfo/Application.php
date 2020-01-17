@@ -35,7 +35,7 @@ use OCP\Util;
 class Application extends App
 {
 	/** @var string */
-	const APP_NAME = 'cms_pico';
+	public const APP_NAME = 'cms_pico';
 
 	/**
 	 * @param array $params
@@ -48,7 +48,7 @@ class Application extends App
 	/**
 	 * Register hooks.
 	 */
-	public function registerHooks()
+	public function registerHooks(): void
 	{
 		Util::connectHook('OC_User', 'post_deleteUser', '\OCA\CMSPico\Hooks\UserHooks', 'onUserDeleted');
 	}
@@ -56,7 +56,7 @@ class Application extends App
 	/**
 	 * Registers a unencrypted storage backend.
 	 */
-	public function registerExternalStorage()
+	public function registerExternalStorage(): void
 	{
 		// TODO >= NC 18: Add \OCP\EventDispatcher\Event $event param to closure
 		\OC::$server->getEventDispatcher()->addListener(

@@ -28,10 +28,10 @@ namespace OCA\CMSPico\Model;
 class WebsiteCore implements \JsonSerializable
 {
 	/** @var int */
-	const TYPE_PUBLIC = 1;
+	public const TYPE_PUBLIC = 1;
 
 	/** @var int */
-	const TYPE_PRIVATE = 2;
+	public const TYPE_PRIVATE = 2;
 
 	/** @var int */
 	private $id;
@@ -206,7 +206,7 @@ class WebsiteCore implements \JsonSerializable
 
 	/**
 	 * @param string $key
-	 * @param mixed $value
+	 * @param mixed  $value
 	 *
 	 * @return $this
 	 */
@@ -226,13 +226,13 @@ class WebsiteCore implements \JsonSerializable
 	 *
 	 * @return mixed
 	 */
-	public function getOption($key)
+	public function getOption(string $key)
 	{
 		return $this->options[$key] ?? null;
 	}
 
 	/**
-	 * @param array|string $options
+	 * @param array|string|null $options
 	 *
 	 * @return $this
 	 */
@@ -403,7 +403,7 @@ class WebsiteCore implements \JsonSerializable
 	 *
 	 * @throws \UnexpectedValueException
 	 */
-	public function fromArray(array $data)
+	public function fromArray(array $data): void
 	{
 		if (!isset($data['user_id']) || !isset($data['name']) || !isset($data['site']) || !isset($data['path'])) {
 			throw new \UnexpectedValueException();
@@ -439,7 +439,7 @@ class WebsiteCore implements \JsonSerializable
 	 *
 	 * @throws \UnexpectedValueException
 	 */
-	public function fromJSON(string $json)
+	public function fromJSON(string $json): void
 	{
 		$this->fromArray(json_decode($json, true));
 	}

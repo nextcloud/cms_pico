@@ -76,7 +76,7 @@ class Version010000From000908 extends SimpleMigrationStep
 	 * @param \Closure $schemaClosure
 	 * @param array    $options
 	 */
-	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options)
+	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options): void
 	{
 		$this->setOutput($output);
 
@@ -95,7 +95,7 @@ class Version010000From000908 extends SimpleMigrationStep
 	/**
 	 * @return void
 	 */
-	private function migrateCustomTemplates()
+	private function migrateCustomTemplates(): void
 	{
 		$customTemplatesJson = $this->configService->getAppValue(ConfigService::CUSTOM_TEMPLATES);
 		$customTemplates = $customTemplatesJson ? json_decode($customTemplatesJson, true) : [];
@@ -117,7 +117,7 @@ class Version010000From000908 extends SimpleMigrationStep
 	/**
 	 * @return void
 	 */
-	private function migrateCustomThemes()
+	private function migrateCustomThemes(): void
 	{
 		$customThemesJson = $this->configService->getAppValue(ConfigService::CUSTOM_THEMES);
 		$customThemes = $customThemesJson ? json_decode($customThemesJson, true) : [];
@@ -139,7 +139,7 @@ class Version010000From000908 extends SimpleMigrationStep
 	/**
 	 * @return array<string,string>
 	 */
-	private function migrateSystemTemplates()
+	private function migrateSystemTemplates(): array
 	{
 		$systemTemplatesFolder = $this->fileService->getSystemFolder(PicoService::DIR_TEMPLATES);
 		$systemTemplatesFolder->sync(FolderInterface::SYNC_SHALLOW);
@@ -178,7 +178,7 @@ class Version010000From000908 extends SimpleMigrationStep
 	/**
 	 * @return array<string,string>
 	 */
-	private function migrateSystemThemes()
+	private function migrateSystemThemes(): array
 	{
 		$systemThemesFolder = $this->fileService->getSystemFolder(PicoService::DIR_THEMES);
 		$systemThemesFolder->sync(FolderInterface::SYNC_SHALLOW);
@@ -217,7 +217,7 @@ class Version010000From000908 extends SimpleMigrationStep
 	/**
 	 * @param array $themesMigrationMap
 	 */
-	private function migratePrivateWebsites(array $themesMigrationMap)
+	private function migratePrivateWebsites(array $themesMigrationMap): void
 	{
 		$qbUpdate = $this->databaseConnection->getQueryBuilder();
 		$qbUpdate

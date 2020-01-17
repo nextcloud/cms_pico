@@ -32,7 +32,7 @@ class UserHooks
 	/**
 	 * @param array $params
 	 */
-	public static function onUserDeleted(array $params)
+	public static function onUserDeleted(array $params): void
 	{
 		/** @var UserEvents $userEvents */
 		$userEvents = \OC::$server->query(UserEvents::class);

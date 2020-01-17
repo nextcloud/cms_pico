@@ -31,34 +31,34 @@ use OCP\IConfig;
 class ConfigService
 {
 	/** @var string */
-	const SYSTEM_TEMPLATES = 'system_templates';
+	public const SYSTEM_TEMPLATES = 'system_templates';
 
 	/** @var string */
-	const CUSTOM_TEMPLATES = 'custom_templates';
+	public const CUSTOM_TEMPLATES = 'custom_templates';
 
 	/** @var string */
-	const SYSTEM_THEMES = 'system_themes';
+	public const SYSTEM_THEMES = 'system_themes';
 
 	/** @var string */
-	const CUSTOM_THEMES = 'custom_themes';
+	public const CUSTOM_THEMES = 'custom_themes';
 
 	/** @var string */
-	const THEMES_ETAG = 'themes_etag';
+	public const THEMES_ETAG = 'themes_etag';
 
 	/** @var string */
-	const SYSTEM_PLUGINS = 'system_plugins';
+	public const SYSTEM_PLUGINS = 'system_plugins';
 
 	/** @var string */
-	const CUSTOM_PLUGINS = 'custom_plugins';
+	public const CUSTOM_PLUGINS = 'custom_plugins';
 
 	/** @var string */
-	const PLUGINS_ETAG = 'plugins_etag';
+	public const PLUGINS_ETAG = 'plugins_etag';
 
 	/** @var string */
-	const LIMIT_GROUPS = 'limit_groups';
+	public const LIMIT_GROUPS = 'limit_groups';
 
 	/** @var string */
-	const LINK_MODE = 'link_mode';
+	public const LINK_MODE = 'link_mode';
 
 	/** @var array<string,mixed> */
 	private $defaults = [
@@ -77,16 +77,16 @@ class ConfigService
 	/** @var IConfig */
 	private $config;
 
-	/** @var string */
+	/** @var string|null */
 	private $userId;
 
 	/**
 	 * ConfigService constructor.
 	 *
 	 * @param IConfig     $config
-	 * @param string      $userId
+	 * @param string|null $userId
 	 */
-	public function __construct(IConfig $config, $userId)
+	public function __construct(IConfig $config, ?string $userId)
 	{
 		$this->config = $config;
 		$this->userId = $userId;
@@ -107,7 +107,7 @@ class ConfigService
 	 * @param string $key
 	 * @param mixed $value
 	 */
-	public function setAppValue(string $key, $value)
+	public function setAppValue(string $key, $value): void
 	{
 		$this->config->setAppValue(Application::APP_NAME, $key, $value);
 	}
@@ -115,7 +115,7 @@ class ConfigService
 	/**
 	 * @param string $key
 	 */
-	public function deleteAppValue(string $key)
+	public function deleteAppValue(string $key): void
 	{
 		$this->config->deleteAppValue(Application::APP_NAME, $key);
 	}
@@ -137,7 +137,7 @@ class ConfigService
 	 * @param mixed       $value
 	 * @param string|null $userId
 	 */
-	public function setUserValue(string $key, $value, string $userId = null)
+	public function setUserValue(string $key, $value, string $userId = null): void
 	{
 		$this->config->setUserValue($userId ?? $this->userId, Application::APP_NAME, $key, $value);
 	}
@@ -146,7 +146,7 @@ class ConfigService
 	 * @param string      $key
 	 * @param string|null $userId
 	 */
-	public function deleteUserValue(string $key, string $userId = null)
+	public function deleteUserValue(string $key, string $userId = null): void
 	{
 		$this->config->deleteUserValue($userId ?? $this->userId, Application::APP_NAME, $key);
 	}

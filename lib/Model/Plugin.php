@@ -34,13 +34,13 @@ use OCP\Files\NotFoundException;
 class Plugin implements \JsonSerializable
 {
 	/** @var int */
-	const TYPE_SYSTEM = 1;
+	public const TYPE_SYSTEM = 1;
 
 	/** @var int */
-	const TYPE_CUSTOM = 2;
+	public const TYPE_CUSTOM = 2;
 
 	/** @var int[] */
-	const PLUGIN_API_VERSIONS = [
+	public const PLUGIN_API_VERSIONS = [
 		Pico::API_VERSION_1,
 		Pico::API_VERSION_2,
 		Pico::API_VERSION_3,
@@ -119,7 +119,7 @@ class Plugin implements \JsonSerializable
 	/**
 	 * @throws PluginNotCompatibleException
 	 */
-	public function checkCompatibility()
+	public function checkCompatibility(): void
 	{
 		if ($this->compat === false) {
 			throw $this->compatException;
@@ -136,10 +136,7 @@ class Plugin implements \JsonSerializable
 			try {
 				$pluginFile = $this->getFolder()->getFile($this->getName() . '.php');
 				$includeClosure($pluginFile->getLocalPath());
-			} catch (\Exception $e) {
-				/** @noinspection PhpUnhandledExceptionInspection */
-				$this->miscService->consumeException($e, InvalidPathException::class, NotFoundException::class);
-
+			} catch (InvalidPathException | NotFoundException $e) {
 				throw new PluginNotCompatibleException(
 					$this->getName(),
 					'Incompatible plugin: Plugin file "{file}" not found.',

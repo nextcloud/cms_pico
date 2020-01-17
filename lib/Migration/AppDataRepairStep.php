@@ -102,7 +102,7 @@ class AppDataRepairStep implements IRepairStep
 	/**
 	 * @param IOutput $output
 	 */
-	public function run(IOutput $output)
+	public function run(IOutput $output): void
 	{
 		$this->setOutput($output);
 
@@ -138,7 +138,7 @@ class AppDataRepairStep implements IRepairStep
 	/**
 	 * @return void
 	 */
-	private function syncAppDataFolder()
+	private function syncAppDataFolder(): void
 	{
 		$this->fileService->syncAppDataFolder();
 	}
@@ -146,7 +146,7 @@ class AppDataRepairStep implements IRepairStep
 	/**
 	 * @return void
 	 */
-	private function copyConfig()
+	private function copyConfig(): void
 	{
 		$appDataConfigFolder = $this->fileService->getAppDataFolder(PicoService::DIR_CONFIG);
 		$systemConfigFolder = $this->fileService->getSystemFolder(PicoService::DIR_CONFIG);
@@ -172,7 +172,7 @@ class AppDataRepairStep implements IRepairStep
 	/**
 	 * @return void
 	 */
-	private function registerTemplates()
+	private function registerTemplates(): void
 	{
 		$this->registerSystemTemplates();
 		$this->registerCustomTemplates();
@@ -181,7 +181,7 @@ class AppDataRepairStep implements IRepairStep
 	/**
 	 * @return void
 	 */
-	private function registerSystemTemplates()
+	private function registerSystemTemplates(): void
 	{
 		$systemTemplatesFolder = $this->fileService->getSystemFolder(PicoService::DIR_TEMPLATES);
 
@@ -203,7 +203,7 @@ class AppDataRepairStep implements IRepairStep
 	/**
 	 * @return void
 	 */
-	private function registerCustomTemplates()
+	private function registerCustomTemplates(): void
 	{
 		$appDataTemplatesFolder = $this->fileService->getAppDataFolder(PicoService::DIR_TEMPLATES);
 
@@ -228,7 +228,7 @@ class AppDataRepairStep implements IRepairStep
 	/**
 	 * @return void
 	 */
-	private function publishThemes()
+	private function publishThemes(): void
 	{
 		$publicThemesFolder = $this->fileService->getPublicFolder(PicoService::DIR_THEMES);
 		$publicThemesFolder->truncate();
@@ -242,7 +242,7 @@ class AppDataRepairStep implements IRepairStep
 	/**
 	 * @return void
 	 */
-	private function publishSystemThemes()
+	private function publishSystemThemes(): void
 	{
 		$systemThemesFolder = $this->fileService->getSystemFolder(PicoService::DIR_THEMES);
 
@@ -264,7 +264,7 @@ class AppDataRepairStep implements IRepairStep
 	/**
 	 * @return void
 	 */
-	private function publishCustomThemes()
+	private function publishCustomThemes(): void
 	{
 		$appDataThemesFolder = $this->fileService->getAppDataFolder(PicoService::DIR_THEMES);
 
@@ -289,7 +289,7 @@ class AppDataRepairStep implements IRepairStep
 	/**
 	 * @return void
 	 */
-	private function publishPlugins()
+	private function publishPlugins(): void
 	{
 		$publicPluginsFolder = $this->fileService->getPublicFolder(PicoService::DIR_PLUGINS);
 		$publicPluginsFolder->truncate();
@@ -303,7 +303,7 @@ class AppDataRepairStep implements IRepairStep
 	/**
 	 * @return void
 	 */
-	private function publishSystemPlugins()
+	private function publishSystemPlugins(): void
 	{
 		$systemPluginsFolder = $this->fileService->getSystemFolder(PicoService::DIR_PLUGINS);
 
@@ -325,7 +325,7 @@ class AppDataRepairStep implements IRepairStep
 	/**
 	 * @return void
 	 */
-	private function publishCustomPlugins()
+	private function publishCustomPlugins(): void
 	{
 		$appDataPluginsFolder = $this->fileService->getAppDataFolder(PicoService::DIR_PLUGINS);
 

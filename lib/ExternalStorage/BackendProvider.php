@@ -32,7 +32,7 @@ class BackendProvider implements IBackendProvider
 	/**
 	 * @return CommonBackend[]
 	 */
-	public function getBackends()
+	public function getBackends(): array
 	{
 		return [
 			\OC::$server->query(Backend::class)
