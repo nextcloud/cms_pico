@@ -61,7 +61,7 @@ class Website extends WebsiteCore
 	const SITE_LENGTH_MAX = 255;
 
 	/** @var string */
-	const SITE_REGEX = '^[a-z][a-z0-9_-]+[a-z0-9]$';
+	const SITE_REGEX = '^[a-z0-9][a-z0-9_-]+[a-z0-9]$';
 
 	/** @var int */
 	const NAME_LENGTH_MIN = 3;
