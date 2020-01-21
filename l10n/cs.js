@@ -23,7 +23,7 @@ OC.L10N.register(
     "Plugin not found." : "Zásuvný modul nenalezen.",
     "Plugin exists already." : "Zásuvný modul už existuje.",
     "Template not found." : "Šablona nenalezena.",
-    "Template exists already." : "Šablona už existuje",
+    "Template exists already." : "Šablona už existuje.",
     "Theme not found." : "Motiv vzhledu nenalezen.",
     "Theme exists already." : "Motiv vzhledu už existuje.",
     "Website exists." : "Web existuje.",
