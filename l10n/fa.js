@@ -6,6 +6,7 @@ OC.L10N.register(
     "Save" : "ذخیره",
     "Location" : "محل",
     "Access forbidden" : "اجازه دسترسی به مناطق ممنوعه را ندارید",
+    "Not found" : "پیدا نشد",
     "Internal Server Error" : "خطای داخلی سرور",
     "The server was unable to complete your request." : "سرور قادر به تکمیل درخواست شما نبود.",
     "If this happens again, please send the technical details below to the server administrator." : "اگر این اتفاق دوباره افتاد، لطفا جزئیات فنی زیر را به مدیر سرور ارسال کنید.",
