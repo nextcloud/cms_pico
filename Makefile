@@ -41,7 +41,7 @@ github_token:=$(shell cat "$(HOME)/.nextcloud/github-token")
 download_url=https://github.com/$(github_owner)/$(github_repo)/releases/download/$(version)/$(archive)
 publish_url=https://apps.nextcloud.com/api/v1/apps/releases
 appinfo=./appinfo/info.xml
-appinfo_version:=$(shell sed -ne 's/^.*<version>\(.*\)<\/version>.*$$/\1/p' "$(CURDIR)/$(appinfo)")
+appinfo_version:=$(shell sed -ne 's/^.*<version>\(.*\)<\/version>.*$$/v\1/p' "$(CURDIR)/$(appinfo)")
 git_version:=$(shell git describe --exact-match --tags HEAD 2> /dev/null)
 
 all: build
@@ -58,8 +58,8 @@ clean-export:
 
 check:
 	@:
-ifneq (v$(appinfo_version),$(version))
-	$(error Version mismatch: Building $(version), but $(appinfo) indicates v$(appinfo_version))
+ifneq ($(appinfo_version),$(version))
+	$(error Version mismatch: Building $(version), but $(appinfo) indicates $(appinfo_version))
 endif
 ifeq ($(git_version),)
 	$(error Version mismatch: Building $(version), but no Git tag found)
