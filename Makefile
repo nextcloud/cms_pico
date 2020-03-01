@@ -70,12 +70,13 @@ endif
 
 lazy-check:
 	@:
-ifeq ($(or $(filter v$(appinfo_version) latest,$(version)), $(filter true,$(nocheck))),)
-	$(error Version mismatch: Building $(version), but $(appinfo) indicates v$(appinfo_version))
+ifeq ($(or $(filter $(appinfo_version) latest,$(version)), $(filter true,$(nocheck))),)
+	$(error Version mismatch: Building $(version), but $(appinfo) indicates $(appinfo_version))
 endif
 
 check-git:
 	GIT_STATUS="$$(git status --porcelain)" && [ -z "$$GIT_STATUS" ]
+	git fetch --quiet && [ "$$(git rev-parse HEAD)" == "$$(git rev-parse @{u})" ]
 
 check-composer:
 	composer update --no-suggest --no-dev --dry-run 2>&1 \
@@ -132,7 +133,7 @@ verify:
 				"$(verify)"
 
 github-release: export GITHUB_TOKEN=$(github_token)
-github-release: check
+github-release: check check-git
 	github-release release \
 		--user "$(github_owner)" \
 		--repo "$(github_repo)" \
