@@ -8,7 +8,7 @@ OC.L10N.register(
     "Access forbidden" : "Забранет пристап",
     "Back to %s" : "Врати се на %s",
     "Not found" : "Не е пронајдено",
-    "Internal Server Error" : "Интерна серверска грешка",
+    "Internal Server Error" : "Внатрешна серверска грешка",
     "The server was unable to complete your request." : "Серверот не е во можност да го комплетира вашето брање.",
     "If this happens again, please send the technical details below to the server administrator." : "Доколку ова се случи повторно, ве молиме испрате технички детали на администраторот на серверот.",
     "Remote Address: %s" : "Далечинкска Адреса: %s",
