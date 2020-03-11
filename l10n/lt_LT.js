@@ -19,7 +19,7 @@ OC.L10N.register(
     "Not found" : "Nerasta",
     "Internal Server Error" : "Vidinė serverio klaida",
     "The server was unable to complete your request." : "Serveriui nepavyko užbaigti jūsų užklausos.",
-    "If this happens again, please send the technical details below to the server administrator." : "Jei tai pasikartos, prašome nusiųskite administratoriui žemiau esančią informaciją .",
+    "If this happens again, please send the technical details below to the server administrator." : "Jei tai pasikartos, prašome nusiųsti serverio administratoriui žemiau esančią techninę informaciją.",
     "Remote Address: %s" : "Nuotolinis adresas: %s",
     "Request ID: %s" : "Užklausos ID: %s",
     "More details can be found in the server log." : "Išsamesnę informaciją galima rasti serverio žurnale.",
