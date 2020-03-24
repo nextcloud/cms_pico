@@ -25,6 +25,7 @@ OC.L10N.register(
     "Limit to groups" : "Обмежити групами",
     "Name" : "Ім'я",
     "Path" : "Шлях",
+    "Theme" : "Тема",
     "Actions" : "Дії",
     "Address" : "Адреса",
     "Loading…" : "Завантаження…"
