@@ -73,6 +73,6 @@ OC.L10N.register(
     "Actions" : "Åtgärder",
     "Create a new website" : "Skapa en ny webbplats",
     "Address" : "Adress",
-    "Loading…" : "Laddar…"
+    "Loading…" : "Läser in…"
 },
 "nplurals=2; plural=(n != 1);");
