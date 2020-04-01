@@ -49,7 +49,7 @@ OC.L10N.register(
     "Not found" : "Niet gevonden",
     "Internal Server Error" : "Interne serverfout",
     "The server was unable to complete your request." : "De server was niet in staat je aanvraag te verwerken.",
-    "If this happens again, please send the technical details below to the server administrator." : "Stuur de hieronder afgebeelde technische details naar de server beheerder wanneer dit opnieuw gebeurt.",
+    "If this happens again, please send the technical details below to the server administrator." : "Stuur de hieronder afgebeelde technische details naar de serverbeheerder wanneer dit opnieuw gebeurt.",
     "Remote Address: %s" : "Extern adres: %s",
     "Request ID: %s" : "Aanvraag-ID: %s",
     "More details can be found in the server log." : "Meer details in de serverlogging,",
