@@ -33,7 +33,7 @@ OC.L10N.register(
     "Access forbidden" : "Dostop je prepovedan",
     "Not found" : "Predmeta ni mogoče najti",
     "Internal Server Error" : "Notranja napaka strežnika",
-    "The server was unable to complete your request." : "Odziv strežnika kaže, da ni mogoče končati zahteve.",
+    "The server was unable to complete your request." : "Odziv strežnika kaže, da zahteve ni mogoče končati.",
     "If this happens again, please send the technical details below to the server administrator." : "V koliko se napaka ponovno pojavi, pošljite tehnične podrobnosti, zbrane spodaj, skrbniku sistema.",
     "Remote Address: %s" : "Oddaljeni naslov: %s",
     "Request ID: %s" : "ID zahteve: %s",
