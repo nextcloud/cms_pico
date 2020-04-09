@@ -2,6 +2,8 @@ OC.L10N.register(
     "cms_pico",
     {
     "Copy" : "Kopiatu",
+    "Confirm website deletion" : "Baieztatu webgunearen ezabaketa",
+    "This operation will delete the website \"{name}\". However, all of its contents will still be available in your Nextcloud." : "Eragiketa honek \"{name}\" webgunea ezabatuko du. Hala ere, bere eduki guztiak zure Nextcloud-ean eskuragarri jarraituko du.",
     "Abort" : "Utzi bertan behera",
     "Save" : "Gorde",
     "Local (unencrypted)" : "Lokala (deszifratua)",
