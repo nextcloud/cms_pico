@@ -156,7 +156,7 @@
 					.attr('data-timestamp', time)
 					.text(OC.Util.relativeModifiedDate(time))
 					.addClass('has-tooltip')
-					.prop('title', OC.Util.formatDate(time))
+					.attr('title', OC.Util.formatDate(time))
 					.tooltip();
 			});
 		},

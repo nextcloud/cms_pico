@@ -151,7 +151,7 @@
 		 */
 		_content: function ($template, vars, replaceContent) {
 			var $baseElement = $($template.data('replaces') || $template.data('appendTo') || this.$element),
-				$content = $template.octemplate(vars || {});
+				$content = $template.octemplate(vars || {}) || $();
 
 			$baseElement.find('.has-tooltip').tooltip('hide');
 			$content.find('.has-tooltip').tooltip();

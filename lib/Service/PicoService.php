@@ -215,8 +215,7 @@ class PicoService
 			require_once($pluginFile);
 		};
 
-		$plugins = $this->pluginsService->getPlugins();
-		foreach ($plugins as $pluginData) {
+		foreach ($this->pluginsService->getPlugins() as $pluginData) {
 			if ($pluginData['compat']) {
 				$pluginFile = $pluginData['name'] . '/' . $pluginData['name'] . '.php';
 				$includeClosure($this->pluginsService->getPluginsPath() . '/' . $pluginFile);

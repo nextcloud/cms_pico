@@ -198,7 +198,8 @@
 					}
 
 					$icon
-						.prop('title', compatReason)
+						.tooltip('dispose')
+						.attr('title', compatReason)
 						.tooltip();
 				}
 			});

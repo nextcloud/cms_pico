@@ -27,6 +27,7 @@ namespace OCA\CMSPico\Files;
 use OC\Files\Utils\Scanner;
 use OC\ForbiddenException;
 use OCP\EventDispatcher\IEventDispatcher;
+use OCP\Files\AlreadyExistsException;
 use OCP\Files\Folder as OCFolder;
 use OCP\Files\InvalidPathException;
 use OCP\Files\NotPermittedException;
@@ -134,6 +135,10 @@ class StorageFolder extends AbstractStorageNode implements FolderInterface
 	 */
 	public function newFolder(string $path): FolderInterface
 	{
+		if ($this->exists($path)) {
+			throw new AlreadyExistsException();
+		}
+
 		$basePath = $this->getBasePath($path);
 		return new StorageFolder($this->node->newFolder($path), $basePath);
 	}
@@ -143,6 +148,10 @@ class StorageFolder extends AbstractStorageNode implements FolderInterface
 	 */
 	public function newFile(string $path): FileInterface
 	{
+		if ($this->exists($path)) {
+			throw new AlreadyExistsException();
+		}
+
 		$basePath = $this->getBasePath($path);
 		return new StorageFile($this->node->newFile($path), $basePath);
 	}
