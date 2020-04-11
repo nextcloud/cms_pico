@@ -219,9 +219,11 @@ style(Application::APP_NAME, 'pico');
 	<section id="picocms-plugins" class="picocms-admin-list"
 			data-route="/apps/cms_pico/admin/plugins"
 			data-template="#picocms-plugins-template"
+			data-static-template="#picocms-plugins-template-static-items"
 			data-system-template="#picocms-plugins-template-system-item"
 			data-custom-template="#picocms-plugins-template-custom-item"
 			data-new-template="#picocms-plugins-template-new-item"
+			data-copy-template="#picocms-plugins-template-copy-item"
 			data-loading-template="#picocms-plugins-template-loading"
 			data-error-template="#picocms-plugins-template-error">
 		<div class="app-content-loading message large">
@@ -247,6 +249,27 @@ style(Application::APP_NAME, 'pico');
 						title="<?php p($l->t('Reload plugins list')); ?>">
 					<span class="hidden-visually"><?php p($l->t('Reload plugins list')); ?></span>
 				</div>
+			</div>
+		</div>
+	</script>
+
+	<script id="picocms-plugins-template-static-items" type="text/template"
+			data-append-to="#picocms-plugins > .app-content-list"
+			data-filter=".app-content-list-item-static">
+		<div class="app-content-list-item app-content-list-item-static"
+				data-item-name="DummyPlugin">
+			<div class="app-content-list-item-line-one">
+				<p>{name}</p>
+				<div class="info-compat message">
+					<div class="icon-checkmark has-tooltip" title="<?php p($l->t('Compatible plugin.')); ?>"></div>
+					<div>
+						<p class="note"><?php p($l->t('Example plugin')); ?></p>
+					</div>
+				</div>
+			</div>
+			<div class="action-copy icon-copy has-tooltip" data-placement="left"
+					title="<?php p($l->t('Copy example plugin')); ?>">
+				<span class="hidden-visually"><?php p($l->t('Copy example plugin')); ?></span>
 			</div>
 		</div>
 	</script>
@@ -292,6 +315,28 @@ style(Application::APP_NAME, 'pico');
 	<script id="picocms-plugins-template-new-item" type="text/template"
 			data-append-to="#picocms-plugins > .app-content-list > .app-content-list-add select">
 		<option name="{name}">{name}</option>
+	</script>
+
+	<script id="picocms-plugins-template-copy-item" type="text/template">
+		<form id="{id}" title="{title}" class="form">
+			<fieldset>
+				<div class="label">
+					<label for="picocms-plugins-copy-base"><?php p($l->t('Base plugin')); ?></label>
+				</div>
+				<div class="content">
+					<span id="picocms-plugins-copy-base" class="input">{source}</span>
+				</div>
+			</fieldset>
+			<fieldset>
+				<div class="label">
+					<label for="picocms-plugins-copy-name"><?php p($l->t('Plugin name')); ?></label>
+				</div>
+				<div class="content">
+					<input id="picocms-plugins-copy-name" class="input input-name" type="text" name="name"
+							value="" placeholder="{source}" />
+				</div>
+			</fieldset>
+		</form>
 	</script>
 
 	<script id="picocms-plugins-template-loading" type="text/template"

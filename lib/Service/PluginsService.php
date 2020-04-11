@@ -29,7 +29,10 @@ use OCA\CMSPico\Exceptions\PluginAlreadyExistsException;
 use OCA\CMSPico\Exceptions\PluginNotFoundException;
 use OCA\CMSPico\Files\FolderInterface;
 use OCA\CMSPico\Files\LocalFolder;
+use OCA\CMSPico\Model\DummyPluginFile;
 use OCA\CMSPico\Model\Plugin;
+use OCP\Files\AlreadyExistsException;
+use OCP\Files\InvalidPathException;
 use OCP\Files\NotFoundException;
 
 class PluginsService
@@ -218,6 +221,48 @@ class PluginsService
 		$customPlugins = $this->getCustomPlugins();
 		unset($customPlugins[$pluginName]);
 		$this->configService->setAppValue(ConfigService::CUSTOM_PLUGINS, json_encode($customPlugins));
+	}
+
+	/**
+	 * @param string $pluginName
+	 *
+	 * @return Plugin
+	 * @throws PluginNotFoundException
+	 * @throws PluginAlreadyExistsException
+	 */
+	public function copyDummyPlugin(string $pluginName)
+	{
+		if (!$pluginName) {
+			throw new PluginNotFoundException();
+		}
+
+		$systemPlugins = $this->getSystemPlugins();
+		$customPlugins = $this->getCustomPlugins();
+
+		if (isset($systemPlugins[$pluginName]) || isset($customPlugins[$pluginName])) {
+			throw new PluginAlreadyExistsException();
+		}
+
+		$systemPluginsFolder = $this->fileService->getSystemFolder(PicoService::DIR_PLUGINS);
+		$appDataPluginsFolder = $this->fileService->getAppDataFolder(PicoService::DIR_PLUGINS);
+
+		try {
+			$basePluginFile = $systemPluginsFolder->getFile('DummyPlugin.php');
+		} catch (NotFoundException $e) {
+			throw new PluginNotFoundException();
+		}
+
+		try {
+			$pluginFile = new DummyPluginFile($pluginName, $basePluginFile);
+			$pluginFolder = $appDataPluginsFolder->newFolder($pluginName);
+			$pluginFile->copy($pluginFolder);
+		} catch (InvalidPathException $e) {
+			throw new PluginNotFoundException();
+		} catch (AlreadyExistsException $e) {
+			throw new PluginAlreadyExistsException();
+		}
+
+		return $this->publishCustomPlugin($pluginName);
 	}
 
 	/**

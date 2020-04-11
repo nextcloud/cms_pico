@@ -133,4 +133,24 @@ class PluginsController extends Controller
 			return $this->createErrorResponse($e);
 		}
 	}
+
+	/**
+	 * @param string $name
+	 *
+	 * @return DataResponse
+	 */
+	public function copyDummyPlugin(string $name): DataResponse
+	{
+		try {
+			$this->pluginsService->copyDummyPlugin($name);
+
+			return $this->getPlugins();
+		} catch (PluginNotFoundException $e) {
+			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Plugin not found.') ]);
+		} catch (PluginAlreadyExistsException $e) {
+			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Plugin exists already.') ]);
+		} catch (\Exception $e) {
+			return $this->createErrorResponse($e);
+		}
+	}
 }
