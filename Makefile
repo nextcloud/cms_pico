@@ -5,9 +5,6 @@
 # another release, pass the 'version' environment variable.
 #
 # Requirements:
-# - Target 'export'
-#       Requires the current working dir to be a Git repo to export the repo's
-#       current 'HEAD'
 # - Target 'sign'
 #       Requires OpenSSL and a RSA key to sign the release archive at
 #       '~/.nextcloud/certificates/$(app_name).key'
@@ -44,7 +41,8 @@ github_token:=$(shell cat "$(HOME)/.nextcloud/github-token")
 download_url=https://github.com/$(github_owner)/$(github_repo)/releases/download/$(version)/$(archive)
 publish_url=https://apps.nextcloud.com/api/v1/apps/releases
 appinfo=./appinfo/info.xml
-appinfo_version:=$(shell sed -ne 's/^.*<version>\(.*\)<\/version>.*$$/\1/p' "$(CURDIR)/$(appinfo)")
+appinfo_version:=$(shell sed -ne 's/^.*<version>\(.*\)<\/version>.*$$/v\1/p' "$(CURDIR)/$(appinfo)")
+git_version:=$(shell git describe --exact-match --tags HEAD 2> /dev/null)
 
 all: build
 
@@ -60,15 +58,25 @@ clean-export:
 
 check:
 	@:
-ifneq (v$(appinfo_version),$(version))
-	$(error Version mismatch: Building $(version), but $(appinfo) indicates v$(appinfo_version))
+ifneq ($(appinfo_version),$(version))
+	$(error Version mismatch: Building $(version), but $(appinfo) indicates $(appinfo_version))
+endif
+ifeq ($(git_version),)
+	$(error Version mismatch: Building $(version), but no Git tag found)
+endif
+ifneq ($(git_version),$(version))
+	$(error Version mismatch: Building $(version), but Git tag indicates $(git_version))
 endif
 
 lazy-check:
 	@:
-ifeq ($(or $(filter v$(appinfo_version) latest,$(version)), $(filter true,$(nocheck))),)
-	$(error Version mismatch: Building $(version), but $(appinfo) indicates v$(appinfo_version))
+ifeq ($(or $(filter $(appinfo_version) latest,$(version)), $(filter true,$(nocheck))),)
+	$(error Version mismatch: Building $(version), but $(appinfo) indicates $(appinfo_version))
 endif
+
+check-git:
+	GIT_STATUS="$$(git status --porcelain)" && [ -z "$$GIT_STATUS" ]
+	git fetch --quiet && [ "$$(git rev-parse HEAD)" == "$$(git rev-parse @{u})" ]
 
 check-composer:
 	composer update --no-suggest --no-dev --dry-run 2>&1 \
@@ -125,7 +133,7 @@ verify:
 				"$(verify)"
 
 github-release: export GITHUB_TOKEN=$(github_token)
-github-release: check
+github-release: check check-git
 	github-release release \
 		--user "$(github_owner)" \
 		--repo "$(github_repo)" \
@@ -136,7 +144,7 @@ github-release: check
 		$(if $(filter true,$(prerelease)),--pre-release,)
 
 github-upload: export GITHUB_TOKEN=$(github_token)
-github-upload: check check-composer build github-release
+github-upload: check check-git check-composer build github-release
 	github-release upload \
 		--user "$(github_owner)" \
 		--repo "$(github_repo)" \
@@ -144,7 +152,7 @@ github-upload: check check-composer build github-release
 		--name "$(archive)" \
 		--file "$(build_dir)/$(archive)"
 
-publish: check check-composer sign github-upload
+publish: check check-git check-composer sign github-upload
 	php -r 'echo json_encode([ "download" => $$_SERVER["argv"][1], "signature" => file_get_contents($$_SERVER["argv"][2]), "nightly" => !!$$_SERVER["argv"][3] ]);' \
 		"$(download_url)" "$(build_dir)/$(signature)" "$(if $(filter true,$(prerelease)),1,0)" \
 			| curl -K "$(curlrc)" \
@@ -162,7 +170,8 @@ publish-dev: publish
 
 .PHONY: all \
 	clean clean-build clean-export \
-	check lazy-check check-composer \
+	check lazy-check \
+	check-git check-composer \
 	composer build export \
 	sign verify \
 	github-release github-release-dev \

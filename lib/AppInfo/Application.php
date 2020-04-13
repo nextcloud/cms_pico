@@ -31,7 +31,6 @@ use OCP\App\AppPathNotFoundException;
 use OCP\App\IAppManager;
 use OCP\AppFramework\App;
 use OCP\Util;
-use Symfony\Component\EventDispatcher\Event;
 
 class Application extends App
 {
@@ -59,9 +58,10 @@ class Application extends App
 	 */
 	public function registerExternalStorage()
 	{
+		// TODO >= NC 18: Add \OCP\EventDispatcher\Event $event param to closure
 		\OC::$server->getEventDispatcher()->addListener(
 			'OCA\\Files_External::loadAdditionalBackends',
-			function (Event $event) {
+			function () {
 				$encryptionManager = \OC::$server->getEncryptionManager();
 				if ($encryptionManager->isEnabled()) {
 					$backendService = \OC::$server->query(BackendService::class);

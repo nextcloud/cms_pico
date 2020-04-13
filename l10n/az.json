@@ -1,0 +1,12 @@
+{ "translations": {
+    "Abort" : "Durdur",
+    "Save" : "Saxla",
+    "Location" : "Yerləşdiyiniz ünvan",
+    "Error" : "Səhv",
+    "Settings" : "Quraşdırmalar",
+    "Name" : "Ad",
+    "Path" : "Ünvan",
+    "Actions" : "İşlər",
+    "Address" : "Ünvan"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}

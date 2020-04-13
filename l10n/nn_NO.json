@@ -1,0 +1,14 @@
+{ "translations": {
+    "Abort" : "Avbryt",
+    "Save" : "Lagre",
+    "Location" : "Stad",
+    "Access forbidden" : "Tilgang forbudt",
+    "Error" : "Feil",
+    "Settings" : "Instillingar",
+    "Name" : "Namn",
+    "Path" : "Vei",
+    "Created" : "Lagd",
+    "Actions" : "Handlingar",
+    "Address" : "Adresse"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}
