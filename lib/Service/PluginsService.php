@@ -230,7 +230,7 @@ class PluginsService
 	 * @throws PluginNotFoundException
 	 * @throws PluginAlreadyExistsException
 	 */
-	public function copyDummyPlugin(string $pluginName)
+	public function copyDummyPlugin(string $pluginName): Plugin
 	{
 		if (!$pluginName) {
 			throw new PluginNotFoundException();

@@ -84,7 +84,7 @@ class DummyPluginFile extends AbstractNode implements FileInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function delete()
+	public function delete(): void
 	{
 		// nothing to do
 	}
@@ -168,7 +168,7 @@ class DummyPluginFile extends AbstractNode implements FileInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function putContent(string $data)
+	public function putContent(string $data): void
 	{
 		throw new NotPermittedException();
 	}
