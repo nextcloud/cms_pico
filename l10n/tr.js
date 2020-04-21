@@ -49,7 +49,7 @@ OC.L10N.register(
     "Not found" : "Bulunamadı",
     "Internal Server Error" : "Sunucu İçinde Sorun",
     "The server was unable to complete your request." : "Sunucu isteğinizi yerine getiremedi.",
-    "If this happens again, please send the technical details below to the server administrator." : "Bu sorun sürerse lütfen aşağıdaki teknik ayrıntıları sunucu yöneticisine iletin.",
+    "If this happens again, please send the technical details below to the server administrator." : "Bu sorun sürerse lütfen aşağıdaki teknik ayrıntıları BT yöneticinize iletin.",
     "Remote Address: %s" : "Uzak Adres: %s",
     "Request ID: %s" : "İstek Kodu: %s",
     "More details can be found in the server log." : "Sunucu günlüğünden ayrıntılı bilgi alabilirsiniz.",
