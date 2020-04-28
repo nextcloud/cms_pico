@@ -48,7 +48,7 @@ OC.L10N.register(
     "Back to %s" : "Zurück zu %s",
     "Not found" : "Nicht gefunden",
     "Internal Server Error" : "Interner Serverfehler",
-    "The server was unable to complete your request." : "Der Server konnte die Anfrage nicht fertig stellen.",
+    "The server was unable to complete your request." : "Der Server konnte die Anfrage nicht fertigstellen.",
     "If this happens again, please send the technical details below to the server administrator." : "Sollte dies erneut auftreten, senden Sie bitte die nachfolgenden technischen Einzelheiten an Ihren Server-Administrator.",
     "Remote Address: %s" : "Entfernte Adresse: %s",
     "Request ID: %s" : "Anfrage-ID: %s",
