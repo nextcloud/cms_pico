@@ -31,6 +31,7 @@ OC.L10N.register(
     "The path of the website is invalid." : "Pot do spletnega mesta je neveljavna.",
     "Pico CMS" : "Pico CMS",
     "Access forbidden" : "Dostop je prepovedan",
+    "Back to %s" : "Nazaj na %s",
     "Not found" : "Predmeta ni mogoče najti",
     "Internal Server Error" : "Notranja napaka strežnika",
     "The server was unable to complete your request." : "Odziv strežnika kaže, da zahteve ni mogoče končati.",
