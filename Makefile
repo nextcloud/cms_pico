@@ -76,7 +76,7 @@ endif
 
 check-git:
 	GIT_STATUS="$$(git status --porcelain)" && [ -z "$$GIT_STATUS" ]
-	git fetch --quiet && [ "$$(git rev-parse HEAD)" == "$$(git rev-parse @{u})" ]
+	git fetch --quiet && [ "$$(git rev-parse HEAD)" = "$$(git rev-parse @{u})" ]
 
 check-composer:
 	composer update --no-suggest --no-dev --dry-run 2>&1 \
