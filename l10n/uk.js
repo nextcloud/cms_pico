@@ -7,6 +7,7 @@ OC.L10N.register(
     "Location" : "Місце",
     "Access forbidden" : "Доступ заборонено",
     "Back to %s" : "Назад до %s",
+    "Not found" : "Не знайдено",
     "Internal Server Error" : "Внутрішня помилка серверу",
     "The server was unable to complete your request." : "Сервер не зміг обробити ваш запит.",
     "If this happens again, please send the technical details below to the server administrator." : "Якщо це станеться знову, надішліть технічні подробиці нижче адміністратору сервера.",
