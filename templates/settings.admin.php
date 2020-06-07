@@ -30,6 +30,32 @@ style(Application::APP_NAME, 'pico');
 
 ?>
 
+<?php if (!$_['parsedownCompatible']) { ?>
+	<article class="section">
+		<div class="message large error">
+			<div class="icon icon-error-color"></div>
+			<div>
+				<p><strong><?php p($l->t(
+					'Your Nextcloud installation is incompatible with Pico CMS for Nextcloud!'
+				)); ?></strong></p>
+				<p><?php p($l->t(
+					'Some of your Nextcloud apps have known incompatibilities with Pico CMS for Nextcloud. This is '
+					. 'no-one\'s fault, neither are Nextcloud nor the conflicting apps to blame, this is just some '
+					. 'technical limitation of Nextcloud\'s app infrastructure we can\'t solve in the short term. '
+					. 'We\'re working on a solution! In the meantime you must remove the conflicting apps. Known '
+					. 'conflicting apps are "Issue Template" and "Terms of service".'
+				 )); ?></p>
+				<p><?php print_unescaped($l->t(
+					'If you see the error <code>"Call to undefined method ParsedownExtra::textElements()"</code> '
+					. 'in Nextcloud\'s logs even though you\'ve removed all conflicting apps, please don\'t hesitate '
+					. 'to <a href="https://github.com/nextcloud/cms_pico/issues/new">open a new Issue on GitHub</a> '
+					. 'with a copy of the error including its stack trace and a complete list of all apps installed.'
+				)); ?></p>
+			</div>
+		</div>
+	</article>
+<?php } ?>
+
 <article class="section">
 	<h2><?php p($l->t('Custom themes')); ?></h2>
 	<p class="settings-hint"><?php p($l->t(

@@ -32,6 +32,8 @@ use OCA\CMSPico\Service\WebsitesService;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IURLGenerator;
 use OCP\Settings\ISettings;
+use Parsedown;
+use ParsedownExtra;
 
 class Admin implements ISettings
 {
@@ -76,19 +78,22 @@ class Admin implements ISettings
 		$internalBaseUrl = $this->urlGenerator->getBaseUrl() . '/index.php/apps/' . Application::APP_NAME;
 		$internalBasePath = \OC::$WEBROOT;
 
+		$parsedownCompatible = (Parsedown::version === '1.8.0-beta-7') && (ParsedownExtra::version === '0.8.0-beta-1');
+
 		$data = [
-			'exampleProxyUrl'  => $exampleProxyUrl . '/',
-			'exampleFullUrl'   => $exampleFullUrl . '/',
-			'internalProxyUrl' => $internalBaseUrl . '/pico_proxy/',
-			'internalFullUrl'  => $internalBaseUrl . '/pico/',
-			'internalPath'     => $internalBasePath . '/sites/',
-			'themesPath'       => $this->fileService->getAppDataFolderPath(PicoService::DIR_THEMES),
-			'pluginsPath'      => $this->fileService->getAppDataFolderPath(PicoService::DIR_PLUGINS),
-			'templatesPath'    => $this->fileService->getAppDataFolderPath(PicoService::DIR_TEMPLATES),
-			'limitGroups'      => $this->websitesService->getLimitGroups(),
-			'linkMode'         => $this->websitesService->getLinkMode(),
-			'linkModeLong'     => WebsitesService::LINK_MODE_LONG,
-			'linkModeShort'    => WebsitesService::LINK_MODE_SHORT,
+			'parsedownCompatible' => $parsedownCompatible,
+			'exampleProxyUrl'     => $exampleProxyUrl . '/',
+			'exampleFullUrl'      => $exampleFullUrl . '/',
+			'internalProxyUrl'    => $internalBaseUrl . '/pico_proxy/',
+			'internalFullUrl'     => $internalBaseUrl . '/pico/',
+			'internalPath'        => $internalBasePath . '/sites/',
+			'themesPath'          => $this->fileService->getAppDataFolderPath(PicoService::DIR_THEMES),
+			'pluginsPath'         => $this->fileService->getAppDataFolderPath(PicoService::DIR_PLUGINS),
+			'templatesPath'       => $this->fileService->getAppDataFolderPath(PicoService::DIR_TEMPLATES),
+			'limitGroups'         => $this->websitesService->getLimitGroups(),
+			'linkMode'            => $this->websitesService->getLinkMode(),
+			'linkModeLong'        => WebsitesService::LINK_MODE_LONG,
+			'linkModeShort'       => WebsitesService::LINK_MODE_SHORT,
 		];
 
 		return new TemplateResponse(Application::APP_NAME, 'settings.admin', $data);
