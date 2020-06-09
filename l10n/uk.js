@@ -2,7 +2,7 @@ OC.L10N.register(
     "cms_pico",
     {
     "Copy" : "Копіювати",
-    "Abort" : "Відміна",
+    "Abort" : "Скасування",
     "Save" : "Зберегти",
     "Location" : "Місце",
     "Access forbidden" : "Доступ заборонено",
