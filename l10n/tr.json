@@ -58,6 +58,7 @@
     "File: %s" : "Dosya: %s",
     "Line: %s" : "Satır: %s",
     "Trace" : "İz",
+    "Your Nextcloud installation is incompatible with Pico CMS for Nextcloud!" : "Nextcloud kurulumunuz, Nextcloud için Pico CMS ile uyumsuz!",
     "Custom themes" : "Özel temalar",
     "Add custom themes for greater individuality and style." : "Daha özel görünüm ve biçemler kullanmak için özel temalar ekleyin.",
     "Pico CMS for Nextcloud allows you to add custom themes for some greater individuality and style. However, for security reasons, users can't add custom themes on their own. Before you can add a new custom theme using the \"Add custom theme\" button below, you'll have to upload all of its files to the data folder of your Nextcloud instance. After uploading the theme it will show up in the form below to actually allow users to use the custom theme." : "Nextcloud için Pico CMS, daha özel bir görünüm ve biçem sağlamak için özel temalar eklemenize izin verir. Ancak güvenlik nedeniyle, kullanıcılar kendi başlarına özel temalar ekleyemez. Aşağıdaki \"Özel tema ekle\" düğmesini kullanarak yeni bir özel tema eklemeden önce, tema dosyalarını Nextcloud kopyanızın veri klasörüne yüklemeniz gerekir. Tema yüklendikten sonra aşağıdaki formda görüntülenir ve böylece kullanıcılar tarafından özel tema olarak kullanılmasına izin verilebilir.",
