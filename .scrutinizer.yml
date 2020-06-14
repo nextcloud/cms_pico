@@ -43,7 +43,7 @@ build:
           - js-scrutinizer-run
 
           - cd ~/nextcloud
-#          - php ./occ app:check-code $APP_NAME -c private
+          - php ./occ app:check-code $APP_NAME -c private
           - php ./occ app:check-code $APP_NAME -c strong-comparison
           - php ./occ app:check-code $APP_NAME -c deprecation
 
@@ -83,7 +83,7 @@ build:
       tests: &tests
         override:
           - cd ~/nextcloud
-#          - php ./occ app:check-code $APP_NAME -c private
+          - php ./occ app:check-code $APP_NAME -c private
           - php ./occ app:check-code $APP_NAME -c strong-comparison
           - php ./occ app:check-code $APP_NAME -c deprecation
 

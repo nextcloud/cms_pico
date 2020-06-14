@@ -54,7 +54,7 @@ class StorageFolder extends AbstractStorageNode implements FolderInterface
 	/** @var ILogger */
 	private $logger;
 
-	/** @var IEventDispatcher|null */
+	/** @var IEventDispatcher */
 	private $eventDispatcher;
 
 	/**
@@ -70,6 +70,7 @@ class StorageFolder extends AbstractStorageNode implements FolderInterface
 		$this->tempManager = \OC::$server->getTempManager();
 		$this->connection = \OC::$server->query(IDBConnection::class);
 		$this->logger = \OC::$server->query(ILogger::class);
+		$this->eventDispatcher = \OC::$server->query(IEventDispatcher::class);
 
 		parent::__construct($folder, $basePath);
 	}
@@ -169,17 +170,7 @@ class StorageFolder extends AbstractStorageNode implements FolderInterface
 	 */
 	public function sync(bool $recursive = FolderInterface::SYNC_RECURSIVE): void
 	{
-		// TODO >= NC 18: Remove version switch
-		[ $majorVersion ] = \OC_Util::getVersion();
-		if ($majorVersion >= 18) {
-			if ($this->eventDispatcher === null) {
-				$this->eventDispatcher = \OC::$server->query(IEventDispatcher::class);
-			}
-
-			$scanner = new Scanner(null, $this->connection, $this->eventDispatcher, $this->logger);
-		} else {
-			$scanner = new Scanner(null, $this->connection, $this->logger);
-		}
+		$scanner = new Scanner(null, $this->connection, $this->eventDispatcher, $this->logger);
 
 		try {
 			$scanner->scan($this->node->getPath(), $recursive);
