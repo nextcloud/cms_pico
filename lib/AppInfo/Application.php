@@ -30,6 +30,8 @@ use OCA\Files_External\Service\BackendService;
 use OCP\App\AppPathNotFoundException;
 use OCP\App\IAppManager;
 use OCP\AppFramework\App;
+use OCP\EventDispatcher\Event;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Util;
 
 class Application extends App
@@ -58,10 +60,10 @@ class Application extends App
 	 */
 	public function registerExternalStorage(): void
 	{
-		// TODO >= NC 18: Add \OCP\EventDispatcher\Event $event param to closure
-		\OC::$server->getEventDispatcher()->addListener(
+		$eventDispatcher = \OC::$server->query(IEventDispatcher::class);
+		$eventDispatcher->addListener(
 			'OCA\\Files_External::loadAdditionalBackends',
-			function () {
+			function (Event $event) {
 				$encryptionManager = \OC::$server->getEncryptionManager();
 				if ($encryptionManager->isEnabled()) {
 					$backendService = \OC::$server->query(BackendService::class);
@@ -94,8 +96,12 @@ class Application extends App
 	 */
 	public static function getAppWebPath(): string
 	{
-		// TODO >= NC 18: Replace by \OC::$server->getAppManager()->getAppWebPath() and
-		//                enable private API code checks in .scrutinizer.yml
-		return \OC_App::getAppWebPath(self::APP_NAME) ?: '';
+		try {
+			/** @var IAppManager $appManager */
+			$appManager = \OC::$server->getAppManager();
+			return $appManager->getAppWebPath(self::APP_NAME);
+		} catch (AppPathNotFoundException $e) {
+			return '';
+		}
 	}
 }
