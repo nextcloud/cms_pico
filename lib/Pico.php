@@ -268,7 +268,7 @@ class Pico extends \Pico
 
 			// exclude hidden files/dirs starting with a .
 			// exclude files ending with a ~ (vim/nano backup) or # (emacs backup)
-			if (($fileName[0] === '.') || in_array(substr($fileName, -1), [ '~', '#' ], true)) {
+			if (($fileName[0] === '.') || in_array($fileName[-1], [ '~', '#' ], true)) {
 				return false;
 			}
 
@@ -321,7 +321,7 @@ class Pico extends \Pico
 				$fileName = $file->getName();
 
 				// exclude files ending with a ~ (vim/nano backup) or # (emacs backup)
-				if (in_array(substr($fileName, -1), [ '~', '#' ], true)) {
+				if (in_array($fileName[-1], [ '~', '#' ], true)) {
 					continue;
 				}
 
