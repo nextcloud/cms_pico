@@ -70,11 +70,15 @@ style(Application::APP_NAME, 'pico');
 				. 'style. However, for security reasons, users can\'t add custom themes on their own. Before you '
 				. 'can add a new custom theme using the "Add custom theme" button below, you\'ll have to upload all '
 				. 'of its files to the data folder of your Nextcloud instance. After uploading the theme it will show '
-				. 'up in the form below to actually allow users to use the custom theme.'
+				. 'up in the form below to actually allow users to use the custom theme. If you want to modify one of '
+				. 'your previously added custom themes, simply edit the corresponding files in Nextcloud\'s data '
+				. 'folder. For the changes to take effect you must hit the "Reload custom theme" button next to the '
+				. 'edited theme in the form below.'
 			)); ?></p>
 			<p><?php p($l->t(
 				'Before adding a new custom theme, upload all of the theme\'s files to a new folder in the '
-					. 'following directory:'
+					. 'following directory. If you want to edit one of your custom themes, refer to this directory '
+					. 'likewise.'
 			)); ?>
 			<p class="followup indent"><code><?php p($_['themesPath']); ?></code></p>
 		</div>
@@ -231,12 +235,16 @@ style(Application::APP_NAME, 'pico');
 				. 'power. Plugins work on a global basis, i.e. adding a custom plugin will enable it for all of '
 				. 'your users\' websites. Before adding a new custom plugin using the "Add custom plugin" button '
 				. 'below, you must upload all of the plugin\'s files to the data folder of your Nextcloud instance. '
-				. 'After uploading the plugin it will show up in the form below to actually enable it.'
+				. 'After uploading the plugin it will show up in the form below to actually enable it. If you want to '
+				. 'update one of your previously added custom plugins, simply replace the plugin\'s files in '
+				. 'Nextcloud\'s data folder. For the changes to take effect you must hit the "Reload custom plugin" '
+				. 'button next to the updated plugin in the form below.'
 			)); ?></p>
 			<p><?php p($l->t(
 				'Before adding a new custom plugin, upload all of the plugin\'s files to a new folder in the '
-				. 'following directory. Please note that the name of this new folder must strictly match the name of '
-				. 'the plugin, otherwise Pico will refuse to enable the plugin.'
+				. 'following directory. If you want to update one of your custom plugins, refer to this directory '
+				. 'likewise. Please note that the name of a plugin\'s folder must strictly match the name of the '
+				. 'plugin, otherwise Pico will refuse to enable the plugin.'
 			)); ?>
 			<p class="followup indent"><code><?php p($_['pluginsPath']); ?></code></p>
 		</div>
@@ -362,7 +370,9 @@ style(Application::APP_NAME, 'pico');
 				. 'point for users to create a new website using Pico CMS for Nextcloud. Before adding a new custom '
 				. 'template using the "Add custom template" button below, you must upload all of the template\'s '
 				. 'files to the data folder of your Nextcloud instance. After uploading the template it will show up '
-				. 'in the form below to actually add it to the "Create a new website" form of your users.'
+				. 'in the form below to actually add it to the "Create a new website" form of your users. If you want '
+				. 'to modify one of your previously added custom templates, simply edit the corresponding files in '
+				. 'Nextcloud\'s data folder.'
 			)); ?></p>
 			<p><?php p($l->t(
 				'Before adding a new custom template, upload all of the template\'s files to a new folder in the '
