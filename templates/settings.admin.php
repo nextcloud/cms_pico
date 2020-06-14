@@ -77,8 +77,8 @@ style(Application::APP_NAME, 'pico');
 			)); ?></p>
 			<p><?php p($l->t(
 				'Before adding a new custom theme, upload all of the theme\'s files to a new folder in the '
-					. 'following directory. If you want to edit one of your custom themes, refer to this directory '
-					. 'likewise.'
+				. 'following directory. If you want to edit one of your custom themes, refer to this directory '
+				. 'likewise.'
 			)); ?>
 			<p class="followup indent"><code><?php p($_['themesPath']); ?></code></p>
 		</div>
@@ -518,8 +518,8 @@ style(Application::APP_NAME, 'pico');
 <article class="section">
 	<h2><?php p($l->t('Settings')); ?></h2>
 	<p class="settings-hint"><?php p($l->t(
-			'Change Pico CMS for Nextcloud\'s behavior and manage optional features.'
-		)); ?></p>
+		'Change Pico CMS for Nextcloud\'s behavior and manage optional features.'
+	)); ?></p>
 
 	<section class="lane">
 		<header>
