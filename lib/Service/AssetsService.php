@@ -57,7 +57,7 @@ class AssetsService
 
 			$assetsDir = PicoService::DIR_ASSETS . '/';
 			$assetsDirLength = strlen($assetsDir);
-			if (substr($asset, 0, $assetsDirLength) !== $assetsDir) {
+			if (substr_compare($asset, $assetsDir, 0, $assetsDirLength) !== 0) {
 				throw new InvalidPathException();
 			}
 

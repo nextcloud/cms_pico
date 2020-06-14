@@ -624,7 +624,7 @@ style(Application::APP_NAME, 'pico');
 				<code>
 					ProxyPass <?php p($_['internalPath']); ?> <?php p($_['internalProxyUrl']); ?><br/>
 					ProxyPassReverse <?php p($_['internalPath']); ?> <?php p($_['internalProxyUrl']); ?><br/>
-					<?php if (substr($_['internalProxyUrl'], 0, 5) === 'https') { ?>
+					<?php if (substr_compare($_['internalProxyUrl'], 'https', 0, 5) === 0) { ?>
 						SSLProxyEngine on<br/>
 					<?php } ?>
 				</code>
@@ -678,7 +678,7 @@ style(Application::APP_NAME, 'pico');
 					&nbsp;&nbsp;&nbsp;&nbsp;proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;<br/>
 					&nbsp;&nbsp;&nbsp;&nbsp;proxy_set_header X-Forwarded-Server $host;<br/>
 					&nbsp;&nbsp;&nbsp;&nbsp;proxy_pass <?php p($_['internalProxyUrl']); ?>;<br/>
-					<?php if (substr($_['internalProxyUrl'], 0, 5) === 'https') { ?>
+					<?php if (substr_compare($_['internalProxyUrl'], 'https', 0, 5) === 0) { ?>
 						&nbsp;&nbsp;&nbsp;&nbsp;proxy_ssl_server_name on;<br/>
 					<?php } ?>
 					}<br/>

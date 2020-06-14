@@ -128,7 +128,7 @@ class MiscService
 
 		if ($path === $basePath) {
 			return '';
-		} elseif (substr($path, 0, $basePathLength + 1) === $basePath . '/') {
+		} elseif (substr_compare($path, $basePath . '/', 0, $basePathLength + 1) === 0) {
 			return substr($path, $basePathLength + 1);
 		} else {
 			throw new InvalidPathException();
@@ -146,7 +146,7 @@ class MiscService
 	{
 		$fileName = basename($path);
 		$fileExtensionPos = strrpos($fileName, '.');
-		if (($fileExtensionPos === false) || (substr($fileName, $fileExtensionPos) !== $fileExtension)) {
+		if (($fileExtensionPos === false) || (substr_compare($fileName, $fileExtension, $fileExtensionPos) !== 0)) {
 			throw new InvalidPathException();
 		}
 
