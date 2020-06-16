@@ -60,6 +60,7 @@ OC.L10N.register(
     "File: %s" : "Archivo: %s",
     "Line: %s" : "Línea: %s",
     "Trace" : "Traza",
+    "Your Nextcloud installation is incompatible with Pico CMS for Nextcloud!" : "¡Su instalación de Nextcloud no es compatible con  Pico CMS para Nextcloud!",
     "Custom themes" : "Temas personalizados",
     "Add custom themes for greater individuality and style." : "Añade temas personalizados para mejorar el estilo y la individualidad.",
     "Loading themes…" : "Cargando temas…",
