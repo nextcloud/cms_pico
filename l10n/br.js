@@ -3,7 +3,13 @@ OC.L10N.register(
     {
     "Copy" : "Eilañ",
     "Access forbidden" : "N'oc'h ket aotreet tremen",
+    "Back to %s" : "Distro da %s",
+    "Request ID: %s" : "ID goulennet : %s",
+    "Technical details" : "Munidoù teknikel",
+    "Type: %s" : "Stumm : %s",
     "Code: %s" : "Kod : %s",
+    "Message: %s" : "Kemenadenn : %s",
+    "File: %s" : "Restr : %s",
     "Line: %s" : "Linenn :%s",
     "Error" : "Fazi",
     "Settings" : "Arventennoù",
