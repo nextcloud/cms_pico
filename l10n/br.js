@@ -2,8 +2,11 @@ OC.L10N.register(
     "cms_pico",
     {
     "Copy" : "Eilañ",
+    "Save" : "Entilañ",
     "Access forbidden" : "N'oc'h ket aotreet tremen",
     "Back to %s" : "Distro da %s",
+    "Internal Server Error" : "Fazi servijour diabazh",
+    "Remote Address: %s" : "Chom-loc'h pell : %s",
     "Request ID: %s" : "ID goulennet : %s",
     "Technical details" : "Munidoù teknikel",
     "Type: %s" : "Stumm : %s",
