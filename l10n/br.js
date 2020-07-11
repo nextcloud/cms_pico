@@ -22,6 +22,7 @@ OC.L10N.register(
     "Settings" : "Arventennoù",
     "Name" : "Anv",
     "Path" : "Hent",
+    "Theme" : "Tem",
     "Actions" : "Oberoù",
     "Address" : "Chom-lec'h",
     "Loading…" : "O Kargañ"
