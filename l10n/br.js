@@ -20,6 +20,7 @@ OC.L10N.register(
     "Trace" : "Trace",
     "Error" : "Fazi",
     "Settings" : "Arventennoù",
+    "Limit to groups" : "Nemet d'ar strolladoù",
     "Name" : "Anv",
     "Path" : "Hent",
     "Theme" : "Tem",
