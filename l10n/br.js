@@ -2,7 +2,7 @@ OC.L10N.register(
     "cms_pico",
     {
     "Copy" : "Eilañ",
-    "Save" : "Entilañ",
+    "Save" : "Enrollañ",
     "Access forbidden" : "N'oc'h ket aotreet tremen",
     "Back to %s" : "Distro da %s",
     "Internal Server Error" : "Fazi servijour diabazh",
