@@ -34,15 +34,18 @@ curlrc=$(HOME)/.nextcloud/curlrc
 archive=$(app_name)-$(version).tar.gz
 export=$(app_name)-export.tar.gz
 signature=$(app_name)-$(version).tar.gz.sig
+git_remote=origin
 github_owner=nextcloud
 github_repo=cms_pico
-github_branch=master
 github_token:=$(shell cat "$(HOME)/.nextcloud/github-token")
 download_url=https://github.com/$(github_owner)/$(github_repo)/releases/download/$(version)/$(archive)
 publish_url=https://apps.nextcloud.com/api/v1/apps/releases
 appinfo=./appinfo/info.xml
 appinfo_version:=$(shell sed -ne 's/^.*<version>\(.*\)<\/version>.*$$/v\1/p' "$(CURDIR)/$(appinfo)")
-git_version:=$(shell git describe --exact-match --tags HEAD 2> /dev/null)
+git_local:=$(shell git status --porcelain)
+git_local_head:=$(shell git rev-parse HEAD)
+git_local_tag:=$(shell git rev-parse --verify "refs/tags/$(version)" 2> /dev/null)
+git_remote_tag:=$(shell git ls-remote "$(git_remote)" "refs/tags/$(version)" | cut -f1 2> /dev/null)
 
 all: build
 
@@ -61,26 +64,31 @@ check:
 ifneq ($(appinfo_version),$(version))
 	$(error Version mismatch: Building $(version), but $(appinfo) indicates $(appinfo_version))
 endif
-ifeq ($(git_version),)
-	$(error Version mismatch: Building $(version), but no Git tag found)
+ifneq ($(git_local),)
+	$(error Version mismatch: Building $(version), but working tree is not clean)
 endif
-ifneq ($(git_version),$(version))
-	$(error Version mismatch: Building $(version), but Git tag indicates $(git_version))
+ifeq ($(git_local_tag),)
+	$(error Version mismatch: Building $(version), but no matching local Git tag found)
 endif
+ifneq ($(git_local_head),$(git_local_tag))
+	$(error Version mismatch: Building $(version), but the matching Git tag is not checked out)
+endif
+ifeq ($(git_remote_tag),)
+	$(error Version mismatch: Building $(version), but no matching remote Git tag found)
+endif
+ifneq ($(git_local_tag),$(git_remote_tag))
+	$(error Version mismatch: Building $(version), but the matching local and remote Git tags differ)
+endif
+
+check-composer:
+	composer update --no-suggest --no-dev --dry-run 2>&1 \
+		| grep --quiet '^Nothing to install or update$$'
 
 lazy-check:
 	@:
 ifeq ($(or $(filter $(appinfo_version) latest,$(version)), $(filter true,$(nocheck))),)
 	$(error Version mismatch: Building $(version), but $(appinfo) indicates $(appinfo_version))
 endif
-
-check-git:
-	GIT_STATUS="$$(git status --porcelain)" && [ -z "$$GIT_STATUS" ]
-	git fetch --quiet && [ "$$(git rev-parse HEAD)" = "$$(git rev-parse @{u})" ]
-
-check-composer:
-	composer update --no-suggest --no-dev --dry-run 2>&1 \
-		| grep --quiet '^Nothing to install or update$$'
 
 composer:
 	composer install --no-suggest --no-dev --prefer-dist --optimize-autoloader
@@ -99,6 +107,7 @@ build: lazy-check clean-build composer
 		--exclude="/nextcloud" \
 		--exclude="/screenshots" \
 		--exclude="/tests" \
+		--exclude="/vendor/*/*/.git" \
 		--exclude="/vendor/picocms/pico/index.php" \
 		--exclude="/vendor/picocms/pico/index.php.dist" \
 		--exclude="/.gitattributes" \
@@ -133,18 +142,17 @@ verify:
 				"$(verify)"
 
 github-release: export GITHUB_TOKEN=$(github_token)
-github-release: check check-git
+github-release: check
 	github-release release \
 		--user "$(github_owner)" \
 		--repo "$(github_repo)" \
 		--tag "$(version)" \
-		--target "$(github_branch)" \
 		--name "$(version)" \
 		--description "$(app_title) $(version)" \
 		$(if $(filter true,$(prerelease)),--pre-release,)
 
 github-upload: export GITHUB_TOKEN=$(github_token)
-github-upload: check check-git check-composer build github-release
+github-upload: check check-composer build github-release
 	github-release upload \
 		--user "$(github_owner)" \
 		--repo "$(github_repo)" \
@@ -152,7 +160,7 @@ github-upload: check check-git check-composer build github-release
 		--name "$(archive)" \
 		--file "$(build_dir)/$(archive)"
 
-publish: check check-git check-composer sign github-upload
+publish: check check-composer sign github-upload
 	php -r 'echo json_encode([ "download" => $$_SERVER["argv"][1], "signature" => file_get_contents($$_SERVER["argv"][2]), "nightly" => !!$$_SERVER["argv"][3] ]);' \
 		"$(download_url)" "$(build_dir)/$(signature)" "$(if $(filter true,$(prerelease)),1,0)" \
 			| curl -K "$(curlrc)" \
@@ -170,8 +178,7 @@ publish-dev: publish
 
 .PHONY: all \
 	clean clean-build clean-export \
-	check lazy-check \
-	check-git check-composer \
+	check check-composer lazy-check \
 	composer build export \
 	sign verify \
 	github-release github-release-dev \
