@@ -99,7 +99,9 @@ build: lazy-check clean-build composer
 		--exclude="/.github" \
 		--exclude="/.idea" \
 		--exclude="/.tx" \
+		--exclude="/appdata/plugins/*/.git" \
 		--exclude="/appdata/plugins/.gitignore" \
+		--exclude="/appdata/themes/*/.git" \
 		--exclude="/appdata/themes/.gitignore" \
 		--exclude="/appdata_public/*" \
 		--exclude="/build" \
