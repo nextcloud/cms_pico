@@ -74,7 +74,7 @@ class PicoAssetResponse extends DownloadResponse
 		$this->setLastModified($asset->getLastModified());
 
 		if ($enableCache && isset($this->cacheFor[$mimeType])) {
-			$this->cacheFor($this->cacheFor[$mimeType]);
+			$this->cacheFor($this->cacheFor[$mimeType], $asset->isPublicAsset());
 		} else {
 			$this->cacheFor(0);
 		}
@@ -97,15 +97,17 @@ class PicoAssetResponse extends DownloadResponse
 	}
 
 	/**
-	 * @param int $cacheSeconds
+	 * @param int  $cacheSeconds
+	 * @param bool $public
 	 *
 	 * @return $this
 	 */
-	public function cacheFor(int $cacheSeconds): self
+	public function cacheFor(int $cacheSeconds, bool $public = false): self
 	{
 		if ($cacheSeconds > 0) {
-			$this->addHeader('Cache-Control', 'max-age=' . $cacheSeconds . ', public');
-			$this->addHeader('Pragma', 'public');
+			$pragma = $public ? 'public' : 'private';
+			$this->addHeader('Cache-Control', 'max-age=' . $cacheSeconds . ', ' . $pragma);
+			$this->addHeader('Pragma', $pragma);
 
 			try {
 				$expires = new \DateTime();
@@ -116,7 +118,7 @@ class PicoAssetResponse extends DownloadResponse
 			}
 		} else {
 			$this->addHeader('Cache-Control', 'no-cache, must-revalidate');
-			$this->addHeader('Pragma', null);
+			$this->addHeader('Pragma', 'no-cache');
 			$this->addHeader('Expires', null);
 		}
 
@@ -129,7 +131,7 @@ class PicoAssetResponse extends DownloadResponse
 	public function noCache(): self
 	{
 		$this->addHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-		$this->addHeader('Pragma', null);
+		$this->addHeader('Pragma', 'no-cache');
 		$this->addHeader('Expires', null);
 
 		return $this;
