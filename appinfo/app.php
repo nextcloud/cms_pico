@@ -27,6 +27,7 @@ if (is_file(__DIR__ . '/../vendor/autoload.php')) {
 	require_once(__DIR__ . '/../vendor/autoload.php');
 }
 
+/** @var Application $app */
 $app = \OC::$server->query(Application::class);
 $app->registerHooks();
 $app->registerExternalStorage();
