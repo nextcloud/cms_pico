@@ -30,6 +30,7 @@ use OCA\CMSPico\Pico;
 use OCA\CMSPico\Service\MiscService;
 use OCP\Files\InvalidPathException;
 use OCP\Files\NotFoundException;
+use ParseError;
 
 class Plugin implements \JsonSerializable
 {
@@ -140,6 +141,12 @@ class Plugin implements \JsonSerializable
 				throw new PluginNotCompatibleException(
 					$this->getName(),
 					'Incompatible plugin: Plugin file "{file}" not found.',
+					[ 'file' => $this->getName() . '/' . $this->getName() . '.php' ]
+				);
+			} catch (ParseError $e) {
+				throw new PluginNotCompatibleException(
+					$this->getName(),
+					'Incompatible plugin: PHP parse error in file "{file}".',
 					[ 'file' => $this->getName() . '/' . $this->getName() . '.php' ]
 				);
 			}
