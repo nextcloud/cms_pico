@@ -26,6 +26,7 @@ OC.L10N.register(
     "Pico CMS" : "Pico CMS",
     "Create and publish your own websites - with Pico CMS for Nextcloud!" : "Luo ja julkaise omia verkkosivustoja - Nextcloudin Pico CMS:llä!",
     "Access forbidden" : "Pääsy estetty",
+    "Back to %s" : "Takaisin kohtaan %s",
     "Not found" : "Ei löytynyt",
     "Internal Server Error" : "Sisäinen palvelinvirhe",
     "The server was unable to complete your request." : "Palvelin ei kyennyt käsittelemään pyyntöäsi.",

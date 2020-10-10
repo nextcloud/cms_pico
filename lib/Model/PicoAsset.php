@@ -32,6 +32,9 @@ class PicoAsset
 	/** @var StorageFile */
 	private $file;
 
+	/** @var bool */
+	private $publicAsset;
+
 	/** @var \DateTime|null */
 	private $lastModified;
 
@@ -42,10 +45,14 @@ class PicoAsset
 	 * Asset constructor.
 	 *
 	 * @param StorageFile $file
+	 * @param bool        $publicAsset
+	 *
+	 * @throws NotPermittedException
 	 */
-	public function __construct(StorageFile $file)
+	public function __construct(StorageFile $file, bool $publicAsset)
 	{
 		$this->file = $file;
+		$this->publicAsset = $publicAsset;
 
 		if (!$this->isReadable()) {
 			throw new NotPermittedException();
@@ -124,6 +131,14 @@ class PicoAsset
 	public function isReadable(): bool
 	{
 		return $this->file->isReadable();
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isPublicAsset(): bool
+	{
+		return $this->publicAsset;
 	}
 
 	/**

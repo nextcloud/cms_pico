@@ -4,7 +4,6 @@
 [![Latest Release](https://img.shields.io/github/v/release/nextcloud/cms_pico?sort=semver)](https://apps.nextcloud.com/apps/cms_pico)
 [![Build Status](https://scrutinizer-ci.com/g/nextcloud/cms_pico/badges/build.png?b=master)](https://scrutinizer-ci.com/g/nextcloud/cms_pico/build-status/master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nextcloud/cms_pico/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/nextcloud/cms_pico/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/nextcloud/cms_pico/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/nextcloud/cms_pico/?branch=master)
 
 ## About
 

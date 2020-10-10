@@ -1,4 +1,9 @@
 ##
+# Basic
+#
+locale: ~                           # Your PHP installation might require you to manually specify a locale to use
+
+##
 # Theme
 #
 theme_config:                       # Additional theme-specific config

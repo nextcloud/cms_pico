@@ -54,12 +54,12 @@ build:
               file: tests/clover.xml
               format: clover
 
-    test-nc16-php71:
+    test-nc18-php72:
       environment:
         php:
-          version: 7.1
+          version: 7.2
         variables:
-          NEXTCLOUD: releases/latest-16
+          NEXTCLOUD: releases/latest-18
       dependencies: &dependencies
         override:
           - curl -L -o ~/nextcloud.tar.bz2 https://download.nextcloud.com/server/$NEXTCLOUD.tar.bz2
@@ -90,66 +90,6 @@ build:
           - cd ~/nextcloud/apps/$APP_NAME
           - php ~/phpunit.phar --configuration tests/phpunit.xml
 
-    test-nc16-php72:
-      environment:
-        php:
-          version: 7.2
-        variables:
-          NEXTCLOUD: releases/latest-16
-      dependencies: *dependencies
-      project_setup: *setup
-      tests: *tests
-
-    test-nc16-php73:
-      environment:
-        php:
-          version: 7.3
-        variables:
-          NEXTCLOUD: releases/latest-16
-      dependencies: *dependencies
-      project_setup: *setup
-      tests: *tests
-
-    test-nc17-php71:
-      environment:
-        php:
-          version: 7.1
-        variables:
-          NEXTCLOUD: releases/latest-17
-      dependencies: *dependencies
-      project_setup: *setup
-      tests: *tests
-
-    test-nc17-php72:
-      environment:
-        php:
-          version: 7.2
-        variables:
-          NEXTCLOUD: releases/latest-17
-      dependencies: *dependencies
-      project_setup: *setup
-      tests: *tests
-
-    test-nc17-php73:
-      environment:
-        php:
-          version: 7.3
-        variables:
-          NEXTCLOUD: releases/latest-17
-      dependencies: *dependencies
-      project_setup: *setup
-      tests: *tests
-
-    test-nc18-php72:
-      environment:
-        php:
-          version: 7.2
-        variables:
-          NEXTCLOUD: releases/latest-18
-      dependencies: *dependencies
-      project_setup: *setup
-      tests: *tests
-
     test-nc18-php73:
       environment:
         php:
@@ -171,12 +111,60 @@ build:
       project_setup: *setup
       tests: *tests
 
-    test-master-php72:
+    test-nc19-php72:
       environment:
         php:
           version: 7.2
         variables:
-          NEXTCLOUD: daily/latest-master
+          NEXTCLOUD: releases/latest-19
+      dependencies: *dependencies
+      project_setup: *setup
+      tests: *tests
+
+    test-nc19-php73:
+      environment:
+        php:
+          version: 7.3
+        variables:
+          NEXTCLOUD: releases/latest-19
+      dependencies: *dependencies
+      project_setup: *setup
+      tests: *tests
+
+    test-nc19-php74:
+      environment:
+        php: *php74
+        variables:
+          NEXTCLOUD: releases/latest-19
+      dependencies: *dependencies
+      project_setup: *setup
+      tests: *tests
+
+    test-nc20-php72:
+      environment:
+        php:
+          version: 7.2
+        variables:
+          NEXTCLOUD: releases/latest-20
+      dependencies: *dependencies
+      project_setup: *setup
+      tests: *tests
+
+    test-nc20-php73:
+      environment:
+        php:
+          version: 7.3
+        variables:
+          NEXTCLOUD: releases/latest-20
+      dependencies: *dependencies
+      project_setup: *setup
+      tests: *tests
+
+    test-nc20-php74:
+      environment:
+        php: *php74
+        variables:
+          NEXTCLOUD: releases/latest-20
       dependencies: *dependencies
       project_setup: *setup
       tests: *tests
@@ -194,6 +182,16 @@ build:
     test-master-php74:
       environment:
         php: *php74
+        variables:
+          NEXTCLOUD: daily/latest-master
+      dependencies: *dependencies
+      project_setup: *setup
+      tests: *tests
+
+    test-master-php80:
+      environment:
+        php:
+          version: 8.0
         variables:
           NEXTCLOUD: daily/latest-master
       dependencies: *dependencies

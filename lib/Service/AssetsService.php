@@ -33,6 +33,7 @@ use OCA\CMSPico\Files\StorageFile;
 use OCA\CMSPico\Files\StorageFolder;
 use OCA\CMSPico\Model\PicoAsset;
 use OCA\CMSPico\Model\Website;
+use OCA\CMSPico\Model\WebsiteCore;
 use OCP\Files\InvalidPathException;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
@@ -69,7 +70,7 @@ class AssetsService
 
 			/** @var StorageFile $assetFile */
 			$assetFile = $this->getAssetsFolder($website)->getFile($asset);
-			$picoAsset = new PicoAsset($assetFile);
+			$picoAsset = new PicoAsset($assetFile, $website->getType() === WebsiteCore::TYPE_PUBLIC);
 		} catch (InvalidPathException $e) {
 			throw new AssetInvalidPathException($e);
 		} catch (NotFoundException $e) {

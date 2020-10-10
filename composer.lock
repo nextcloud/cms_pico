@@ -104,16 +104,16 @@
         },
         {
             "name": "ezyang/htmlpurifier",
-            "version": "v4.12.0",
+            "version": "v4.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ezyang/htmlpurifier.git",
-                "reference": "a617e55bc62a87eec73bd456d146d134ad716f03"
+                "reference": "08e27c97e4c6ed02f37c5b2b20488046c8d90d75"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ezyang/htmlpurifier/zipball/a617e55bc62a87eec73bd456d146d134ad716f03",
-                "reference": "a617e55bc62a87eec73bd456d146d134ad716f03",
+                "url": "https://api.github.com/repos/ezyang/htmlpurifier/zipball/08e27c97e4c6ed02f37c5b2b20488046c8d90d75",
+                "reference": "08e27c97e4c6ed02f37c5b2b20488046c8d90d75",
                 "shasum": ""
             },
             "require": {
@@ -129,6 +129,9 @@
                 },
                 "files": [
                     "library/HTMLPurifier.composer.php"
+                ],
+                "exclude-from-classmap": [
+                    "/library/HTMLPurifier/Language/"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -147,7 +150,7 @@
             "keywords": [
                 "html"
             ],
-            "time": "2019-10-28T03:44:26+00:00"
+            "time": "2020-06-29T00:56:53+00:00"
         },
         {
             "name": "picocms/composer-installer",
@@ -208,21 +211,22 @@
         },
         {
             "name": "picocms/pico",
-            "version": "v2.1.1",
+            "version": "v2.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/picocms/Pico.git",
-                "reference": "b49936fb3a389b89c1bca659b7841f34c04b95bd"
+                "reference": "7228129cade3f812f22904b503c939b04a75c9dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/picocms/Pico/zipball/b49936fb3a389b89c1bca659b7841f34c04b95bd",
-                "reference": "b49936fb3a389b89c1bca659b7841f34c04b95bd",
+                "url": "https://api.github.com/repos/picocms/Pico/zipball/7228129cade3f812f22904b503c939b04a75c9dd",
+                "reference": "7228129cade3f812f22904b503c939b04a75c9dd",
                 "shasum": ""
             },
             "require": {
                 "erusev/parsedown": "1.8.0-beta-7",
                 "erusev/parsedown-extra": "0.8.0-beta-1",
+                "ext-mbstring": "*",
                 "php": ">=5.3.6",
                 "symfony/yaml": "^2.8",
                 "twig/twig": "^1.36"
@@ -235,8 +239,8 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.0.x-dev",
-                    "dev-pico-2.1": "2.1.x-dev"
+                    "dev-master": "2.1.x-dev",
+                    "dev-pico-3.0": "3.0.x-dev"
                 }
             },
             "autoload": {
@@ -287,20 +291,26 @@
                 "website",
                 "yaml"
             ],
-            "time": "2019-12-31T15:33:55+00:00"
+            "funding": [
+                {
+                    "url": "https://www.bountysource.com/teams/picocms",
+                    "type": "custom"
+                }
+            ],
+            "time": "2020-08-29T14:15:52+00:00"
         },
         {
             "name": "picocms/pico-deprecated",
-            "version": "v2.1.1",
+            "version": "v2.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/picocms/pico-deprecated.git",
-                "reference": "9554c025626bcba4f9160d3f2dabf18376402a1f"
+                "reference": "8d1a4056ecc71cc2857e91d50bcb38db91d424e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/picocms/pico-deprecated/zipball/9554c025626bcba4f9160d3f2dabf18376402a1f",
-                "reference": "9554c025626bcba4f9160d3f2dabf18376402a1f",
+                "url": "https://api.github.com/repos/picocms/pico-deprecated/zipball/8d1a4056ecc71cc2857e91d50bcb38db91d424e0",
+                "reference": "8d1a4056ecc71cc2857e91d50bcb38db91d424e0",
                 "shasum": ""
             },
             "require": {
@@ -310,8 +320,8 @@
             "type": "pico-plugin",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.0.x-dev",
-                    "dev-pico-2.1": "2.1.x-dev"
+                    "dev-master": "2.1.x-dev",
+                    "dev-pico-3.0": "3.0.x-dev"
                 }
             },
             "autoload": {
@@ -350,20 +360,20 @@
                 "picocms",
                 "picocms-plugin"
             ],
-            "time": "2019-12-31T15:36:04+00:00"
+            "time": "2020-08-29T15:11:07+00:00"
         },
         {
             "name": "picocms/pico-theme",
-            "version": "v2.1.1",
+            "version": "v2.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/picocms/pico-theme.git",
-                "reference": "a79b9875b1d2dd182617454ad73af3c7caa47682"
+                "reference": "d4ec8df28356f1e034a97d37327b9aecb3129eed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/picocms/pico-theme/zipball/a79b9875b1d2dd182617454ad73af3c7caa47682",
-                "reference": "a79b9875b1d2dd182617454ad73af3c7caa47682",
+                "url": "https://api.github.com/repos/picocms/pico-theme/zipball/d4ec8df28356f1e034a97d37327b9aecb3129eed",
+                "reference": "d4ec8df28356f1e034a97d37327b9aecb3129eed",
                 "shasum": ""
             },
             "require": {
@@ -373,8 +383,8 @@
             "extra": {
                 "installer-name": "default",
                 "branch-alias": {
-                    "dev-master": "2.0.x-dev",
-                    "dev-pico-2.1": "2.1.x-dev"
+                    "dev-master": "2.1.x-dev",
+                    "dev-pico-3.0": "3.0.x-dev"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -405,20 +415,20 @@
                 "picocms",
                 "picocms-theme"
             ],
-            "time": "2019-12-31T15:37:35+00:00"
+            "time": "2020-08-29T15:11:43+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
-            "version": "v1.14.0",
+            "version": "v1.18.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-ctype.git",
-                "reference": "fbdeaec0df06cf3d51c93de80c7eb76e271f5a38"
+                "reference": "1c302646f6efc070cd46856e600e5e0684d6b454"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/fbdeaec0df06cf3d51c93de80c7eb76e271f5a38",
-                "reference": "fbdeaec0df06cf3d51c93de80c7eb76e271f5a38",
+                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/1c302646f6efc070cd46856e600e5e0684d6b454",
+                "reference": "1c302646f6efc070cd46856e600e5e0684d6b454",
                 "shasum": ""
             },
             "require": {
@@ -430,7 +440,11 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.14-dev"
+                    "dev-master": "1.18-dev"
+                },
+                "thanks": {
+                    "name": "symfony/polyfill",
+                    "url": "https://github.com/symfony/polyfill"
                 }
             },
             "autoload": {
@@ -463,7 +477,21 @@
                 "polyfill",
                 "portable"
             ],
-            "time": "2020-01-13T11:15:53+00:00"
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-07-14T12:35:20+00:00"
         },
         {
             "name": "symfony/yaml",
@@ -517,30 +545,30 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.42.5",
+            "version": "v1.43.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "87b2ea9d8f6fd014d0621ca089bb1b3769ea3f8e"
+                "reference": "2311602f6a208715252febe682fa7c38e56a3373"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/87b2ea9d8f6fd014d0621ca089bb1b3769ea3f8e",
-                "reference": "87b2ea9d8f6fd014d0621ca089bb1b3769ea3f8e",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/2311602f6a208715252febe682fa7c38e56a3373",
+                "reference": "2311602f6a208715252febe682fa7c38e56a3373",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5.0",
+                "php": ">=7.1.3",
                 "symfony/polyfill-ctype": "^1.8"
             },
             "require-dev": {
                 "psr/container": "^1.0",
-                "symfony/phpunit-bridge": "^4.4|^5.0"
+                "symfony/phpunit-bridge": "^4.4.9|^5.0.9"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.42-dev"
+                    "dev-master": "1.43-dev"
                 }
             },
             "autoload": {
@@ -577,7 +605,17 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2020-02-11T05:59:23+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/twig/twig",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-08-05T15:05:05+00:00"
         },
         {
             "name": "xemlock/htmlpurifier-html5",
@@ -641,5 +679,6 @@
         "php": ">=7.0.0",
         "ext-json": "*"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "1.1.0"
 }

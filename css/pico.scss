@@ -480,6 +480,15 @@
 			border: 2px solid var(--color-error);
 			border-radius: var(--border-radius);
 			padding: calc(var(--margin) * 0.5) var(--margin);
+
+			a[href] {
+				color: var(--color-text-light) !important;
+				font-weight: normal !important;
+
+				&:hover {
+					color: var(--color-main-text) !important;
+				}
+			}
 		}
 
 		&.select2-loading {

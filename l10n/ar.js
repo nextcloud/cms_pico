@@ -21,6 +21,7 @@ OC.L10N.register(
     "Name" : "الاسم",
     "Path" : "المسار",
     "Theme" : "المظهر",
+    "Created" : "أُنشئ",
     "Actions" : "الإجراءات",
     "Address" : "العنوان",
     "Loading…" : "التحميل جارٍ…"
