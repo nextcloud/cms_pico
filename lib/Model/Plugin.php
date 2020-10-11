@@ -31,6 +31,7 @@ use OCA\CMSPico\Service\MiscService;
 use OCP\Files\InvalidPathException;
 use OCP\Files\NotFoundException;
 use ParseError;
+use function OCA\CMSPico\t;
 
 class Plugin implements \JsonSerializable
 {
@@ -140,13 +141,13 @@ class Plugin implements \JsonSerializable
 			} catch (InvalidPathException | NotFoundException $e) {
 				throw new PluginNotCompatibleException(
 					$this->getName(),
-					'Incompatible plugin: Plugin file "{file}" not found.',
+					t('Incompatible plugin: Plugin file "{file}" not found.'),
 					[ 'file' => $this->getName() . '/' . $this->getName() . '.php' ]
 				);
 			} catch (ParseError $e) {
 				throw new PluginNotCompatibleException(
 					$this->getName(),
-					'Incompatible plugin: PHP parse error in file "{file}".',
+					t('Incompatible plugin: PHP parse error in file "{file}".'),
 					[ 'file' => $this->getName() . '/' . $this->getName() . '.php' ]
 				);
 			}
@@ -155,7 +156,7 @@ class Plugin implements \JsonSerializable
 			if (!class_exists($className, false)) {
 				throw new PluginNotCompatibleException(
 					$this->getName(),
-					'Incompatible plugin: Plugin class "{class}" not found.',
+					t('Incompatible plugin: Plugin class "{class}" not found.'),
 					[ 'class' => $className ]
 				);
 			}
@@ -172,8 +173,8 @@ class Plugin implements \JsonSerializable
 			if (!in_array($apiVersion, static::PLUGIN_API_VERSIONS, true)) {
 				throw new PluginNotCompatibleException(
 					$this->getName(),
-					'Incompatible plugin: Plugins for Pico CMS for Nextcloud must use one of the API versions '
-							. '{compatApiVersions}, but this plugin uses API version {apiVersion}.',
+					t('Incompatible plugin: Plugins for Pico CMS for Nextcloud must use one of the API versions '
+							. '{compatApiVersions}, but this plugin uses API version {apiVersion}.'),
 					[ 'compatApiVersions' => implode(', ', static::PLUGIN_API_VERSIONS), 'apiVersion' => $apiVersion ]
 				);
 			}

@@ -2,8 +2,7 @@
 /**
  * CMS Pico - Create websites using Pico CMS for Nextcloud.
  *
- * @copyright Copyright (c) 2017, Maxence Lange (<maxence@artificial-owl.com>)
- * @copyright Copyright (c) 2019, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
+ * @copyright Copyright (c) 2020, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -21,15 +20,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use OCA\CMSPico\AppInfo\Application;
+namespace OCA\CMSPico;
 
-if (is_file(__DIR__ . '/../vendor/autoload.php')) {
-	require_once(__DIR__ . '/../vendor/autoload.php');
+/**
+ * Noop l10n function for gettext
+ *
+ * @param string $text
+ *
+ * @return string
+ */
+function t(string $text): string
+{
+	return $text;
 }
-
-require_once(__DIR__ . '/../lib/functions.php');
-
-/** @var Application $app */
-$app = \OC::$server->query(Application::class);
-$app->registerHooks();
-$app->registerExternalStorage();
