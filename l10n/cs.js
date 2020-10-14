@@ -32,6 +32,7 @@ OC.L10N.register(
     "Local (unencrypted)" : "Místní (nešifrované)",
     "Location" : "Umístění",
     "Incompatible plugin: PHP parse error in file \"{file}\"." : "Nekompatibilní zásuvný modul: chyba zpracovávání PHP v souboru „{file}“.",
+    "Incompatible template: Required directory \"{file}\" not found." : "Nekompatibilní šablona: Potřebná složka „{file}“ chybí.",
     "The name of the website must be longer." : "Je třeba, aby název webu byl delší.",
     "The name of the website is too long." : "Název webu je příliš dlouhý.",
     "The identifier of the website must be longer." : "Je třeba, aby identifikátor webu byl delší.",
