@@ -41,38 +41,40 @@ style(Application::APP_NAME, 'pico');
 		<div>
 			<p><?php print_unescaped($l->t(
 				'<a href="https://apps.nextcloud.com/apps/cms_pico">Pico CMS for Nextcloud</a> combines the power of '
-				. '<a href="http://picocms.org/"><strong>Pico</strong></a> and Nextcloud to create simple, secure, '
-				. 'shareable and amazingly powerful websites with just a few clicks. Pico is a stupidly simple, '
-				. 'blazing fast, flat file CMS - making the web easy!'
+						. '<a href="http://picocms.org/"><strong>Pico</strong></a> and Nextcloud to create simple, '
+						. 'secure, shareable and amazingly powerful websites with just a few clicks. Pico is a '
+						. 'stupidly simple, blazing fast, flat file CMS - making the web easy!'
 			)); ?></p>
 
 			<p><?php print_unescaped($l->t(
-				'Start a blog, share your resume with the world, create a plan for world domination and only share '
-				. 'it with the right friends or build a knowledge base and let the smart ones among your colleagues '
-				. 'help out. Pico CMS for Nextcloud allows you to create and manage your own websites. Creating a new '
-				. 'page with Pico is no more than creating a simple text file in your Nextcloud files. No config is '
-				. 'required, no utterly complex management interfaces - just files. It\'s the perfect match with '
-				. 'Nextcloud. Secure Sharing, Collaboration, Access Control - not just for your files, but also your '
-				. 'websites, all made possible by Pico CMS for Nextcloud! Breaking the boundaries between your Mobile '
-				. '& Desktop devices and your Server.'
+				'Start a blog, share your resume with the world, create a plan for world domination and only share it '
+						. 'with the right friends or build a knowledge base and let the smart ones among your '
+						. 'colleagues help out. Pico CMS for Nextcloud allows you to create and manage your own '
+						. 'websites. Creating a new page with Pico is no more than creating a simple text file in your '
+						. 'Nextcloud files. No config is required, no utterly complex management interfaces - just '
+						. 'files. It\'s the perfect match with Nextcloud. Secure Sharing, Collaboration, Access '
+						. 'Control - not just for your files, but also your websites, all made possible by Pico CMS '
+						. 'for Nextcloud! Breaking the boundaries between your Mobile & Desktop devices and your '
+						. 'Server.'
 			)); ?></p>
 
 			<p><?php print_unescaped($l->t(
 				'A website consist of just a bunch of <code class="inline">.md</code> text files in your Nextcloud '
-				. 'files. <code class="inline">.md</code> stands for <a href="https://www.markdownguide.org/"><strong>'
-				. 'Markdown</strong></a> - a super simple and intuitive markup to create headings, paragraphs, text '
-				. 'formatting, lists, images and links. But don\'t despair - you don\'t have to learn yet another '
-				. 'language if you don\'t want to. Try Nextcloud\'s <a href="https://apps.nextcloud.com/apps/text">'
-				. 'Text</a> or <a href="https://apps.nextcloud.com/apps/files_markdown">Markdown Editor</a> apps to '
-				. 'make easy things stupidly simple. But what about meta data like a page\'s title or release date? '
-				. 'Guess right, it\'s all in one place. At the top of your Markdown files you can place a block with '
-				. 'such meta data - called the <a href="https://en.wikipedia.org/wiki/YAML"><strong>YAML</strong></a> '
-				. 'Front Matter. Creating websites can\'t be easier…'
+						. 'files. <code class="inline">.md</code> stands for <a href="https://www.markdownguide.org/">'
+						. '<strong>Markdown</strong></a> - a super simple and intuitive markup to create headings, '
+						. 'paragraphs, text formatting, lists, images and links. But don\'t despair - you don\'t have '
+						. 'to learn yet another language if you don\'t want to. Try Nextcloud\'s '
+						. '<a href="https://apps.nextcloud.com/apps/text">Text</a> or '
+						. '<a href="https://apps.nextcloud.com/apps/files_markdown">Markdown Editor</a> apps to make '
+						. 'easy things stupidly simple. But what about meta data like a page\'s title or release date? '
+						. 'Guess right, it\'s all in one place. At the top of your Markdown files you can place a '
+						. 'block with such meta data - called the <a href="https://en.wikipedia.org/wiki/YAML">'
+						. '<strong>YAML</strong></a> Front Matter. Creating websites can\'t be easier…'
 			)); ?></p>
 
 			<p><?php print_unescaped($l->t(
 				'You want to learn more about Pico CMS for Nextcloud? Easy! Just create your first personal website '
-				. 'using the "sample_pico" template. Pico\'s sample contents will explain all you need to know…'
+						. 'using the "sample_pico" template. Pico\'s sample contents will explain all you need to know…'
 			)); ?></p>
 
 			<p><?php p($l->t('You will be able to access your websites using URLs like the following:')); ?>
@@ -85,11 +87,12 @@ style(Application::APP_NAME, 'pico');
 			<div class="icon icon-error-color"></div>
 			<div>
 				<p><?php p($l->t(
-					'The Nextcloud admin limited access of Pico CMS for Nextcloud to certain groups. Unfortunately '
-					. 'you don\'t have permission to create personal websites. You can still access websites of other '
-					. 'users, possibly including private websites. If you had permission to create websites in the '
-					. 'past, you don\'t have to worry about your data: Nothing is lost. However, nobody will be able '
-					. 'to access your private websites and a "Website not found" error is shown instead.'
+					'The Nextcloud admin limited access of Pico CMS for Nextcloud to certain groups. Unfortunately you '
+							. 'don\'t have permission to create personal websites. You can still access websites of '
+							. 'other users, possibly including private websites. If you had permission to create '
+							. 'websites in the past, you don\'t have to worry about your data: Nothing is lost. '
+							. 'However, nobody will be able to access your private websites and a "Website not found" '
+							. 'error is shown instead.'
 				)); ?></p>
 			</div>
 		</div>
@@ -256,9 +259,7 @@ style(Application::APP_NAME, 'pico');
 		)); ?></p>
 
 		<div id="picocms-website-form" class="picocms-website-form"
-				data-route="/apps/cms_pico/personal/websites"
-				data-website-base-url="<?php p($_['baseUrl']); ?>"
-				data-website-list="#picocms-websites">
+				data-route="/apps/cms_pico/personal/websites">
 			<form class="form">
 				<fieldset>
 					<div class="label">
@@ -272,7 +273,7 @@ style(Application::APP_NAME, 'pico');
 						<p class="note">
 							<?php p($l->t(
 								'Here you can specify the name of your personal website. Your website\'s name will be '
-								. 'used as website title, often shown in your website\'s header.'
+										. 'used as website title, often shown in your website\'s header.'
 							)); ?>
 						</p>
 						<div class="message input-error">
@@ -297,9 +298,9 @@ style(Application::APP_NAME, 'pico');
 						<p class="note">
 							<?php p($l->t(
 								'The identifier of your website prescribes both your website\'s address (URL) and the '
-								. 'name of the directory your website\'s files (both pages and assets) will be stored in. '
-								. 'A website\'s identifier must consist of lowercase alphanumeric characters, dashes and '
-								. 'underscores (a-z, 0-9, - and _) only.'
+										. 'name of the directory your website\'s files (both pages and assets) will be '
+										. 'stored in. A website\'s identifier must consist of lowercase alphanumeric '
+										. 'characters, dashes and underscores (a-z, 0-9, - and _) only.'
 							)); ?>
 						</p>
 						<div class="message input-error">
@@ -335,8 +336,8 @@ style(Application::APP_NAME, 'pico');
 						<input id="picocms-website-new-path" class="input input-path" type="button" name="path" value="/" />
 						<p class="note">
 							<?php p($l->t(
-								'When creating a new website, Pico CMS for Nextcloud copies the website '
-								. 'template to the following new directory in your Nextcloud.'
+								'When creating a new website, Pico CMS for Nextcloud copies the website template to '
+										. 'the following new directory in your Nextcloud.'
 							)); ?>
 						</p>
 						<div class="message input-error">
@@ -362,9 +363,9 @@ style(Application::APP_NAME, 'pico');
 						</select>
 						<p class="note">
 							<?php p($l->t(
-								'You can use one of the provided themes for some greater individuality and '
-								. 'style. If you want to use another theme, ask your Nextcloud admin - it might '
-								. 'be possible to add your favourite theme, too!'
+								'You can use one of the provided themes for some greater individuality and style. If '
+										. 'you want to use another theme, ask your Nextcloud admin - it might be '
+										. 'possible to add your favourite theme, too!'
 							)); ?>
 						</p>
 						<div class="message input-error">
@@ -390,10 +391,10 @@ style(Application::APP_NAME, 'pico');
 						</select>
 						<p class="note">
 							<?php p($l->t(
-								'Templates act as a starting point when creating a new website. All templates '
-								. 'consist of a "content" directory (for your pages) and a "assets" directory '
-								. '(for your website\'s assets), which will be copied to the above folder in '
-								. 'your Nextcloud.'
+								'Templates act as a starting point when creating a new website. All templates consist '
+										. 'of a "content" directory (for your pages) and a "assets" directory (for '
+										. 'your website\'s assets), which will be copied to the above folder in your '
+										. 'Nextcloud.'
 							)); ?>
 						</p>
 						<div class="message input-error">

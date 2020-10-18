@@ -141,8 +141,7 @@ class PicoController extends Controller
 			));
 		} catch (PicoRuntimeException $e) {
 			$errorMessage = $this->l10n->t(
-				'The requested website page could not be built, '
-					. 'so that the server was unable to complete your request.'
+				'The requested website page could not be built, so that the server was unable to complete your request.'
 			);
 			return new PicoErrorResponse($errorMessage, $e);
 		}

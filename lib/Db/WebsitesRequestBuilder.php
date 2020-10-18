@@ -58,7 +58,7 @@ class WebsitesRequestBuilder extends CoreRequestBuilder
 	protected function getWebsitesSelectSql(): IQueryBuilder
 	{
 		return $this->dbConnection->getQueryBuilder()
-			->select('id', 'name', 'user_id', 'site', 'theme', 'type', 'options', 'path', 'creation')
+			->select('*')
 			->from(self::TABLE_WEBSITES);
 	}
 
