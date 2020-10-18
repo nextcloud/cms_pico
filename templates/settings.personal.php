@@ -64,11 +64,11 @@ style(Application::APP_NAME, 'pico');
 						. '<strong>Markdown</strong></a> - a super simple and intuitive markup to create headings, '
 						. 'paragraphs, text formatting, lists, images and links. But don\'t despair - you don\'t have '
 						. 'to learn yet another language if you don\'t want to. Try Nextcloud\'s '
-						. '<a href="https://apps.nextcloud.com/apps/text">Text</a> or '
-						. '<a href="https://apps.nextcloud.com/apps/files_markdown">Markdown Editor</a> apps to make '
-						. 'easy things stupidly simple. But what about meta data like a page\'s title or release date? '
-						. 'Guess right, it\'s all in one place. At the top of your Markdown files you can place a '
-						. 'block with such meta data - called the <a href="https://en.wikipedia.org/wiki/YAML">'
+						. '<a href="https://apps.nextcloud.com/apps/files_markdown">Markdown Editor</a> app to make '
+						. 'easy things stupidly simple. Please note that Nextcloud\'s built-in Text editor is '
+						. 'incompatible with Pico CMS for Nextcloud. But what about meta data like a page\'s title or '
+						. 'release date? Guess right, it\'s all in one place. At the top of your Markdown files you '
+						. 'can place a block with such meta data - called <a href="https://en.wikipedia.org/wiki/YAML">'
 						. '<strong>YAML</strong></a> Front Matter. Creating websites can\'t be easier…'
 			)); ?></p>
 

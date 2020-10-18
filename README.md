@@ -16,7 +16,7 @@
 
 Installing Pico CMS for Nextcloud allows your users to create and manage their own websites. Creating a new page with Pico is no more than creating a simple text file in a users' Nextcloud files. No config is required, no utterly complex management interfaces - just files. It's the perfect match with Nextcloud. Secure Sharing, Collaboration, Access Control - not just for your files, but also your websites, all made possible by Pico CMS for Nextcloud! Breaking the boundaries between your Mobile & Desktop devices and your Server.
 
-Websites will be accessible through URLs like https://cloud.example.com/sites/my_site/ and consist of just a bunch of `.md` text files in a user's Nextcloud files. `.md` stands for [**Markdown**](https://www.markdownguide.org/) - a super simple and intuitive markup to create headings, paragraphs, text formatting, lists, images and links. But don't despair - you don't have to learn yet another language if you don't want to. Consider enabling Nextcloud's [Text](https://apps.nextcloud.com/apps/text) or [Markdown Editor](https://apps.nextcloud.com/apps/files_markdown) apps to make easy things stupidly simple. But what about meta data like a page's title or release date? Guess right, it's all in one place. At the top of your Markdown files you can place a block with such meta data - called the [**YAML**](https://en.wikipedia.org/wiki/YAML) Front Matter. Creating websites can't be easier…
+Websites will be accessible through URLs like https://cloud.example.com/sites/my_site/ and consist of just a bunch of `.md` text files in a user's Nextcloud files. `.md` stands for [**Markdown**](https://www.markdownguide.org/) - a super simple and intuitive markup to create headings, paragraphs, text formatting, lists, images and links. But don't despair - you don't have to learn yet another language if you don't want to. Consider enabling Nextcloud's [Markdown Editor](https://apps.nextcloud.com/apps/files_markdown) app to make easy things stupidly simple. Please note that Nextcloud's built-in Text editor is incompatible with Pico CMS for Nextcloud. But what about meta data like a page's title or release date? Guess right, it's all in one place. At the top of your Markdown files you can place a block with such meta data - called the [**YAML**](https://en.wikipedia.org/wiki/YAML) Front Matter. Creating websites can't be easier…
 
 But that wasn't everything… Pico CMS for Nextcloud is highly customizable. You can change Pico’s appearance by using custom themes and add new functionality by using custom plugins. For security reasons users can neither add custom themes nor plugins on their own - but as an admin you can. Plugins and themes aren’t just new "skins" or "widgets", the underlying technologies are powerful frameworks you can leverage to make your users' websites truly unique. However, with great power comes great responsibility. Pico CMS for Nextcloud does its best to prevent users from including scripts into websites, since this might bear security risks (so called "Cross Scripting"). Since this risk doesn't apply to Pico itself, 3rd-party developers of plugins and themes might not be aware of this issue - so be careful when installing custom plugins and themes.
 
@@ -47,6 +47,26 @@ Pico CMS for Nextcloud can be found in [Nextcloud's App Store](https://apps.next
    $ chown --reference=../../data/ appdata_public
    $ chmod --reference=../../data/ appdata_public
    ```
+
+## Known limitations
+
+### HTML in Markdown files
+
+One of Markdown's key features is that users can use arbitrary HTML in their Markdown files to enable more advanced contents. However, since all websites of Pico CMS for Nextcloud run under the same domain as Nextcloud, this bears a huge security risk: Users with some knowledge could attack other users of your Nextcloud, including you, the Nextcloud admin (so called "Cross Scripting"). Pico CMS for Nextcloud follows a "Better safe than sorry" mentality, thus we let [HTMLPurifier](http://htmlpurifier.org/) remove any potentially active content from Markdown files.
+
+For this reason you can't use HTML features like `<iframe>`, `<audio>`, `<video>` and `<script>` in your Markdown files - on purpose! These limitations don't apply to themes, so if you know what you're doing, you can create a custom theme to include any advanced features you need (for example a video player). However, please be careful not to introduce security risks!
+
+### Nextcloud's Text App
+
+Nextcloud's official [Text](https://apps.nextcloud.com/apps/text) app is incompatible with Pico CMS for Nextcloud, as is destroys otherwise valid Markdown files (it e.g. removes YAML Front Matters). Unfortunately we can't do anything about this, it's a rather complex issue in the realm of the Text app. Please see [#116](https://github.com/nextcloud/cms_pico/issues/116) for more info.
+
+In the meantime we recommend using Nextcloud's [Markdown editor](https://apps.nextcloud.com/apps/files_markdown) app instead.
+
+### App incompatibilities
+
+Due to how Nextcloud and most other PHP applications handle dependencies, there's a huge potential of dependency conflicts. Due to this some Nextcloud apps have known incompatibilities with Pico CMS for Nextcloud. This is no-one's fault, neither are Nextcloud nor the conflicting apps to blame, this is just some technical limitation of Nextcloud's app infrastructure we can't solve in the short term. Please see [#97](https://github.com/nextcloud/cms_pico/issues/97) for more info.
+
+In the meantime you must remove all conflicting apps. Known conflicting apps are [Issue Template](https://apps.nextcloud.com/apps/issuetemplate) and [Terms of service](https://apps.nextcloud.com/apps/terms_of_service). If you see the error `"Call to undefined method ParsedownExtra::textElements()"` in Nextcloud's log even though you\'ve removed all conflicting apps, please don't hesitate to [open a new Issue on GitHub](https://github.com/nextcloud/cms_pico/issues/new) with a copy of the error including its stack trace and a complete list of all apps installed.
 
 ## Getting help
 
