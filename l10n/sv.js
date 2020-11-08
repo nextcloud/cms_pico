@@ -69,7 +69,7 @@ OC.L10N.register(
     "Path" : "Sökväg",
     "Theme" : "Tema",
     "Created" : "Skapat",
-    "Delete website" : "Radera webbplats",
+    "Delete website" : "Ta bort webbplats",
     "Actions" : "Åtgärder",
     "Create a new website" : "Skapa en ny webbplats",
     "Address" : "Adress",
