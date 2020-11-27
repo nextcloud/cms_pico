@@ -2,7 +2,7 @@ OC.L10N.register(
     "cms_pico",
     {
     "Copy" : "Kopiraj",
-    "Confirm website deletion" : "Potrdi brisanje spletišča",
+    "Confirm website deletion" : "Potrditev brisanja spletišča",
     "This operation will delete the website \"{name}\". However, all of its contents will still be available in your Nextcloud." : "S potrditvijo tega dejanja bo spletišče »{name}« izbrisano, datoteke spletišča pa bodo še vedno na voljo v Nextcloud.",
     "Choose website directory" : "Izbor mape spletišča",
     "A unexpected error occured while performing this action. Please check Nextcloud's logs." : "Med izvajanjem dejanja je prišlo do nepričakovane napake. Priporočljivo je preveriti dnevniške zapise okolja Nextcloud.",
