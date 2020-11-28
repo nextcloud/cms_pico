@@ -136,16 +136,21 @@ class MiscService
 	}
 
 	/**
-	 * @param string $path
-	 * @param string $fileExtension
+	 * @param string      $path
+	 * @param string|null $fileExtension
 	 *
 	 * @return false|string
 	 * @throws InvalidPathException
 	 */
-	public function dropFileExtension(string $path, string $fileExtension): string
+	public function dropFileExtension(string $path, string $fileExtension = null): string
 	{
 		$fileName = basename($path);
 		$fileExtensionPos = strrpos($fileName, '.');
+
+		if ($fileExtension === null) {
+			return $fileExtensionPos ? substr($path, 0, $fileExtensionPos) : $path;
+		}
+
 		if (($fileExtensionPos === false) || (substr_compare($fileName, $fileExtension, $fileExtensionPos) !== 0)) {
 			throw new InvalidPathException();
 		}
