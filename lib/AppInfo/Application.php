@@ -26,11 +26,13 @@ declare(strict_types=1);
 namespace OCA\CMSPico\AppInfo;
 
 use OCA\CMSPico\Listener\ExternalStorageBackendEventListener;
+use OCA\CMSPico\Listener\GroupDeletedEventListener;
 use OCA\CMSPico\Listener\UserDeletedEventListener;
 use OCP\App\AppPathNotFoundException;
 use OCP\App\IAppManager;
 use OCP\AppFramework\App;
 use OCP\EventDispatcher\IEventDispatcher;
+use OCP\Group\Events\GroupDeletedEvent;
 use OCP\User\Events\UserDeletedEvent;
 
 class Application extends App
@@ -54,6 +56,7 @@ class Application extends App
 		/** @var IEventDispatcher $eventDispatcher */
 		$eventDispatcher = \OC::$server->query(IEventDispatcher::class);
 		$eventDispatcher->addServiceListener(UserDeletedEvent::class, UserDeletedEventListener::class);
+		$eventDispatcher->addServiceListener(GroupDeletedEvent::class, GroupDeletedEventListener::class);
 
 		$eventDispatcher->addServiceListener(
 			'OCA\\Files_External::loadAdditionalBackends',

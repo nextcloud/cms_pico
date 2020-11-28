@@ -328,12 +328,7 @@ class WebsitesService
 	 */
 	public function setLimitGroups(array $limitGroups): void
 	{
-		foreach ($limitGroups as $group) {
-			if (!$this->groupManager->groupExists($group)) {
-				throw new \UnexpectedValueException();
-			}
-		}
-
+		$limitGroups = array_values(array_filter($limitGroups, [ $this->groupManager, 'groupExists' ]));
 		$this->configService->setAppValue(ConfigService::LIMIT_GROUPS, json_encode($limitGroups));
 	}
 
