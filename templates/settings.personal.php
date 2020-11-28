@@ -233,13 +233,13 @@ style(Application::APP_NAME, 'pico');
 		<form id="{id}" title="{title}" class="form">
 			<p class="dialog-hint"><?php p($l->t(
 				'Pico CMS for Nextcloud supports both public and private websites. Everyone can access public '
-				. 'websites, no matter whether they are logged in or not. If you want to limit access to a certain '
-				. 'subset of users, create a private website. All visitors of a private website must be logged in, '
-				. 'otherwise a "Access forbidden" error is shown. Additionally one of the following conditions must '
-				. 'be met: (1) the user has access to the website\'s source files (i.e. the source folder is shared '
-				. 'with the user), (2) the user is a member of one of the groups listed below, or (3) the user is a '
-				. 'member of one of the groups specified in the YAML header of the requested page using the "access" '
-				. 'meta value.'
+						. 'websites, no matter whether they are logged in or not. If you want to limit access to a '
+						. 'certain subset of users, create a private website. All visitors of a private website must '
+						. 'be logged in, otherwise a "Access forbidden" error is shown. Additionally one of the '
+						. 'following conditions must be met: (1) the user has access to the website\'s source files '
+						. '(i.e. the source folder is shared with the user), (2) the user is a member of one of the '
+						. 'groups listed below, or (3) the user is a member of one of the groups specified in the '
+						. 'YAML Front Matter of the requested page using the "access" meta value.'
 			)); ?></p>
 			<fieldset>
 				<div class="label">
