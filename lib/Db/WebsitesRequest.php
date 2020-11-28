@@ -82,7 +82,7 @@ class WebsitesRequest extends WebsitesRequestBuilder
 	/**
 	 * @param string $userId
 	 */
-	public function deleteAllFromUser(string $userId): void
+	public function deleteAllFromUserId(string $userId): void
 	{
 		$qb = $this->getWebsitesDeleteSql();
 		$this->limitToUserId($qb, $userId);

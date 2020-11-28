@@ -2,8 +2,7 @@
 /**
  * CMS Pico - Create websites using Pico CMS for Nextcloud.
  *
- * @copyright Copyright (c) 2017, Maxence Lange (<maxence@artificial-owl.com>)
- * @copyright Copyright (c) 2019, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
+ * @copyright Copyright (c) 2020, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -23,17 +22,20 @@
 
 declare(strict_types=1);
 
-namespace OCA\CMSPico\Events;
+namespace OCA\CMSPico\Listener;
 
 use OCA\CMSPico\Service\WebsitesService;
+use OCP\EventDispatcher\Event;
+use OCP\EventDispatcher\IEventListener;
+use OCP\Group\Events\GroupDeletedEvent;
 
-class UserEvents
+class GroupDeletedEventListener implements IEventListener
 {
 	/** @var WebsitesService */
 	private $websitesService;
 
 	/**
-	 * UserEvents constructor.
+	 * GroupDeletedEventListener constructor.
 	 *
 	 * @param WebsitesService $websitesService
 	 */
@@ -43,11 +45,16 @@ class UserEvents
 	}
 
 	/**
-	 * @param array $params
+	 * @inheritDoc
 	 */
-	public function onUserDeleted(array $params): void
+	public function handle(Event $event): void
 	{
-		$userId = $params['uid'];
-		$this->websitesService->onUserRemoved($userId);
+		if (!($event instanceof GroupDeletedEvent)) {
+			return;
+		}
+
+		$limitGroups = $this->websitesService->getLimitGroups();
+		$limitGroups = array_values(array_diff($limitGroups, [ $event->getGroup()->getGID() ]));
+		$this->websitesService->setLimitGroups($limitGroups);
 	}
 }

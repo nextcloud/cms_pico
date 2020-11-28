@@ -23,19 +23,37 @@
 
 declare(strict_types=1);
 
-namespace OCA\CMSPico\Hooks;
+namespace OCA\CMSPico\Listener;
 
-use OCA\CMSPico\Events\UserEvents;
+use OCA\CMSPico\Service\WebsitesService;
+use OCP\EventDispatcher\Event;
+use OCP\EventDispatcher\IEventListener;
+use OCP\User\Events\UserDeletedEvent;
 
-class UserHooks
+class UserDeletedEventListener implements IEventListener
 {
+	/** @var WebsitesService */
+	private $websitesService;
+
 	/**
-	 * @param array $params
+	 * UserDeletedEventListener constructor.
+	 *
+	 * @param WebsitesService $websitesService
 	 */
-	public static function onUserDeleted(array $params): void
+	public function __construct(WebsitesService $websitesService)
 	{
-		/** @var UserEvents $userEvents */
-		$userEvents = \OC::$server->query(UserEvents::class);
-		$userEvents->onUserDeleted($params);
+		$this->websitesService = $websitesService;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function handle(Event $event): void
+	{
+		if (!($event instanceof UserDeletedEvent)) {
+			return;
+		}
+
+		$this->websitesService->deleteUserWebsites($event->getUser()->getUID());
 	}
 }

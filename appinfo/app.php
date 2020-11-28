@@ -31,5 +31,4 @@ require_once(__DIR__ . '/../lib/functions.php');
 
 /** @var Application $app */
 $app = \OC::$server->query(Application::class);
-$app->registerHooks();
-$app->registerExternalStorage();
+$app->registerEventListener();
