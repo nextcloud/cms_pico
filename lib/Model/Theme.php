@@ -33,6 +33,7 @@ use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 use Symfony\Component\Yaml\Exception\ParseException as YamlParseException;
 use Symfony\Component\Yaml\Parser as YamlParser;
+use function OCA\CMSPico\t;
 
 class Theme implements \JsonSerializable
 {
@@ -137,7 +138,7 @@ class Theme implements \JsonSerializable
 			} catch (InvalidPathException | NotFoundException $e) {
 				throw new ThemeNotCompatibleException(
 					$this->getName(),
-					'Incompatible theme: Twig template "{file}" not found.',
+					t('Incompatible theme: Twig template "{file}" not found.'),
 					[ 'file' => $this->getName() . '/index.twig' ]
 				);
 			}
@@ -162,8 +163,8 @@ class Theme implements \JsonSerializable
 			if (!in_array($apiVersion, static::THEME_API_VERSIONS, true)) {
 				throw new ThemeNotCompatibleException(
 					$this->getName(),
-					'Incompatible theme: Themes for Pico CMS for Nextcloud must use one of the API versions '
-					. '{compatApiVersions}, but this theme uses API version {apiVersion}.',
+					t('Incompatible theme: Themes for Pico CMS for Nextcloud must use one of the API versions '
+							. '{compatApiVersions}, but this theme uses API version {apiVersion}.'),
 					[ 'compatApiVersions' => implode(', ', static::THEME_API_VERSIONS), 'apiVersion' => $apiVersion ]
 				);
 			}

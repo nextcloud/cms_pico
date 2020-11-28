@@ -60,12 +60,14 @@ class Application extends App
 	 */
 	public function registerExternalStorage(): void
 	{
+		/** @var IEventDispatcher $eventDispatcher */
 		$eventDispatcher = \OC::$server->query(IEventDispatcher::class);
 		$eventDispatcher->addListener(
 			'OCA\\Files_External::loadAdditionalBackends',
 			function (Event $event) {
 				$encryptionManager = \OC::$server->getEncryptionManager();
 				if ($encryptionManager->isEnabled()) {
+					/** @var BackendService $backendService */
 					$backendService = \OC::$server->query(BackendService::class);
 					$backendService->registerBackendProvider(new BackendProvider());
 				}

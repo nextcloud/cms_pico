@@ -29,6 +29,7 @@ use OCA\CMSPico\Files\FolderInterface;
 use OCA\CMSPico\Service\MiscService;
 use OCP\Files\InvalidPathException;
 use OCP\Files\NotFoundException;
+use function OCA\CMSPico\t;
 
 class Template implements \JsonSerializable
 {
@@ -125,7 +126,7 @@ class Template implements \JsonSerializable
 			} catch (InvalidPathException | NotFoundException $e) {
 				throw new TemplateNotCompatibleException(
 					$this->getName(),
-					'Incompatible template: Required directory "{file}" not found.',
+					t('Incompatible template: Required directory "{file}" not found.'),
 					[ 'file' => $this->getName() . '/assets/' ]
 				);
 			}
@@ -135,7 +136,7 @@ class Template implements \JsonSerializable
 			} catch (InvalidPathException | NotFoundException $e) {
 				throw new TemplateNotCompatibleException(
 					$this->getName(),
-					'Incompatible template: Required directory "{file}" not found.',
+					t('Incompatible template: Required directory "{file}" not found.'),
 					[ 'file' => $this->getName() . '/content/' ]
 				);
 			}

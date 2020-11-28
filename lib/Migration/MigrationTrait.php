@@ -54,7 +54,7 @@ trait MigrationTrait
 
 	/**
 	 * @param string  $message
-	 * @param mixed[] ...$arguments
+	 * @param mixed ...$arguments
 	 */
 	protected function logInfo(string $message, ...$arguments): void
 	{
@@ -69,7 +69,7 @@ trait MigrationTrait
 
 	/**
 	 * @param string $message
-	 * @param mixed[] ...$arguments
+	 * @param mixed ...$arguments
 	 */
 	protected function logWarning(string $message, ...$arguments): void
 	{
