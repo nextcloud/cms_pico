@@ -54,7 +54,7 @@ class GroupDeletedEventListener implements IEventListener
 		}
 
 		$limitGroups = $this->websitesService->getLimitGroups();
-		$limitGroups = array_diff($limitGroups, [ $event->getGroup()->getGID() ]);
+		$limitGroups = array_values(array_diff($limitGroups, [ $event->getGroup()->getGID() ]));
 		$this->websitesService->setLimitGroups($limitGroups);
 	}
 }
