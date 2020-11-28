@@ -204,9 +204,9 @@ class WebsitesService
 	/**
 	 * @param string $userId
 	 */
-	public function onUserRemoved(string $userId): void
+	public function deleteUserWebsites(string $userId): void
 	{
-		$this->websiteRequest->deleteAllFromUser($userId);
+		$this->websiteRequest->deleteAllFromUserId($userId);
 	}
 
 	/**

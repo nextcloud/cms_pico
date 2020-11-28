@@ -241,7 +241,7 @@ class WebsitesServiceTest extends TestCase
 		$websites = $this->websitesService->getWebsitesFromUser(Env::ENV_TEST_USER2);
 		$this->assertCount(1, $websites);
 
-		$this->websitesService->onUserRemoved(Env::ENV_TEST_USER2);
+		$this->websitesService->deleteUserWebsites(Env::ENV_TEST_USER2);
 
 		$websites = $this->websitesService->getWebsitesFromUser(Env::ENV_TEST_USER2);
 		$this->assertCount(0, $websites);

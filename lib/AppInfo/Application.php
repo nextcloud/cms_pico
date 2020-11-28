@@ -25,14 +25,13 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\AppInfo;
 
-use OCA\CMSPico\ExternalStorage\BackendProvider;
-use OCA\Files_External\Service\BackendService;
+use OCA\CMSPico\Listener\ExternalStorageBackendEventListener;
+use OCA\CMSPico\Listener\UserDeletedEventListener;
 use OCP\App\AppPathNotFoundException;
 use OCP\App\IAppManager;
 use OCP\AppFramework\App;
-use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventDispatcher;
-use OCP\Util;
+use OCP\User\Events\UserDeletedEvent;
 
 class Application extends App
 {
@@ -48,30 +47,17 @@ class Application extends App
 	}
 
 	/**
-	 * Register hooks.
+	 * Registers event listeners.
 	 */
-	public function registerHooks(): void
-	{
-		Util::connectHook('OC_User', 'post_deleteUser', '\OCA\CMSPico\Hooks\UserHooks', 'onUserDeleted');
-	}
-
-	/**
-	 * Registers a unencrypted storage backend.
-	 */
-	public function registerExternalStorage(): void
+	public function registerEventListener(): void
 	{
 		/** @var IEventDispatcher $eventDispatcher */
 		$eventDispatcher = \OC::$server->query(IEventDispatcher::class);
-		$eventDispatcher->addListener(
+		$eventDispatcher->addServiceListener(UserDeletedEvent::class, UserDeletedEventListener::class);
+
+		$eventDispatcher->addServiceListener(
 			'OCA\\Files_External::loadAdditionalBackends',
-			function (Event $event) {
-				$encryptionManager = \OC::$server->getEncryptionManager();
-				if ($encryptionManager->isEnabled()) {
-					/** @var BackendService $backendService */
-					$backendService = \OC::$server->query(BackendService::class);
-					$backendService->registerBackendProvider(new BackendProvider());
-				}
-			}
+			ExternalStorageBackendEventListener::class
 		);
 	}
 
