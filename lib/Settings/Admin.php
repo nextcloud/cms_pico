@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace OCA\CMSPico\Settings;
 
 use OCA\CMSPico\AppInfo\Application;
+use OCA\CMSPico\Pico;
 use OCA\CMSPico\Service\FileService;
 use OCA\CMSPico\Service\PicoService;
 use OCA\CMSPico\Service\WebsitesService;
@@ -94,6 +95,8 @@ class Admin implements ISettings
 			'linkMode'            => $this->websitesService->getLinkMode(),
 			'linkModeLong'        => WebsitesService::LINK_MODE_LONG,
 			'linkModeShort'       => WebsitesService::LINK_MODE_SHORT,
+			'appVersion'          => Application::getAppVersion(),
+			'picoVersion'         => Pico::VERSION,
 		];
 
 		return new TemplateResponse(Application::APP_NAME, 'settings.admin', $data);

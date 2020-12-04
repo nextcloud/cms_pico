@@ -95,4 +95,20 @@ class Application extends App
 			return '';
 		}
 	}
+
+	/**
+	 * Returns the installed version of this app.
+	 *
+	 * @return string
+	 */
+	public static function getAppVersion(): string
+	{
+		try {
+			/** @var IAppManager $appManager */
+			$appManager = \OC::$server->getAppManager();
+			return $appManager->getAppVersion(self::APP_NAME);
+		} catch (AppPathNotFoundException $e) {
+			return '';
+		}
+	}
 }
