@@ -82,6 +82,7 @@ class Admin implements ISettings
 
 		$data = [
 			'parsedownCompatible' => $parsedownCompatible,
+			'limitGroups'         => $this->websitesService->getLimitGroups(),
 			'exampleProxyUrl'     => $exampleProxyUrl . '/',
 			'exampleFullUrl'      => $exampleFullUrl . '/',
 			'internalProxyUrl'    => $internalBaseUrl . '/pico_proxy/',
@@ -90,7 +91,6 @@ class Admin implements ISettings
 			'themesPath'          => $this->fileService->getAppDataFolderPath(PicoService::DIR_THEMES),
 			'pluginsPath'         => $this->fileService->getAppDataFolderPath(PicoService::DIR_PLUGINS),
 			'templatesPath'       => $this->fileService->getAppDataFolderPath(PicoService::DIR_TEMPLATES),
-			'limitGroups'         => $this->websitesService->getLimitGroups(),
 			'linkMode'            => $this->websitesService->getLinkMode(),
 			'linkModeLong'        => WebsitesService::LINK_MODE_LONG,
 			'linkModeShort'       => WebsitesService::LINK_MODE_SHORT,
