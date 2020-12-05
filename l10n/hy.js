@@ -11,7 +11,6 @@ OC.L10N.register(
     "Line: %s" : "Տող. %s",
     "Trace" : "Հետք",
     "Error" : "Սխալ",
-    "Settings" : "կարգավորումներ",
     "Name" : "Անուն",
     "Address" : "Հասցե"
 },

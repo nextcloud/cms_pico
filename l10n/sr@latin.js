@@ -5,7 +5,6 @@ OC.L10N.register(
     "Abort" : "Prekini",
     "Save" : "Save",
     "Error" : "Greška",
-    "Settings" : "Postavke",
     "Name" : "naziv",
     "Theme" : "Tema",
     "Address" : "Adresa",

@@ -13,7 +13,6 @@ OC.L10N.register(
     "File: %s" : "Datoteka: %s",
     "Line: %s" : "Red: %s",
     "Error" : "Greška",
-    "Settings" : "Podešavanje",
     "Name" : "Ime",
     "Actions" : "Radnje",
     "Address" : "Adresa"

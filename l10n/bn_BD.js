@@ -6,7 +6,6 @@ OC.L10N.register(
     "Location" : "অবস্থান",
     "Access forbidden" : "অধিগমনের অনুমতি নেই",
     "Error" : "সমস্যা",
-    "Settings" : "সেটিংস",
     "Name" : "নাম",
     "Actions" : "পদক্ষেপসমূহ",
     "Address" : "ঠিকানা"

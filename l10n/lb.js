@@ -5,7 +5,6 @@ OC.L10N.register(
     "Location" : "Uert",
     "Access forbidden" : "Zougrëff net erlaabt",
     "Error" : "Fehler",
-    "Settings" : "Astellungen",
     "Name" : "Numm",
     "Path" : "Pad",
     "Actions" : "Aktiounen",

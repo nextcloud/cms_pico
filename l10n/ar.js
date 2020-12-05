@@ -17,7 +17,6 @@ OC.L10N.register(
     "File: %s" : "ملف : %s",
     "Line: %s" : "السطر: %s",
     "Error" : "خطأ",
-    "Settings" : "الإعدادات",
     "Name" : "الاسم",
     "Path" : "المسار",
     "Theme" : "المظهر",

@@ -7,7 +7,6 @@ OC.L10N.register(
     "Access forbidden" : "Mynediad wedi'i wahardd",
     "Not found" : "Heb ei ganfod",
     "Error" : "Gwall",
-    "Settings" : "Gosodiadau",
     "Name" : "Enw",
     "Actions" : "Gweithredoedd",
     "Address" : "Cyfeiriad",

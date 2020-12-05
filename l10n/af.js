@@ -19,7 +19,6 @@ OC.L10N.register(
     "Line: %s" : "Lyn: %s",
     "Trace" : "Spoor",
     "Error" : "Fout",
-    "Settings" : "Instellings",
     "Name" : "Naam",
     "Path" : "Roete",
     "Theme" : "Tema",

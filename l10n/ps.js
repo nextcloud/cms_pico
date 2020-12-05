@@ -6,7 +6,6 @@ OC.L10N.register(
     "Access forbidden" : "لاسرسی نشته",
     "Back to %s" : "بېرته %s ته",
     "Error" : "شسیب",
-    "Settings" : "سمونې",
     "Name" : "نوم",
     "Path" : "درک",
     "Actions" : "کړنې"

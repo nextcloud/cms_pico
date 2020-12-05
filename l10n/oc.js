@@ -6,7 +6,6 @@ OC.L10N.register(
     "Save" : "Salvar",
     "Location" : "Emplaçament",
     "Error" : "Error",
-    "Settings" : "Paramètres",
     "Name" : "Nom",
     "Path" : "Camin",
     "Actions" : "Accions",
