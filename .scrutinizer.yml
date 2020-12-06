@@ -10,9 +10,9 @@ build:
     analysis:
       environment:
         php:
-          version: 7.3
+          version: 7.4
           pecl_extensions:
-            - xdebug-2.7.2
+            - xdebug-2.9.8
       dependencies:
         override:
           - curl -L -o ~/nextcloud.tar.bz2 https://download.nextcloud.com/server/$NEXTCLOUD.tar.bz2
