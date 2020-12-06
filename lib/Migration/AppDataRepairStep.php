@@ -31,7 +31,9 @@ use OCA\CMSPico\Service\PicoService;
 use OCA\CMSPico\Service\PluginsService;
 use OCA\CMSPico\Service\TemplatesService;
 use OCA\CMSPico\Service\ThemesService;
+use OCA\CMSPico\Service\WebsitesService;
 use OCP\Files\NotFoundException;
+use OCP\IGroupManager;
 use OCP\ILogger;
 use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
@@ -39,6 +41,12 @@ use OCP\Migration\IRepairStep;
 class AppDataRepairStep implements IRepairStep
 {
 	use MigrationTrait;
+
+	/** @var IGroupManager */
+	private $groupManager;
+
+	/** @var WebsitesService */
+	private $websitesService;
 
 	/** @var ConfigService */
 	private $configService;
@@ -65,6 +73,8 @@ class AppDataRepairStep implements IRepairStep
 	 * AppDataRepairStep constructor.
 	 *
 	 * @param ILogger          $logger
+	 * @param IGroupManager    $groupManager
+	 * @param WebsitesService  $websitesService
 	 * @param ConfigService    $configService
 	 * @param TemplatesService $templatesService
 	 * @param ThemesService    $themesService
@@ -74,6 +84,8 @@ class AppDataRepairStep implements IRepairStep
 	 */
 	public function __construct(
 		ILogger $logger,
+		IGroupManager $groupManager,
+		WebsitesService $websitesService,
 		ConfigService $configService,
 		TemplatesService $templatesService,
 		ThemesService $themesService,
@@ -83,6 +95,8 @@ class AppDataRepairStep implements IRepairStep
 	) {
 		$this->setLogger($logger);
 
+		$this->groupManager = $groupManager;
+		$this->websitesService = $websitesService;
 		$this->configService = $configService;
 		$this->templatesService = $templatesService;
 		$this->themesService = $themesService;
@@ -119,6 +133,9 @@ class AppDataRepairStep implements IRepairStep
 		$this->miscService->checkComposer();
 		$this->miscService->checkPublicFolder();
 
+		$this->logInfo('Rebuilding Pico CMS app settings …');
+		$this->rebuildAppSettings();
+
 		$this->logInfo('Syncing Pico CMS app data folder …');
 		$this->syncAppDataFolder();
 
@@ -133,6 +150,16 @@ class AppDataRepairStep implements IRepairStep
 
 		$this->logInfo('Publishing Pico CMS plugins …');
 		$this->publishPlugins();
+	}
+
+	/**
+	 * @return void
+	 */
+	private function rebuildAppSettings(): void
+	{
+		$limitGroups = $this->websitesService->getLimitGroups();
+		$limitGroups = array_values(array_filter($limitGroups, [ $this->groupManager, 'groupExists' ]));
+		$this->websitesService->setLimitGroups($limitGroups);
 	}
 
 	/**
