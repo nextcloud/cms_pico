@@ -72,7 +72,7 @@ class CoreRequestBuilder
 	 * Limit the request to a site.
 	 *
 	 * @param IQueryBuilder $qb
-	 * @param string        $userId
+	 * @param string        $site
 	 */
 	protected function limitToSite(IQueryBuilder $qb, string $site): void
 	{
