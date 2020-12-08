@@ -32,12 +32,13 @@ use OCA\CMSPico\Service\ThemesService;
 use OCA\CMSPico\Service\WebsitesService;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IURLGenerator;
+use OCP\IUserSession;
 use OCP\Settings\ISettings;
 
 class Personal implements ISettings
 {
-	/** @var string|null */
-	private $userId;
+	/** @var IUserSession */
+	private $userSession;
 
 	/** @var IURLGenerator */
 	private $urlGenerator;
@@ -54,20 +55,20 @@ class Personal implements ISettings
 	/**
 	 * Personal constructor.
 	 *
-	 * @param string|null      $userId
+	 * @param IUserSession     $userSession
 	 * @param IURLGenerator    $urlGenerator
 	 * @param WebsitesService  $websitesService
 	 * @param ThemesService    $themesService
 	 * @param TemplatesService $templatesService
 	 */
 	public function __construct(
-		?string $userId,
+		IUserSession $userSession,
 		IURLGenerator $urlGenerator,
 		WebsitesService $websitesService,
 		ThemesService $themesService,
 		TemplatesService $templatesService
 	) {
-		$this->userId = $userId;
+		$this->userSession = $userSession;
 		$this->urlGenerator = $urlGenerator;
 		$this->websitesService = $websitesService;
 		$this->themesService = $themesService;
@@ -79,6 +80,7 @@ class Personal implements ISettings
 	 */
 	public function getForm(): TemplateResponse
 	{
+		$userId = $this->userSession->getUser()->getUID();
 		$exampleSite = 'example_site';
 
 		$baseUrl = $this->urlGenerator->getBaseUrl() . '/index.php/apps/' . Application::APP_NAME . '/pico/';
@@ -96,7 +98,7 @@ class Personal implements ISettings
 			'siteRegex' => Website::SITE_REGEX,
 			'themes' => $this->themesService->getThemes(),
 			'templates' => $this->templatesService->getTemplates(),
-			'limitedUser' => !$this->websitesService->isUserAllowed($this->userId),
+			'limitedUser' => !$this->websitesService->isUserAllowed($userId),
 		];
 
 		return new TemplateResponse(Application::APP_NAME, 'settings.personal', $data);

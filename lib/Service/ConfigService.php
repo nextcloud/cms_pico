@@ -27,6 +27,7 @@ namespace OCA\CMSPico\Service;
 
 use OCA\CMSPico\AppInfo\Application;
 use OCP\IConfig;
+use OCP\IUserSession;
 
 class ConfigService
 {
@@ -77,19 +78,19 @@ class ConfigService
 	/** @var IConfig */
 	private $config;
 
-	/** @var string|null */
-	private $userId;
+	/** @var IUserSession */
+	private $userSession;
 
 	/**
 	 * ConfigService constructor.
 	 *
-	 * @param IConfig     $config
-	 * @param string|null $userId
+	 * @param IConfig      $config
+	 * @param IUserSession $userSession
 	 */
-	public function __construct(IConfig $config, ?string $userId)
+	public function __construct(IConfig $config, IUserSession $userSession)
 	{
 		$this->config = $config;
-		$this->userId = $userId;
+		$this->userSession = $userSession;
 	}
 
 	/**
@@ -128,8 +129,9 @@ class ConfigService
 	 */
 	public function getUserValue(string $key, string $userId = null)
 	{
+		$userId = $userId ?? $this->userSession->getUser()->getUID();
 		$defaultValue = $this->getDefaultValue($key);
-		return $this->config->getUserValue($userId ?? $this->userId, Application::APP_NAME, $key, $defaultValue);
+		return $this->config->getUserValue($userId, Application::APP_NAME, $key, $defaultValue);
 	}
 
 	/**
@@ -139,7 +141,8 @@ class ConfigService
 	 */
 	public function setUserValue(string $key, $value, string $userId = null): void
 	{
-		$this->config->setUserValue($userId ?? $this->userId, Application::APP_NAME, $key, $value);
+		$userId = $userId ?? $this->userSession->getUser()->getUID();
+		$this->config->setUserValue($userId, Application::APP_NAME, $key, $value);
 	}
 
 	/**
@@ -148,7 +151,8 @@ class ConfigService
 	 */
 	public function deleteUserValue(string $key, string $userId = null): void
 	{
-		$this->config->deleteUserValue($userId ?? $this->userId, Application::APP_NAME, $key);
+		$userId = $userId ?? $this->userSession->getUser()->getUID();
+		$this->config->deleteUserValue($userId, Application::APP_NAME, $key);
 	}
 
 	/**
