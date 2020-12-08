@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Listener;
 
-use OC\Encryption\Manager as EncryptionManager;
+use OCP\Encryption\IManager as EncryptionManager;
 use OCA\CMSPico\ExternalStorage\BackendProvider;
 use OCA\CMSPico\Service\WebsitesService;
 use OCA\Files_External\Service\BackendService;
