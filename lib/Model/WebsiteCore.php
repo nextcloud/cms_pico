@@ -383,7 +383,7 @@ class WebsiteCore implements \JsonSerializable
 	/**
 	 * @return array
 	 */
-	public function jsonSerialize(): array
+	public function getData(): array
 	{
 		return [
 			'id' => $this->getId(),
@@ -398,6 +398,14 @@ class WebsiteCore implements \JsonSerializable
 			'template' => $this->getTemplateSource(),
 			'page' => $this->getPage(),
 		];
+	}
+
+	/**
+	 * @return array
+	 */
+	public function jsonSerialize(): array
+	{
+		return $this->getData();
 	}
 
 	/**
