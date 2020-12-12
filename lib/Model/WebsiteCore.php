@@ -75,14 +75,12 @@ class WebsiteCore implements \JsonSerializable
 	/**
 	 * WebsiteCore constructor.
 	 *
-	 * @param array|string|null $data
+	 * @param array|null $data
 	 */
-	public function __construct($data = null)
+	public function __construct(array $data = null)
 	{
-		if (is_array($data)) {
+		if ($data !== null) {
 			$this->fromArray($data);
-		} elseif ($data !== null) {
-			$this->fromJSON($data);
 		}
 	}
 
@@ -442,15 +440,5 @@ class WebsiteCore implements \JsonSerializable
 			->setPage($data['page'] ?? '')
 			->setViewer($data['viewer'] ?? '')
 			->setProxyRequest(!empty($data['proxyRequest']));
-	}
-
-	/**
-	 * @param string $json
-	 *
-	 * @throws \UnexpectedValueException
-	 */
-	public function fromJSON(string $json): void
-	{
-		$this->fromArray(json_decode($json, true));
 	}
 }
