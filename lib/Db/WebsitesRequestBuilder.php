@@ -26,9 +26,36 @@ declare(strict_types=1);
 namespace OCA\CMSPico\Db;
 
 use OCP\DB\QueryBuilder\IQueryBuilder;
+use OCP\IDBConnection;
 
-class WebsitesRequestBuilder extends CoreRequestBuilder
+class WebsitesRequestBuilder
 {
+	/** @var string */
+	public const TABLE_WEBSITES = 'cms_pico_websites';
+
+	/** @var IDBConnection */
+	protected $dbConnection;
+
+	/**
+	 * CoreRequestBuilder constructor.
+	 *
+	 * @param IDBConnection $connection
+	 */
+	public function __construct(IDBConnection $connection)
+	{
+		$this->dbConnection = $connection;
+	}
+
+	/**
+	 * @return IQueryBuilder
+	 */
+	protected function getWebsitesSelectSql(): IQueryBuilder
+	{
+		return $this->dbConnection->getQueryBuilder()
+			->select('*')
+			->from(self::TABLE_WEBSITES);
+	}
+
 	/**
 	 * @return IQueryBuilder
 	 */
@@ -54,19 +81,52 @@ class WebsitesRequestBuilder extends CoreRequestBuilder
 	/**
 	 * @return IQueryBuilder
 	 */
-	protected function getWebsitesSelectSql(): IQueryBuilder
-	{
-		return $this->dbConnection->getQueryBuilder()
-			->select('*')
-			->from(self::TABLE_WEBSITES);
-	}
-
-	/**
-	 * @return IQueryBuilder
-	 */
 	protected function getWebsitesDeleteSql(): IQueryBuilder
 	{
 		return $this->dbConnection->getQueryBuilder()
 			->delete(self::TABLE_WEBSITES);
+	}
+
+	/**
+	 * Limit the request by id.
+	 *
+	 * @param IQueryBuilder $qb
+	 * @param int           $id
+	 */
+	protected function limitToId(IQueryBuilder $qb, int $id): void
+	{
+		$this->limitToDBField($qb, 'id', $id);
+	}
+
+	/**
+	 * Limit the request to a user.
+	 *
+	 * @param IQueryBuilder $qb
+	 * @param string        $userId
+	 */
+	protected function limitToUserId(IQueryBuilder $qb, string $userId): void
+	{
+		$this->limitToDBField($qb, 'user_id', $userId);
+	}
+
+	/**
+	 * Limit the request to a site.
+	 *
+	 * @param IQueryBuilder $qb
+	 * @param string        $site
+	 */
+	protected function limitToSite(IQueryBuilder $qb, string $site): void
+	{
+		$this->limitToDBField($qb, 'site', $site);
+	}
+
+	/**
+	 * @param IQueryBuilder $qb
+	 * @param string        $field
+	 * @param mixed         $value
+	 */
+	private function limitToDBField(IQueryBuilder $qb, string $field, $value): void
+	{
+		$qb->andWhere($qb->expr()->eq($field, $qb->createNamedParameter($value)));
 	}
 }
