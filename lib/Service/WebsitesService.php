@@ -47,6 +47,7 @@ use OCA\CMSPico\Exceptions\WebsiteNotPermittedException;
 use OCA\CMSPico\Model\PicoAsset;
 use OCA\CMSPico\Model\PicoPage;
 use OCA\CMSPico\Model\Website;
+use OCA\CMSPico\Model\WebsiteRequest;
 use OCP\Files\InvalidPathException;
 use OCP\IGroupManager;
 
@@ -271,17 +272,14 @@ class WebsitesService
 		}
 
 		$website = $this->getWebsiteFromSite($site);
-		$website->setProxyRequest($proxyRequest);
-		$website->setViewer($viewer ?: '');
-		$website->setPage($page);
-
 		$website->assertValidOwner();
 
 		if (!$website->getWebsiteFolder()->isLocal()) {
 			throw new FilesystemNotLocalException();
 		}
 
-		return $this->picoService->getPage($website);
+		$websiteRequest = new WebsiteRequest($website, $viewer, $page, $proxyRequest);
+		return $this->picoService->getPage($websiteRequest);
 	}
 
 	/**
@@ -311,16 +309,14 @@ class WebsitesService
 		}
 
 		$website = $this->getWebsiteFromSite($site);
-		$website->setViewer($viewer ?: '');
-		$website->setPage(PicoService::DIR_ASSETS . '/' . $asset);
-
 		$website->assertValidOwner();
 
 		if (!$website->getWebsiteFolder()->isLocal()) {
 			throw new FilesystemNotLocalException();
 		}
 
-		return $this->assetsService->getAsset($website);
+		$websiteRequest = new WebsiteRequest($website, $viewer, PicoService::DIR_ASSETS . '/' . $asset);
+		return $this->assetsService->getAsset($websiteRequest);
 	}
 
 	/**

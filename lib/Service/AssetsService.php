@@ -34,6 +34,7 @@ use OCA\CMSPico\Files\StorageFolder;
 use OCA\CMSPico\Model\PicoAsset;
 use OCA\CMSPico\Model\Website;
 use OCA\CMSPico\Model\WebsiteCore;
+use OCA\CMSPico\Model\WebsiteRequest;
 use OCP\Files\InvalidPathException;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
@@ -41,7 +42,7 @@ use OCP\Files\NotPermittedException;
 class AssetsService
 {
 	/**
-	 * @param Website $website
+	 * @param WebsiteRequest $websiteRequest
 	 *
 	 * @return PicoAsset
 	 * @throws WebsiteInvalidFilesystemException
@@ -50,10 +51,11 @@ class AssetsService
 	 * @throws AssetNotFoundException
 	 * @throws AssetNotPermittedException
 	 */
-	public function getAsset(Website $website): PicoAsset
+	public function getAsset(WebsiteRequest $websiteRequest): PicoAsset
 	{
 		try {
-			$asset = $website->getPage();
+			$website = $websiteRequest->getWebsite();
+			$asset = $websiteRequest->getPage();
 
 			$assetsDir = PicoService::DIR_ASSETS . '/';
 			$assetsDirLength = strlen($assetsDir);
@@ -61,7 +63,7 @@ class AssetsService
 				throw new InvalidPathException();
 			}
 
-			$website->assertViewerAccess($asset);
+			$websiteRequest->assertViewerAccess($asset);
 
 			$asset = substr($asset, $assetsDirLength);
 			if ($asset === '') {
@@ -113,14 +115,16 @@ class AssetsService
 	}
 
 	/**
-	 * @param Website $website
+	 * @param WebsiteRequest $websiteRequest
 	 *
 	 * @return string
 	 * @throws WebsiteInvalidFilesystemException
 	 */
-	public function getAssetsUrl(Website $website): string
+	public function getAssetsUrl(WebsiteRequest $websiteRequest): string
 	{
-		$assetsETag = $this->getAssetsFolder($website)->getOCNode()->getEtag();
-		return $website->getWebsiteUrl() . PicoService::DIR_ASSETS . '-' . $assetsETag . '/';
+		$website = $websiteRequest->getWebsite();
+		$websiteUrl = $website->getWebsiteUrl($websiteRequest->isProxyRequest());
+		$assetsETag = $this->getAssetsFolder($websiteRequest->getWebsite())->getOCNode()->getEtag();
+		return $websiteUrl . PicoService::DIR_ASSETS . '-' . $assetsETag . '/';
 	}
 }

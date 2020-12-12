@@ -37,6 +37,7 @@ use OCA\CMSPico\Exceptions\WebsiteNotPermittedException;
 use OCA\CMSPico\Files\StorageFolder;
 use OCA\CMSPico\Model\PicoPage;
 use OCA\CMSPico\Model\Website;
+use OCA\CMSPico\Model\WebsiteRequest;
 use OCA\CMSPico\Pico;
 use OCP\Files\InvalidPathException;
 use OCP\Files\NotFoundException;
@@ -111,7 +112,7 @@ class PicoService
 	}
 
 	/**
-	 * @param Website $website
+	 * @param WebsiteRequest $websiteRequest
 	 *
 	 * @return PicoPage
 	 * @throws WebsiteInvalidFilesystemException
@@ -123,12 +124,13 @@ class PicoService
 	 * @throws PageNotPermittedException
 	 * @throws PicoRuntimeException
 	 */
-	public function getPage(Website $website): PicoPage
+	public function getPage(WebsiteRequest $websiteRequest): PicoPage
 	{
 		try {
-			$page = $website->getPage();
+			$website = $websiteRequest->getWebsite();
 
-			$website->assertViewerAccess(self::DIR_CONTENT . '/' . ($page ?: 'index') . self::CONTENT_EXT);
+			$page = $websiteRequest->getPage();
+			$websiteRequest->assertViewerAccess(self::DIR_CONTENT . '/' . ($page ?: 'index') . self::CONTENT_EXT);
 
 			$this->themesService->assertValidTheme($website->getTheme());
 
@@ -141,7 +143,7 @@ class PicoService
 			);
 
 			try {
-				$this->setupPico($website, $pico, $page);
+				$this->setupPico($websiteRequest, $pico);
 				$this->loadPicoPlugins($pico);
 
 				$output = $pico->run();
@@ -155,10 +157,10 @@ class PicoService
 				throw $exception;
 			}
 
-			$picoPage = new PicoPage($website, $pico, $output);
+			$picoPage = new PicoPage($websiteRequest, $pico, $output);
 
 			$picoPagePath = self::DIR_CONTENT . '/' . $picoPage->getRelativePath() . self::CONTENT_EXT;
-			$website->assertViewerAccess($picoPagePath, $picoPage->getMeta());
+			$websiteRequest->assertViewerAccess($picoPagePath, $picoPage->getMeta());
 		} catch (InvalidPathException $e) {
 			throw new PageInvalidPathException($e);
 		} catch (NotFoundException $e) {
@@ -171,21 +173,22 @@ class PicoService
 	}
 
 	/**
-	 * @param Website $website
-	 * @param Pico    $pico
-	 * @param string  $page
+	 * @param WebsiteRequest $websiteRequest
+	 * @param Pico           $pico
 	 *
 	 * @throws WebsiteInvalidFilesystemException
 	 */
-	private function setupPico(Website $website, Pico $pico, string $page): void
+	private function setupPico(WebsiteRequest $websiteRequest, Pico $pico): void
 	{
-		$pico->setRequestUrl($page);
-		$pico->setNextcloudWebsite($website);
+		$website = $websiteRequest->getWebsite();
+
+		$pico->setRequestUrl($websiteRequest->getPage());
+		$pico->setNextcloudWebsite($websiteRequest);
 
 		$pico->setConfig(
 			[
 				'site_title'     => $website->getName(),
-				'base_url'       => $website->getWebsiteUrl(),
+				'base_url'       => $this->getWebsiteUrl($websiteRequest),
 				'rewrite_url'    => true,
 				'debug'          => \OC::$server->getConfig()->getSystemValue('debug', false),
 				'timezone'       => $website->getTimeZone(),
@@ -194,7 +197,7 @@ class PicoService
 				'content_dir'    => $this->getContentPath($website),
 				'content_ext'    => self::CONTENT_EXT,
 				'assets_dir'     => $this->assetsService->getAssetsPath($website),
-				'assets_url'     => $this->assetsService->getAssetsUrl($website),
+				'assets_url'     => $this->assetsService->getAssetsUrl($websiteRequest),
 				'plugins_url'    => $this->pluginsService->getPluginsUrl(),
 				'nextcloud_site' => $website->getSite(),
 			]
@@ -314,5 +317,16 @@ class PicoService
 	public function getConfigPath(): string
 	{
 		return $this->fileService->getAppDataFolderPath(self::DIR_CONFIG);
+	}
+
+	/**
+	 * @param WebsiteRequest $websiteRequest
+	 *
+	 * @return string
+	 */
+	public function getWebsiteUrl(WebsiteRequest $websiteRequest): string
+	{
+		$website = $websiteRequest->getWebsite();
+		return $website->getWebsiteUrl($websiteRequest->isProxyRequest());
 	}
 }

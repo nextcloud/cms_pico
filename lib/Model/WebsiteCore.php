@@ -43,10 +43,10 @@ class WebsiteCore implements \JsonSerializable
 	private $name;
 
 	/** @var string */
-	private $theme = 'default';
+	private $site;
 
 	/** @var string */
-	private $site;
+	private $theme = 'default';
 
 	/** @var int */
 	private $type = self::TYPE_PUBLIC;
@@ -57,19 +57,10 @@ class WebsiteCore implements \JsonSerializable
 	/** @var string */
 	private $path;
 
-	/** @var string */
-	private $page;
-
 	/** @var int */
 	private $creation;
 
-	/** @var string */
-	private $viewer;
-
-	/** @var bool */
-	private $proxyRequest;
-
-	/** @var string */
+	/** @var string|null */
 	private $templateSource;
 
 	/**
@@ -314,68 +305,11 @@ class WebsiteCore implements \JsonSerializable
 	}
 
 	/**
-	 * @return string
+	 * @return string|null
 	 */
-	public function getTemplateSource(): string
+	public function getTemplateSource(): ?string
 	{
 		return $this->templateSource;
-	}
-
-	/**
-	 * @param string $page
-	 *
-	 * @return $this
-	 */
-	public function setPage(string $page): self
-	{
-		$this->page = $page;
-		return $this;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getPage(): string
-	{
-		return $this->page;
-	}
-
-	/**
-	 * @param string $viewer
-	 *
-	 * @return $this
-	 */
-	public function setViewer(string $viewer): self
-	{
-		$this->viewer = $viewer;
-		return $this;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getViewer(): string
-	{
-		return $this->viewer;
-	}
-
-	/**
-	 * @param bool $proxyRequest
-	 *
-	 * @return $this
-	 */
-	public function setProxyRequest(bool $proxyRequest): self
-	{
-		$this->proxyRequest = $proxyRequest;
-		return $this;
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function getProxyRequest(): bool
-	{
-		return $this->proxyRequest;
 	}
 
 	/**
@@ -394,7 +328,6 @@ class WebsiteCore implements \JsonSerializable
 			'path' => $this->getPath(),
 			'creation' => $this->getCreation(),
 			'template' => $this->getTemplateSource(),
-			'page' => $this->getPage(),
 		];
 	}
 
@@ -435,10 +368,10 @@ class WebsiteCore implements \JsonSerializable
 			->setType(isset($data['type']) ? (int) $data['type'] : self::TYPE_PUBLIC)
 			->setOptions($options)
 			->setPath($data['path'])
-			->setCreation($creation)
-			->setTemplateSource($data['template'] ?? '')
-			->setPage($data['page'] ?? '')
-			->setViewer($data['viewer'] ?? '')
-			->setProxyRequest(!empty($data['proxyRequest']));
+			->setCreation($creation);
+
+		if (!empty($data['template'])) {
+			$this->setTemplateSource($data['template']);
+		}
 	}
 }
