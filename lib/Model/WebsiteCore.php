@@ -36,7 +36,7 @@ class WebsiteCore implements \JsonSerializable
 	/** @var int */
 	private $id;
 
-	/** @var string|null */
+	/** @var string */
 	private $userId;
 
 	/** @var string */
@@ -104,20 +104,20 @@ class WebsiteCore implements \JsonSerializable
 	}
 
 	/**
-	 * @param string|null $userId
+	 * @param string $userId
 	 *
 	 * @return $this
 	 */
-	public function setUserId(?string $userId): self
+	public function setUserId(string $userId): self
 	{
 		$this->userId = $userId;
 		return $this;
 	}
 
 	/**
-	 * @return string|null
+	 * @return string
 	 */
-	public function getUserId(): ?string
+	public function getUserId(): string
 	{
 		return $this->userId;
 	}
