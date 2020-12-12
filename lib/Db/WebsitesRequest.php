@@ -46,6 +46,8 @@ class WebsitesRequest extends WebsitesRequestBuilder
 			->setValue('path', $qb->createNamedParameter($website->getPath()));
 
 		$qb->execute();
+
+		$website->setId($qb->getLastInsertId());
 	}
 
 	/**
