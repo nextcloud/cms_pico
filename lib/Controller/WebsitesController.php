@@ -114,6 +114,8 @@ class WebsitesController extends Controller
 				->setPath($data['path'] ?? '')
 				->setTemplateSource($data['template'] ?? '');
 
+			$website->assertValidOwner();
+
 			$this->websitesService->createWebsite($website);
 
 			return $this->getPersonalWebsites();

@@ -113,6 +113,9 @@ class WebsitesService
 	/**
 	 * Creates a new website.
 	 *
+	 * Warning: This method does not check whether the user is allowed to create websites!
+	 * Please use {@see Website::assertValidOwner()} beforehand.
+	 *
 	 * @param Website $website
 	 *
 	 * @throws WebsiteExistsException
@@ -125,7 +128,6 @@ class WebsitesService
 	 */
 	public function createWebsite(Website $website): void
 	{
-		$website->assertValidOwner();
 		$website->assertValidName();
 		$website->assertValidSite();
 		$website->assertValidPath();
