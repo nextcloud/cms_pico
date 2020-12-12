@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Db;
 
-use OCA\CMSPico\Model\Website;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 
 class WebsitesRequestBuilder extends CoreRequestBuilder
@@ -69,15 +68,5 @@ class WebsitesRequestBuilder extends CoreRequestBuilder
 	{
 		return $this->dbConnection->getQueryBuilder()
 			->delete(self::TABLE_WEBSITES);
-	}
-
-	/**
-	 * @param array $data
-	 *
-	 * @return Website
-	 */
-	protected function parseWebsitesSelectSql(array $data): Website
-	{
-		return new Website($data);
 	}
 }
