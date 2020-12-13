@@ -26,6 +26,7 @@ OC.L10N.register(
     "Name" : "Име",
     "Path" : "Патека",
     "Theme" : "Тема",
+    "Created" : "Креирано",
     "Actions" : "Акции",
     "Address" : "Адреса",
     "Loading…" : "Се вчитува…"
