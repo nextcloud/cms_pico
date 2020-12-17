@@ -118,6 +118,7 @@ class WebsitesService
 	 * Please use {@see Website::assertValidOwner()} beforehand.
 	 *
 	 * @param Website $website
+	 * @param string  $templateName
 	 *
 	 * @throws WebsiteExistsException
 	 * @throws WebsiteInvalidDataException
@@ -127,13 +128,12 @@ class WebsitesService
 	 * @throws TemplateNotFoundException
 	 * @throws TemplateNotCompatibleException
 	 */
-	public function createWebsite(Website $website): void
+	public function createWebsite(Website $website, string $templateName): void
 	{
 		$website->assertValidName();
 		$website->assertValidSite();
 		$website->assertValidPath();
 		$website->assertValidTheme();
-		$website->assertValidTemplate();
 
 		try {
 			$website = $this->websiteRequest->getWebsiteFromSite($website->getSite());
@@ -142,7 +142,9 @@ class WebsitesService
 			// in fact we want the website not to exist yet
 		}
 
-		$this->templatesService->installTemplate($website);
+		$this->templatesService->assertValidTemplate($templateName);
+		$this->templatesService->installTemplate($website, $templateName);
+
 		$this->websiteRequest->create($website);
 	}
 
@@ -176,11 +178,6 @@ class WebsitesService
 		}
 		if ($website->getTheme() !== $originalWebsite->getTheme()) {
 			$website->assertValidTheme();
-		}
-		if ($website->getTemplateSource()) {
-			if ($website->getTemplateSource() !== $originalWebsite->getTemplateSource()) {
-				$website->assertValidTemplate();
-			}
 		}
 
 		$this->websiteRequest->update($website);

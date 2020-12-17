@@ -60,9 +60,6 @@ class WebsiteCore implements \JsonSerializable
 	/** @var int */
 	private $creation;
 
-	/** @var string|null */
-	private $templateSource;
-
 	/**
 	 * WebsiteCore constructor.
 	 *
@@ -294,25 +291,6 @@ class WebsiteCore implements \JsonSerializable
 	}
 
 	/**
-	 * @param string $source
-	 *
-	 * @return $this
-	 */
-	public function setTemplateSource(string $source): self
-	{
-		$this->templateSource = $source;
-		return $this;
-	}
-
-	/**
-	 * @return string|null
-	 */
-	public function getTemplateSource(): ?string
-	{
-		return $this->templateSource;
-	}
-
-	/**
 	 * @return array
 	 */
 	public function getData(): array
@@ -327,7 +305,6 @@ class WebsiteCore implements \JsonSerializable
 			'options' => $this->getOptions(),
 			'path' => $this->getPath(),
 			'creation' => $this->getCreation(),
-			'template' => $this->getTemplateSource(),
 		];
 	}
 
@@ -369,9 +346,5 @@ class WebsiteCore implements \JsonSerializable
 			->setOptions($options)
 			->setPath($data['path'])
 			->setCreation($creation);
-
-		if (!empty($data['template'])) {
-			$this->setTemplateSource($data['template']);
-		}
 	}
 }

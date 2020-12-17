@@ -224,15 +224,6 @@ class Website extends WebsiteCore
 	}
 
 	/**
-	 * @throws TemplateNotFoundException
-	 * @throws TemplateNotCompatibleException
-	 */
-	public function assertValidTemplate(): void
-	{
-		$this->templatesService->assertValidTemplate($this->getTemplateSource());
-	}
-
-	/**
 	 * @param string $userId
 	 *
 	 * @throws WebsiteForeignOwnerException

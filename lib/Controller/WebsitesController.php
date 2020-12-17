@@ -111,12 +111,11 @@ class WebsitesController extends Controller
 				->setUserId($userId)
 				->setSite($data['site'] ?? '')
 				->setTheme($data['theme'] ?? '')
-				->setPath($data['path'] ?? '')
-				->setTemplateSource($data['template'] ?? '');
+				->setPath($data['path'] ?? '');
 
 			$website->assertValidOwner();
 
-			$this->websitesService->createWebsite($website);
+			$this->websitesService->createWebsite($website, $data['template'] ?? '');
 
 			return $this->getPersonalWebsites();
 		} catch (\Exception $e) {
