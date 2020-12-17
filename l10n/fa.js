@@ -2,8 +2,11 @@ OC.L10N.register(
     "cms_pico",
     {
     "Copy" : "کپی کردن",
+    "Confirm website deletion" : "تایید حذف وب‌سایت",
+    "Choose website directory" : "انتخاب پوشه وب‌سایت",
     "Abort" : "صرف نظر",
     "Save" : "ذخیره",
+    "Plugin not found." : "افزونه یافت نشد.",
     "Location" : "محل",
     "Access forbidden" : "اجازه دسترسی به مناطق ممنوعه را ندارید",
     "Not found" : "پیدا نشد",
