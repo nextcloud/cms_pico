@@ -321,7 +321,7 @@ class WebsiteCore implements \JsonSerializable
 	 *
 	 * @throws \UnexpectedValueException
 	 */
-	public function fromArray(array $data): void
+	private function fromArray(array $data): void
 	{
 		if (!isset($data['user_id']) || !isset($data['name']) || !isset($data['site']) || !isset($data['path'])) {
 			throw new \UnexpectedValueException();
