@@ -29,6 +29,7 @@
     "Website not found." : "Webová stránka sa nenašla.",
     "Local (unencrypted)" : "Miestne (nešifrované)",
     "Location" : "Umiestnenie",
+    "Incompatible plugin: Plugin file \"{file}\" not found." : "Nekompatibilný doplnok: Doplnok \"{file} nebol nájdený",
     "The name of the website must be longer." : "Názov webovej stránky musí byť dlhší.",
     "The name of the website is too long." : "Názov webovej stránky je príliš dlhý.",
     "The identifier of the website must be longer." : "Identifikátor webovej stránky musí byť dlhší.",
