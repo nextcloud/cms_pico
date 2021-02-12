@@ -217,7 +217,7 @@ class PicoService
 		foreach ($this->pluginsService->getPlugins() as $pluginData) {
 			if ($pluginData['compat']) {
 				$pluginFile = $pluginData['name'] . '/' . $pluginData['name'] . '.php';
-				$includeClosure($this->pluginsService->getPluginsPath() . '/' . $pluginFile);
+				$includeClosure($this->pluginsService->getPluginsPath() . $pluginFile);
 
 				$pico->loadPlugin($pluginData['name']);
 			}

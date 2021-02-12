@@ -353,11 +353,11 @@ class WebsitesService
 		}
 
 		$limitGroups = $this->getLimitGroups();
-		if (empty($limitGroups)) {
+		if (!$limitGroups) {
 			return true;
 		}
 
-		foreach ($this->getLimitGroups() as $groupId) {
+		foreach ($limitGroups as $groupId) {
 			if ($this->groupManager->isInGroup($userId, $groupId)) {
 				return true;
 			}

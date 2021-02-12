@@ -26,8 +26,6 @@ declare(strict_types=1);
 namespace OCA\CMSPico\Model;
 
 use OCA\CMSPico\AppInfo\Application;
-use OCA\CMSPico\Exceptions\TemplateNotCompatibleException;
-use OCA\CMSPico\Exceptions\TemplateNotFoundException;
 use OCA\CMSPico\Exceptions\ThemeNotCompatibleException;
 use OCA\CMSPico\Exceptions\ThemeNotFoundException;
 use OCA\CMSPico\Exceptions\WebsiteForeignOwnerException;

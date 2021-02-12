@@ -29,7 +29,6 @@ use OCA\CMSPico\Listener\ExternalStorageBackendEventListener;
 use OCA\CMSPico\Listener\GroupDeletedEventListener;
 use OCA\CMSPico\Listener\UserDeletedEventListener;
 use OCP\App\AppPathNotFoundException;
-use OCP\App\IAppManager;
 use OCP\AppFramework\App;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Group\Events\GroupDeletedEvent;
@@ -41,11 +40,11 @@ class Application extends App
 	public const APP_NAME = 'cms_pico';
 
 	/**
-	 * @param array $params
+	 * @param array $urlParams
 	 */
-	public function __construct(array $params = [])
+	public function __construct(array $urlParams = [])
 	{
-		parent::__construct(self::APP_NAME, $params);
+		parent::__construct(self::APP_NAME, $urlParams);
 	}
 
 	/**
@@ -72,7 +71,6 @@ class Application extends App
 	public static function getAppPath(): string
 	{
 		try {
-			/** @var IAppManager $appManager */
 			$appManager = \OC::$server->getAppManager();
 			return $appManager->getAppPath(self::APP_NAME);
 		} catch (AppPathNotFoundException $e) {
@@ -88,7 +86,6 @@ class Application extends App
 	public static function getAppWebPath(): string
 	{
 		try {
-			/** @var IAppManager $appManager */
 			$appManager = \OC::$server->getAppManager();
 			return $appManager->getAppWebPath(self::APP_NAME);
 		} catch (AppPathNotFoundException $e) {
@@ -104,7 +101,6 @@ class Application extends App
 	public static function getAppVersion(): string
 	{
 		try {
-			/** @var IAppManager $appManager */
 			$appManager = \OC::$server->getAppManager();
 			return $appManager->getAppVersion(self::APP_NAME);
 		} catch (AppPathNotFoundException $e) {
