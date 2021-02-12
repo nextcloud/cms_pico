@@ -72,6 +72,9 @@ class TestUsersManager extends TestManager
 			if ($user === false) {
 				throw new \RuntimeException(sprintf('Could not create test user "%s"', $uid));
 			}
+
+			\OC::$server->getUserFolder($uid);
+			\OC_Util::setupFS($uid);
 		}
 
 		$this->users[$id] = $user;
