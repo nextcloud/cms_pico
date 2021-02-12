@@ -21,5 +21,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/../../../tests/bootstrap.php';
+use OCA\CMSPico\AppInfo\Application;
+
+define('PHPUNIT_RUN', 1);
+
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../../../lib/base.php';
+
+OC_App::loadApp(Application::APP_NAME);
+OC_Hook::clear();
