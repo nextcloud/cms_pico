@@ -87,7 +87,7 @@ abstract class AbstractStorageNode extends AbstractNode implements NodeInterface
 			}
 
 			/** @var OCFolder $ocNode */
-			$ocNode = $this->node->copy($targetPath->getOCNode()->getPath() . '/' . ($name ?: $this->getName()));
+			$ocNode = $this->node->copy($targetPath->getOCNode()->getPath() . '/' . ($name ?? $this->getName()));
 			return $this->repackNode($ocNode, $targetPath->getPath());
 		} else {
 			return parent::copy($targetPath, $name);
@@ -105,7 +105,7 @@ abstract class AbstractStorageNode extends AbstractNode implements NodeInterface
 			}
 
 			/** @var OCFolder $ocNode */
-			$ocNode = $this->node->move($targetPath->getOCNode()->getPath() . '/' . ($name ?: $this->getName()));
+			$ocNode = $this->node->move($targetPath->getOCNode()->getPath() . '/' . ($name ?? $this->getName()));
 			return $this->repackNode($ocNode, $targetPath->getPath());
 		} else {
 			return parent::move($targetPath, $name);
