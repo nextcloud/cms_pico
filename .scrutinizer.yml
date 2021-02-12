@@ -48,7 +48,7 @@ build:
           - php ./occ app:check-code $APP_NAME -c deprecation
 
           - cd ~/nextcloud/apps/$APP_NAME
-          - command: php ./vendor/bin/phpunit --configuration ./tests/phpunit.xml --coverage-clover ./tests/clover.xml
+          - command: php ./vendor/bin/phpunit --configuration ./tests/phpunit.xml --coverage-clover ~/build/tests/clover.xml
             idle_timeout: 1200
             coverage:
               file: tests/clover.xml
