@@ -377,7 +377,7 @@ class WebsitesService
 			throw new \UnexpectedValueException();
 		}
 
-		$this->configService->setAppValue(ConfigService::LINK_MODE, $linkMode);
+		$this->configService->setAppValue(ConfigService::LINK_MODE, (string) $linkMode);
 	}
 
 	/**

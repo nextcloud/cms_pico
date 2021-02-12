@@ -61,25 +61,14 @@ class ConfigService
 	/** @var string */
 	public const LINK_MODE = 'link_mode';
 
-	/** @var array<string,mixed> */
-	private $defaults = [
-		self::SYSTEM_TEMPLATES => '',
-		self::CUSTOM_TEMPLATES => '',
-		self::SYSTEM_THEMES => '',
-		self::CUSTOM_THEMES => '',
-		self::THEMES_ETAG => '',
-		self::SYSTEM_PLUGINS => '',
-		self::CUSTOM_PLUGINS => '',
-		self::PLUGINS_ETAG => '',
-		self::LIMIT_GROUPS => '',
-		self::LINK_MODE => WebsitesService::LINK_MODE_LONG,
-	];
-
 	/** @var IConfig */
-	private $config;
+	protected $config;
 
 	/** @var IUserSession */
-	private $userSession;
+	protected $userSession;
+
+	/** @var array<string,string> */
+	private $defaults;
 
 	/**
 	 * ConfigService constructor.
@@ -91,14 +80,27 @@ class ConfigService
 	{
 		$this->config = $config;
 		$this->userSession = $userSession;
+
+		$this->defaults = [
+			self::SYSTEM_TEMPLATES => '',
+			self::CUSTOM_TEMPLATES => '',
+			self::SYSTEM_THEMES => '',
+			self::CUSTOM_THEMES => '',
+			self::THEMES_ETAG => '',
+			self::SYSTEM_PLUGINS => '',
+			self::CUSTOM_PLUGINS => '',
+			self::PLUGINS_ETAG => '',
+			self::LIMIT_GROUPS => '',
+			self::LINK_MODE => (string) WebsitesService::LINK_MODE_LONG,
+		];
 	}
 
 	/**
 	 * @param string $key
 	 *
-	 * @return mixed
+	 * @return string
 	 */
-	public function getAppValue(string $key)
+	public function getAppValue(string $key): string
 	{
 		$defaultValue = $this->getDefaultValue($key);
 		return $this->config->getAppValue(Application::APP_NAME, $key, $defaultValue);
@@ -106,9 +108,9 @@ class ConfigService
 
 	/**
 	 * @param string $key
-	 * @param mixed $value
+	 * @param string $value
 	 */
-	public function setAppValue(string $key, $value): void
+	public function setAppValue(string $key, string $value): void
 	{
 		$this->config->setAppValue(Application::APP_NAME, $key, $value);
 	}
@@ -119,40 +121,6 @@ class ConfigService
 	public function deleteAppValue(string $key): void
 	{
 		$this->config->deleteAppValue(Application::APP_NAME, $key);
-	}
-
-	/**
-	 * @param string      $key
-	 * @param string|null $userId
-	 *
-	 * @return mixed
-	 */
-	public function getUserValue(string $key, string $userId = null)
-	{
-		$userId = $userId ?? $this->userSession->getUser()->getUID();
-		$defaultValue = $this->getDefaultValue($key);
-		return $this->config->getUserValue($userId, Application::APP_NAME, $key, $defaultValue);
-	}
-
-	/**
-	 * @param string      $key
-	 * @param mixed       $value
-	 * @param string|null $userId
-	 */
-	public function setUserValue(string $key, $value, string $userId = null): void
-	{
-		$userId = $userId ?? $this->userSession->getUser()->getUID();
-		$this->config->setUserValue($userId, Application::APP_NAME, $key, $value);
-	}
-
-	/**
-	 * @param string      $key
-	 * @param string|null $userId
-	 */
-	public function deleteUserValue(string $key, string $userId = null): void
-	{
-		$userId = $userId ?? $this->userSession->getUser()->getUID();
-		$this->config->deleteUserValue($userId, Application::APP_NAME, $key);
 	}
 
 	/**
@@ -169,9 +137,9 @@ class ConfigService
 	/**
 	 * @param string $key
 	 *
-	 * @return mixed
+	 * @return string
 	 */
-	private function getDefaultValue(string $key)
+	protected function getDefaultValue(string $key): string
 	{
 		return $this->defaults[$key] ?? '';
 	}
