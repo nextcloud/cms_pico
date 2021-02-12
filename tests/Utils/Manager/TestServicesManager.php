@@ -61,10 +61,27 @@ class TestServicesManager extends TestManager
 	public function overwriteService(string $name, $newService): self
 	{
 		if (!isset(self::$originalServices[$name])) {
+			if (substr_compare($name, 'OCA\\CMSPico\\', 0, 12) !== 0) {
+				throw new \RuntimeException(sprintf('Unable to overwrite service "%s": Permission denied', $name));
+			}
+
+			try {
+				$container = \OC::$server->getRegisteredAppContainer(Application::APP_NAME);
+			} catch (QueryException $e) {
+				// load application container
+				\OC::$server->query(Application::class);
+
+				try {
+					$container = \OC::$server->getRegisteredAppContainer(Application::APP_NAME);
+				} catch (QueryException $e) {
+					$errorTemplate = 'Unable to overwrite service "%s": Invalid app container';
+					throw new \RuntimeException(sprintf($errorTemplate, $name));
+				}
+			}
+
 			self::$originalServices[$name] = \OC::$server->query($name);
 			self::$serviceUsage[$name] = 1;
 
-			$container = \OC::$server->getAppContainerForService($name) ?? \OC::$server;
 			$container->registerService($name, static function () use ($name) {
 				$isTestCase = false;
 				foreach (debug_backtrace(0, 0) as $frame) {
