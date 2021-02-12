@@ -87,8 +87,12 @@
 			this.websiteBaseUrl = options.websiteBaseUrl + ((options.websiteBaseUrl.substr(-1) !== '/') ? '/' : '');
 
 			var signature = 'OCA.CMSPico.WebsiteList.initialize()';
-			if (!this.$itemTemplate.length) throw signature + ': No valid item template given';
-			if (this.websiteBaseUrl === '/') throw signature + ': No valid website base URL given';
+			if (!this.$itemTemplate.length) {
+				throw signature + ': No valid item template given';
+			}
+			if (this.websiteBaseUrl === '/') {
+				throw signature + ': No valid website base URL given';
+			}
 
 			this._init();
 		},

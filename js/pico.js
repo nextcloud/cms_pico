@@ -90,10 +90,18 @@
 			this.$errorTemplate = $(options.errorTemplate);
 
 			var signature = 'OCA.CMSPico.List.initialize()';
-			if (!this.route) throw signature + ': No route given';
-			if (!this.$template.length) throw signature + ': No valid list template given';
-			if (!this.$loadingTemplate.length) throw signature + ': No valid loading template given';
-			if (!this.$errorTemplate.length) throw signature + ': No valid error template given';
+			if (!this.route) {
+				throw signature + ': No route given';
+			}
+			if (!this.$template.length) {
+				throw signature + ': No valid list template given';
+			}
+			if (!this.$loadingTemplate.length) {
+				throw signature + ': No valid loading template given';
+			}
+			if (!this.$errorTemplate.length) {
+				throw signature + ': No valid error template given';
+			}
 		},
 
 		/**
@@ -222,8 +230,9 @@
 
 			this.route = options.route;
 
-			var signature = 'OCA.CMSPico.Form.initialize()';
-			if (!this.route) throw signature + ': No route given';
+			if (!this.route) {
+				throw 'OCA.CMSPico.Form.initialize(): No route given';
+			}
 		},
 
 		/**
@@ -344,8 +353,9 @@
 
 			this.dialogId = 'picocms-dialog-' + ++OCA.CMSPico.Dialog.dialogId;
 
-			var signature = 'OCA.CMSPico.Dialog.initialize()';
-			if (!this.title) throw signature + ': No dialog title given';
+			if (!this.title) {
+				throw 'OCA.CMSPico.Dialog.initialize(): No dialog title given';
+			}
 		},
 
 		/**

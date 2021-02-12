@@ -91,7 +91,7 @@ class Website extends WebsiteCore
 	/**
 	 * Website constructor.
 	 *
-	 * @param array|string|null $data
+	 * @param array|null $data
 	 */
 	public function __construct($data = null)
 	{

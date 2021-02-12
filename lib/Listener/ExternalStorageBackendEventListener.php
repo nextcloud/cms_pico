@@ -33,7 +33,7 @@ use OCP\EventDispatcher\IEventListener;
 
 class ExternalStorageBackendEventListener implements IEventListener
 {
-	/** @var WebsitesService */
+	/** @var EncryptionManager */
 	private $encryptionManager;
 
 	/**

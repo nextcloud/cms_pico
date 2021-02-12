@@ -353,7 +353,7 @@ class WebsitesService
 		}
 
 		$limitGroups = $this->getLimitGroups();
-		if (!$limitGroups) {
+		if (empty($limitGroups)) {
 			return true;
 		}
 
