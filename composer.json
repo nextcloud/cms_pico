@@ -21,7 +21,7 @@
     "picocms/pico-deprecated": "^2.1",
     "picocms/composer-installer": "^1.0",
     "xemlock/htmlpurifier-html5": "~0.1.11",
-    "symfony/yaml" : "^2.8|^3.4|^4.4"
+    "symfony/yaml" : "^2.8|^3.4|^4.4|^5.1"
   },
   "extra": {
     "pico-theme-dir": "appdata/themes/",
