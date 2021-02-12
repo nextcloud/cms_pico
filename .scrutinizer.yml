@@ -16,13 +16,12 @@ build:
       dependencies:
         override:
           - curl -L -o ~/nextcloud.tar.bz2 https://download.nextcloud.com/server/$NEXTCLOUD.tar.bz2
-          - curl -L -o ~/phpunit.phar https://phar.phpunit.de/phpunit-6.phar
       project_setup:
         override:
           - php --info
           - composer --version
 
-          - make build version=latest
+          - make build-dev version=latest
           - cp build/$APP_NAME-latest.tar.gz ~/$APP_NAME.tar.gz
 
           - tar xfjv ~/nextcloud.tar.bz2
@@ -48,7 +47,7 @@ build:
           - php ./occ app:check-code $APP_NAME -c deprecation
 
           - cd ~/nextcloud/apps/$APP_NAME
-          - command: php ~/phpunit.phar --configuration tests/phpunit.xml --coverage-clover ~/build/tests/clover.xml
+          - command: php ./vendor/bin/phpunit --configuration ./tests/phpunit.xml --coverage-clover ./tests/clover.xml
             idle_timeout: 1200
             coverage:
               file: tests/clover.xml
@@ -63,13 +62,12 @@ build:
       dependencies: &dependencies
         override:
           - curl -L -o ~/nextcloud.tar.bz2 https://download.nextcloud.com/server/$NEXTCLOUD.tar.bz2
-          - curl -L -o ~/phpunit.phar https://phar.phpunit.de/phpunit-6.phar
       project_setup: &setup
         override:
           - php --info
           - composer --version
 
-          - make build version=latest
+          - make build-dev version=latest
           - cp build/$APP_NAME-latest.tar.gz ~/$APP_NAME.tar.gz
 
           - tar xfjv ~/nextcloud.tar.bz2 -C ~
@@ -88,7 +86,7 @@ build:
           - php ./occ app:check-code $APP_NAME -c deprecation
 
           - cd ~/nextcloud/apps/$APP_NAME
-          - php ~/phpunit.phar --configuration tests/phpunit.xml
+          - php ./vendor/bin/phpunit --configuration ./tests/phpunit.xml
 
     test-nc18-php73:
       environment:

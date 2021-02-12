@@ -2,8 +2,7 @@
 /**
  * CMS Pico - Create websites using Pico CMS for Nextcloud.
  *
- * @copyright Copyright (c) 2017, Maxence Lange (<maxence@artificial-owl.com>)
- * @copyright Copyright (c) 2019, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
+ * @copyright Copyright (c) 2021, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -21,5 +20,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/../../../tests/bootstrap.php';
-require_once __DIR__ . '/../vendor/autoload.php';
+declare(strict_types=1);
+
+namespace OCA\CMSPico\Tests\Utils\Mocks\Service;
+
+use OCA\CMSPico\Files\LocalFolder;
+
+class PluginsService extends \OCA\CMSPico\Service\PluginsService
+{
+	public function getPluginsFolder(bool $renewETag = false, bool $forceRenewETag = false): LocalFolder
+	{
+		return parent::getPluginsFolder(false, false);
+	}
+}

@@ -1,0 +1,5 @@
+Title: PHPUnit Test
+Test: foobar
+
+<p>This is test content for PHPUnit.
+This is <code>index.md</code> in the <code>test</code> template.</p>

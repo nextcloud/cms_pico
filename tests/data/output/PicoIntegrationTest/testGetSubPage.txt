@@ -1,0 +1,5 @@
+Title: PHPUnit Test Sub Page
+Test: 42
+
+<p>This is test content for PHPUnit.
+This is <code>sub/page.md</code> in the <code>test</code> template.</p>
