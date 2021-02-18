@@ -7,6 +7,7 @@ OC.L10N.register(
     "Location" : "Местоположение",
     "Pico CMS" : "Pico CMS",
     "Access forbidden" : "Достъпът е забранен",
+    "Not found" : "Не е намерен",
     "Internal Server Error" : "Вътрешно сървърна грешка",
     "The server was unable to complete your request." : "Сървърът не можа да изпълни заявката ви.",
     "If this happens again, please send the technical details below to the server administrator." : "Ако грешката се повтори, моля изпратете техническите данни на администратора.",
