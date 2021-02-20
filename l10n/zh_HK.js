@@ -46,7 +46,7 @@ OC.L10N.register(
     "Failed to enable Pico CMS for Nextcloud: The webserver has no permission to create files and folders below \"%s\". Make sure to give the webserver write access to this directory by changing its permissions and ownership to the same as of your \"%s\" directory. Then try again enabling Pico CMS for Nextcloud." : "無法為 Nextcloud 啟用 Pico CMS：網頁服務器無權創建“%s”以下的文件和文件夾。 通過將其權限和所有權更改為與您的“%s”目錄相同的權限，確保授予網頁服務器對此目錄的寫訪問權限。 然後，再次嘗試為 Nextcloud 啟用 Pico CMS。",
     "Pico CMS" : "Pico CMS",
     "Create and publish your own websites - with Pico CMS for Nextcloud!" : "使用 Pico CMS for Nextcloud 創建和發佈自己的網站！",
-    "Access forbidden" : "訪問被禁止",
+    "Access forbidden" : "存取被拒",
     "Back to %s" : "返回 %s",
     "Not found" : "未找到",
     "Internal Server Error" : "內部伺服器錯誤",
