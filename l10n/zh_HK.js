@@ -34,6 +34,7 @@ OC.L10N.register(
     "Incompatible plugin: Plugin file \"{file}\" not found." : "不兼容的插件：找不到插件檔案“{file}”。",
     "Incompatible plugin: PHP parse error in file \"{file}\"." : "不兼容的插件：檔案“{file}”中的PHP分析錯誤。",
     "Incompatible plugin: Plugin class \"{class}\" not found." : "不兼容的插件：找不到插件類“{class}”。",
+    "Incompatible plugin: Plugins for Pico CMS for Nextcloud must use one of the API versions {compatApiVersions}, but this plugin uses API version {apiVersion}." : "不兼容的插件：用於 Pico CMS for Nextcloud 的插件必須使用API版本{compatApiVersions} 之一，但此插件使用API版本 {apiVersion}。",
     "The name of the website must be longer." : "網站的名稱必須更長。",
     "The name of the website is too long." : "網站名稱太長。",
     "The identifier of the website must be longer." : "網站的標識符必須更長。",
