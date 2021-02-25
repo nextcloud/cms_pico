@@ -39,6 +39,11 @@ class PicoRuntimeException extends \Exception
 	{
 		$this->exception = $exception;
 
-		parent::__construct($exception->getMessage(), $exception->getCode(), $exception->getPrevious());
+		$message = sprintf('Uncaught %s', get_class($exception));
+		if ($exception->getMessage()) {
+			$message .= sprintf('%s: %s', $message, $exception->getMessage());
+		}
+
+		parent::__construct($message, $exception->getCode(), $exception->getPrevious());
 	}
 }
