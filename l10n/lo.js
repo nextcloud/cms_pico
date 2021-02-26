@@ -1,6 +1,7 @@
 OC.L10N.register(
     "cms_pico",
     {
+    "Copy" : "ສຳເນົາ",
     "Access forbidden" : "ຫ້າມການເຂົ້າເຖິງ",
     "Back to %s" : "ຫຼັງ%s",
     "Internal Server Error" : "ຄວາມຜິດພາດຂອງ Server ພາຍໃນ",
@@ -16,6 +17,7 @@ OC.L10N.register(
     "File: %s" : "ຟາຍ%s",
     "Line: %s" : "ສາຍ: %s",
     "Trace" : "ຕິດຕາມ",
-    "Error" : "ຜິດພາດ"
+    "Error" : "ຜິດພາດ",
+    "Name" : "ຊື່"
 },
 "nplurals=1; plural=0;");

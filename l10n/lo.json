@@ -1,4 +1,5 @@
 { "translations": {
+    "Copy" : "ສຳເນົາ",
     "Access forbidden" : "ຫ້າມການເຂົ້າເຖິງ",
     "Back to %s" : "ຫຼັງ%s",
     "Internal Server Error" : "ຄວາມຜິດພາດຂອງ Server ພາຍໃນ",
@@ -14,6 +15,7 @@
     "File: %s" : "ຟາຍ%s",
     "Line: %s" : "ສາຍ: %s",
     "Trace" : "ຕິດຕາມ",
-    "Error" : "ຜິດພາດ"
+    "Error" : "ຜິດພາດ",
+    "Name" : "ຊື່"
 },"pluralForm" :"nplurals=1; plural=0;"
 }
