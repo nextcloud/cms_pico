@@ -110,7 +110,9 @@ build: lazy-check clean-build composer
 		--exclude="/l10n/.gitignore" \
 		--exclude="/nextcloud" \
 		--exclude="/screenshots" \
-		--exclude="/tests" \
+		$(if $(filter true,$(dev)),,--exclude="/tests") \
+		--exclude="/tests/.phpunit.result.cache" \
+		--exclude="/tests/clover.xml" \
 		--exclude="/vendor/*/*/.git" \
 		--exclude="/vendor/picocms/pico/index.php" \
 		--exclude="/vendor/picocms/pico/index.php.dist" \
@@ -149,7 +151,10 @@ verify:
 				"$(verify)"
 
 test:
-	php ./vendor/bin/phpunit --configuration ./tests/phpunit.xml
+	php -f ./vendor/bin/phpunit -- --configuration ./tests/phpunit.xml
+
+coverage: test
+	php -f ./vendor/bin/coverage -- ./tests/clover.xml 0
 
 github-release: export GITHUB_TOKEN=$(github_token)
 github-release: check

@@ -29,7 +29,6 @@ build:
 
           - tar xfjv ~/nextcloud.tar.bz2 -C ~
           - tar xfzv ~/$APP_NAME.tar.gz -C ~/nextcloud/apps
-          - cp -rv tests ~/nextcloud/apps/$APP_NAME/tests
 
           - cd ~/nextcloud
           - php ./occ --version
@@ -67,13 +66,13 @@ build:
         override:
           - php --info
           - composer --version
+          - echo Installing $APP_NAME on Nextcloud branch $NEXTCLOUD
 
           - make build-dev version=latest
           - cp build/$APP_NAME-latest.tar.gz ~/$APP_NAME.tar.gz
 
           - tar xfjv ~/nextcloud.tar.bz2 -C ~
           - tar xfzv ~/$APP_NAME.tar.gz -C ~/nextcloud/apps
-          - cp -rv tests ~/nextcloud/apps/$APP_NAME/tests
 
           - cd ~/nextcloud
           - php ./occ --version
