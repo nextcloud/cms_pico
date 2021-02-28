@@ -106,7 +106,7 @@ class PicoController extends Controller
 	public function getPage(string $site, string $page, bool $proxyRequest = false): Response
 	{
 		try {
-			$userId = $this->userSession->getUser()->getUID();
+			$userId = $this->userSession->isLoggedIn() ? $this->userSession->getUser()->getUID() : null;
 			$picoPage = $this->websitesService->getPage($site, $page, $userId, $proxyRequest);
 			return new PicoPageResponse($picoPage);
 		} catch (WebsiteNotFoundException | WebsiteInvalidOwnerException $e) {
@@ -162,7 +162,7 @@ class PicoController extends Controller
 	public function getAsset(string $site, string $asset, string $assetsETag = ''): Response
 	{
 		try {
-			$userId = $this->userSession->getUser()->getUID();
+			$userId = $this->userSession->isLoggedIn() ? $this->userSession->getUser()->getUID() : null;
 			$picoAsset = $this->websitesService->getAsset($site, $asset, $userId);
 
 			$response = new PicoAssetResponse($picoAsset, (bool) $assetsETag);

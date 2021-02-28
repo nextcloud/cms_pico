@@ -86,9 +86,27 @@ class PicoControllerIntegrationTest extends TestCase
 		$this->assertPicoPageResponse($response);
 	}
 
+	public function testGetPublicPageAsGuest(): void
+	{
+		$this->testUsersManager->logoutUser();
+		$website = $this->testWebsitesManager->getTestWebsite('public');
+		$response = $this->controller->getPage($website->getSite(), '');
+
+		$this->assertPicoPageResponse($response);
+	}
+
 	public function testGetPublicAsset(): void
 	{
 		$this->testUsersManager->loginTestUser('viewer');
+		$website = $this->testWebsitesManager->getTestWebsite('public');
+		$response = $this->controller->getAsset($website->getSite(), 'image.png');
+
+		$this->assertPicoAssetResponse($response, 'image/png');
+	}
+
+	public function testGetPublicAssetAsGuest(): void
+	{
+		$this->testUsersManager->logoutUser();
 		$website = $this->testWebsitesManager->getTestWebsite('public');
 		$response = $this->controller->getAsset($website->getSite(), 'image.png');
 
