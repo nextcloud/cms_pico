@@ -53,11 +53,12 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\Response;
 use OCP\IL10N;
 use OCP\IRequest;
+use OCP\IUserSession;
 
 class PicoController extends Controller
 {
-	/** @var string|null */
-	private $userId;
+	/** @var IUserSession */
+	private $userSession;
 
 	/** @var IL10N */
 	private $l10n;
@@ -72,21 +73,21 @@ class PicoController extends Controller
 	 * PicoController constructor.
 	 *
 	 * @param IRequest        $request
-	 * @param string|null     $userId
+	 * @param IUserSession    $userSession
 	 * @param IL10N           $l10n
 	 * @param WebsitesService $websitesService
 	 * @param FileService     $fileService
 	 */
 	public function __construct(
 		IRequest $request,
-		?string $userId,
+		IUserSession $userSession,
 		IL10N $l10n,
 		WebsitesService $websitesService,
 		FileService $fileService
 	) {
 		parent::__construct(Application::APP_NAME, $request);
 
-		$this->userId = $userId;
+		$this->userSession = $userSession;
 		$this->l10n = $l10n;
 		$this->websitesService = $websitesService;
 		$this->fileService = $fileService;
@@ -105,7 +106,8 @@ class PicoController extends Controller
 	public function getPage(string $site, string $page, bool $proxyRequest = false): Response
 	{
 		try {
-			$picoPage = $this->websitesService->getPage($site, $page, $this->userId, $proxyRequest);
+			$userId = $this->userSession->isLoggedIn() ? $this->userSession->getUser()->getUID() : null;
+			$picoPage = $this->websitesService->getPage($site, $page, $userId, $proxyRequest);
 			return new PicoPageResponse($picoPage);
 		} catch (WebsiteNotFoundException | WebsiteInvalidOwnerException $e) {
 			return new NotFoundResponse($this->l10n->t(
@@ -160,7 +162,8 @@ class PicoController extends Controller
 	public function getAsset(string $site, string $asset, string $assetsETag = ''): Response
 	{
 		try {
-			$picoAsset = $this->websitesService->getAsset($site, $asset, $this->userId);
+			$userId = $this->userSession->isLoggedIn() ? $this->userSession->getUser()->getUID() : null;
+			$picoAsset = $this->websitesService->getAsset($site, $asset, $userId);
 
 			$response = new PicoAssetResponse($picoAsset, (bool) $assetsETag);
 

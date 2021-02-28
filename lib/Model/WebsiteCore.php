@@ -43,10 +43,10 @@ class WebsiteCore implements \JsonSerializable
 	private $name;
 
 	/** @var string */
-	private $theme = 'default';
+	private $site;
 
 	/** @var string */
-	private $site;
+	private $theme = 'default';
 
 	/** @var int */
 	private $type = self::TYPE_PUBLIC;
@@ -57,32 +57,18 @@ class WebsiteCore implements \JsonSerializable
 	/** @var string */
 	private $path;
 
-	/** @var string */
-	private $page;
-
 	/** @var int */
 	private $creation;
-
-	/** @var string */
-	private $viewer;
-
-	/** @var bool */
-	private $proxyRequest;
-
-	/** @var string */
-	private $templateSource;
 
 	/**
 	 * WebsiteCore constructor.
 	 *
-	 * @param array|string|null $data
+	 * @param array|null $data
 	 */
-	public function __construct($data = null)
+	public function __construct(array $data = null)
 	{
-		if (is_array($data)) {
+		if ($data !== null) {
 			$this->fromArray($data);
-		} elseif ($data !== null) {
-			$this->fromJSON($data);
 		}
 	}
 
@@ -305,85 +291,9 @@ class WebsiteCore implements \JsonSerializable
 	}
 
 	/**
-	 * @param string $source
-	 *
-	 * @return $this
-	 */
-	public function setTemplateSource(string $source): self
-	{
-		$this->templateSource = $source;
-		return $this;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getTemplateSource(): string
-	{
-		return $this->templateSource;
-	}
-
-	/**
-	 * @param string $page
-	 *
-	 * @return $this
-	 */
-	public function setPage(string $page): self
-	{
-		$this->page = $page;
-		return $this;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getPage(): string
-	{
-		return $this->page;
-	}
-
-	/**
-	 * @param string $viewer
-	 *
-	 * @return $this
-	 */
-	public function setViewer(string $viewer): self
-	{
-		$this->viewer = $viewer;
-		return $this;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getViewer(): string
-	{
-		return $this->viewer;
-	}
-
-	/**
-	 * @param bool $proxyRequest
-	 *
-	 * @return $this
-	 */
-	public function setProxyRequest(bool $proxyRequest): self
-	{
-		$this->proxyRequest = $proxyRequest;
-		return $this;
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function getProxyRequest(): bool
-	{
-		return $this->proxyRequest;
-	}
-
-	/**
 	 * @return array
 	 */
-	public function jsonSerialize(): array
+	public function getData(): array
 	{
 		return [
 			'id' => $this->getId(),
@@ -395,9 +305,15 @@ class WebsiteCore implements \JsonSerializable
 			'options' => $this->getOptions(),
 			'path' => $this->getPath(),
 			'creation' => $this->getCreation(),
-			'template' => $this->getTemplateSource(),
-			'page' => $this->getPage(),
 		];
+	}
+
+	/**
+	 * @return array
+	 */
+	public function jsonSerialize(): array
+	{
+		return $this->getData();
 	}
 
 	/**
@@ -405,7 +321,7 @@ class WebsiteCore implements \JsonSerializable
 	 *
 	 * @throws \UnexpectedValueException
 	 */
-	public function fromArray(array $data): void
+	private function fromArray(array $data): void
 	{
 		if (!isset($data['user_id']) || !isset($data['name']) || !isset($data['site']) || !isset($data['path'])) {
 			throw new \UnexpectedValueException();
@@ -429,20 +345,6 @@ class WebsiteCore implements \JsonSerializable
 			->setType(isset($data['type']) ? (int) $data['type'] : self::TYPE_PUBLIC)
 			->setOptions($options)
 			->setPath($data['path'])
-			->setCreation($creation)
-			->setTemplateSource($data['template'] ?? '')
-			->setPage($data['page'] ?? '')
-			->setViewer($data['viewer'] ?? '')
-			->setProxyRequest(!empty($data['proxyRequest']));
-	}
-
-	/**
-	 * @param string $json
-	 *
-	 * @throws \UnexpectedValueException
-	 */
-	public function fromJSON(string $json): void
-	{
-		$this->fromArray(json_decode($json, true));
+			->setCreation($creation);
 	}
 }

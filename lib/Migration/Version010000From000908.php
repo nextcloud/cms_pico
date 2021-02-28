@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Migration;
 
-use OCA\CMSPico\Db\CoreRequestBuilder;
+use OCA\CMSPico\Db\WebsitesRequestBuilder;
 use OCA\CMSPico\Files\FolderInterface;
 use OCA\CMSPico\Model\Template;
 use OCA\CMSPico\Model\Theme;
@@ -221,7 +221,7 @@ class Version010000From000908 extends SimpleMigrationStep
 	{
 		$qbUpdate = $this->databaseConnection->getQueryBuilder();
 		$qbUpdate
-			->update(CoreRequestBuilder::TABLE_WEBSITES)
+			->update(WebsitesRequestBuilder::TABLE_WEBSITES)
 			->set('theme', $qbUpdate->createParameter('theme'))
 			->set('type', $qbUpdate->createParameter('type'))
 			->set('options', $qbUpdate->createParameter('options'))
@@ -229,7 +229,7 @@ class Version010000From000908 extends SimpleMigrationStep
 
 		$selectCursor = $this->databaseConnection->getQueryBuilder()
 			->select('id', 'site', 'theme', 'type', 'options')
-			->from(CoreRequestBuilder::TABLE_WEBSITES)
+			->from(WebsitesRequestBuilder::TABLE_WEBSITES)
 			->execute();
 
 		while ($data = $selectCursor->fetch()) {

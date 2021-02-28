@@ -6,7 +6,6 @@ OC.L10N.register(
     "Location" : "Stad",
     "Access forbidden" : "Tilgang forbudt",
     "Error" : "Feil",
-    "Settings" : "Instillingar",
     "Name" : "Namn",
     "Path" : "Vei",
     "Created" : "Lagd",

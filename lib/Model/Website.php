@@ -26,28 +26,20 @@ declare(strict_types=1);
 namespace OCA\CMSPico\Model;
 
 use OCA\CMSPico\AppInfo\Application;
-use OCA\CMSPico\Exceptions\TemplateNotCompatibleException;
-use OCA\CMSPico\Exceptions\TemplateNotFoundException;
 use OCA\CMSPico\Exceptions\ThemeNotCompatibleException;
 use OCA\CMSPico\Exceptions\ThemeNotFoundException;
 use OCA\CMSPico\Exceptions\WebsiteForeignOwnerException;
 use OCA\CMSPico\Exceptions\WebsiteInvalidDataException;
 use OCA\CMSPico\Exceptions\WebsiteInvalidFilesystemException;
 use OCA\CMSPico\Exceptions\WebsiteInvalidOwnerException;
-use OCA\CMSPico\Exceptions\WebsiteNotPermittedException;
-use OCA\CMSPico\Files\StorageFile;
 use OCA\CMSPico\Files\StorageFolder;
 use OCA\CMSPico\Service\MiscService;
 use OCA\CMSPico\Service\TemplatesService;
 use OCA\CMSPico\Service\ThemesService;
 use OCA\CMSPico\Service\WebsitesService;
-use OCP\Files\Folder as OCFolder;
 use OCP\Files\InvalidPathException;
-use OCP\Files\Node as OCNode;
 use OCP\Files\NotFoundException;
-use OCP\Files\NotPermittedException;
 use OCP\IConfig;
-use OCP\IGroupManager;
 use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\IUserManager;
@@ -78,9 +70,6 @@ class Website extends WebsiteCore
 	/** @var IUserManager */
 	private $userManager;
 
-	/** @var IGroupManager */
-	private $groupManager;
-
 	/** @var IURLGenerator */
 	private $urlGenerator;
 
@@ -102,14 +91,13 @@ class Website extends WebsiteCore
 	/**
 	 * Website constructor.
 	 *
-	 * @param array|string|null $data
+	 * @param array|null $data
 	 */
 	public function __construct($data = null)
 	{
 		$this->config = \OC::$server->getConfig();
 		$this->l10n = \OC::$server->getL10N(Application::APP_NAME);
 		$this->userManager = \OC::$server->getUserManager();
-		$this->groupManager = \OC::$server->getGroupManager();
 		$this->urlGenerator = \OC::$server->getURLGenerator();
 		$this->websitesService = \OC::$server->query(WebsitesService::class);
 		$this->themesService = \OC::$server->query(ThemesService::class);
@@ -126,106 +114,6 @@ class Website extends WebsiteCore
 	{
 		$serverTimeZone = date_default_timezone_get() ?: 'UTC';
 		return $this->config->getUserValue($this->getUserId(), 'core', 'timezone', $serverTimeZone);
-	}
-
-	/**
-	 * @param string $path
-	 * @param array  $meta
-	 *
-	 * @throws InvalidPathException
-	 * @throws WebsiteInvalidFilesystemException
-	 * @throws WebsiteNotPermittedException
-	 * @throws NotPermittedException
-	 */
-	public function assertViewerAccess(string $path, array $meta = []): void
-	{
-		$exceptionClass = WebsiteNotPermittedException::class;
-		if ($this->getType() === self::TYPE_PUBLIC) {
-			if (empty($meta['access'])) {
-				return;
-			}
-
-			$groupPageAccess = $meta['access'];
-			if (!is_array($groupPageAccess)) {
-				$groupPageAccess = explode(',', $groupPageAccess);
-			}
-
-			foreach ($groupPageAccess as $group) {
-				$group = trim($group);
-
-				if ($group === 'public') {
-					return;
-				} elseif ($group === 'private') {
-					continue;
-				}
-
-				if ($this->getViewer() && $this->groupManager->groupExists($group)) {
-					if ($this->groupManager->isInGroup($this->getViewer(), $group)) {
-						return;
-					}
-				}
-			}
-
-			$exceptionClass = NotPermittedException::class;
-		}
-
-		if ($this->getViewer()) {
-			if ($this->getViewer() === $this->getUserId()) {
-				return;
-			}
-
-			$groupAccess = $this->getOption('group_access') ?? [];
-			foreach ($groupAccess as $group) {
-				if ($this->groupManager->groupExists($group)) {
-					if ($this->groupManager->isInGroup($this->getViewer(), $group)) {
-						return;
-					}
-				}
-			}
-
-			/** @var OCFolder $viewerOCFolder */
-			$viewerOCFolder = \OC::$server->getUserFolder($this->getViewer());
-			$viewerAccessClosure = function (OCNode $node) use ($viewerOCFolder) {
-				$nodeId = $node->getId();
-
-				$viewerNodes = $viewerOCFolder->getById($nodeId);
-				foreach ($viewerNodes as $viewerNode) {
-					if ($viewerNode->isReadable()) {
-						return true;
-					}
-				}
-
-				return false;
-			};
-
-			$websiteFolder = $this->getWebsiteFolder();
-
-			$path = $this->miscService->normalizePath($path);
-			while ($path && ($path !== '.')) {
-				try {
-					/** @var StorageFile|StorageFolder $file */
-					$file = $websiteFolder->get($path);
-				} catch (NotFoundException $e) {
-					$file = null;
-				}
-
-				if ($file) {
-					if ($viewerAccessClosure($file->getOCNode())) {
-						return;
-					}
-
-					throw new $exceptionClass();
-				}
-
-				$path = dirname($path);
-			}
-
-			if ($viewerAccessClosure($websiteFolder->getOCNode())) {
-				return;
-			}
-		}
-
-		throw new $exceptionClass();
 	}
 
 	/**
@@ -334,15 +222,6 @@ class Website extends WebsiteCore
 	}
 
 	/**
-	 * @throws TemplateNotFoundException
-	 * @throws TemplateNotCompatibleException
-	 */
-	public function assertValidTemplate(): void
-	{
-		$this->templatesService->assertValidTemplate($this->getTemplateSource());
-	}
-
-	/**
 	 * @param string $userId
 	 *
 	 * @throws WebsiteForeignOwnerException
@@ -403,9 +282,9 @@ class Website extends WebsiteCore
 	/**
 	 * @return string
 	 */
-	public function getWebsiteUrl(): string
+	public function getWebsiteUrl(bool $proxyRequest = false): string
 	{
-		if (!$this->getProxyRequest()) {
+		if (!$proxyRequest) {
 			$route = Application::APP_NAME . '.Pico.getPage';
 			$parameters = [ 'site' => $this->getSite(), 'page' => '' ];
 			return $this->urlGenerator->linkToRoute($route, $parameters) . '/';

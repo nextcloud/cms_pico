@@ -241,10 +241,11 @@ class TemplatesService
 
 	/**
 	 * @param Website $website
+	 * @param string  $templateName
 	 *
 	 * @throws TemplateNotFoundException
 	 */
-	public function installTemplate(Website $website): void
+	public function installTemplate(Website $website, string $templateName): void
 	{
 		$userFolder = new StorageFolder(\OC::$server->getUserFolder($website->getUserId()));
 
@@ -260,7 +261,7 @@ class TemplatesService
 
 		$websiteFolder = $userFolder->newFolder($website->getPath());
 
-		$templateFolder = $this->getTemplateFolder($website->getTemplateSource());
+		$templateFolder = $this->getTemplateFolder($templateName);
 		$templateFolder->sync();
 
 		$templateData = $this->getTemplateData($website);

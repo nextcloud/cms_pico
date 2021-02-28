@@ -52,13 +52,13 @@ abstract class AbstractNode implements NodeInterface
 
 		if ($this->isFolder()) {
 			/** @var FolderInterface $this */
-			$target = $targetPath->newFolder($name ?: $this->getName());
+			$target = $targetPath->newFolder($name ?? $this->getName());
 			foreach ($this as $child) {
 				$child->copy($target);
 			}
 		} else {
 			/** @var FileInterface $this */
-			$target = $targetPath->newFile($name ?: $this->getName());
+			$target = $targetPath->newFile($name ?? $this->getName());
 			$target->putContent($this->getContent());
 		}
 
@@ -76,13 +76,13 @@ abstract class AbstractNode implements NodeInterface
 
 		if ($this->isFolder()) {
 			/** @var FolderInterface $this */
-			$target = $targetPath->newFolder($name ?: $this->getName());
+			$target = $targetPath->newFolder($name ?? $this->getName());
 			foreach ($this as $child) {
 				$child->move($target);
 			}
 		} else {
 			/** @var FileInterface $this */
-			$target = $targetPath->newFile($name ?: $this->getName());
+			$target = $targetPath->newFile($name ?? $this->getName());
 			$target->putContent($this->getContent());
 		}
 

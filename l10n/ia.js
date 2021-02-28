@@ -8,7 +8,6 @@ OC.L10N.register(
     "Request ID: %s" : "ID de requesta: %s",
     "Technical details" : "Detalios technic",
     "Error" : "Error",
-    "Settings" : "Configurationes",
     "Name" : "Nomine",
     "Path" : "Sentiero",
     "Actions" : "Actiones",

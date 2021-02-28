@@ -18,7 +18,6 @@ OC.L10N.register(
     "Line: %s" : "Qator: %s",
     "Trace" : "Iz",
     "Error" : "Xato",
-    "Settings" : "Sozlamalar",
     "Name" : "Ism...",
     "Loading…" : "Yuklanmoqda…"
 },

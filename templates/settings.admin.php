@@ -58,6 +58,40 @@ style(Application::APP_NAME, 'pico');
 <?php } ?>
 
 <article class="section">
+	<h2><?php p($l->t('Pico CMS for Nextcloud')); ?></h2>
+	<p class="settings-hint"><?php p($l->t(
+		'Change Pico CMS for Nextcloud\'s behavior and manage optional features.'
+	)); ?></p>
+
+	<section class="lane">
+		<header>
+			<h3 class="select2-align"><?php p($l->t('Limit to groups')); ?></h3>
+		</header>
+		<section>
+			<form id="picocms-limit_groups" class="picocms-limit_groups-form"
+					data-route="/apps/cms_pico/admin/limit_groups">
+				<div>
+					<input type="hidden" class="input select2-placeholder" name="data[limit_groups]"
+							value="<?php p(implode('|', $_['limitGroups'])); ?>" />
+					<div class="message input select2-loading">
+						<div class="icon icon-loading"></div>
+						<div>
+							<p><?php p($l->t('Loading groups…')); ?></p>
+						</div>
+					</div>
+				</div>
+				<p class="note"><?php p($l->t(
+					'If you wish not to enable all of your users to create personal websites, you can limit Pico CMS '
+							. 'for Nextcloud to certain groups. Select the groups you want to limit access to. If you '
+							. 'leave this field empty, usage isn\'t limited. Revoking access for certain groups won\'t '
+							. 'delete any of a user\'s websites, however, they get inaccessible.'
+				)); ?></p>
+			</form>
+		</section>
+	</section>
+</article>
+
+<article class="section">
 	<h2><?php p($l->t('Custom themes')); ?></h2>
 	<p class="settings-hint"><?php p($l->t(
 		'Add custom themes for greater individuality and style.'
@@ -561,40 +595,6 @@ style(Application::APP_NAME, 'pico');
 </article>
 
 <article class="section">
-	<h2><?php p($l->t('Settings')); ?></h2>
-	<p class="settings-hint"><?php p($l->t(
-		'Change Pico CMS for Nextcloud\'s behavior and manage optional features.'
-	)); ?></p>
-
-	<section class="lane">
-		<header>
-			<h3 class="select2-align"><?php p($l->t('Limit to groups')); ?></h3>
-		</header>
-		<section>
-			<form id="picocms-limit_groups" class="picocms-limit_groups-form"
-					data-route="/apps/cms_pico/admin/limit_groups">
-				<div>
-					<input type="hidden" class="input select2-placeholder" name="data[limit_groups]"
-							value="<?php p(implode('|', $_['limitGroups'])); ?>" />
-					<div class="message input select2-loading">
-						<div class="icon icon-loading"></div>
-						<div>
-							<p><?php p($l->t('Loading groups…')); ?></p>
-						</div>
-					</div>
-				</div>
-				<p class="note"><?php p($l->t(
-					'If you wish not to enable all of your users to create personal websites, you can limit Pico CMS '
-							. 'for Nextcloud to certain groups. Select the groups you want to limit access to. If you '
-							. 'leave this field empty, usage isn\'t limited. Revoking access for certain groups won\'t '
-							. 'delete any of a user\'s websites, however, they get inaccessible.'
-				)); ?></p>
-			</form>
-		</section>
-	</section>
-</article>
-
-<article class="section">
 	<h2><?php p($l->t('Configure your webserver')); ?></h2>
 	<p class="settings-hint"><?php p($l->t(
 		'Enable Pico CMS for Nextcloud\'s full potential by configuring your webserver appropriately.'
@@ -760,4 +760,30 @@ style(Application::APP_NAME, 'pico');
 			)); ?></p>
 		</section>
 	</section>
+</article>
+
+<article class="section">
+	<h2><?php p($l->t('Version information')); ?></h2>
+
+	<p>
+		<strong>Pico CMS for Nextcloud <?php p($_['appVersion']); ?></strong>
+		– <a href="https://apps.nextcloud.com/apps/cms_pico">https://apps.nextcloud.com/apps/cms_pico</a><br>
+		<?php print_unescaped($l->t(
+			'Pico CMS for Nextcloud was made by <a href="https://github.com/daita">Maxence Lange</a> and '
+					. '<a href="https://daniel-rudolf.de/">Daniel Rudolf</a>.<br>It is free and open source software '
+					. 'released under the <a href="https://github.com/nextcloud/cms_pico/blob/master/LICENSE">GNU '
+					. 'Affero General Public License</a>.'
+		)); ?>
+	</p>
+	<p>
+		<strong>Pico <?php p($_['picoVersion']); ?></strong>
+		– <a href="http://picocms.org/">http://picocms.org/</a><br>
+		<?php print_unescaped($l->t(
+			'Pico was made by <a href="https://gilbitron.me/">Gilbert Pellegrom</a> and '
+					. '<a href="https://daniel-rudolf.de/">Daniel Rudolf</a> and is maintained by '
+					. '<a href="https://github.com/picocms/Pico/graphs/contributors">The Pico Community</a>.<br>'
+					. 'It is free and open source software released under the '
+					. '<a href="https://github.com/picocms/Pico/blob/master/LICENSE.md">MIT license</a>.'
+		)); ?>
+	</p>
 </article>

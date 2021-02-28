@@ -13,7 +13,6 @@ OC.L10N.register(
     "Line: %s" : "ಕೋಂಡಿ: %s",
     "Trace" : "ಕುರುಹು",
     "Error" : "﻿ತಪ್ಪಾಗಿದೆ",
-    "Settings" : "ಆಯ್ಕೆ",
     "Name" : "﻿ಹೆಸರು",
     "Address" : "ವಿಳಾಸ"
 },

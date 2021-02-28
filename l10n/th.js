@@ -18,7 +18,6 @@ OC.L10N.register(
     "Line: %s" : "ไลน์: %s",
     "Trace" : "ร่องรอย",
     "Error" : "ข้อผิดพลาด",
-    "Settings" : "ตั้งค่า",
     "Name" : "ชื่อ",
     "Path" : "เส้นทาง",
     "Actions" : "การกระทำ",

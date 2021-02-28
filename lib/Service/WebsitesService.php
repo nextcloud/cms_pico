@@ -47,6 +47,7 @@ use OCA\CMSPico\Exceptions\WebsiteNotPermittedException;
 use OCA\CMSPico\Model\PicoAsset;
 use OCA\CMSPico\Model\PicoPage;
 use OCA\CMSPico\Model\Website;
+use OCA\CMSPico\Model\WebsiteRequest;
 use OCP\Files\InvalidPathException;
 use OCP\IGroupManager;
 
@@ -113,7 +114,11 @@ class WebsitesService
 	/**
 	 * Creates a new website.
 	 *
+	 * Warning: This method does not check whether the user is allowed to create websites!
+	 * Please use {@see Website::assertValidOwner()} beforehand.
+	 *
 	 * @param Website $website
+	 * @param string  $templateName
 	 *
 	 * @throws WebsiteExistsException
 	 * @throws WebsiteInvalidDataException
@@ -123,14 +128,12 @@ class WebsitesService
 	 * @throws TemplateNotFoundException
 	 * @throws TemplateNotCompatibleException
 	 */
-	public function createWebsite(Website $website): void
+	public function createWebsite(Website $website, string $templateName): void
 	{
-		$website->assertValidOwner();
 		$website->assertValidName();
 		$website->assertValidSite();
 		$website->assertValidPath();
 		$website->assertValidTheme();
-		$website->assertValidTemplate();
 
 		try {
 			$website = $this->websiteRequest->getWebsiteFromSite($website->getSite());
@@ -139,7 +142,9 @@ class WebsitesService
 			// in fact we want the website not to exist yet
 		}
 
-		$this->templatesService->installTemplate($website);
+		$this->templatesService->assertValidTemplate($templateName);
+		$this->templatesService->installTemplate($website, $templateName);
+
 		$this->websiteRequest->create($website);
 	}
 
@@ -173,11 +178,6 @@ class WebsitesService
 		}
 		if ($website->getTheme() !== $originalWebsite->getTheme()) {
 			$website->assertValidTheme();
-		}
-		if ($website->getTemplateSource()) {
-			if ($website->getTemplateSource() !== $originalWebsite->getTemplateSource()) {
-				$website->assertValidTemplate();
-			}
 		}
 
 		$this->websiteRequest->update($website);
@@ -269,17 +269,14 @@ class WebsitesService
 		}
 
 		$website = $this->getWebsiteFromSite($site);
-		$website->setProxyRequest($proxyRequest);
-		$website->setViewer($viewer ?: '');
-		$website->setPage($page);
-
 		$website->assertValidOwner();
 
 		if (!$website->getWebsiteFolder()->isLocal()) {
 			throw new FilesystemNotLocalException();
 		}
 
-		return $this->picoService->getPage($website);
+		$websiteRequest = new WebsiteRequest($website, $viewer, $page, $proxyRequest);
+		return $this->picoService->getPage($websiteRequest);
 	}
 
 	/**
@@ -309,16 +306,14 @@ class WebsitesService
 		}
 
 		$website = $this->getWebsiteFromSite($site);
-		$website->setViewer($viewer ?: '');
-		$website->setPage(PicoService::DIR_ASSETS . '/' . $asset);
-
 		$website->assertValidOwner();
 
 		if (!$website->getWebsiteFolder()->isLocal()) {
 			throw new FilesystemNotLocalException();
 		}
 
-		return $this->assetsService->getAsset($website);
+		$websiteRequest = new WebsiteRequest($website, $viewer, PicoService::DIR_ASSETS . '/' . $asset);
+		return $this->assetsService->getAsset($websiteRequest);
 	}
 
 	/**
@@ -328,7 +323,12 @@ class WebsitesService
 	 */
 	public function setLimitGroups(array $limitGroups): void
 	{
-		$limitGroups = array_values(array_filter($limitGroups, [ $this->groupManager, 'groupExists' ]));
+		foreach ($limitGroups as $group) {
+			if (!$this->groupManager->groupExists($group)) {
+				throw new \UnexpectedValueException();
+			}
+		}
+
 		$this->configService->setAppValue(ConfigService::LIMIT_GROUPS, json_encode($limitGroups));
 	}
 
@@ -357,8 +357,8 @@ class WebsitesService
 			return true;
 		}
 
-		foreach ($this->getLimitGroups() as $group) {
-			if ($this->groupManager->isInGroup($userId, $group)) {
+		foreach ($limitGroups as $groupId) {
+			if ($this->groupManager->isInGroup($userId, $groupId)) {
 				return true;
 			}
 		}
@@ -377,7 +377,7 @@ class WebsitesService
 			throw new \UnexpectedValueException();
 		}
 
-		$this->configService->setAppValue(ConfigService::LINK_MODE, $linkMode);
+		$this->configService->setAppValue(ConfigService::LINK_MODE, (string) $linkMode);
 	}
 
 	/**

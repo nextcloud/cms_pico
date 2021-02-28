@@ -46,6 +46,8 @@ class WebsitesRequest extends WebsitesRequestBuilder
 			->setValue('path', $qb->createNamedParameter($website->getPath()));
 
 		$qb->execute();
+
+		$website->setId($qb->getLastInsertId());
 	}
 
 	/**
@@ -103,7 +105,7 @@ class WebsitesRequest extends WebsitesRequestBuilder
 		$websites = [];
 		$cursor = $qb->execute();
 		while ($data = $cursor->fetch()) {
-			$websites[] = $this->parseWebsitesSelectSql($data);
+			$websites[] = new Website($data);
 		}
 		$cursor->closeCursor();
 
@@ -129,7 +131,7 @@ class WebsitesRequest extends WebsitesRequestBuilder
 			throw new WebsiteNotFoundException();
 		}
 
-		return $this->parseWebsitesSelectSql($data);
+		return new Website($data);
 	}
 
 	/**
@@ -151,6 +153,6 @@ class WebsitesRequest extends WebsitesRequestBuilder
 			throw new WebsiteNotFoundException();
 		}
 
-		return $this->parseWebsitesSelectSql($data);
+		return new Website($data);
 	}
 }

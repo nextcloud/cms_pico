@@ -37,7 +37,15 @@ class NotPermittedResponse extends TemplateResponse
 	 */
 	public function __construct(string $message = null)
 	{
-		parent::__construct(Application::APP_NAME, '403', [ 'message' => $message ], 'guest');
+		$params = [
+			'message' => $message,
+			'buttonLink' => \OC::$server->getURLGenerator()->linkToRoute(
+				'core.login.showLoginForm',
+				[ 'redirect_url' => \OC::$server->getRequest()->getRequestUri() ]
+			),
+		];
+
+		parent::__construct(Application::APP_NAME, '403', $params, 'guest');
 		$this->setStatus(Http::STATUS_FORBIDDEN);
 	}
 }

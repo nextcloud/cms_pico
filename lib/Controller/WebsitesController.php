@@ -43,12 +43,14 @@ use OCP\AppFramework\Http\DataResponse;
 use OCP\IL10N;
 use OCP\ILogger;
 use OCP\IRequest;
+use OCP\IUserSession;
 
 class WebsitesController extends Controller
 {
 	use ControllerTrait;
-	/** @var string */
-	private $userId;
+
+	/** @var IUserSession */
+	private $userSession;
 
 	/** @var IL10N */
 	private $l10n;
@@ -60,21 +62,21 @@ class WebsitesController extends Controller
 	 * WebsitesController constructor.
 	 *
 	 * @param IRequest        $request
-	 * @param string          $userId
+	 * @param IUserSession    $userSession
 	 * @param IL10N           $l10n
 	 * @param ILogger         $logger
 	 * @param WebsitesService $websitesService
 	 */
 	public function __construct(
 		IRequest $request,
-		$userId,
+		IUserSession $userSession,
 		IL10N $l10n,
 		ILogger $logger,
 		WebsitesService $websitesService
 	) {
 		parent::__construct(Application::APP_NAME, $request);
 
-		$this->userId = $userId;
+		$this->userSession = $userSession;
 		$this->l10n = $l10n;
 		$this->logger = $logger;
 		$this->websitesService = $websitesService;
@@ -87,7 +89,8 @@ class WebsitesController extends Controller
 	 */
 	public function getPersonalWebsites(): DataResponse
 	{
-		$data = [ 'websites' => $this->websitesService->getWebsitesFromUser($this->userId) ];
+		$userId = $this->userSession->getUser()->getUID();
+		$data = [ 'websites' => $this->websitesService->getWebsitesFromUser($userId) ];
 		return new DataResponse($data, Http::STATUS_OK);
 	}
 
@@ -100,16 +103,19 @@ class WebsitesController extends Controller
 	 */
 	public function createPersonalWebsite(array $data): DataResponse
 	{
+		$userId = $this->userSession->getUser()->getUID();
+
 		try {
 			$website = (new Website())
 				->setName($data['name'] ?? '')
-				->setUserId($this->userId)
+				->setUserId($userId)
 				->setSite($data['site'] ?? '')
 				->setTheme($data['theme'] ?? '')
-				->setPath($data['path'] ?? '')
-				->setTemplateSource($data['template'] ?? '');
+				->setPath($data['path'] ?? '');
 
-			$this->websitesService->createWebsite($website);
+			$website->assertValidOwner();
+
+			$this->websitesService->createWebsite($website, $data['template'] ?? '');
 
 			return $this->getPersonalWebsites();
 		} catch (\Exception $e) {
@@ -147,7 +153,8 @@ class WebsitesController extends Controller
 		try {
 			$website = $this->websitesService->getWebsiteFromId($siteId);
 
-			$website->assertOwnedBy($this->userId);
+			$userId = $this->userSession->getUser()->getUID();
+			$website->assertOwnedBy($userId);
 
 			foreach ($data as $key => $value) {
 				switch ($key) {
@@ -213,7 +220,8 @@ class WebsitesController extends Controller
 		try {
 			$website = $this->websitesService->getWebsiteFromId($siteId);
 
-			$website->assertOwnedBy($this->userId);
+			$userId = $this->userSession->getUser()->getUID();
+			$website->assertOwnedBy($userId);
 
 			$this->websitesService->deleteWebsite($website);
 

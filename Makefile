@@ -23,6 +23,7 @@
 
 version?=v1.0.0
 prerelease?=false
+dev?=false
 nocheck?=false
 verify?=$(build_dir)/$(archive)
 
@@ -91,7 +92,8 @@ ifeq ($(or $(filter $(appinfo_version) latest,$(version)), $(filter true,$(noche
 endif
 
 composer:
-	composer install --no-suggest --no-dev --prefer-dist --optimize-autoloader
+	composer install --no-suggest --prefer-dist --optimize-autoloader \
+		$(if $(filter true,$(dev)),,--no-dev)
 
 build: lazy-check clean-build composer
 	mkdir -p "$(build_dir)"
@@ -108,7 +110,9 @@ build: lazy-check clean-build composer
 		--exclude="/l10n/.gitignore" \
 		--exclude="/nextcloud" \
 		--exclude="/screenshots" \
-		--exclude="/tests" \
+		$(if $(filter true,$(dev)),,--exclude="/tests") \
+		--exclude="/tests/.phpunit.result.cache" \
+		--exclude="/tests/clover.xml" \
 		--exclude="/vendor/*/*/.git" \
 		--exclude="/vendor/picocms/pico/index.php" \
 		--exclude="/vendor/picocms/pico/index.php.dist" \
@@ -127,6 +131,9 @@ build: lazy-check clean-build composer
 	tar cfz "$(build_dir)/$(archive)" \
 		-C "$(build_dir)" "$(app_name)"
 
+build-dev: dev=true
+build-dev: build
+
 export: clean-export
 	mkdir -p "$(build_dir)"
 	git archive --prefix "$(app_name)/" -o "$(build_dir)/$(export)" HEAD
@@ -144,6 +151,12 @@ verify:
 				-verify "$(cert_dir)/$(app_name).pub" \
 				-signature /dev/stdin \
 				"$(verify)"
+
+test:
+	php -f ./vendor/bin/phpunit -- --configuration ./tests/phpunit.xml
+
+coverage: test
+	php -f ./vendor/bin/coverage -- ./tests/clover.xml 0
 
 github-release: export GITHUB_TOKEN=$(github_token)
 github-release: check
@@ -165,6 +178,7 @@ github-upload: check check-composer build github-release
 		--file "$(build_dir)/$(archive)"
 
 publish: check check-composer sign github-upload
+	sleep 5
 	php -r 'echo json_encode([ "download" => $$_SERVER["argv"][1], "signature" => file_get_contents($$_SERVER["argv"][2]), "nightly" => !!$$_SERVER["argv"][3] ]);' \
 		"$(download_url)" "$(build_dir)/$(signature)" "$(if $(filter true,$(prerelease)),1,0)" \
 			| curl -K "$(curlrc)" \
@@ -183,8 +197,9 @@ publish-dev: publish
 .PHONY: all \
 	clean clean-build clean-export \
 	check check-composer lazy-check \
-	composer build export \
+	composer build build-dev export \
 	sign verify \
+	test coverage \
 	github-release github-release-dev \
 	github-upload github-upload-dev \
 	publish publish-dev

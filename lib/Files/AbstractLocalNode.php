@@ -99,20 +99,22 @@ abstract class AbstractLocalNode extends AbstractNode implements NodeInterface
 		if (($targetPath instanceof LocalFolder) && $this->isFile()) {
 			if ($name !== null) {
 				$this->assertValidFileName($name);
+			} else {
+				$name = $this->getName();
 			}
 
-			if ($targetPath->exists($this->getName())) {
+			if ($targetPath->exists($name)) {
 				throw new AlreadyExistsException();
 			}
 			if (!$targetPath->isCreatable()) {
 				throw new NotPermittedException();
 			}
 
-			if (!@copy($this->getLocalPath(), $targetPath->getLocalPath() . '/' . ($name ?: $this->getName()))) {
+			if (!@copy($this->getLocalPath(), $targetPath->getLocalPath() . '/' . $name)) {
 				throw new GenericFileException();
 			}
 
-			return new LocalFile($targetPath->getPath() . '/' . $this->getName(), $targetPath->basePath);
+			return new LocalFile($targetPath->getPath() . '/' . $name, $targetPath->basePath);
 		} else {
 			return parent::copy($targetPath, $name);
 		}
@@ -126,20 +128,22 @@ abstract class AbstractLocalNode extends AbstractNode implements NodeInterface
 		if (($targetPath instanceof LocalFolder) && $this->isFile()) {
 			if ($name !== null) {
 				$this->assertValidFileName($name);
+			} else {
+				$name = $this->getName();
 			}
 
-			if ($targetPath->exists($this->getName())) {
+			if ($targetPath->exists($name)) {
 				throw new AlreadyExistsException();
 			}
 			if (!$targetPath->isCreatable()) {
 				throw new NotPermittedException();
 			}
 
-			if (!@rename($this->getLocalPath(), $targetPath->getLocalPath() . '/' . ($name ?: $this->getName()))) {
+			if (!@rename($this->getLocalPath(), $targetPath->getLocalPath() . '/' . $name)) {
 				throw new GenericFileException();
 			}
 
-			return new LocalFile($targetPath->getPath() . '/' . $this->getName(), $targetPath->getBasePath());
+			return new LocalFile($targetPath->getPath() . '/' . $name, $targetPath->getBasePath());
 		} else {
 			return parent::move($targetPath, $name);
 		}

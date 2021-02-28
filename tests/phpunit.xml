@@ -3,6 +3,7 @@
   ~ CMS Pico - Create websites using Pico CMS for Nextcloud.
   ~
   ~ @copyright Copyright (c) 2017, Maxence Lange (<maxence@artificial-owl.com>)
+  ~ @copyright Copyright (c) 2020, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
   ~
   ~ @license GNU AGPL version 3 or any later version
   ~
@@ -20,27 +21,23 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<phpunit bootstrap="bootstrap.php" beStrictAboutTestsThatDoNotTestAnything="false">
-	<testsuite name="cms_pico">
-		<directory suffix='Test.php'>.</directory>
-	</testsuite>
+<phpunit
+	bootstrap="bootstrap.php"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/8.5/phpunit.xsd"
+>
+	<testsuites>
+		<testsuite name="cms_pico">
+			<directory>./Integration</directory>
+		</testsuite>
+	</testsuites>
 	<filter>
 		<whitelist>
 			<directory suffix=".php">../lib</directory>
-			<exclude>
-				<directory suffix=".php">../lib/Hooks</directory>
-				<directory suffix=".php">../lib/Settings</directory>
-				<directory suffix=".php">../lib/Events</directory>
-				<directory suffix=".php">../lib/Exceptions</directory>
-				<file>../lib/personal.php</file>
-			</exclude>
 		</whitelist>
 	</filter>
 	<logging>
 		<log type="coverage-clover" target="clover.xml"/>
-		<!--<log type="coverage-text" target="php://stdout" showUncoveredFiles="false"/>-->
+		<log type="coverage-text" target="php://stdout" showUncoveredFiles="false"/>
 	</logging>
-	<listeners>
-		<listener class="OCA\CMSPico\Tests\Env" file="TestSuiteListener.php"/>
-	</listeners>
 </phpunit>

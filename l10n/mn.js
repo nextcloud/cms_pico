@@ -7,7 +7,6 @@ OC.L10N.register(
     "Access forbidden" : "Хандах эрхгүй",
     "Technical details" : "Техникийн мэдээлэл",
     "Error" : "Алдаа",
-    "Settings" : "Тохиргоо",
     "Name" : "Нэр",
     "Path" : "Зам",
     "Theme" : "загвар",

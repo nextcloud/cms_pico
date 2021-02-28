@@ -33,6 +33,7 @@ use OCA\CMSPico\Files\FolderInterface;
 use OCA\CMSPico\Files\Glob\GlobIterator;
 use OCA\CMSPico\Files\NodeInterface;
 use OCA\CMSPico\Model\Website;
+use OCA\CMSPico\Model\WebsiteRequest;
 use OCA\CMSPico\Service\PicoService;
 use OCP\Files\InvalidPathException;
 use OCP\Files\NotFoundException;
@@ -75,6 +76,9 @@ class Pico extends \Pico
 	/** @var HTMLPurifier */
 	private $htmlPurifier;
 
+	/** @var WebsiteRequest */
+	private $websiteRequest;
+
 	/** @var Website */
 	private $website;
 
@@ -105,15 +109,16 @@ class Pico extends \Pico
 	}
 
 	/**
-	 * Set's Nextcloud's website instance.
+	 * Set's Nextcloud's website and website request instances.
 	 *
-	 * @param Website $website Nextcloud's website instance
+	 * @param WebsiteRequest $websiteRequest Nextcloud's website request instance
 	 *
 	 * @return void
 	 */
-	public function setNextcloudWebsite(Website $website)
+	public function setNextcloudWebsite(WebsiteRequest $websiteRequest)
 	{
-		$this->website = $website;
+		$this->websiteRequest = $websiteRequest;
+		$this->website = $websiteRequest->getWebsite();
 	}
 
 	/**

@@ -82,5 +82,7 @@ class PicoContentSecurityPolicy extends EmptyContentSecurityPolicy
 	protected $allowedChildSrcDomains = [];
 
 	/** @var array Domains which can embed this Nextcloud instance */
-	protected $allowedFrameAncestors = [];
+	protected $allowedFrameAncestors = [
+		'\'self\'',
+	];
 }

@@ -33,8 +33,8 @@ class PicoPage
 	/** @var MiscService */
 	private $miscService;
 
-	/** @var Website */
-	private $website;
+	/** @var WebsiteRequest */
+	private $websiteRequest;
 
 	/** @var Pico */
 	private $pico;
@@ -45,15 +45,15 @@ class PicoPage
 	/**
 	 * PicoPage constructor.
 	 *
-	 * @param Website $website
-	 * @param Pico    $pico
-	 * @param string  $output
+	 * @param WebsiteRequest $websiteRequest
+	 * @param Pico           $pico
+	 * @param string         $output
 	 */
-	public function __construct(Website $website, Pico $pico, string $output)
+	public function __construct(WebsiteRequest $websiteRequest, Pico $pico, string $output)
 	{
 		$this->miscService = \OC::$server->query(MiscService::class);
 
-		$this->website = $website;
+		$this->websiteRequest = $websiteRequest;
 		$this->pico = $pico;
 		$this->output = $output;
 	}
@@ -70,7 +70,7 @@ class PicoPage
 
 		$contentDir = $this->pico->getConfig('content_dir');
 		$contentExt = $this->pico->getConfig('content_ext');
-		return $contentDir . ($this->website->getPage() ?: 'index') . $contentExt;
+		return $contentDir . ($this->websiteRequest->getPage() ?: 'index') . $contentExt;
 	}
 
 	/**
@@ -91,7 +91,7 @@ class PicoPage
 			}
 		}
 
-		return ($this->website->getPage() ?: 'index');
+		return ($this->websiteRequest->getPage() ?: 'index');
 	}
 
 	/**

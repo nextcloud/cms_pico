@@ -34,8 +34,8 @@ class BackendProvider implements IBackendProvider
 	 */
 	public function getBackends(): array
 	{
-		return [
-			\OC::$server->query(Backend::class)
-		];
+		/** @var Backend $backend */
+		$backend = \OC::$server->query(Backend::class);
+		return [ $backend ];
 	}
 }

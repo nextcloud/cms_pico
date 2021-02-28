@@ -71,7 +71,7 @@
 			}
 		}
 
-		> *:not(h2):not(.settings-hint) {
+		> *:not(h2):not(p) {
 			margin-top: calc(var(--margin) * 0.75);
 			margin-bottom: calc(var(--margin) * 1.5);
 		}

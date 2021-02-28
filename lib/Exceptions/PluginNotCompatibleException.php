@@ -73,7 +73,7 @@ class PluginNotCompatibleException extends \Exception
 			return $reasonData[$matches[1]] ?? '';
 		};
 
-		return preg_replace_callback('/{([^{}]*)}/g', $replaceCallback, $this->reason) ?: '';
+		return preg_replace_callback('/{([^{}]*)}/', $replaceCallback, $this->reason) ?: '';
 	}
 
 	/**
