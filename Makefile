@@ -176,6 +176,7 @@ github-upload: check check-composer build github-release
 		--file "$(build_dir)/$(archive)"
 
 publish: check check-composer sign github-upload
+	sleep 5
 	php -r 'echo json_encode([ "download" => $$_SERVER["argv"][1], "signature" => file_get_contents($$_SERVER["argv"][2]), "nightly" => !!$$_SERVER["argv"][3] ]);' \
 		"$(download_url)" "$(build_dir)/$(signature)" "$(if $(filter true,$(prerelease)),1,0)" \
 			| curl -K "$(curlrc)" \
@@ -194,8 +195,9 @@ publish-dev: publish
 .PHONY: all \
 	clean clean-build clean-export \
 	check check-composer lazy-check \
-	composer build export \
+	composer build build-dev export \
 	sign verify \
+	test coverage \
 	github-release github-release-dev \
 	github-upload github-upload-dev \
 	publish publish-dev
