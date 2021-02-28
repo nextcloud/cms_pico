@@ -134,8 +134,14 @@ style(Application::APP_NAME, 'pico');
 		<tr>
 			<td class="name-column">
 				<div class="name-container">
-					<div>
+					<div class="name">
 						<p>{name}</p>
+					</div>
+					<div class="name-edit">
+						<input class="input input-name" type="text" name="name"
+							value="{name}" placeholder="{name}"
+							minlength="<?php p($_['nameLengthMin']); ?>"
+							maxlength="<?php p($_['nameLengthMax']); ?>" />
 					</div>
 					<div class="actions">
 						<a class="action action-open has-tooltip" title="<?php p($l->t('Go to website')); ?>">

@@ -187,6 +187,10 @@
 					flex: 1 1 auto;
 				}
 
+				> .name-edit {
+					display: none;
+				}
+
 				> .actions,
 				> .more {
 					flex: 0 0 auto;

@@ -158,6 +158,10 @@ class WebsitesController extends Controller
 
 			foreach ($data as $key => $value) {
 				switch ($key) {
+					case 'name':
+						$website->setName($value);
+						break;
+
 					case 'type':
 						$website->setType((int) $value);
 						break;

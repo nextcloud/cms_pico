@@ -241,6 +241,45 @@
 				});
 			});
 
+			// change website name
+			$website.find('.name').on('dblclick.CMSPicoWebsiteList', function (event) {
+				event.preventDefault();
+
+				var $textContainer = $(this),
+					$inputContainer = $textContainer.siblings('.name-edit'),
+					$input = $inputContainer.children('.input-name');
+
+				$textContainer.hide();
+				$inputContainer.show();
+				$input.focus();
+			});
+
+			$website.find('.name-edit > .input-name')
+				.on('change.CMSPicoWebsiteList', function (event) {
+					var $input = $(this),
+						$inputContainer = $input.parent(),
+						$textContainer = $inputContainer.siblings('.name'),
+						oldValue = $input.prop('placeholder'),
+						newValue = $input.val() || oldValue;
+
+					$inputContainer.hide();
+					$textContainer.show();
+
+					$input.val(newValue);
+
+					if (newValue !== oldValue) {
+						that._updateItem(websiteData.id, { name: newValue });
+					}
+				})
+				.on('keyup.CMSPicoWebsiteList', function (event) {
+					if ((event.which === 13) || (event.which === 27)) {
+						$(this).change();
+					}
+				})
+				.on('blur.CMSPicoWebsiteList', function (event) {
+					$(this).change();
+				});
+
 			// change website theme
 			$website.find('.action-theme').each(function () {
 				var $this = $(this);
@@ -248,7 +287,6 @@
 				$this.val(websiteData.theme);
 
 				$this.on('change.CMSPicoWebsiteList', function (event) {
-					event.preventDefault();
 					that._updateItem(websiteData.id, { theme: $(this).val() });
 				});
 			});
