@@ -21,6 +21,7 @@ build:
         override:
           - php --info
           - composer --version
+          - echo Installing $APP_NAME on Nextcloud branch $NEXTCLOUD
 
           - make build-dev version=latest
           - cp build/$APP_NAME-latest.tar.gz ~/$APP_NAME.tar.gz
