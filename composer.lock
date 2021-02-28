@@ -419,7 +419,7 @@
         },
         {
             "name": "symfony/polyfill-ctype",
-            "version": "v1.22.0",
+            "version": "v1.22.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-ctype.git",
@@ -911,16 +911,16 @@
         },
         {
             "name": "phar-io/version",
-            "version": "3.0.4",
+            "version": "3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phar-io/version.git",
-                "reference": "e4782611070e50613683d2b9a57730e9a3ba5451"
+                "reference": "bae7c545bef187884426f042434e561ab1ddb182"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phar-io/version/zipball/e4782611070e50613683d2b9a57730e9a3ba5451",
-                "reference": "e4782611070e50613683d2b9a57730e9a3ba5451",
+                "url": "https://api.github.com/repos/phar-io/version/zipball/bae7c545bef187884426f042434e561ab1ddb182",
+                "reference": "bae7c545bef187884426f042434e561ab1ddb182",
                 "shasum": ""
             },
             "require": {
@@ -954,7 +954,7 @@
                 }
             ],
             "description": "Library for handling version information and constraints",
-            "time": "2020-12-13T23:18:30+00:00"
+            "time": "2021-02-23T14:00:09+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -1577,16 +1577,16 @@
         },
         {
             "name": "phrozenbyte/phpunit-array-asserts",
-            "version": "v1.1.0",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PhrozenByte/phpunit-array-asserts.git",
-                "reference": "b2398eddaba60a1ec526bd54ab688cb36e670db1"
+                "reference": "b0e0a2d58cef49db4c68bd620b4b22f74fc87f7d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PhrozenByte/phpunit-array-asserts/zipball/b2398eddaba60a1ec526bd54ab688cb36e670db1",
-                "reference": "b2398eddaba60a1ec526bd54ab688cb36e670db1",
+                "url": "https://api.github.com/repos/PhrozenByte/phpunit-array-asserts/zipball/b0e0a2d58cef49db4c68bd620b4b22f74fc87f7d",
+                "reference": "b0e0a2d58cef49db4c68bd620b4b22f74fc87f7d",
                 "shasum": ""
             },
             "require": {
@@ -1600,9 +1600,12 @@
             "require-dev": {
                 "incompass/coverage": "^1.0",
                 "mockery/mockery": "^1.3",
+                "php-parallel-lint/php-parallel-lint": "^1.2",
                 "phpunit/phpunit": "^8",
+                "psalm/plugin-mockery": "^0.7.0",
+                "psalm/plugin-phpunit": "^0.15.1",
                 "symfony/yaml": "^4.4",
-                "vimeo/psalm": "^4.4"
+                "vimeo/psalm": "^4.5"
             },
             "type": "library",
             "extra": {
@@ -1632,20 +1635,20 @@
                 "phpunit-assertions",
                 "phpunit-extension"
             ],
-            "time": "2021-02-06T23:04:55+00:00"
+            "time": "2021-02-27T14:54:32+00:00"
         },
         {
             "name": "phrozenbyte/phpunit-throwable-asserts",
-            "version": "v1.1.0",
+            "version": "v1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PhrozenByte/phpunit-throwable-asserts.git",
-                "reference": "53aab8cc8f9f0cb60187dfdc4f8b9b917b26355e"
+                "reference": "590235e19a51313e03ac4110523a6d257b4c9e0a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PhrozenByte/phpunit-throwable-asserts/zipball/53aab8cc8f9f0cb60187dfdc4f8b9b917b26355e",
-                "reference": "53aab8cc8f9f0cb60187dfdc4f8b9b917b26355e",
+                "url": "https://api.github.com/repos/PhrozenByte/phpunit-throwable-asserts/zipball/590235e19a51313e03ac4110523a6d257b4c9e0a",
+                "reference": "590235e19a51313e03ac4110523a6d257b4c9e0a",
                 "shasum": ""
             },
             "require": {
@@ -1657,9 +1660,12 @@
             "require-dev": {
                 "incompass/coverage": "^1.0",
                 "mockery/mockery": "^1.3",
+                "php-parallel-lint/php-parallel-lint": "^1.2",
                 "phpunit/phpunit": "^8",
+                "psalm/plugin-mockery": "^0.7.0",
+                "psalm/plugin-phpunit": "^0.15.1",
                 "symfony/yaml": "^4.4",
-                "vimeo/psalm": "^4.4"
+                "vimeo/psalm": "^4.5"
             },
             "type": "library",
             "extra": {
@@ -1689,7 +1695,7 @@
                 "phpunit-assertions",
                 "phpunit-extension"
             ],
-            "time": "2021-02-06T23:04:10+00:00"
+            "time": "2021-02-15T17:40:06+00:00"
         },
         {
             "name": "psr/log",
@@ -2568,16 +2574,16 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.22.0",
+            "version": "v1.22.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "f377a3dd1fde44d37b9831d68dc8dea3ffd28e13"
+                "reference": "5232de97ee3b75b0360528dae24e73db49566ab1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/f377a3dd1fde44d37b9831d68dc8dea3ffd28e13",
-                "reference": "f377a3dd1fde44d37b9831d68dc8dea3ffd28e13",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/5232de97ee3b75b0360528dae24e73db49566ab1",
+                "reference": "5232de97ee3b75b0360528dae24e73db49566ab1",
                 "shasum": ""
             },
             "require": {
@@ -2641,11 +2647,11 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-01-07T16:49:33+00:00"
+            "time": "2021-01-22T09:19:47+00:00"
         },
         {
             "name": "symfony/polyfill-php80",
-            "version": "v1.22.0",
+            "version": "v1.22.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php80.git",
