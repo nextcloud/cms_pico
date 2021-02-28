@@ -64,9 +64,6 @@ class ConfigService
 	/** @var IConfig */
 	protected $config;
 
-	/** @var IUserSession */
-	protected $userSession;
-
 	/** @var array<string,string> */
 	private $defaults;
 
@@ -74,12 +71,10 @@ class ConfigService
 	 * ConfigService constructor.
 	 *
 	 * @param IConfig      $config
-	 * @param IUserSession $userSession
 	 */
-	public function __construct(IConfig $config, IUserSession $userSession)
+	public function __construct(IConfig $config)
 	{
 		$this->config = $config;
-		$this->userSession = $userSession;
 
 		$this->defaults = [
 			self::SYSTEM_TEMPLATES => '',
