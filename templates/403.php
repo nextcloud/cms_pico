@@ -30,7 +30,7 @@
 	<div class="icon-big icon-error icon-white"></div>
 	<h2><?php p($l->t('Access forbidden')); ?></h2>
 	<p class="infogroup"><?php p($_['message'] ?? ''); ?></p>
-	<p><a class="button primary" href="<?php p(\OC::$server->getURLGenerator()->linkTo('', 'index.php')); ?>">
+	<p><a class="button primary" href="<?php p($_['buttonLink']); ?>">
 		<?php p($l->t('Back to %s', [ $theme->getName() ])); ?>
 	</a></p>
 </div>
