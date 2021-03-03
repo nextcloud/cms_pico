@@ -242,43 +242,21 @@
 			});
 
 			// change website name
-			$website.find('.name').on('dblclick.CMSPicoWebsiteList', function (event) {
-				event.preventDefault();
+			var nameEditable = new OCA.CMSPico.Editable(
+				$website.find('.name > p'),
+				$website.find('.name-edit > input')
+			);
 
-				var $textContainer = $(this),
-					$inputContainer = $textContainer.siblings('.name-edit'),
-					$input = $inputContainer.children('.input-name');
-
-				$textContainer.hide();
-				$inputContainer.show();
-				$input.focus();
+			nameEditable.on('submit.CMSPicoWebsiteList', function (value, defaultValue) {
+				if (value !== defaultValue) {
+					that._updateItem(websiteData.id, { name: value });
+				}
 			});
 
-			$website.find('.name-edit > .input-name')
-				.on('change.CMSPicoWebsiteList', function (event) {
-					var $input = $(this),
-						$inputContainer = $input.parent(),
-						$textContainer = $inputContainer.siblings('.name'),
-						oldValue = $input.prop('placeholder'),
-						newValue = $input.val() || oldValue;
-
-					$inputContainer.hide();
-					$textContainer.show();
-
-					$input.val(newValue);
-
-					if (newValue !== oldValue) {
-						that._updateItem(websiteData.id, { name: newValue });
-					}
-				})
-				.on('keyup.CMSPicoWebsiteList', function (event) {
-					if ((event.which === 13) || (event.which === 27)) {
-						$(this).change();
-					}
-				})
-				.on('blur.CMSPicoWebsiteList', function (event) {
-					$(this).change();
-				});
+			$website.find('.action-rename').on('click.CMSPicoWebsiteList', function (event) {
+				event.preventDefault();
+				nameEditable.toggle();
+			});
 
 			// change website theme
 			$website.find('.action-theme').each(function () {

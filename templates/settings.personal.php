@@ -153,6 +153,11 @@ style(Application::APP_NAME, 'pico');
 							<span class="icon-files-dark"></span>
 							<span class="hidden-visually"><?php p($l->t('Go to website directory')); ?></span>
 						</a>
+						<a class="action action-rename has-tooltip"
+							title="<?php p($l->t('Edit website name')); ?>">
+							<span class="icon-edit"></span>
+							<span class="hidden-visually"><?php p($l->t('Edit website name')); ?></span>
+						</a>
 						<a class="action action-private has-tooltip"
 								title="<?php p($l->t('Edit private website settings')); ?>">
 							<span class="icon-lock-open"></span>
@@ -180,6 +185,12 @@ style(Application::APP_NAME, 'pico');
 									<a class="action-files">
 										<span class="icon-files-dark"></span>
 										<span><?php p($l->t('Go to website directory')); ?></span>
+									</a>
+								</li>
+								<li>
+									<a class="action-rename">
+										<span class="icon-edit"></span>
+										<span><?php p($l->t('Edit website name')); ?></span>
 									</a>
 								</li>
 								<li>
