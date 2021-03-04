@@ -159,7 +159,7 @@ class PicoControllerIntegrationTest extends TestCase
 		$this->assertSame($expectedStatusCode, $response->getStatus());
 
 		if ($expectedMessage !== null) {
-			$actualMessage = $response->getParams()['message'] ?? null;
+			$actualMessage = $response->getParams()['error'] ?? null;
 			$this->assertSame($expectedMessage, $actualMessage);
 		}
 	}

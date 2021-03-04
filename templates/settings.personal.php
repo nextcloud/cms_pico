@@ -244,8 +244,18 @@ style(Application::APP_NAME, 'pico');
 			<div class="icon icon-error-color"></div>
 			<div>
 				<p><?php p($l->t(
-					'A unexpected error occured while performing this action. Please check Nextcloud\'s logs.'
+					'A unexpected error occurred while performing this action. Please check Nextcloud\'s logs.'
 				)); ?></p>
+				<p class="error-details" style="display: none">
+					<?php p($l->t('Error: {error}')); ?>
+				</p>
+				<p class="exception-details" style="display: none">
+					<?php p($l->t('Encountered unexpected {exception}: {exceptionMessage}')); ?>
+				</p>
+			</div>
+			<div class="action action-reload icon-redo-alt has-tooltip" data-placement="left"
+				title="<?php p($l->t('Reload websites list')); ?>">
+				<span class="hidden-visually"><?php p($l->t('Reload websites list')); ?></span>
 			</div>
 		</div>
 	</script>
@@ -259,7 +269,8 @@ style(Application::APP_NAME, 'pico');
 		)); ?></p>
 
 		<div id="picocms-website-form" class="picocms-website-form"
-				data-route="/apps/cms_pico/personal/websites">
+				data-route="/apps/cms_pico/personal/websites"
+				data-error-template="#picocms-website-form-error">
 			<form class="form">
 				<fieldset>
 					<div class="label">
@@ -278,9 +289,7 @@ style(Application::APP_NAME, 'pico');
 						</p>
 						<div class="message input-error">
 							<div class="icon icon-error-color"></div>
-							<div>
-								<p class="input-name-error"></p>
-							</div>
+							<div class="input-name-error"></div>
 						</div>
 					</div>
 				</fieldset>
@@ -305,9 +314,7 @@ style(Application::APP_NAME, 'pico');
 						</p>
 						<div class="message input-error">
 							<div class="icon icon-error-color"></div>
-							<div>
-								<p class="input-site-error"></p>
-							</div>
+							<div class="input-site-error"></div>
 						</div>
 					</div>
 				</fieldset>
@@ -342,9 +349,7 @@ style(Application::APP_NAME, 'pico');
 						</p>
 						<div class="message input-error">
 							<div class="icon icon-error-color"></div>
-							<div>
-								<p class="input-path-error"></p>
-							</div>
+							<div class="input-path-error"></div>
 						</div>
 					</div>
 				</fieldset>
@@ -370,9 +375,7 @@ style(Application::APP_NAME, 'pico');
 						</p>
 						<div class="message input-error">
 							<div class="icon icon-error-color"></div>
-							<div>
-								<p class="input-theme-error"></p>
-							</div>
+							<div class="input-theme-error"></div>
 						</div>
 					</div>
 				</fieldset>
@@ -399,9 +402,7 @@ style(Application::APP_NAME, 'pico');
 						</p>
 						<div class="message input-error">
 							<div class="icon icon-error-color"></div>
-							<div>
-								<p class="input-template-error"></p>
-							</div>
+							<div class="input-template-error"></div>
 						</div>
 					</div>
 				</fieldset>
@@ -410,9 +411,7 @@ style(Application::APP_NAME, 'pico');
 					<div class="content">
 						<div class="message input-error">
 							<div class="icon icon-error-color"></div>
-							<div>
-								<p class="input-unknown-error"></p>
-							</div>
+							<div class="input-unknown-error"></div>
 						</div>
 
 						<input class="form-submit" type="submit"
@@ -424,5 +423,17 @@ style(Application::APP_NAME, 'pico');
 				</fieldset>
 			</form>
 		</div>
+
+		<script id="picocms-website-form-error" type="text/template">
+			<p><?php p($l->t(
+				'A unexpected error occurred while performing this action. Please check Nextcloud\'s logs.'
+			)); ?></p>
+			<p class="error-details" style="display: none">
+				<?php p($l->t('Error: {error}')); ?>
+			</p>
+			<p class="exception-details" style="display: none">
+				<?php p($l->t('Encountered unexpected {exception}: {exceptionMessage}')); ?>
+			</p>
+		</script>
 	</article>
 <?php } ?>

@@ -68,13 +68,17 @@ class ThemesController extends Controller
 	 */
 	public function getThemes(): DataResponse
 	{
-		$data = [
-			'systemItems' => $this->themesService->getSystemThemes(),
-			'customItems' => $this->themesService->getCustomThemes(),
-			'newItems' => $this->themesService->getNewCustomThemes(),
-		];
+		try {
+			$data = [
+				'systemItems' => $this->themesService->getSystemThemes(),
+				'customItems' => $this->themesService->getCustomThemes(),
+				'newItems' => $this->themesService->getNewCustomThemes(),
+			];
 
-		return new DataResponse($data, Http::STATUS_OK);
+			return new DataResponse($data);
+		} catch (\Throwable $e) {
+			return $this->createErrorResponse($e);
+		}
 	}
 
 	/**
@@ -92,7 +96,7 @@ class ThemesController extends Controller
 			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Theme not found.') ]);
 		} catch (ThemeAlreadyExistsException $e) {
 			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Theme exists already.') ]);
-		} catch (\Exception $e) {
+		} catch (\Throwable $e) {
 			return $this->createErrorResponse($e);
 		}
 	}
@@ -111,7 +115,7 @@ class ThemesController extends Controller
 			return $this->getThemes();
 		} catch (ThemeNotFoundException $e) {
 			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Theme not found.') ]);
-		} catch (\Exception $e) {
+		} catch (\Throwable $e) {
 			return $this->createErrorResponse($e);
 		}
 	}
@@ -129,7 +133,7 @@ class ThemesController extends Controller
 			return $this->getThemes();
 		} catch (ThemeNotFoundException $e) {
 			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Theme not found.') ]);
-		} catch (\Exception $e) {
+		} catch (\Throwable $e) {
 			return $this->createErrorResponse($e);
 		}
 	}
@@ -150,7 +154,7 @@ class ThemesController extends Controller
 			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Theme not found.') ]);
 		} catch (ThemeAlreadyExistsException $e) {
 			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Theme exists already.') ]);
-		} catch (\Exception $e) {
+		} catch (\Throwable $e) {
 			return $this->createErrorResponse($e);
 		}
 	}

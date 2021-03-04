@@ -243,9 +243,14 @@ style(Application::APP_NAME, 'pico');
 			<div class="icon icon-error-color"></div>
 			<div>
 				<p><?php p($l->t(
-					'A unexpected error occured while performing this action. Please check Nextcloud\'s logs.'
+					'A unexpected error occurred while performing this action. Please check Nextcloud\'s logs.'
 				)); ?></p>
-				<p class="error-details" style="display: none"><?php p($l->t('Error')); ?>: {message}</p>
+				<p class="error-details" style="display: none">
+					<?php p($l->t('Error: {error}')); ?>
+				</p>
+				<p class="exception-details" style="display: none">
+					<?php p($l->t('Encountered unexpected {exception}: {exceptionMessage}')); ?>
+				</p>
 			</div>
 			<div class="action action-reload icon-redo-alt has-tooltip" data-placement="left"
 					title="<?php p($l->t('Reload themes list')); ?>">
@@ -378,9 +383,14 @@ style(Application::APP_NAME, 'pico');
 			<div class="icon icon-error-color"></div>
 			<div>
 				<p><?php p($l->t(
-					'A unexpected error occured while performing this action. Please check Nextcloud\'s logs.'
+					'A unexpected error occurred while performing this action. Please check Nextcloud\'s logs.'
 				)); ?></p>
-				<p class="error-details" style="display: none"><?php p($l->t('Error')); ?>: {message}</p>
+				<p class="error-details" style="display: none">
+					<?php p($l->t('Error: {error}')); ?>
+				</p>
+				<p class="exception-details" style="display: none">
+					<?php p($l->t('Encountered unexpected {exception}: {exceptionMessage}')); ?>
+				</p>
 			</div>
 			<div class="action action-reload icon-redo-alt has-tooltip" data-placement="left"
 					title="<?php p($l->t('Reload plugins list')); ?>">
@@ -537,9 +547,14 @@ style(Application::APP_NAME, 'pico');
 			<div class="icon icon-error-color"></div>
 			<div>
 				<p><?php p($l->t(
-					'A unexpected error occured while performing this action. Please check Nextcloud\'s logs.'
+					'A unexpected error occurred while performing this action. Please check Nextcloud\'s logs.'
 				)); ?></p>
-				<p class="error-details" style="display: none"><?php p($l->t('Error')); ?>: {message}</p>
+				<p class="error-details" style="display: none">
+					<?php p($l->t('Error: {error}')); ?>
+				</p>
+				<p class="exception-details" style="display: none">
+					<?php p($l->t('Encountered unexpected {exception}: {exceptionMessage}')); ?>
+				</p>
 			</div>
 			<div class="action action-reload icon-redo-alt has-tooltip" data-placement="left"
 					title="<?php p($l->t('Reload templates list')); ?>">
