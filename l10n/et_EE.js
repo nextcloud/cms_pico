@@ -20,7 +20,6 @@ OC.L10N.register(
     "Line: %s" : "Rida: %s",
     "Trace" : "Jälita",
     "Limit to groups" : "Luba gruppidele",
-    "Error" : "Viga",
     "Custom templates" : "Kohandatud mallid",
     "Add custom template" : "Lisa kohandatud mall",
     "Delete custom template" : "Kustuta kohandatud mall",

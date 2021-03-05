@@ -4,7 +4,6 @@ OC.L10N.register(
     "Save" : "Späicheren",
     "Location" : "Uert",
     "Access forbidden" : "Zougrëff net erlaabt",
-    "Error" : "Fehler",
     "Name" : "Numm",
     "Path" : "Pad",
     "Actions" : "Aktiounen",

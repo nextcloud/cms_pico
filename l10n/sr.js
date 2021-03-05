@@ -26,7 +26,6 @@ OC.L10N.register(
     "Custom themes" : "Произвољне теме",
     "Add custom theme" : "Додај произвољну тему",
     "Delete custom theme" : "Обриши произвољну тему",
-    "Error" : "Грешка",
     "Custom templates" : "Произвољни шаблони",
     "Add custom template" : "Додај произвољни шаблон",
     "Delete custom template" : "Обриши произвољни шаблон",

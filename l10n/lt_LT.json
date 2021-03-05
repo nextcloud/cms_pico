@@ -1,7 +1,6 @@
 { "translations": {
     "Copy" : "Kopijuoti",
     "Confirm website deletion" : "Patvirtinkite svetainės ištrynimą",
-    "A unexpected error occured while performing this action. Please check Nextcloud's logs." : "Atliekant šį veiksmą, atsirado netikėta klaida. Patikrinkite Nextcloud žurnalus.",
     "Abort" : "Nutraukti",
     "Save" : "Įrašyti",
     "Plugin not found." : "Įskiepis nerastas.",
@@ -49,7 +48,6 @@
     "Copy custom theme" : "Kopijuoti tinkintą apipavidalinimą",
     "Delete custom theme" : "Ištrinti tinkintą apipavidalinimą",
     "Theme name" : "Apipavidalinimo pavadinimas",
-    "Error" : "Klaida",
     "Loading plugins…" : "Įkeliami įskiepiai…",
     "Reload plugins list" : "Įkelti įskiepių sąrašą iš naujo",
     "Compatible plugin." : "Suderinamas įskiepis.",

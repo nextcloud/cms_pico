@@ -24,7 +24,6 @@ OC.L10N.register(
     "Line: %s" : "خط: %s",
     "Trace" : "ردیابی",
     "Limit to groups" : "محدود کردن به گروه ها",
-    "Error" : "خطا",
     "Name" : "نام",
     "Path" : "مسیر",
     "Theme" : "زمینه",

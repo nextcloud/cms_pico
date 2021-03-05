@@ -24,7 +24,6 @@ OC.L10N.register(
     "Custom themes" : "Temas personalizados",
     "Add custom theme" : "Agregar tema personalizado",
     "Delete custom theme" : "Borra tema personalizado",
-    "Error" : "Error",
     "Custom templates" : "Plantillas personalizadas",
     "Add custom template" : "Agregar una plantilla personalizada",
     "Delete custom template" : "Borrar la plantilla personalizada",

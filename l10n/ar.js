@@ -16,7 +16,6 @@ OC.L10N.register(
     "Message: %s" : "الرسالة : %s",
     "File: %s" : "ملف : %s",
     "Line: %s" : "السطر: %s",
-    "Error" : "خطأ",
     "Name" : "الاسم",
     "Path" : "المسار",
     "Theme" : "المظهر",

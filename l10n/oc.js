@@ -5,7 +5,6 @@ OC.L10N.register(
     "Abort" : "Anullar",
     "Save" : "Salvar",
     "Location" : "Emplaçament",
-    "Error" : "Error",
     "Name" : "Nom",
     "Path" : "Camin",
     "Actions" : "Accions",

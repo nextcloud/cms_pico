@@ -6,7 +6,6 @@ OC.L10N.register(
     "Location" : "Байршил",
     "Access forbidden" : "Хандах эрхгүй",
     "Technical details" : "Техникийн мэдээлэл",
-    "Error" : "Алдаа",
     "Name" : "Нэр",
     "Path" : "Зам",
     "Theme" : "загвар",

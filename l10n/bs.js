@@ -12,7 +12,6 @@ OC.L10N.register(
     "Message: %s" : "Poruka: %s",
     "File: %s" : "Datoteka: %s",
     "Line: %s" : "Red: %s",
-    "Error" : "Greška",
     "Name" : "Ime",
     "Actions" : "Radnje",
     "Address" : "Adresa"

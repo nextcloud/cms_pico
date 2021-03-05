@@ -22,7 +22,6 @@ OC.L10N.register(
     "Line: %s" : "Линија: %s",
     "Trace" : "Следи",
     "Limit to groups" : "Ограничување на групи",
-    "Error" : "Грешка",
     "Name" : "Име",
     "Path" : "Патека",
     "Theme" : "Тема",

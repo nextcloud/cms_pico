@@ -17,7 +17,6 @@ OC.L10N.register(
     "File: %s" : "Fayl: %s",
     "Line: %s" : "Qator: %s",
     "Trace" : "Iz",
-    "Error" : "Xato",
     "Name" : "Ism...",
     "Loading…" : "Yuklanmoqda…"
 },

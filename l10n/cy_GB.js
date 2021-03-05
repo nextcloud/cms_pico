@@ -6,7 +6,6 @@ OC.L10N.register(
     "Location" : "Lleoliad",
     "Access forbidden" : "Mynediad wedi'i wahardd",
     "Not found" : "Heb ei ganfod",
-    "Error" : "Gwall",
     "Name" : "Enw",
     "Actions" : "Gweithredoedd",
     "Address" : "Cyfeiriad",

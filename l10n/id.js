@@ -21,7 +21,6 @@ OC.L10N.register(
     "Line: %s" : "Baris: %s",
     "Trace" : "Jejak",
     "Limit to groups" : "Batasi ke grup",
-    "Error" : "Kesalahan",
     "Name" : "Nama",
     "Path" : "Jalur",
     "Created" : "Dibuat",

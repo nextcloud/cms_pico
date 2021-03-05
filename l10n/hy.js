@@ -10,7 +10,6 @@ OC.L10N.register(
     "File: %s" : "Ֆայլ. %s",
     "Line: %s" : "Տող. %s",
     "Trace" : "Հետք",
-    "Error" : "Սխալ",
     "Name" : "Անուն",
     "Address" : "Հասցե"
 },

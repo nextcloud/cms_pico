@@ -17,7 +17,6 @@ OC.L10N.register(
     "File: %s" : "Ficheru: %s",
     "Line: %s" : "Llinia: %s",
     "Limit to groups" : "Llendar a grupos",
-    "Error" : "Fallu",
     "Add custom template" : "Amestar plantía personalizada",
     "Delete custom template" : "Desaniciar plantía personalizada",
     "Name" : "Nome",
