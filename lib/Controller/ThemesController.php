@@ -30,7 +30,6 @@ use OCA\CMSPico\Exceptions\ThemeAlreadyExistsException;
 use OCA\CMSPico\Exceptions\ThemeNotFoundException;
 use OCA\CMSPico\Service\ThemesService;
 use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IL10N;
 use OCP\ILogger;

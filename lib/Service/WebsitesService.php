@@ -90,8 +90,6 @@ class WebsitesService
 	 * @param PicoService      $picoService
 	 * @param AssetsService    $assetsService
 	 * @param MiscService      $miscService
-	 *
-	 * @internal param Manager $encryptionManager
 	 */
 	public function __construct(
 		WebsitesRequest $websiteRequest,

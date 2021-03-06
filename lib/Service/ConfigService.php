@@ -27,7 +27,6 @@ namespace OCA\CMSPico\Service;
 
 use OCA\CMSPico\AppInfo\Application;
 use OCP\IConfig;
-use OCP\IUserSession;
 
 class ConfigService
 {

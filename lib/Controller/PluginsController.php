@@ -30,7 +30,6 @@ use OCA\CMSPico\Exceptions\PluginAlreadyExistsException;
 use OCA\CMSPico\Exceptions\PluginNotFoundException;
 use OCA\CMSPico\Service\PluginsService;
 use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IL10N;
 use OCP\ILogger;

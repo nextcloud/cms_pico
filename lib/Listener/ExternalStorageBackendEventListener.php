@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace OCA\CMSPico\Listener;
 
 use OCA\CMSPico\ExternalStorage\BackendProvider;
-use OCA\CMSPico\Service\WebsitesService;
 use OCA\Files_External\Service\BackendService;
 use OCP\Encryption\IManager as EncryptionManager;
 use OCP\EventDispatcher\Event;
