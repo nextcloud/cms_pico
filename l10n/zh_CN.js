@@ -58,6 +58,7 @@ OC.L10N.register(
     "File: %s" : "文件：%s",
     "Line: %s" : "行：%s",
     "Trace" : "追踪",
+    "Your Nextcloud installation is incompatible with Pico CMS for Nextcloud!" : "您的Nextcloud安装实例与Pico CMS for Nextcloud不兼容！",
     "Pico CMS for Nextcloud" : "Pico CMS for Nextcloud",
     "Change Pico CMS for Nextcloud's behavior and manage optional features." : "改变Pico CMS for Nextcloud的行为并管理可选的功能。",
     "Limit to groups" : "限制于分组",
