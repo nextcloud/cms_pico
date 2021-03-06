@@ -221,7 +221,7 @@
 					]
 				});
 
-				dialog.on('open.CMSPicoAdminList', function () {
+				dialog.on('open.CMSPicoWebsiteList', function () {
 					var $inputType = this.$element.find('.input-private-' + (!websitePrivate ? 'public' : 'private')),
 						$inputGroups = this.$element.find('.input-private-groups');
 
@@ -230,12 +230,12 @@
 					OC.Settings.setupGroupsSelect($inputGroups);
 				});
 
-				dialog.on('submit.CMSPicoAdminList', function () {
+				dialog.on('submit.CMSPicoWebsiteList', function () {
 					var data = OCA.CMSPico.Util.serialize(this.$element);
 					that._updateItem(websiteData.id, data);
 				});
 
-				$this.on('click.CMSPicoAdminList', function (event) {
+				$this.on('click.CMSPicoWebsiteList', function (event) {
 					event.preventDefault();
 					dialog.open();
 				});
