@@ -21,7 +21,6 @@ OC.L10N.register(
     "Line: %s" : "Linio: %s",
     "Trace" : "Spuro",
     "Limit to groups" : "Limigi al grupoj",
-    "Error" : "Eraro",
     "Name" : "Nomo",
     "Path" : "Vojo",
     "Created" : "Kreita",

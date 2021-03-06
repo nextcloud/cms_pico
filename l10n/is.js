@@ -48,7 +48,6 @@ OC.L10N.register(
     "Add custom theme" : "Bæta við sérsniðnu þema",
     "Custom theme" : "Sérsniðið þema",
     "Delete custom theme" : "Eyða sérsniðnu þema",
-    "Error" : "Villa",
     "Loading plugins…" : "Hleð inn viðbótum…",
     "Custom templates" : "Sérsniðin sniðmát",
     "Add custom template" : "Bæta við sérsniðnu sniðmáti",

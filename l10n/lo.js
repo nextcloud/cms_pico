@@ -17,7 +17,6 @@ OC.L10N.register(
     "File: %s" : "ຟາຍ%s",
     "Line: %s" : "ສາຍ: %s",
     "Trace" : "ຕິດຕາມ",
-    "Error" : "ຜິດພາດ",
     "Name" : "ຊື່"
 },
 "nplurals=1; plural=0;");

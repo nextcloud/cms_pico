@@ -30,7 +30,6 @@ use OCA\CMSPico\Exceptions\PluginAlreadyExistsException;
 use OCA\CMSPico\Exceptions\PluginNotFoundException;
 use OCA\CMSPico\Service\PluginsService;
 use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IL10N;
 use OCP\ILogger;
@@ -68,13 +67,17 @@ class PluginsController extends Controller
 	 */
 	public function getPlugins(): DataResponse
 	{
-		$data = [
-			'systemItems' => $this->pluginsService->getSystemPlugins(),
-			'customItems' => $this->pluginsService->getCustomPlugins(),
-			'newItems' => $this->pluginsService->getNewCustomPlugins(),
-		];
+		try {
+			$data = [
+				'systemItems' => $this->pluginsService->getSystemPlugins(),
+				'customItems' => $this->pluginsService->getCustomPlugins(),
+				'newItems' => $this->pluginsService->getNewCustomPlugins(),
+			];
 
-		return new DataResponse($data, Http::STATUS_OK);
+			return new DataResponse($data);
+		} catch (\Throwable $e) {
+			return $this->createErrorResponse($e);
+		}
 	}
 
 	/**
@@ -92,7 +95,7 @@ class PluginsController extends Controller
 			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Plugin not found.') ]);
 		} catch (PluginAlreadyExistsException $e) {
 			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Plugin exists already.') ]);
-		} catch (\Exception $e) {
+		} catch (\Throwable $e) {
 			return $this->createErrorResponse($e);
 		}
 	}
@@ -111,7 +114,7 @@ class PluginsController extends Controller
 			return $this->getPlugins();
 		} catch (PluginNotFoundException $e) {
 			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Plugin not found.') ]);
-		} catch (\Exception $e) {
+		} catch (\Throwable $e) {
 			return $this->createErrorResponse($e);
 		}
 	}
@@ -129,7 +132,7 @@ class PluginsController extends Controller
 			return $this->getPlugins();
 		} catch (PluginNotFoundException $e) {
 			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Plugin not found.') ]);
-		} catch (\Exception $e) {
+		} catch (\Throwable $e) {
 			return $this->createErrorResponse($e);
 		}
 	}

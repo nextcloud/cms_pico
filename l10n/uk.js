@@ -22,7 +22,6 @@ OC.L10N.register(
     "Line: %s" : "Рядок: %s",
     "Trace" : "Трасування",
     "Limit to groups" : "Обмежити групами",
-    "Error" : "Помилка",
     "Name" : "Ім'я",
     "Path" : "Шлях",
     "Theme" : "Тема",

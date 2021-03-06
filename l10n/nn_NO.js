@@ -5,7 +5,6 @@ OC.L10N.register(
     "Save" : "Lagre",
     "Location" : "Stad",
     "Access forbidden" : "Tilgang forbudt",
-    "Error" : "Feil",
     "Name" : "Namn",
     "Path" : "Vei",
     "Created" : "Lagd",

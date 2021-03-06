@@ -12,7 +12,6 @@ OC.L10N.register(
     "Technical details" : "තාක්ෂණික විස්තර",
     "Message: %s" : "පණිවිඩය: %s",
     "File: %s" : "ගොනුව: %s",
-    "Error" : "දෝෂය",
     "Name" : "නම",
     "Theme" : "තේමාව",
     "Actions" : "ක්‍රියාමාර්ග",

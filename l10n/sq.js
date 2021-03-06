@@ -18,7 +18,6 @@ OC.L10N.register(
     "Line: %s" : "Rresht: %s",
     "Trace" : "Gjurmim",
     "Limit to groups" : "Kufizo grupet",
-    "Error" : "Error",
     "Name" : "Emri",
     "Path" : "Adresa",
     "Theme" : "Shabllon",

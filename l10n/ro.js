@@ -21,7 +21,6 @@ OC.L10N.register(
     "Line: %s" : "Linia: %s",
     "Trace" : "Traseu",
     "Limit to groups" : "Limitează pentru grupuri",
-    "Error" : "Eroare",
     "Name" : "Nume",
     "Path" : "Cale",
     "Actions" : "Acțiuni",

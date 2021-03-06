@@ -18,7 +18,6 @@ OC.L10N.register(
     "Line: %s" : "Līnija: %s",
     "Trace" : "Izsekot",
     "Limit to groups" : "Grupu ierobežojums",
-    "Error" : "Kļūda",
     "Name" : "Vārds",
     "Path" : "Ceļš",
     "Created" : "Izveidots",

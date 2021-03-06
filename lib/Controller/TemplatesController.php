@@ -30,7 +30,6 @@ use OCA\CMSPico\Exceptions\TemplateAlreadyExistsException;
 use OCA\CMSPico\Exceptions\TemplateNotFoundException;
 use OCA\CMSPico\Service\TemplatesService;
 use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IL10N;
 use OCP\ILogger;
@@ -68,13 +67,17 @@ class TemplatesController extends Controller
 	 */
 	public function getTemplates(): DataResponse
 	{
-		$data = [
-			'systemItems' => $this->templatesService->getSystemTemplates(),
-			'customItems' => $this->templatesService->getCustomTemplates(),
-			'newItems' => $this->templatesService->getNewCustomTemplates(),
-		];
+		try {
+			$data = [
+				'systemItems' => $this->templatesService->getSystemTemplates(),
+				'customItems' => $this->templatesService->getCustomTemplates(),
+				'newItems' => $this->templatesService->getNewCustomTemplates(),
+			];
 
-		return new DataResponse($data, Http::STATUS_OK);
+			return new DataResponse($data);
+		} catch (\Throwable $e) {
+			return $this->createErrorResponse($e);
+		}
 	}
 
 	/**
@@ -92,7 +95,7 @@ class TemplatesController extends Controller
 			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Template not found.') ]);
 		} catch (TemplateAlreadyExistsException $e) {
 			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Template exists already.') ]);
-		} catch (\Exception $e) {
+		} catch (\Throwable $e) {
 			return $this->createErrorResponse($e);
 		}
 	}
@@ -110,7 +113,7 @@ class TemplatesController extends Controller
 			return $this->getTemplates();
 		} catch (TemplateNotFoundException $e) {
 			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Template not found.') ]);
-		} catch (\Exception $e) {
+		} catch (\Throwable $e) {
 			return $this->createErrorResponse($e);
 		}
 	}
@@ -131,7 +134,7 @@ class TemplatesController extends Controller
 			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Template not found.') ]);
 		} catch (TemplateAlreadyExistsException $e) {
 			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Template exists already.') ]);
-		} catch (\Exception $e) {
+		} catch (\Throwable $e) {
 			return $this->createErrorResponse($e);
 		}
 	}

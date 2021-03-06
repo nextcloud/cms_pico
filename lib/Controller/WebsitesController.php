@@ -38,7 +38,6 @@ use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
 use OCA\CMSPico\Model\Website;
 use OCA\CMSPico\Service\WebsitesService;
 use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IL10N;
 use OCP\ILogger;
@@ -89,9 +88,13 @@ class WebsitesController extends Controller
 	 */
 	public function getPersonalWebsites(): DataResponse
 	{
-		$userId = $this->userSession->getUser()->getUID();
-		$data = [ 'websites' => $this->websitesService->getWebsitesFromUser($userId) ];
-		return new DataResponse($data, Http::STATUS_OK);
+		try {
+			$userId = $this->userSession->getUser()->getUID();
+			$data = [ 'websites' => $this->websitesService->getWebsitesFromUser($userId) ];
+			return new DataResponse($data);
+		} catch (\Throwable $e) {
+			return $this->createErrorResponse($e);
+		}
 	}
 
 	/**
@@ -103,9 +106,9 @@ class WebsitesController extends Controller
 	 */
 	public function createPersonalWebsite(array $data): DataResponse
 	{
-		$userId = $this->userSession->getUser()->getUID();
-
 		try {
+			$userId = $this->userSession->getUser()->getUID();
+
 			$website = (new Website())
 				->setName($data['name'] ?? '')
 				->setUserId($userId)
@@ -118,22 +121,22 @@ class WebsitesController extends Controller
 			$this->websitesService->createWebsite($website, $data['template'] ?? '');
 
 			return $this->getPersonalWebsites();
-		} catch (\Exception $e) {
+		} catch (\Throwable $e) {
 			$error = [];
 			if ($e instanceof WebsiteExistsException) {
-				$error['error'] = [ 'field' => 'site', 'message' => $this->l10n->t('Website exists.') ];
+				$error += [ 'errorField' => 'site', 'error' => $this->l10n->t('Website exists.') ];
 			} elseif ($e instanceof WebsiteInvalidOwnerException) {
-				$error['error'] = [ 'field' => 'user', 'message' => $this->l10n->t('No permission.') ];
+				$error += [ 'errorField' => 'user', 'error' => $this->l10n->t('No permission.') ];
 			} elseif (($e instanceof WebsiteInvalidDataException) && $e->getField()) {
-				$error['error'] = [ 'field' => $e->getField(), 'message' => $e->getMessage() ];
+				$error += [ 'errorField' => $e->getField(), 'error' => $e->getMessage() ];
 			} elseif ($e instanceof ThemeNotFoundException) {
-				$error['error'] = [ 'field' => 'theme', 'message' => $this->l10n->t('Theme not found.') ];
+				$error += [ 'errorField' => 'theme', 'error' => $this->l10n->t('Theme not found.') ];
 			} elseif ($e instanceof ThemeNotCompatibleException) {
-				$error['error'] = [ 'field' => 'theme', 'message' => $this->l10n->t($e->getReason()) ];
+				$error += [ 'errorField' => 'theme', 'error' => $this->l10n->t($e->getReason()) ];
 			} elseif ($e instanceof TemplateNotFoundException) {
-				$error['error'] = [ 'field' => 'template', 'message' => $this->l10n->t('Template not found.') ];
+				$error += [ 'errorField' => 'template', 'error' => $this->l10n->t('Template not found.') ];
 			} elseif ($e instanceof TemplateNotCompatibleException) {
-				$error['error'] = [ 'field' => 'template', 'message' => $this->l10n->t($e->getReason()) ];
+				$error += [ 'errorField' => 'template', 'error' => $this->l10n->t($e->getReason()) ];
 			}
 
 			return $this->createErrorResponse($e, $error);
@@ -192,20 +195,20 @@ class WebsitesController extends Controller
 			$this->websitesService->updateWebsite($website);
 
 			return $this->getPersonalWebsites();
-		} catch (\Exception $e) {
+		} catch (\Throwable $e) {
 			$error = [];
 			if (($e instanceof WebsiteNotFoundException) || ($e instanceof WebsiteForeignOwnerException)) {
-				$error['error'] = [ 'field' => 'identifier', 'message' => $this->l10n->t('Website not found.') ];
+				$error += [ 'errorField' => 'identifier', 'error' => $this->l10n->t('Website not found.') ];
 			} elseif ($e instanceof WebsiteInvalidDataException) {
-				$error['error'] = [ 'field' => $e->getField(), 'message' => $e->getMessage() ];
+				$error += [ 'errorField' => $e->getField(), 'error' => $e->getMessage() ];
 			} elseif ($e instanceof ThemeNotFoundException) {
-				$error['error'] = [ 'field' => 'theme', 'message' => $this->l10n->t('Theme not found.') ];
+				$error += [ 'errorField' => 'theme', 'error' => $this->l10n->t('Theme not found.') ];
 			} elseif ($e instanceof ThemeNotCompatibleException) {
-				$error['error'] = [ 'field' => 'theme', 'message' => $this->l10n->t($e->getReason()) ];
+				$error += [ 'errorField' => 'theme', 'error' => $this->l10n->t($e->getReason()) ];
 			} elseif ($e instanceof TemplateNotFoundException) {
-				$error['error'] = [ 'field' => 'template', 'message' => $this->l10n->t('Template not found.') ];
+				$error += [ 'errorField' => 'template', 'error' => $this->l10n->t('Template not found.') ];
 			} elseif ($e instanceof TemplateNotCompatibleException) {
-				$error['error'] = [ 'field' => 'template', 'message' => $this->l10n->t($e->getReason()) ];
+				$error += [ 'errorField' => 'template', 'error' => $this->l10n->t($e->getReason()) ];
 			}
 
 			return $this->createErrorResponse($e, $error);
@@ -230,11 +233,9 @@ class WebsitesController extends Controller
 			$this->websitesService->deleteWebsite($website);
 
 			return $this->getPersonalWebsites();
-		} catch (WebsiteNotFoundException $e) {
+		} catch (WebsiteNotFoundException | WebsiteForeignOwnerException $e) {
 			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Website not found.') ]);
-		} catch (WebsiteForeignOwnerException $e) {
-			return $this->createErrorResponse($e, [ 'error' => $this->l10n->t('Website not found.') ]);
-		} catch (\Exception $e) {
+		} catch (\Throwable $e) {
 			return $this->createErrorResponse($e);
 		}
 	}

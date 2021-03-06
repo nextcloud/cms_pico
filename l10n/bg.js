@@ -24,7 +24,6 @@ OC.L10N.register(
     "Limit to groups" : "Ограничен достъп",
     "Custom themes" : "Персонализирани теми",
     "Add custom theme" : "Добави персонализирана тема",
-    "Error" : "Грешка",
     "Name" : "Име",
     "Path" : "Път",
     "Theme" : "Тема",

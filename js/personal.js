@@ -329,9 +329,10 @@
 	 * @class
 	 * @extends OCA.CMSPico.Form
 	 *
-	 * @param {jQuery} $element
-	 * @param {Object} [options]
-	 * @param {string} [options.route]
+	 * @param {jQuery}        $element
+	 * @param {Object}        [options]
+	 * @param {string}        [options.route]
+	 * @param {jQuery|string} [options.errorTemplate]
 	 */
 	OCA.CMSPico.WebsiteForm = function ($element, options) {
 		this.initialize($element, options);
@@ -341,6 +342,29 @@
 	 * @lends OCA.CMSPico.WebsiteForm.prototype
 	 */
 	OCA.CMSPico.WebsiteForm.prototype = $.extend({}, OCA.CMSPico.Form.prototype, {
+		/** @member {jQuery} */
+		$errorTemplate: $(),
+
+		/**
+		 * @constructs
+		 *
+		 * @param {jQuery}        $element
+		 * @param {Object}        [options]
+		 * @param {string}        [options.route]
+		 * @param {jQuery|string} [options.errorTemplate]
+		 */
+		initialize: function ($element, options) {
+			OCA.CMSPico.Form.prototype.initialize.apply(this, arguments);
+
+			options = $.extend({ errorTemplate: $element.data('errorTemplate') }, options);
+
+			this.$errorTemplate = $(options.errorTemplate);
+
+			if (!this.$errorTemplate.length) {
+				throw 'OCA.CMSPico.WebsiteForm.initialize(): No valid error template given';
+			}
+		},
+
 		/**
 		 * @public
 		 */
@@ -399,7 +423,7 @@
 			}).done(function (data, textStatus, jqXHR) {
 				that._success(data);
 			}).fail(function (jqXHR, textStatus, errorThrown) {
-				that._formError((jqXHR.responseJSON || {}).error);
+				that._formError(jqXHR.responseJSON);
 
 				$submitButton.show();
 				$loadingButton.hide();
@@ -434,25 +458,44 @@
 		/**
 		 * @private
 		 *
-		 * @param {Object} errorData
+		 * @param {Object}  [responseData]
+		 * @param {string}  [responseData.error]
+		 * @param {string}  [responseData.errorField]
+		 * @param {int}     [responseData.status]
+		 * @param {string}  [responseData.exception]
+		 * @param {?string} [responseData.exceptionMessage]
+		 * @param {?int}    [responseData.exceptionCode]
 		 */
-		_formError: function (errorData) {
-			if (errorData) {
-				var $errorInput = this.$element.find('.input-' + errorData.field + '-error');
+		_formError: function (responseData) {
+			responseData = responseData || {};
 
-				if ($errorInput.length) {
-					$errorInput.closest('fieldset').addClass('form-error');
-					$errorInput.text(errorData.message);
+			if (responseData.error && responseData.errorField) {
+				var $inputErrorContainer = this.$element.find('.input-' + responseData.errorField + '-error');
+
+				if ($inputErrorContainer.length) {
+					var $inputError = $('<p></p>').text(responseData.error);
+
+					$inputErrorContainer.empty();
+					$inputErrorContainer.append($inputError);
+					$inputErrorContainer.closest('fieldset').addClass('form-error');
 					return;
 				}
 			}
 
-			var $formError = this.$element.find('.input-unknown-error'),
-				message = t('cms_pico', 'A unexpected error occured while performing this action. ' +
-						'Please check Nextcloud\'s logs.');
+			var $formErrorContainer = this.$element.find('.input-unknown-error'),
+				$formError = this.$errorTemplate.octemplate(responseData);
 
-			$formError.closest('fieldset').addClass('form-error');
-			$formError.text(message);
+			if (responseData.error) {
+				$formError.filter('.error-details').show();
+			}
+
+			if (responseData.exception) {
+				$formError.filter('.exception-details').show();
+			}
+
+			$formErrorContainer.empty();
+			$formErrorContainer.append($formError);
+			$formErrorContainer.closest('fieldset').addClass('form-error');
 		}
 	});
 

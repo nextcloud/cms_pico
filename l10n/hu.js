@@ -26,7 +26,6 @@ OC.L10N.register(
     "Custom themes" : "Egyéni témák",
     "Add custom theme" : "Egyéni téma hozzáadása",
     "Delete custom theme" : "Egyéni téma törlése",
-    "Error" : "Hiba",
     "Custom templates" : "Egyéni sablonok",
     "Add custom template" : "Egyéni sablon hozzáadás",
     "Delete custom template" : "Egyéni sablon törlése",

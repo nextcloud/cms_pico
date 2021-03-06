@@ -35,12 +35,12 @@ trait ControllerTrait
 	private $logger;
 
 	/**
-	 * @param \Exception $exception
+	 * @param \Throwable $exception
 	 * @param array      $data
 	 *
 	 * @return DataResponse
 	 */
-	private function createErrorResponse(\Exception $exception, array $data = []): DataResponse
+	private function createErrorResponse(\Throwable $exception, array $data = []): DataResponse
 	{
 		$this->logger->logException($exception, [ 'app' => Application::APP_NAME, 'level' => 2 ]);
 
@@ -49,6 +49,8 @@ trait ControllerTrait
 			$data['exception'] = get_class($exception);
 			$data['exceptionMessage'] = $exception->getMessage();
 			$data['exceptionCode'] = $exception->getCode();
+			$data['exceptionFile'] = $exception->getFile();
+			$data['exceptionLine'] = $exception->getLine();
 		}
 
 		return new DataResponse($data, Http::STATUS_INTERNAL_SERVER_ERROR);

@@ -144,7 +144,7 @@
 					callback(data);
 				}
 			}).fail(function (jqXHR, textStatus, errorThrown) {
-				that._error((jqXHR.responseJSON || {}).error);
+				that._error(jqXHR.responseJSON);
 			});
 		},
 
@@ -176,17 +176,29 @@
 		/**
 		 * @protected
 		 *
-		 * @param {string} [message]
+		 * @param {Object}  [responseData]
+		 * @param {string}  [responseData.error]
+		 * @param {string}  [responseData.errorField]
+		 * @param {int}     [responseData.status]
+		 * @param {string}  [responseData.exception]
+		 * @param {?string} [responseData.exceptionMessage]
+		 * @param {?int}    [responseData.exceptionCode]
 		 */
-		_error: function (message) {
-			var $error = this._content(this.$errorTemplate, { message: message || '' }),
+		_error: function (responseData) {
+			responseData = responseData || {};
+
+			var $error = this._content(this.$errorTemplate, responseData),
 				that = this;
 
-			if (message) {
+			if (responseData.error) {
 				$error.find('.error-details').show();
 			}
 
-			$error.find('.action-reload').on('click.CMSPicoAdminList', function (event) {
+			if (responseData.exception) {
+				$error.find('.exception-details').show();
+			}
+
+			$error.find('.action-reload').on('click.CMSPicoList', function (event) {
 				event.preventDefault();
 				that.reload();
 			});

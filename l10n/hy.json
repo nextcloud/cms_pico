@@ -8,7 +8,6 @@
     "File: %s" : "Ֆայլ. %s",
     "Line: %s" : "Տող. %s",
     "Trace" : "Հետք",
-    "Error" : "Սխալ",
     "Name" : "Անուն",
     "Address" : "Հասցե"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"

@@ -19,7 +19,6 @@ OC.L10N.register(
     "Line: %s" : "Linenn :%s",
     "Trace" : "Trace",
     "Limit to groups" : "Nemet d'ar strolladoù",
-    "Error" : "Fazi",
     "Name" : "Anv",
     "Path" : "Hent",
     "Theme" : "Tem",

@@ -241,25 +241,23 @@ class WebsitesControllerIntegrationTest extends TestCase
 
 		$this->assertThat($response->getData(), $this->logicalAnd(
 			$this->isType(IsType::TYPE_ARRAY),
-			$this->arrayHasKeyWith('error', $this->associativeArray([
-				'field' => $this->logicalAnd(
-					$this->isType(IsType::TYPE_STRING),
-					$this->logicalNot($this->isEmpty())
-				),
-				'message' => $this->logicalAnd(
-					$this->isType(IsType::TYPE_STRING),
-					$this->logicalNot($this->isEmpty())
-				),
-			]))
+			$this->arrayHasKeyWith('error', $this->logicalAnd(
+				$this->isType(IsType::TYPE_STRING),
+				$this->logicalNot($this->isEmpty())
+			)),
+			$this->arrayHasKeyWith('errorField', $this->logicalAnd(
+				$this->isType(IsType::TYPE_STRING),
+				$this->logicalNot($this->isEmpty())
+			))
 		));
 
 		if ($expectedField !== null) {
-			$actualField = $response->getData()['error']['field'];
+			$actualField = $response->getData()['errorField'];
 			$this->assertSame($expectedField, $actualField);
 		}
 
 		if ($expectedMessage !== null) {
-			$actualMessage = $response->getData()['error']['message'];
+			$actualMessage = $response->getData()['error'];
 			$this->assertSame($expectedMessage, $actualMessage);
 		}
 	}

@@ -58,7 +58,6 @@ OC.L10N.register(
     "Delete custom theme" : "Poista mukautettu teema",
     "Base theme" : "Pohjateema",
     "Theme name" : "Teeman nimi",
-    "Error" : "Virhe",
     "Custom plugins" : "Mukautetut liitännäiset",
     "Add custom plugins to reach for Pico's full potential." : "Lisää mukautettuja liitännäisiä ja koe Picon todelliset mahdollisuudet.",
     "Loading plugins…" : "Ladataan liitännäisiä…",

@@ -18,7 +18,6 @@ OC.L10N.register(
     "File: %s" : "Lêer: %s",
     "Line: %s" : "Lyn: %s",
     "Trace" : "Spoor",
-    "Error" : "Fout",
     "Name" : "Naam",
     "Path" : "Roete",
     "Theme" : "Tema",

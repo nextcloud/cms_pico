@@ -26,7 +26,6 @@ OC.L10N.register(
     "Custom themes" : "Tilpass temaer",
     "Add custom theme" : "Legg til eget tema",
     "Delete custom theme" : "Slett tilpasset tema",
-    "Error" : "Feil",
     "Custom templates" : "Egendefinerte maler",
     "Add custom template" : "Legg til egendefinert mal",
     "Delete custom template" : "Slett egendefinert mal",

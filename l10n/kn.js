@@ -12,7 +12,6 @@ OC.L10N.register(
     "File: %s" : "ಕಡತ: %s",
     "Line: %s" : "ಕೋಂಡಿ: %s",
     "Trace" : "ಕುರುಹು",
-    "Error" : "﻿ತಪ್ಪಾಗಿದೆ",
     "Name" : "﻿ಹೆಸರು",
     "Address" : "ವಿಳಾಸ"
 },

@@ -20,7 +20,6 @@ OC.L10N.register(
     "Line: %s" : "Dòng: %s",
     "Trace" : "Theo dõi",
     "Limit to groups" : "Giới hạn nhóm",
-    "Error" : "Lỗi",
     "Name" : "Tên",
     "Path" : "Đường dẫn",
     "Created" : "Đã tạo",
