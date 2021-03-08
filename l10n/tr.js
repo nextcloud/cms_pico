@@ -90,7 +90,6 @@ OC.L10N.register(
     "Delete custom theme" : "Özel temayı sil",
     "Base theme" : "Temel tema",
     "Theme name" : "Tema adı",
-    "A unexpected error occurred while performing this action. Please check Nextcloud's logs." : "Bu işlem yapılırken bir sorun çıktı. Lütfen Nextcloud günlük kayıtlarına bakın.",
     "Error: {error}" : "Hata: {error}",
     "Encountered unexpected {exception}: {exceptionMessage}" : "Beklenmeyen {exception} sorunu çıktı: {exceptionMessage}",
     "Custom plugins" : "Özel uygulama ekleri",

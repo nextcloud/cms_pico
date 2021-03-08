@@ -89,7 +89,6 @@ OC.L10N.register(
     "Delete custom theme" : "Smazat uživatelsky určený motiv",
     "Base theme" : "Základní motiv vzhledu",
     "Theme name" : "Název motivu vzhledu",
-    "A unexpected error occurred while performing this action. Please check Nextcloud's logs." : "Při provádění této akce došlo k neočekávané chybě. Nahlédněte do záznamu událostí v Nextcloud.",
     "Error: {error}" : "Chyba: {error}",
     "Custom plugins" : "Uživatelsky určené zásuvné moduly",
     "Add custom plugins to reach for Pico's full potential." : "Pro využití celého potenciálu Pico přidejte uživatelsky určené zásuvné moduly.",
