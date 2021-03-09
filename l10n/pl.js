@@ -90,6 +90,7 @@ OC.L10N.register(
     "Delete custom theme" : "Usuń motyw niestandardowy",
     "Base theme" : "Motyw podstawowy",
     "Theme name" : "Nazwa motywu",
+    "An unexpected error occurred while performing this action. Please check Nextcloud's logs." : "Wystąpił nieoczekiwany błąd podczas wykonywania tej czynności. Sprawdź dzienniki Nextcloud.",
     "Error: {error}" : "Błąd: {error}",
     "Encountered unexpected {exception}: {exceptionMessage}" : "Napotkano nieoczekiwany {exception}: {exceptionMessage}",
     "Custom plugins" : "Wtyczki niestandardowe",
