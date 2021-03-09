@@ -22,18 +22,6 @@ jobs:
             occurs. Thank you for your contributions! :+1:
           stale-pr-label: "info: Stale"
           stale-issue-label: "info: Stale"
-          exempt-issue-labels:
-            - "type: Bug"
-            - "type: Enhancement"
-            - "type: Feature"
-            - "type: Idea"
-            - "type: Release"
-            - "info: Pinned"
-          exempt-pr-labels:
-            - "type: Bug"
-            - "type: Enhancement"
-            - "type: Feature"
-            - "type: Idea"
-            - "type: Release"
-            - "info: Pinned"
+          exempt-issue-labels: "type: Bug,type: Enhancement,type: Feature,type: Idea,type: Release,info: Pinned"
+          exempt-pr-labels: "type: Bug,type: Enhancement,type: Feature,type: Idea,type: Release,info: Pinned"
           remove-stale-when-updated: true
