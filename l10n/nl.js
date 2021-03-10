@@ -90,6 +90,7 @@ OC.L10N.register(
     "Delete custom theme" : "Verwijderen maatwerkthema",
     "Base theme" : "Basisthema",
     "Theme name" : "Naam Thema",
+    "An unexpected error occurred while performing this action. Please check Nextcloud's logs." : "Er trad onverwachte fout op bij het uitvoeren van deze actie. Controleer de logboeken van Nextcloud.",
     "Error: {error}" : "Fout: {error}",
     "Encountered unexpected {exception}: {exceptionMessage}" : "Onverwachte {exception} tegengekomen: {exceptionMessage}",
     "Custom plugins" : "Maatwerk plugins",
