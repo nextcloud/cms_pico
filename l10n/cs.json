@@ -39,7 +39,7 @@
     "The name of the website is too long." : "Název webu je příliš dlouhý.",
     "The identifier of the website must be longer." : "Je třeba, aby identifikátor webu byl delší.",
     "The identifier of the website is too long." : "Identifikátor webu je příliš dlouhý.",
-    "The identifier of the website can only contain lowercase alpha numeric chars." : "Identifikátor webu může obsahovat pouze písmena a číslice.",
+    "The identifier of the website can only contain lowercase alpha numeric chars." : "Identifikátor webu může obsahovat pouze malá písmena a pak ještě číslice.",
     "The path of the website is invalid." : "Popis umístění webu není platný.",
     "The website's path is stored on a non-local storage." : "Popis umístění webu se nachází na vzdáleném úložišti.",
     "Parent folder of the website's path not found." : "Nadřazená složka v popisu umístění webu nenalezena.",
