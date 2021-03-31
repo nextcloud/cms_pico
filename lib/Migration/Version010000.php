@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace OCA\CMSPico\Migration;
 
 use Doctrine\DBAL\Schema\SchemaException;
-use OCA\CMSPico\Db\WebsitesRequestBuilder;
+use OCA\CMSPico\Db\WebsitesRequest;
 use OCA\CMSPico\Service\MiscService;
 use OCP\DB\ISchemaWrapper;
 use OCP\Migration\IOutput;
@@ -57,9 +57,9 @@ class Version010000 extends SimpleMigrationStep
 		$schema = $schemaClosure();
 
 		try {
-			$table = $schema->getTable(WebsitesRequestBuilder::TABLE_WEBSITES);
+			$table = $schema->getTable(WebsitesRequest::TABLE_NAME);
 		} catch (SchemaException $e) {
-			$table = $schema->createTable(WebsitesRequestBuilder::TABLE_WEBSITES);
+			$table = $schema->createTable(WebsitesRequest::TABLE_NAME);
 
 			$table->addColumn('id', 'integer', [
 				'autoincrement' => true,
