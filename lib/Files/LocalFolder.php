@@ -155,7 +155,6 @@ class LocalFolder extends AbstractLocalNode implements FolderInterface
 		$path = $this->normalizePath($this->path . '/' . $path);
 
 		$parentPath = dirname($path);
-
 		if ($parentPath !== '/') {
 			if (!$this->getBaseFolder()->exists($parentPath)) {
 				$parentFolder = $this->getBaseFolder()->newFolder($parentPath);
@@ -193,7 +192,6 @@ class LocalFolder extends AbstractLocalNode implements FolderInterface
 		$path = $this->normalizePath($this->path . '/' . $path);
 
 		$parentPath = dirname($path);
-
 		if ($parentPath !== '/') {
 			if (!$this->getBaseFolder()->exists($parentPath)) {
 				$parentFolder = $this->getBaseFolder()->newFolder($parentPath);

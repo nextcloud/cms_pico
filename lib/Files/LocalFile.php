@@ -52,6 +52,20 @@ class LocalFile extends AbstractLocalNode implements FileInterface
 	/**
 	 * {@inheritDoc}
 	 */
+	public function delete(): void
+	{
+		if (!$this->isDeletable()) {
+			throw new NotPermittedException();
+		}
+
+		if (!@unlink($this->getLocalPath())) {
+			throw new GenericFileException();
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function getExtension(): string
 	{
 		$pos = strrpos($this->getName(), '.');

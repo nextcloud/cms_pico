@@ -73,6 +73,10 @@ abstract class AbstractLocalNode extends AbstractNode implements NodeInterface
 	{
 		$this->assertValidFileName($name);
 
+		if (!$this->isDeletable()) {
+			throw new NotPermittedException();
+		}
+
 		$parentNode = $this->getParentNode();
 		if ($parentNode->exists($name)) {
 			throw new AlreadyExistsException();
@@ -132,6 +136,10 @@ abstract class AbstractLocalNode extends AbstractNode implements NodeInterface
 				$name = $this->getName();
 			}
 
+			if (!$this->isDeletable()) {
+				throw new NotPermittedException();
+			}
+
 			if ($targetPath->exists($name)) {
 				throw new AlreadyExistsException();
 			}
@@ -146,20 +154,6 @@ abstract class AbstractLocalNode extends AbstractNode implements NodeInterface
 			return new LocalFile($targetPath->getPath() . '/' . $name, $targetPath->getBasePath());
 		} else {
 			return parent::move($targetPath, $name);
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function delete(): void
-	{
-		if (!$this->isDeletable()) {
-			throw new NotPermittedException();
-		}
-
-		if (!@unlink($this->getLocalPath())) {
-			throw new GenericFileException();
 		}
 	}
 
@@ -265,7 +259,7 @@ abstract class AbstractLocalNode extends AbstractNode implements NodeInterface
 			if (is_writable($localPath)) {
 				$this->permissions |= Constants::PERMISSION_UPDATE;
 
-				if ($this->isFolder()) {
+				if ($this->isFolder() && is_executable($localPath)) {
 					$this->permissions |= Constants::PERMISSION_CREATE;
 				}
 			}
