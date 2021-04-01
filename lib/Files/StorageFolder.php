@@ -57,6 +57,9 @@ class StorageFolder extends AbstractStorageNode implements FolderInterface
 	/** @var IEventDispatcher */
 	private $eventDispatcher;
 
+	/** @var StorageFolder|null */
+	private $baseFolder;
+
 	/**
 	 * StorageFolder constructor.
 	 *
@@ -116,10 +119,8 @@ class StorageFolder extends AbstractStorageNode implements FolderInterface
 	 */
 	public function exists(string $path): bool
 	{
-		// check for root path breakouts
-		$this->getBasePath($path);
-
-		return $this->node->nodeExists($path);
+		$path = $this->normalizePath($this->getPath() . '/' . $path);
+		return $this->getBaseFolder()->getOCNode()->nodeExists($path);
 	}
 
 	/**
@@ -127,8 +128,9 @@ class StorageFolder extends AbstractStorageNode implements FolderInterface
 	 */
 	public function get(string $path): NodeInterface
 	{
-		$basePath = $this->getBasePath($path);
-		return $this->repackNode($this->node->get($path), $basePath);
+		$path = $this->normalizePath($this->getPath() . '/' . $path);
+		$basePath = ($path !== '/') ? dirname($path) : null;
+		return $this->repackNode($this->getBaseFolder()->getOCNode()->get($path), $basePath);
 	}
 
 	/**
@@ -140,8 +142,20 @@ class StorageFolder extends AbstractStorageNode implements FolderInterface
 			throw new AlreadyExistsException();
 		}
 
-		$basePath = $this->getBasePath($path);
-		return new StorageFolder($this->node->newFolder($path), $basePath);
+		$path = $this->normalizePath($this->getPath() . '/' . $path);
+
+		$name = basename($path);
+		$parentPath = dirname($path);
+		$basePath = ($path !== '/') ? $parentPath : null;
+
+		/** @var StorageFolder $parentFolder */
+		$parentFolder = $this->newFolderRecursive($parentPath);
+
+		if (!$parentFolder->isCreatable()) {
+			throw new NotPermittedException();
+		}
+
+		return new StorageFolder($parentFolder->getOCNode()->newFolder($name), $basePath);
 	}
 
 	/**
@@ -153,8 +167,20 @@ class StorageFolder extends AbstractStorageNode implements FolderInterface
 			throw new AlreadyExistsException();
 		}
 
-		$basePath = $this->getBasePath($path);
-		return new StorageFile($this->node->newFile($path), $basePath);
+		$path = $this->normalizePath($this->getPath() . '/' . $path);
+
+		$name = basename($path);
+		$parentPath = dirname($path);
+		$basePath = ($path !== '/') ? $parentPath : null;
+
+		/** @var StorageFolder $parentFolder */
+		$parentFolder = $this->newFolderRecursive($parentPath);
+
+		if (!$parentFolder->isCreatable()) {
+			throw new NotPermittedException();
+		}
+
+		return new StorageFile($parentFolder->getOCNode()->newFile($name), $basePath);
 	}
 
 	/**
@@ -188,14 +214,23 @@ class StorageFolder extends AbstractStorageNode implements FolderInterface
 	}
 
 	/**
-	 * @param string $path
-	 *
-	 * @return string|null
-	 * @throws InvalidPathException
+	 * @return StorageFolder
 	 */
-	private function getBasePath(string $path): ?string
+	private function getBaseFolder(): self
 	{
-		$path = $this->normalizePath($this->getPath() . '/' . $path);
-		return ($path !== '/') ? dirname($path) : null;
+		if ($this->getPath() === '/') {
+			return $this;
+		}
+
+		if ($this->baseFolder === null) {
+			$ocFolder = $this->node;
+			for ($i = 0; $i < substr_count($this->getPath(), '/'); $i++) {
+				$ocFolder = $ocFolder->getParent();
+			}
+
+			$this->baseFolder = new StorageFolder($ocFolder);
+		}
+
+		return $this->baseFolder;
 	}
 }

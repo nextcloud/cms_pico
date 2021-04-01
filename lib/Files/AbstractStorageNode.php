@@ -35,7 +35,7 @@ abstract class AbstractStorageNode extends AbstractNode implements NodeInterface
 	/** @var OCNode */
 	protected $node;
 
-	/** @var string */
+	/** @var string|null */
 	protected $path;
 
 	/** @var StorageFolder */
@@ -133,7 +133,7 @@ abstract class AbstractStorageNode extends AbstractNode implements NodeInterface
 	 */
 	public function getPath(): string
 	{
-		return $this->path ?: ($this->isFolder() ? '/' : '/' . $this->getName());
+		return $this->path ?? ($this->isFolder() ? '/' : '/' . $this->getName());
 	}
 
 	/**
