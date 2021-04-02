@@ -36,20 +36,20 @@ class LocalFolder extends AbstractLocalNode implements FolderInterface
 	use FolderTrait;
 
 	/** @var LocalFolder|null */
-	private $baseFolder;
+	protected $rootFolder;
 
 	/**
 	 * LocalFolder constructor.
 	 *
-	 * @param string $path
-	 * @param string $basePath
+	 * @param string      $path
+	 * @param string|null $rootPath
 	 *
 	 * @throws InvalidPathException
 	 * @throws NotFoundException
 	 */
-	public function __construct(string $path, string $basePath)
+	public function __construct(string $path, string $rootPath = null)
 	{
-		parent::__construct($path, $basePath);
+		parent::__construct($path, $rootPath);
 
 		if (!is_dir($this->getLocalPath())) {
 			throw new InvalidPathException();
@@ -121,7 +121,7 @@ class LocalFolder extends AbstractLocalNode implements FolderInterface
 	{
 		$path = $this->normalizePath($this->path . '/' . $path);
 
-		return file_exists($this->basePath . $path);
+		return file_exists($this->rootPath . $path);
 	}
 
 	/**
@@ -159,11 +159,11 @@ class LocalFolder extends AbstractLocalNode implements FolderInterface
 			throw new NotPermittedException();
 		}
 
-		if (!@mkdir($this->basePath . '/' . $path)) {
+		if (!@mkdir($this->rootPath . '/' . $path)) {
 			throw new GenericFileException();
 		}
 
-		return new LocalFolder($path, $this->basePath);
+		return new LocalFolder($path, $this->rootPath);
 	}
 
 	/**
@@ -182,11 +182,11 @@ class LocalFolder extends AbstractLocalNode implements FolderInterface
 			throw new NotPermittedException();
 		}
 
-		if (!@touch($this->basePath . '/' . $path)) {
+		if (!@touch($this->rootPath . '/' . $path)) {
 			throw new GenericFileException();
 		}
 
-		return new LocalFile($path, $this->basePath);
+		return new LocalFile($path, $this->rootPath);
 	}
 
 	/**
@@ -216,17 +216,17 @@ class LocalFolder extends AbstractLocalNode implements FolderInterface
 	/**
 	 * @param string $path
 	 *
-	 * @return AbstractLocalNode|null
+	 * @return LocalFolder|LocalFile|null
 	 */
-	private function createNode(string $path): ?AbstractLocalNode
+	protected function createNode(string $path): ?AbstractLocalNode
 	{
 		try {
 			if ($path === '/') {
-				return new LocalFolder('/', $this->basePath);
-			} elseif (is_file($this->basePath . '/' . $path)) {
-				return new LocalFile($path, $this->basePath);
-			} elseif (is_dir($this->basePath . '/' . $path)) {
-				return new LocalFolder($path, $this->basePath);
+				return new LocalFolder('/', $this->rootPath);
+			} elseif (is_file($this->rootPath . '/' . $path)) {
+				return new LocalFile($path, $this->rootPath);
+			} elseif (is_dir($this->rootPath . '/' . $path)) {
+				return new LocalFolder($path, $this->rootPath);
 			}
 
 			return null;
@@ -236,14 +236,14 @@ class LocalFolder extends AbstractLocalNode implements FolderInterface
 	}
 
 	/**
-	 * @return LocalFolder
+	 * {@inheritDoc}
 	 */
-	private function getBaseFolder(): self
+	protected function getRootFolder(): self
 	{
-		if ($this->baseFolder === null) {
-			$this->baseFolder = new LocalFolder('/', $this->basePath);
+		if ($this->rootFolder === null) {
+			$this->rootFolder = new LocalFolder('/', $this->rootPath);
 		}
 
-		return $this->baseFolder;
+		return $this->rootFolder;
 	}
 }

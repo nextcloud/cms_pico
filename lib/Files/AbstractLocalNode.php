@@ -36,30 +36,30 @@ abstract class AbstractLocalNode extends AbstractNode implements NodeInterface
 	/** @var string */
 	protected $path;
 
-	/** @var string */
-	protected $basePath;
-
-	/** @var LocalFolder */
+	/** @var LocalFolder|null */
 	protected $parentFolder;
 
-	/** @var int */
+	/** @var string */
+	protected $rootPath;
+
+	/** @var int|null */
 	protected $permissions;
 
 	/**
 	 * AbstractLocalNode constructor.
 	 *
-	 * @param string $path
-	 * @param string $basePath
+	 * @param string      $path
+	 * @param string|null $rootPath
 	 *
 	 * @throws InvalidPathException
 	 * @throws NotFoundException
 	 */
-	public function __construct(string $path, string $basePath)
+	public function __construct(string $path, string $rootPath = null)
 	{
 		parent::__construct();
 
 		$this->path = $this->normalizePath($path);
-		$this->basePath = realpath($basePath ?: \OC::$SERVERROOT);
+		$this->rootPath = realpath($rootPath ?? \OC::$SERVERROOT);
 
 		if (!file_exists($this->getLocalPath())) {
 			throw new NotFoundException();
@@ -77,7 +77,7 @@ abstract class AbstractLocalNode extends AbstractNode implements NodeInterface
 			throw new NotPermittedException();
 		}
 
-		$parentNode = $this->getParentNode();
+		$parentNode = $this->getParentFolder();
 		if ($parentNode->exists($name)) {
 			throw new AlreadyExistsException();
 		}
@@ -118,7 +118,7 @@ abstract class AbstractLocalNode extends AbstractNode implements NodeInterface
 				throw new GenericFileException();
 			}
 
-			return new LocalFile($targetPath->getPath() . '/' . $name, $targetPath->basePath);
+			return new LocalFile($targetPath->getPath() . '/' . $name, $targetPath->getRootPath());
 		} else {
 			return parent::copy($targetPath, $name);
 		}
@@ -151,7 +151,7 @@ abstract class AbstractLocalNode extends AbstractNode implements NodeInterface
 				throw new GenericFileException();
 			}
 
-			return new LocalFile($targetPath->getPath() . '/' . $name, $targetPath->getBasePath());
+			return new LocalFile($targetPath->getPath() . '/' . $name, $targetPath->getRootPath());
 		} else {
 			return parent::move($targetPath, $name);
 		}
@@ -166,19 +166,11 @@ abstract class AbstractLocalNode extends AbstractNode implements NodeInterface
 	}
 
 	/**
-	 * @return string
-	 */
-	public function getBasePath(): string
-	{
-		return $this->basePath;
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	public function getLocalPath(): string
 	{
-		return $this->basePath . (($this->path !== '/') ? $this->path : '');
+		return $this->rootPath . (($this->path !== '/') ? $this->path : '');
 	}
 
 	/**
@@ -192,7 +184,7 @@ abstract class AbstractLocalNode extends AbstractNode implements NodeInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getParent(): string
+	public function getParentPath(): string
 	{
 		if ($this->path === '/') {
 			throw new InvalidPathException();
@@ -204,13 +196,21 @@ abstract class AbstractLocalNode extends AbstractNode implements NodeInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getParentNode(): FolderInterface
+	public function getParentFolder(): FolderInterface
 	{
 		if ($this->parentFolder === null) {
-			$this->parentFolder = new LocalFolder($this->getParent(), $this->basePath);
+			$this->parentFolder = new LocalFolder($this->getParentPath(), $this->rootPath);
 		}
 
 		return $this->parentFolder;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getRootPath(): string
+	{
+		return $this->rootPath;
 	}
 
 	/**
@@ -265,7 +265,7 @@ abstract class AbstractLocalNode extends AbstractNode implements NodeInterface
 			}
 
 			try {
-				if (is_writable($this->getParentNode()->getLocalPath())) {
+				if (is_writable($this->getParentFolder()->getLocalPath())) {
 					$this->permissions |= Constants::PERMISSION_DELETE;
 				}
 			} catch (\Exception $e) {

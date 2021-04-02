@@ -84,25 +84,26 @@ trait FolderTrait
 	protected function newFolderRecursive(string $fullPath): FolderInterface
 	{
 		if ($fullPath !== '/') {
-			if (!$this->getBaseFolder()->exists($fullPath)) {
-				return $this->getBaseFolder()->newFolder($fullPath);
+			if (!$this->getRootFolder()->exists($fullPath)) {
+				return $this->getRootFolder()->newFolder($fullPath);
 			} else {
 				/** @var FolderInterface $parentFolder */
-				$parentFolder = $this->getBaseFolder()->get($fullPath);
+				$parentFolder = $this->getRootFolder()->get($fullPath);
 				if (!$parentFolder->isFolder()) {
 					throw new AlreadyExistsException();
 				}
 				return $parentFolder;
 			}
 		} else {
-			return $this->getBaseFolder();
+			return $this->getRootFolder();
 		}
 	}
 
 	/**
 	 * @return FolderInterface
+	 * @throws InvalidPathException
 	 */
-	abstract protected function getBaseFolder(): FolderInterface;
+	abstract protected function getRootFolder(): FolderInterface;
 
 	/**
 	 * @return \Generator
