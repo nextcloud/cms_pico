@@ -192,9 +192,9 @@ abstract class AbstractStorageNode extends AbstractNode implements NodeInterface
 				throw new InvalidPathException();
 			}
 
-			$parentBasePath = dirname($this->path);
-			$parentBasePath = ($parentBasePath !== '/') ? dirname($parentBasePath) : null;
-			$this->parentFolder = new StorageFolder($ocNode, $parentBasePath);
+			$grandParentPath = dirname($this->path);
+			$grandParentPath = ($grandParentPath !== '/') ? dirname($grandParentPath) : null;
+			$this->parentFolder = new StorageFolder($ocNode, $grandParentPath);
 		}
 
 		return $this->parentFolder;
@@ -242,17 +242,17 @@ abstract class AbstractStorageNode extends AbstractNode implements NodeInterface
 
 	/**
 	 * @param OCNode      $node
-	 * @param string|null $basePath
+	 * @param string|null $parentPath
 	 *
 	 * @return AbstractStorageNode
 	 * @throws InvalidPathException
 	 */
-	protected function repackNode(OCNode $node, string $basePath = null): AbstractStorageNode
+	protected function repackNode(OCNode $node, string $parentPath = null): AbstractStorageNode
 	{
 		if ($node instanceof OCFile) {
-			return new StorageFile($node, $basePath);
+			return new StorageFile($node, $parentPath);
 		} elseif ($node instanceof OCFolder) {
-			return new StorageFolder($node, $basePath);
+			return new StorageFolder($node, $parentPath);
 		} else {
 			throw new \UnexpectedValueException();
 		}

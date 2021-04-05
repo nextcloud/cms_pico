@@ -108,9 +108,9 @@ class StorageFolder extends AbstractStorageNode implements FolderInterface
 	 */
 	protected function getGenerator(): \Generator
 	{
-		$basePath = $this->getPath();
+		$parentPath = $this->getPath();
 		foreach ($this->node->getDirectoryListing() as $node) {
-			yield $this->repackNode($node, $basePath);
+			yield $this->repackNode($node, $parentPath);
 		}
 	}
 
@@ -129,8 +129,8 @@ class StorageFolder extends AbstractStorageNode implements FolderInterface
 	public function get(string $path): NodeInterface
 	{
 		$path = $this->normalizePath($this->getPath() . '/' . $path);
-		$basePath = ($path !== '/') ? dirname($path) : null;
-		return $this->repackNode($this->getRootFolder()->getOCNode()->get($path), $basePath);
+		$parentPath = ($path !== '/') ? dirname($path) : null;
+		return $this->repackNode($this->getRootFolder()->getOCNode()->get($path), $parentPath);
 	}
 
 	/**
@@ -146,7 +146,6 @@ class StorageFolder extends AbstractStorageNode implements FolderInterface
 
 		$name = basename($path);
 		$parentPath = dirname($path);
-		$basePath = ($path !== '/') ? $parentPath : null;
 
 		/** @var StorageFolder $parentFolder */
 		$parentFolder = $this->newFolderRecursive($parentPath);
@@ -155,7 +154,10 @@ class StorageFolder extends AbstractStorageNode implements FolderInterface
 			throw new NotPermittedException();
 		}
 
-		return new StorageFolder($parentFolder->getOCNode()->newFolder($name), $basePath);
+		return new StorageFolder(
+			$parentFolder->getOCNode()->newFolder($name),
+			($path !== '/') ? $parentPath : null
+		);
 	}
 
 	/**
@@ -171,7 +173,6 @@ class StorageFolder extends AbstractStorageNode implements FolderInterface
 
 		$name = basename($path);
 		$parentPath = dirname($path);
-		$basePath = ($path !== '/') ? $parentPath : null;
 
 		/** @var StorageFolder $parentFolder */
 		$parentFolder = $this->newFolderRecursive($parentPath);
@@ -180,7 +181,10 @@ class StorageFolder extends AbstractStorageNode implements FolderInterface
 			throw new NotPermittedException();
 		}
 
-		return new StorageFile($parentFolder->getOCNode()->newFile($name), $basePath);
+		return new StorageFile(
+			$parentFolder->getOCNode()->newFile($name),
+			($path !== '/') ? $parentPath : null
+		);
 	}
 
 	/**
