@@ -116,7 +116,7 @@ class DummyPluginFile extends AbstractNode implements FileInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getParent(): string
+	public function getParentPath(): string
 	{
 		return '/';
 	}
@@ -124,7 +124,7 @@ class DummyPluginFile extends AbstractNode implements FileInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getParentNode(): FolderInterface
+	public function getParentFolder(): FolderInterface
 	{
 		throw new InvalidPathException();
 	}
