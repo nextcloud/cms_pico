@@ -36,13 +36,13 @@ class StorageFile extends AbstractStorageNode implements FileInterface
 	 * StorageFile constructor.
 	 *
 	 * @param OCFile      $file
-	 * @param string|null $basePath
+	 * @param string|null $parentPath
 	 *
 	 * @throws InvalidPathException
 	 */
-	public function __construct(OCFile $file, string $basePath = null)
+	public function __construct(OCFile $file, string $parentPath = null)
 	{
-		parent::__construct($file, $basePath);
+		parent::__construct($file, $parentPath);
 	}
 
 	/**

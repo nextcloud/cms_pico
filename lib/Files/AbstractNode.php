@@ -27,6 +27,7 @@ namespace OCA\CMSPico\Files;
 use OCA\CMSPico\Service\MiscService;
 use OCP\Constants;
 use OCP\Files\InvalidPathException;
+use OCP\Files\NotPermittedException;
 
 abstract class AbstractNode implements NodeInterface
 {
@@ -72,6 +73,10 @@ abstract class AbstractNode implements NodeInterface
 	{
 		if ($name !== null) {
 			$this->assertValidFileName($name);
+		}
+
+		if (!$this->isDeletable()) {
+			throw new NotPermittedException();
 		}
 
 		if ($this->isFolder()) {

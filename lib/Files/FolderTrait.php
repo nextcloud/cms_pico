@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Files;
 
+use OCP\Files\AlreadyExistsException;
 use OCP\Files\GenericFileException;
 use OCP\Files\InvalidPathException;
 use OCP\Files\NotFoundException;
@@ -71,6 +72,38 @@ trait FolderTrait
 
 		return $file;
 	}
+
+	/**
+	 * @param string $fullPath
+	 *
+	 * @return FolderInterface
+	 * @throws AlreadyExistsException
+	 * @throws InvalidPathException
+	 * @throws NotPermittedException
+	 */
+	protected function newFolderRecursive(string $fullPath): FolderInterface
+	{
+		if ($fullPath !== '/') {
+			if (!$this->getRootFolder()->exists($fullPath)) {
+				return $this->getRootFolder()->newFolder($fullPath);
+			} else {
+				/** @var FolderInterface $parentFolder */
+				$parentFolder = $this->getRootFolder()->get($fullPath);
+				if (!$parentFolder->isFolder()) {
+					throw new AlreadyExistsException();
+				}
+				return $parentFolder;
+			}
+		} else {
+			return $this->getRootFolder();
+		}
+	}
+
+	/**
+	 * @return FolderInterface
+	 * @throws InvalidPathException
+	 */
+	abstract protected function getRootFolder(): FolderInterface;
 
 	/**
 	 * @return \Generator

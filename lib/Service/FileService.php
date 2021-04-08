@@ -79,8 +79,8 @@ class FileService
 	public function getPublicFolder(string $folderName = null): FolderInterface
 	{
 		if ($this->publicFolder === null) {
-			$publicFolderBasePath = Application::getAppPath() . '/' . self::APPDATA_PUBLIC;
-			$this->publicFolder = new LocalFolder('/', $publicFolderBasePath);
+			$publicFolderPath = Application::getAppPath() . '/' . self::APPDATA_PUBLIC;
+			$this->publicFolder = new LocalFolder('/', $publicFolderPath);
 		}
 
 		if ($folderName) {
@@ -104,8 +104,8 @@ class FileService
 	public function getSystemFolder(string $folderName = null): FolderInterface
 	{
 		if ($this->systemFolder === null) {
-			$systemFolderBasePath = Application::getAppPath() . '/' . self::APPDATA_SYSTEM;
-			$this->systemFolder = new LocalFolder('/', $systemFolderBasePath);
+			$systemFolderPath = Application::getAppPath() . '/' . self::APPDATA_SYSTEM;
+			$this->systemFolder = new LocalFolder('/', $systemFolderPath);
 		}
 
 		if ($folderName) {

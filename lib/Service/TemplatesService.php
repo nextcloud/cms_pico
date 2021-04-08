@@ -270,9 +270,9 @@ class TemplatesService
 			$templateFile = new TemplateFile($file);
 
 			try {
-				$targetFolder = $websiteFolder->getFolder($templateFile->getParent());
+				$targetFolder = $websiteFolder->getFolder($templateFile->getParentPath());
 			} catch (NotFoundException $e) {
-				$targetFolder = $websiteFolder->newFolder($templateFile->getParent());
+				$targetFolder = $websiteFolder->newFolder($templateFile->getParentPath());
 			}
 
 			if ($templateFile->getName() === 'empty') {

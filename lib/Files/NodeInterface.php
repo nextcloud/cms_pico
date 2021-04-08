@@ -100,13 +100,13 @@ interface NodeInterface
 	 * @return string
 	 * @throws InvalidPathException
 	 */
-	public function getParent(): string;
+	public function getParentPath(): string;
 
 	/**
 	 * @return FolderInterface
 	 * @throws InvalidPathException
 	 */
-	public function getParentNode(): FolderInterface;
+	public function getParentFolder(): FolderInterface;
 
 	/**
 	 * @return bool
