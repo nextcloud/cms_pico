@@ -324,7 +324,7 @@ style(Application::APP_NAME, 'pico');
 			<div class="icon icon-error-color"></div>
 			<div>
 				<p><?php p($l->t(
-					'A unexpected error occurred while performing this action. Please check Nextcloud\'s logs.'
+					'An unexpected error occurred while performing this action. Please check Nextcloud\'s logs.'
 				)); ?></p>
 				<p class="error-details" style="display: none">
 					<?php p($l->t('Error: {error}')); ?>
@@ -506,7 +506,7 @@ style(Application::APP_NAME, 'pico');
 
 		<script id="picocms-website-form-error" type="text/template">
 			<p><?php p($l->t(
-				'A unexpected error occurred while performing this action. Please check Nextcloud\'s logs.'
+				'An unexpected error occurred while performing this action. Please check Nextcloud\'s logs.'
 			)); ?></p>
 			<p class="error-details" style="display: none">
 				<?php p($l->t('Error: {error}')); ?>

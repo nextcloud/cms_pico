@@ -90,7 +90,7 @@ OC.L10N.register(
     "Delete custom theme" : "Benutzerdefiniertes Design löschen",
     "Base theme" : "Vorlage",
     "Theme name" : "Name",
-    "A unexpected error occurred while performing this action. Please check Nextcloud's logs." : "Bei der Ausführung dieser Aktion ist ein unerwarteter Fehler aufgetreten. Bitte prüfe das Protokoll von Nextcloud.",
+    "An unexpected error occurred while performing this action. Please check Nextcloud's logs." : "Bei der Ausführung dieser Aktion ist ein unerwarteter Fehler aufgetreten. Bitte prüfe das Protokoll von Nextcloud.",
     "Error: {error}" : "Fehler: {error}",
     "Encountered unexpected {exception}: {exceptionMessage}" : "Unerwarteter Ausnahmefehler {exception}: {exceptionMessage}",
     "Custom plugins" : "Benutzerdefinierte Erweiterungen",

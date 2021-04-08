@@ -101,15 +101,15 @@ class TemplateFile extends AbstractNode implements FileInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getParent(): string
+	public function getParentPath(): string
 	{
-		return $this->file->getParent();
+		return $this->file->getParentPath();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getParentNode(): FolderInterface
+	public function getParentFolder(): FolderInterface
 	{
 		throw new InvalidPathException();
 	}

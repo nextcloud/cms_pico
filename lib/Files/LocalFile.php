@@ -34,18 +34,32 @@ class LocalFile extends AbstractLocalNode implements FileInterface
 	/**
 	 * LocalFile constructor.
 	 *
-	 * @param string $path
-	 * @param string $basePath
+	 * @param string      $path
+	 * @param string|null $rootPath
 	 *
 	 * @throws InvalidPathException
 	 * @throws NotFoundException
 	 */
-	public function __construct(string $path, string $basePath)
+	public function __construct(string $path, string $rootPath = null)
 	{
-		parent::__construct($path, $basePath);
+		parent::__construct($path, $rootPath);
 
 		if (!is_file($this->getLocalPath())) {
 			throw new InvalidPathException();
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function delete(): void
+	{
+		if (!$this->isDeletable()) {
+			throw new NotPermittedException();
+		}
+
+		if (!@unlink($this->getLocalPath())) {
+			throw new GenericFileException();
 		}
 	}
 
