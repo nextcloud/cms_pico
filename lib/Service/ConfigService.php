@@ -64,7 +64,7 @@ class ConfigService
 	protected $config;
 
 	/** @var array<string,string> */
-	private $defaults;
+	protected $defaultValues;
 
 	/**
 	 * ConfigService constructor.
@@ -75,7 +75,7 @@ class ConfigService
 	{
 		$this->config = $config;
 
-		$this->defaults = [
+		$this->defaultValues = [
 			self::SYSTEM_TEMPLATES => '',
 			self::CUSTOM_TEMPLATES => '',
 			self::SYSTEM_THEMES => '',
@@ -96,8 +96,7 @@ class ConfigService
 	 */
 	public function getAppValue(string $key): string
 	{
-		$defaultValue = $this->getDefaultValue($key);
-		return $this->config->getAppValue(Application::APP_NAME, $key, $defaultValue);
+		return $this->config->getAppValue(Application::APP_NAME, $key, $this->defaultValues[$key] ?? '');
 	}
 
 	/**
@@ -126,15 +125,5 @@ class ConfigService
 	public function getSystemValue(string $key, $defaultValue = '')
 	{
 		return $this->config->getSystemValue($key, $defaultValue);
-	}
-
-	/**
-	 * @param string $key
-	 *
-	 * @return string
-	 */
-	protected function getDefaultValue(string $key): string
-	{
-		return $this->defaults[$key] ?? '';
 	}
 }

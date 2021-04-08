@@ -60,7 +60,7 @@ class WebsitesService
 	public const LINK_MODE_SHORT = 2;
 
 	/** @var WebsitesRequest */
-	private $websiteRequest;
+	private $websitesRequest;
 
 	/** @var IGroupManager */
 	private $groupManager;
@@ -100,7 +100,7 @@ class WebsitesService
 		AssetsService $assetsService,
 		MiscService $miscService
 	) {
-		$this->websiteRequest = $websiteRequest;
+		$this->websitesRequest = $websiteRequest;
 		$this->groupManager = $groupManager;
 		$this->configService = $configService;
 		$this->templatesService = $templatesService;
@@ -134,7 +134,7 @@ class WebsitesService
 		$website->assertValidTheme();
 
 		try {
-			$website = $this->websiteRequest->getWebsiteFromSite($website->getSite());
+			$this->websitesRequest->getWebsiteFromSite($website->getSite());
 			throw new WebsiteExistsException();
 		} catch (WebsiteNotFoundException $e) {
 			// in fact we want the website not to exist yet
@@ -143,7 +143,7 @@ class WebsitesService
 		$this->templatesService->assertValidTemplate($templateName);
 		$this->templatesService->installTemplate($website, $templateName);
 
-		$this->websiteRequest->create($website);
+		$this->websitesRequest->create($website);
 	}
 
 	/**
@@ -163,7 +163,7 @@ class WebsitesService
 	 */
 	public function updateWebsite(Website $website): void
 	{
-		$originalWebsite = $this->websiteRequest->getWebsiteFromId($website->getId());
+		$originalWebsite = $this->websitesRequest->getWebsiteFromId($website->getId());
 
 		if ($website->getName() !== $originalWebsite->getName()) {
 			$website->assertValidName();
@@ -178,7 +178,7 @@ class WebsitesService
 			$website->assertValidTheme();
 		}
 
-		$this->websiteRequest->update($website);
+		$this->websitesRequest->update($website);
 	}
 
 	/**
@@ -194,9 +194,9 @@ class WebsitesService
 	public function deleteWebsite(Website $website): void
 	{
 		// check whether website actually exists
-		$this->websiteRequest->getWebsiteFromId($website->getId());
+		$this->websitesRequest->getWebsiteFromId($website->getId());
 
-		$this->websiteRequest->delete($website);
+		$this->websitesRequest->delete($website);
 	}
 
 	/**
@@ -204,7 +204,7 @@ class WebsitesService
 	 */
 	public function deleteUserWebsites(string $userId): void
 	{
-		$this->websiteRequest->deleteAllFromUserId($userId);
+		$this->websitesRequest->deleteAllFromUserId($userId);
 	}
 
 	/**
@@ -215,7 +215,7 @@ class WebsitesService
 	 */
 	public function getWebsiteFromId(int $siteId): Website
 	{
-		return $this->websiteRequest->getWebsiteFromId($siteId);
+		return $this->websitesRequest->getWebsiteFromId($siteId);
 	}
 
 	/**
@@ -226,7 +226,7 @@ class WebsitesService
 	 */
 	public function getWebsiteFromSite(string $site): Website
 	{
-		return $this->websiteRequest->getWebsiteFromSite($site);
+		return $this->websitesRequest->getWebsiteFromSite($site);
 	}
 
 	/**
@@ -236,7 +236,7 @@ class WebsitesService
 	 */
 	public function getWebsitesFromUser(string $userId): array
 	{
-		return $this->websiteRequest->getWebsitesFromUserId($userId);
+		return $this->websitesRequest->getWebsitesFromUserId($userId);
 	}
 
 	/**

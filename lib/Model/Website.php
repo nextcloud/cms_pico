@@ -110,6 +110,14 @@ class Website extends WebsiteCore
 	/**
 	 * @return string
 	 */
+	public function getOptionsJSON(): string
+	{
+		return json_encode($this->getOptions());
+	}
+
+	/**
+	 * @return string
+	 */
 	public function getTimeZone(): string
 	{
 		$serverTimeZone = date_default_timezone_get() ?: 'UTC';
@@ -280,6 +288,8 @@ class Website extends WebsiteCore
 	}
 
 	/**
+	 * @param bool $proxyRequest
+	 *
 	 * @return string
 	 */
 	public function getWebsiteUrl(bool $proxyRequest = false): string
