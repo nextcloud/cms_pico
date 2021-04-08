@@ -125,6 +125,16 @@ class Website extends WebsiteCore
 	}
 
 	/**
+	 * {@inheritDoc}
+	 */
+	public function getData(): array
+	{
+		$data = parent::getData();
+		$data['timezone'] = $this->getTimeZone();
+		return $data;
+	}
+
+	/**
 	 * @throws WebsiteInvalidOwnerException
 	 */
 	public function assertValidOwner(): void

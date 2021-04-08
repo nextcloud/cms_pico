@@ -144,6 +144,7 @@
 		 * @param {Object}   data.websites[].options
 		 * @param {string}   data.websites[].path
 		 * @param {int}      data.websites[].creation
+		 * @param {string}   data.websites[].timezone
 		 */
 		update: function (data) {
 			this.websites = data.websites;
@@ -190,6 +191,7 @@
 		 * @param {string[]} [websiteData.options.group_access]
 		 * @param {string}   websiteData.path
 		 * @param {int}      websiteData.creation
+		 * @param {string}   websiteData.timezone
 		 */
 		_setupItem: function ($website, websiteData) {
 			var that = this;
