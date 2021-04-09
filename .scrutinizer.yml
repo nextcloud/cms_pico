@@ -158,6 +158,16 @@ build:
       project_setup: *setup
       tests: *tests
 
+    test-nc21-php80:
+      environment:
+        php:
+          version: 8.0
+        variables:
+          NEXTCLOUD: releases/latest-21
+      dependencies: *dependencies
+      project_setup: *setup
+      tests: *tests
+
     test-master-php73:
       environment:
         php:
