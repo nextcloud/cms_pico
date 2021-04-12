@@ -69,7 +69,7 @@ style(Application::APP_NAME, 'pico');
 						. 'incompatible with Pico CMS for Nextcloud. But what about meta data like a page\'s title or '
 						. 'release date? Guess right, it\'s all in one place. At the top of your Markdown files you '
 						. 'can place a block with such meta data - called <a href="https://en.wikipedia.org/wiki/YAML">'
-						. '<strong>YAML</strong></a> Front Matter. Creating websites can\'t be easier…'
+						. '<strong>YAML</strong></a> Front Matter. Creating websites cannot be easier…'
 			)); ?></p>
 
 			<p><?php print_unescaped($l->t(
