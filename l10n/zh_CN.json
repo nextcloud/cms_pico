@@ -64,7 +64,6 @@
     "Line: %s" : "行：%s",
     "Trace" : "追踪",
     "Your Nextcloud installation is incompatible with Pico CMS for Nextcloud!" : "您的Nextcloud安装实例与Pico CMS for Nextcloud不兼容！",
-    "Some of your Nextcloud apps have known incompatibilities with Pico CMS for Nextcloud. This is no-one's fault, neither are Nextcloud nor the conflicting apps to blame, this is just some technical limitation of Nextcloud's app infrastructure we can't solve in the short term. We're working on a solution! In the meantime you must remove the conflicting apps. Known conflicting apps are \"Issue Template\" and \"Terms of service\"." : "已知你的一些 Nextcloud 应用程序与 Nextcloud Pico CMS 不兼容。这不是任何人的错，既不是 Nextcloud 的责任，也不是冲突的应用程序的责任，这只是 Nextcloud 应用程序基础设施的一些技术限制，我们不能在短期内解决。我们正在研究解决方案！同时，你必须移除冲突的应用程序。已知冲突的应用为 \"Issue Template\" 和 \"Terms of service\"",
     "Pico CMS for Nextcloud" : "Pico CMS for Nextcloud",
     "Change Pico CMS for Nextcloud's behavior and manage optional features." : "改变Pico CMS for Nextcloud的行为并管理可选的功能。",
     "Limit to groups" : "限制于分组",
