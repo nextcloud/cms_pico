@@ -121,7 +121,7 @@ OC.L10N.register(
     "You will be able to access your websites using URLs like the following:" : "As a pòdere atzèdere a su situ web tuo impreende URL comente in fatu:",
     "Loading websites…" : "Carrighende is sitos web...",
     "Name" : "Nùmene",
-    "Path" : "Caminu",
+    "Path" : "Percursu",
     "Theme" : "Tema",
     "Created" : "Creadu",
     "Go to website" : "Bae a su situ web",
