@@ -701,7 +701,7 @@ style(Application::APP_NAME, 'pico');
 				</code>
 			</p>
 			<p><?php p($l->t(
-				'Copy the config snippet above to Nextcloud\'s server { … } section of your nginx.conf. Before doing '
+				'Copy the config snippet above to Nextcloud\'s server {…} section of your nginx.conf. Before doing '
 						. 'doing so you must enable nginx\'s ngx_http_proxy_module module. Otherwise your webserver '
 						. 'will either refuse to (re)start or yield a 500 Internal Server Error.'
 			)); ?></p>
