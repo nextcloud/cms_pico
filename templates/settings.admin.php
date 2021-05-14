@@ -701,7 +701,7 @@ style(Application::APP_NAME, 'pico');
 				</code>
 			</p>
 			<p><?php p($l->t(
-				'Copy the config snippet above to Nextcloud\'s server {…} section of your nginx.conf. Before doing '
+				'Copy the config snippet above to Nextcloud\'s server (…) section of your nginx.conf. Before doing '
 						. 'doing so you must enable nginx\'s ngx_http_proxy_module module. Otherwise your webserver '
 						. 'will either refuse to (re)start or yield a 500 Internal Server Error.'
 			)); ?></p>
@@ -723,7 +723,7 @@ style(Application::APP_NAME, 'pico');
 				</code>
 			</p>
 			<p><?php p($l->t(
-				'Simply copy the config snippet above to Nextcloud\'s server {…} section of your nginx.conf. Please '
+				'Simply copy the config snippet above to Nextcloud\'s server (…) section of your nginx.conf. Please '
 						. 'note that this config won\'t actually let you use shortened URLs, it just redirects users '
 						. 'from shortened URLs to the site\'s full URL. Thus you should prefer the solution utilizing '
 						. 'nginx\'s proxy_pass directive shown above.'
