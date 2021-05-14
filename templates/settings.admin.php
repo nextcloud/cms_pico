@@ -723,7 +723,7 @@ style(Application::APP_NAME, 'pico');
 				</code>
 			</p>
 			<p><?php p($l->t(
-				'Simply copy the config snippet above to Nextcloud\'s server { … } section of your nginx.conf. Please '
+				'Simply copy the config snippet above to Nextcloud\'s server {…} section of your nginx.conf. Please '
 						. 'note that this config won\'t actually let you use shortened URLs, it just redirects users '
 						. 'from shortened URLs to the site\'s full URL. Thus you should prefer the solution utilizing '
 						. 'nginx\'s proxy_pass directive shown above.'
