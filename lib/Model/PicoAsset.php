@@ -29,6 +29,17 @@ use OCP\Files\NotPermittedException;
 
 class PicoAsset
 {
+	/** @var string[] */
+	private static $secureMimeTypes = [
+		'text/plain' => 'text/plain',
+		'image/bmp' => 'image/bmp',
+		'image/gif' => 'image/gif',
+		'image/jpeg' => 'image/jpeg',
+		'image/png' => 'image/png',
+		'image/tiff' => 'image/tiff',
+		'image/webp' => 'image/webp',
+	];
+
 	/** @var StorageFile */
 	private $file;
 
@@ -118,8 +129,15 @@ class PicoAsset
 	public function getSecureMimeType(): string
 	{
 		if ($this->secureMimeType === null) {
-			$mimeTypeDetector = \OC::$server->getMimeTypeDetector();
-			$this->secureMimeType = $mimeTypeDetector->getSecureMimeType($this->getMimeType());
+			if (isset(self::$secureMimeTypes[$this->getMimeType()])) {
+				// whitelisted secure mime types
+				// files of this type are secure by design, or can't be used in a insecure manner due to HTMLPurifier
+				$this->secureMimeType = self::$secureMimeTypes[$this->getMimeType()];
+			} else {
+				// fallback to Nextcloud's built-in list of secure mime types
+				$mimeTypeDetector = \OC::$server->getMimeTypeDetector();
+				$this->secureMimeType = $mimeTypeDetector->getSecureMimeType($this->getMimeType());
+			}
 		}
 
 		return $this->secureMimeType;
