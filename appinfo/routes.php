@@ -87,6 +87,7 @@ return [
 		[ 'name' => 'Plugins#addCustomPlugin', 'url' => '/admin/plugins', 'verb' => 'POST' ],
 		[ 'name' => 'Plugins#updateCustomPlugin', 'url' => '/admin/plugins/{item}', 'verb' => 'POST' ],
 		[ 'name' => 'Plugins#removeCustomPlugin', 'url' => '/admin/plugins/{item}', 'verb' => 'DELETE' ],
+		[ 'name' => 'Plugins#copyDummyPlugin', 'url' => '/admin/plugins/DummyPlugin', 'verb' => 'CLONE' ],
 
 		[ 'name' => 'Settings#setLimitGroups', 'url' => '/admin/limit_groups', 'verb' => 'POST' ],
 		[ 'name' => 'Settings#setLinkMode', 'url' => '/admin/link_mode', 'verb' => 'POST' ],

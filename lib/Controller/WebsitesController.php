@@ -161,12 +161,30 @@ class WebsitesController extends Controller
 
 			foreach ($data as $key => $value) {
 				switch ($key) {
+					case 'name':
+						$website->setName($value);
+						break;
+
 					case 'type':
 						$website->setType((int) $value);
 						break;
 
 					case 'theme':
 						$website->setTheme($value);
+						break;
+
+					case 'options':
+						foreach ($value as $optionKey => $optionValue) {
+							switch ($optionKey) {
+								case 'group_access':
+									$groupAccess = $optionValue ? explode('|', $optionValue) : [];
+									$website->setOption($optionKey, $groupAccess ?: null);
+									break;
+
+								default:
+									throw new WebsiteInvalidDataException();
+							}
+						}
 						break;
 
 					default:

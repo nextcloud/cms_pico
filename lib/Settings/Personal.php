@@ -91,6 +91,8 @@ class Personal implements ISettings
 		$data = [
 			'exampleSite' => $exampleSite,
 			'baseUrl' => $baseUrl,
+			'typePublic' => Website::TYPE_PUBLIC,
+			'typePrivate' => Website::TYPE_PRIVATE,
 			'nameLengthMin' => Website::NAME_LENGTH_MIN,
 			'nameLengthMax' => Website::NAME_LENGTH_MAX,
 			'siteLengthMin' => Website::SITE_LENGTH_MIN,

@@ -102,6 +102,7 @@ style(Application::APP_NAME, 'pico');
 			data-route="/apps/cms_pico/personal/websites"
 			data-template="#picocms-websites-template"
 			data-item-template="#picocms-websites-template-item"
+			data-private-settings-template="#picocms-websites-template-private-settings"
 			data-loading-template="#picocms-websites-template-loading"
 			data-error-template="#picocms-websites-template-error"
 			data-website-base-url="<?php p($_['baseUrl']); ?>">
@@ -133,8 +134,14 @@ style(Application::APP_NAME, 'pico');
 		<tr>
 			<td class="name-column">
 				<div class="name-container">
-					<div>
+					<div class="name">
 						<p>{name}</p>
+					</div>
+					<div class="name-edit">
+						<input class="input input-name" type="text" name="name"
+							value="{name}" placeholder="{name}"
+							minlength="<?php p($_['nameLengthMin']); ?>"
+							maxlength="<?php p($_['nameLengthMax']); ?>" />
 					</div>
 					<div class="actions">
 						<a class="action action-open has-tooltip" title="<?php p($l->t('Go to website')); ?>">
@@ -146,10 +153,15 @@ style(Application::APP_NAME, 'pico');
 							<span class="icon-files-dark"></span>
 							<span class="hidden-visually"><?php p($l->t('Go to website directory')); ?></span>
 						</a>
+						<a class="action action-rename has-tooltip"
+							title="<?php p($l->t('Edit website name')); ?>">
+							<span class="icon-edit"></span>
+							<span class="hidden-visually"><?php p($l->t('Edit website name')); ?></span>
+						</a>
 						<a class="action action-private has-tooltip"
-								title="<?php p($l->t('Toggle private website')); ?>">
+								title="<?php p($l->t('Edit private website settings')); ?>">
 							<span class="icon-lock-open"></span>
-							<span class="hidden-visually"><?php p($l->t('Toggle private website')); ?></span>
+							<span class="hidden-visually"><?php p($l->t('Edit private website settings')); ?></span>
 						</a>
 						<a class="action action-delete has-tooltip"
 								title="<?php p($l->t('Delete website')); ?>">
@@ -176,9 +188,15 @@ style(Application::APP_NAME, 'pico');
 									</a>
 								</li>
 								<li>
+									<a class="action-rename">
+										<span class="icon-edit"></span>
+										<span><?php p($l->t('Edit website name')); ?></span>
+									</a>
+								</li>
+								<li>
 									<a class="action-private">
 										<span class="icon-lock-open"></span>
-										<span><?php p($l->t('Toggle private website')); ?></span>
+										<span><?php p($l->t('Edit private website settings')); ?></span>
 									</a>
 								</li>
 								<li>
@@ -226,6 +244,68 @@ style(Application::APP_NAME, 'pico');
 				<span class="live-relative-timestamp" data-timestamp="{creation}"></span>
 			</td>
 		</tr>
+	</script>
+
+	<script id="picocms-websites-template-private-settings" type="text/template">
+		<form id="{id}" title="{title}" class="form">
+			<p class="dialog-hint"><?php p($l->t(
+				'Pico CMS for Nextcloud supports both public and private websites. Everyone can access public '
+						. 'websites, no matter whether they are logged in or not. If you want to limit access to a '
+						. 'certain subset of users, create a private website. All visitors of a private website must '
+						. 'be logged in, otherwise a "Access forbidden" error is shown. Additionally one of the '
+						. 'following conditions must be met: (1) the user has access to the website\'s source files '
+						. '(i.e. the source folder is shared with the user), (2) the user is a member of one of the '
+						. 'groups listed below, or (3) the user is a member of one of the groups specified in the '
+						. 'YAML Front Matter of the requested page using the "access" meta value.'
+			)); ?></p>
+			<fieldset>
+				<div class="label">
+					<span><?php p($l->t('Website type')); ?></span>
+				</div>
+				<div class="content">
+					<p>
+						<input type="radio" id="picocms-websites-private-public" class="radio input-private-public"
+								name="type" value="<?php p($_['typePublic']); ?>">
+						<label for="picocms-websites-private-public">
+							<?php p($l->t('Public website')); ?>
+							<span class="note">– <?php p($l->t(
+								'The website is publicly accessible and requires no authentication whatsoever.'
+							)); ?></span>
+						</label>
+					</p>
+					<p>
+						<input type="radio" id="picocms-websites-private-private" class="radio input-private-private"
+								name="type" value="<?php p($_['typePrivate']); ?>">
+						<label for="picocms-websites-private-private">
+							<?php p($l->t('Private website')); ?>
+							<span class="note">– <?php p($l->t(
+								'The website requires authentication, access is limited to a subset of all users.'
+							)); ?></span>
+						</label>
+					</p>
+				</div>
+			</fieldset>
+			<fieldset>
+				<div class="label">
+					<label class="select2-align" for="picocms-websites-private-groups">
+						<?php p($l->t('Group access')); ?>
+					</label>
+				</div>
+				<div class="content">
+					<input type="hidden" class="input input-private-groups select2-placeholder"
+							name="options[group_access]" value="" />
+					<div class="message input select2-loading">
+						<div class="icon icon-loading"></div>
+						<div>
+							<p><?php p($l->t('Loading groups…')); ?></p>
+						</div>
+					</div>
+					<p class="note"><?php p($l->t(
+						'Grant access to all members of the selected groups.'
+					)); ?></p>
+				</div>
+			</fieldset>
+		</form>
 	</script>
 
 	<script id="picocms-websites-template-loading" type="text/template"
