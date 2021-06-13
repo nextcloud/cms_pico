@@ -9,6 +9,6 @@ OC.L10N.register(
     "Path" : "Camin",
     "Actions" : "Accions",
     "Address" : "Adreça",
-    "Loading…" : "Cargament..."
+    "Loading…" : "Cargament…"
 },
 "nplurals=2; plural=(n > 1);");
