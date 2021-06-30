@@ -47,7 +47,6 @@ use OCA\CMSPico\Http\NotPermittedResponse;
 use OCA\CMSPico\Http\PicoAssetResponse;
 use OCA\CMSPico\Http\PicoErrorResponse;
 use OCA\CMSPico\Http\PicoPageResponse;
-use OCA\CMSPico\Service\FileService;
 use OCA\CMSPico\Service\WebsitesService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\Response;
@@ -66,9 +65,6 @@ class PicoController extends Controller
 	/** @var WebsitesService */
 	private $websitesService;
 
-	/** @var FileService */
-	private $fileService;
-
 	/**
 	 * PicoController constructor.
 	 *
@@ -76,21 +72,18 @@ class PicoController extends Controller
 	 * @param IUserSession    $userSession
 	 * @param IL10N           $l10n
 	 * @param WebsitesService $websitesService
-	 * @param FileService     $fileService
 	 */
 	public function __construct(
 		IRequest $request,
 		IUserSession $userSession,
 		IL10N $l10n,
-		WebsitesService $websitesService,
-		FileService $fileService
+		WebsitesService $websitesService
 	) {
 		parent::__construct(Application::APP_NAME, $request);
 
 		$this->userSession = $userSession;
 		$this->l10n = $l10n;
 		$this->websitesService = $websitesService;
-		$this->fileService = $fileService;
 	}
 
 	/**
