@@ -49,13 +49,18 @@ use OCA\CMSPico\Http\PicoErrorResponse;
 use OCA\CMSPico\Http\PicoPageResponse;
 use OCA\CMSPico\Service\WebsitesService;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\IL10N;
 use OCP\IRequest;
+use OCP\IURLGenerator;
 use OCP\IUserSession;
 
 class PicoController extends Controller
 {
+	/** @var IURLGenerator */
+	private $urlGenerator;
+
 	/** @var IUserSession */
 	private $userSession;
 
@@ -69,18 +74,21 @@ class PicoController extends Controller
 	 * PicoController constructor.
 	 *
 	 * @param IRequest        $request
+	 * @param IURLGenerator   $urlGenerator
 	 * @param IUserSession    $userSession
 	 * @param IL10N           $l10n
 	 * @param WebsitesService $websitesService
 	 */
 	public function __construct(
 		IRequest $request,
+		IURLGenerator $urlGenerator,
 		IUserSession $userSession,
 		IL10N $l10n,
 		WebsitesService $websitesService
 	) {
 		parent::__construct(Application::APP_NAME, $request);
 
+		$this->urlGenerator = $urlGenerator;
 		$this->userSession = $userSession;
 		$this->l10n = $l10n;
 		$this->websitesService = $websitesService;
@@ -98,8 +106,9 @@ class PicoController extends Controller
 	 */
 	public function getPage(string $site, string $page, bool $proxyRequest = false): Response
 	{
+		$userId = $this->userSession->isLoggedIn() ? $this->userSession->getUser()->getUID() : null;
+
 		try {
-			$userId = $this->userSession->isLoggedIn() ? $this->userSession->getUser()->getUID() : null;
 			$picoPage = $this->websitesService->getPage($site, $page, $userId, $proxyRequest);
 			return new PicoPageResponse($picoPage);
 		} catch (WebsiteNotFoundException | WebsiteInvalidOwnerException $e) {
@@ -111,6 +120,13 @@ class PicoController extends Controller
 				'The file and directory structure of this website appears to be broken and thus could not be accessed.'
 			));
 		} catch (WebsiteNotPermittedException $e) {
+			if ($userId === null) {
+				return new RedirectResponse($this->urlGenerator->linkToRoute(
+					'core.login.showLoginForm',
+					[ 'redirect_url' => $this->request->getRequestUri() ]
+				));
+			}
+
 			return new NotPermittedResponse($this->l10n->t(
 				'You don\'t have access to this private website. Maybe the share was deleted or has expired?'
 			));
@@ -154,8 +170,9 @@ class PicoController extends Controller
 	 */
 	public function getAsset(string $site, string $asset, string $assetsETag = ''): Response
 	{
+		$userId = $this->userSession->isLoggedIn() ? $this->userSession->getUser()->getUID() : null;
+
 		try {
-			$userId = $this->userSession->isLoggedIn() ? $this->userSession->getUser()->getUID() : null;
 			$picoAsset = $this->websitesService->getAsset($site, $asset, $userId);
 
 			$response = new PicoAssetResponse($picoAsset, (bool) $assetsETag);
@@ -178,6 +195,13 @@ class PicoController extends Controller
 				'The file and directory structure of this website appears to be broken und thus could not be accessed.'
 			));
 		} catch (WebsiteNotPermittedException $e) {
+			if ($userId === null) {
+				return new RedirectResponse($this->urlGenerator->linkToRoute(
+					'core.login.showLoginForm',
+					[ 'redirect_url' => $this->request->getRequestUri() ]
+				));
+			}
+
 			return new NotPermittedResponse($this->l10n->t(
 				'You don\'t have access to this private website. Maybe the share was deleted or has expired?'
 			));

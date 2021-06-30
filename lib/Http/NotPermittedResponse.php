@@ -39,10 +39,7 @@ class NotPermittedResponse extends TemplateResponse
 	{
 		$params = [
 			'message' => $message,
-			'buttonLink' => \OC::$server->getURLGenerator()->linkToRoute(
-				'core.login.showLoginForm',
-				[ 'redirect_url' => \OC::$server->getRequest()->getRequestUri() ]
-			),
+			'buttonLink' => \OC_Util::getDefaultPageUrl(),
 		];
 
 		parent::__construct(Application::APP_NAME, '403', $params, 'guest');

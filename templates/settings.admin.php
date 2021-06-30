@@ -41,7 +41,7 @@ style(Application::APP_NAME, 'pico');
 				<p><?php p($l->t(
 					'Some of your Nextcloud apps have known incompatibilities with Pico CMS for Nextcloud. This is '
 							. 'no-one\'s fault, neither are Nextcloud nor the conflicting apps to blame, this is just '
-							. 'some technical limitation of Nextcloud\'s app infrastructure we can\'t solve in the '
+							. 'some technical limitation of Nextcloud\'s app infrastructure we cannot solve in the '
 							. 'short term. We\'re working on a solution! In the meantime you must remove the '
 							. 'conflicting apps. Known conflicting apps are "Issue Template" and "Terms of service".'
 				 )); ?></p>
@@ -102,7 +102,7 @@ style(Application::APP_NAME, 'pico');
 		<div>
 			<p><?php p($l->t(
 				'Pico CMS for Nextcloud allows you to add custom themes for some greater individuality and style. '
-						. 'However, for security reasons, users can\'t add custom themes on their own. Before you can '
+						. 'However, for security reasons, users cannot add custom themes on their own. Before you can '
 						. 'add a new custom theme using the "Add custom theme" button below, you\'ll have to upload '
 						. 'all of its files to the data folder of your Nextcloud instance. After uploading the theme '
 						. 'it will show up in the form below to actually allow users to use the custom theme. If you '

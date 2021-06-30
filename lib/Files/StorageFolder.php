@@ -30,6 +30,7 @@ use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\AlreadyExistsException;
 use OCP\Files\Folder as OCFolder;
 use OCP\Files\InvalidPathException;
+use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 use OCP\IDBConnection;
 use OCP\ILogger;
@@ -229,7 +230,11 @@ class StorageFolder extends AbstractStorageNode implements FolderInterface
 		if ($this->rootFolder === null) {
 			$ocFolder = $this->node;
 			for ($i = 0; $i < substr_count($this->getPath(), '/'); $i++) {
-				$ocFolder = $ocFolder->getParent();
+				try {
+					$ocFolder = $ocFolder->getParent();
+				} catch (NotFoundException $e) {
+					throw new InvalidPathException();
+				}
 			}
 
 			$this->rootFolder = new StorageFolder($ocFolder);

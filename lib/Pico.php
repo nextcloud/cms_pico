@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace OCA\CMSPico;
 
 use HTMLPurifier;
+use HTMLPurifier_Config;
 use HTMLPurifier_HTML5Config;
 use OCA\CMSPico\Exceptions\WebsiteInvalidFilesystemException;
 use OCA\CMSPico\Files\FileInterface;
@@ -237,15 +238,32 @@ class Pico extends \Pico
 	public function getHtmlPurifier(): HTMLPurifier
 	{
 		if ($this->htmlPurifier === null) {
-			$htmlPurifierConfig = HTMLPurifier_HTML5Config::createDefault();
-			$htmlPurifierConfig->set('Attr.EnableID', true);
-
-			$this->htmlPurifier = new HTMLPurifier($htmlPurifierConfig);
+			$this->htmlPurifier = new HTMLPurifier($this->getHtmlPurifierConfig());
 
 			$this->triggerEvent('onHtmlPurifier', [ &$this->htmlPurifier ]);
 		}
 
 		return $this->htmlPurifier;
+	}
+
+	/**
+	 * Returns the HTMLPurifier_Config instance.
+	 *
+	 * @return HTMLPurifier_Config
+	 */
+	private function getHtmlPurifierConfig(): HTMLPurifier_Config
+	{
+		$config = HTMLPurifier_HTML5Config::createDefault();
+		$config->autoFinalize = false;
+
+		$config->set('Attr.EnableID', true);
+
+		$allowedSchemes = array_merge($config->get('URI.AllowedSchemes'), [ 'data' => true ]);
+		$config->set('URI.AllowedSchemes', $allowedSchemes);
+
+		$config->finalize();
+
+		return $config;
 	}
 
 	/**
