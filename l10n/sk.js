@@ -36,6 +36,7 @@ OC.L10N.register(
     "Incompatible plugin: Plugins for Pico CMS for Nextcloud must use one of the API versions {compatApiVersions}, but this plugin uses API version {apiVersion}." : "Nekompatibilný doplnok: Doplnky pre Pico CMS pre Nextcloud musia používať jednu z verzíí API {compatApiVersions}, ale tento doplnok používa verziu API {apiVersion}.",
     "Incompatible template: Required directory \"{file}\" not found." : "Nekompatibilná šablóna: Požadovaný priečinok \"{file}\" nebol nájdený.",
     "Incompatible theme: Twig template \"{file}\" not found." : "Nekompatibilná téma: Twig šablóna \"{file}\" nebola nájdená.",
+    "Incompatible theme: Themes for Pico CMS for Nextcloud must use one of the API versions {compatApiVersions}, but this theme uses API version {apiVersion}." : "Nekompatibilný vzhľad: Vzhľady pre Pico CMS pre Nextcloud musia používať jednu z verzíí API {compatApiVersions}, ale tento doplnok používa verziu API {apiVersion}.",
     "The name of the website must be longer." : "Názov webovej stránky musí byť dlhší.",
     "The name of the website is too long." : "Názov webovej stránky je príliš dlhý.",
     "The identifier of the website must be longer." : "Identifikátor webovej stránky musí byť dlhší.",
