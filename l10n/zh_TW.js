@@ -2,6 +2,9 @@ OC.L10N.register(
     "cms_pico",
     {
     "Copy" : "複製",
+    "Confirm website deletion" : "確認網站刪除",
+    "This operation will delete the website \"{name}\". However, all of its contents will still be available in your Nextcloud." : "此操作將刪除網站 “{name}”。但是，其所有內容仍將在您的 Nextcloud 中可用。",
+    "Choose website directory" : "選擇網站目錄",
     "Abort" : "中斷",
     "Save" : "儲存",
     "Location" : "地點",
