@@ -54,12 +54,12 @@ build:
               file: tests/clover.xml
               format: clover
 
-    test-nc19-php72:
+    test-nc20-php72:
       environment:
         php:
           version: 7.2
         variables:
-          NEXTCLOUD: releases/latest-19
+          NEXTCLOUD: releases/latest-20
       dependencies: &dependencies
         override:
           - curl -L -o ~/nextcloud.tar.bz2 https://download.nextcloud.com/server/$NEXTCLOUD.tar.bz2
@@ -89,37 +89,6 @@ build:
           - cd ~/nextcloud/apps/$APP_NAME
           - php ./vendor/bin/phpunit --configuration ./tests/phpunit.xml
 
-    test-nc19-php73:
-      environment:
-        php:
-          version: 7.3
-        variables:
-          NEXTCLOUD: releases/latest-19
-      dependencies: *dependencies
-      project_setup: *setup
-      tests: *tests
-
-    test-nc19-php74:
-      environment:
-        php: &php74
-          version: 7.4
-          compile_options: '--enable-gd --with-openssl --with-curl --with-pdo-mysql --with-mysqli --with-freetype --enable-mbstring --enable-mbregex --enable-exif --enable-bcmath --with-mhash --with-xmlrpc --with-xsl --enable-opcache --enable-intl --with-pear --with-gettext --enable-fpm --with-zlib-dir --with-zlib --disable-rpath --enable-inline-optimization --with-bz2 --with-zlib --enable-sockets --enable-sysvsem --enable-sysvshm --enable-pcntl'
-        variables:
-          NEXTCLOUD: releases/latest-19
-      dependencies: *dependencies
-      project_setup: *setup
-      tests: *tests
-
-    test-nc20-php72:
-      environment:
-        php:
-          version: 7.2
-        variables:
-          NEXTCLOUD: releases/latest-20
-      dependencies: *dependencies
-      project_setup: *setup
-      tests: *tests
-
     test-nc20-php73:
       environment:
         php:
@@ -132,7 +101,9 @@ build:
 
     test-nc20-php74:
       environment:
-        php: *php74
+        php: &php74
+          version: 7.4
+          compile_options: '--enable-gd --with-openssl --with-curl --with-pdo-mysql --with-mysqli --with-freetype --enable-mbstring --enable-mbregex --enable-exif --enable-bcmath --with-mhash --with-xmlrpc --with-xsl --enable-opcache --enable-intl --with-pear --with-gettext --enable-fpm --with-zlib-dir --with-zlib --disable-rpath --enable-inline-optimization --with-bz2 --with-zlib --enable-sockets --enable-sysvsem --enable-sysvshm --enable-pcntl'
         variables:
           NEXTCLOUD: releases/latest-20
       dependencies: *dependencies
@@ -164,6 +135,35 @@ build:
           version: 8.0
         variables:
           NEXTCLOUD: releases/latest-21
+      dependencies: *dependencies
+      project_setup: *setup
+      tests: *tests
+
+    test-nc22-php73:
+      environment:
+        php:
+          version: 7.3
+        variables:
+          NEXTCLOUD: releases/latest-22
+      dependencies: *dependencies
+      project_setup: *setup
+      tests: *tests
+
+    test-nc22-php74:
+      environment:
+        php: *php74
+        variables:
+          NEXTCLOUD: releases/latest-22
+      dependencies: *dependencies
+      project_setup: *setup
+      tests: *tests
+
+    test-nc22-php80:
+      environment:
+        php:
+          version: 8.0
+        variables:
+          NEXTCLOUD: releases/latest-22
       dependencies: *dependencies
       project_setup: *setup
       tests: *tests
