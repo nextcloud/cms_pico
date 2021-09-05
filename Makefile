@@ -83,7 +83,7 @@ endif
 
 check-composer:
 	composer update --no-suggest --no-dev --dry-run 2>&1 \
-		| grep --quiet '^Nothing to install or update$$'
+		| grep --quiet '^Nothing to install, update or remove$$'
 
 lazy-check:
 	@:
