@@ -574,16 +574,16 @@ style(Application::APP_NAME, 'pico');
 		<div class="icon icon-info"></div>
 		<div>
 			<p><?php p($l->t(
-				'Depending on your webserver\'s configuration, users can access their websites using different URLs. '
+				'Depending on your web server\'s configuration, users can access their websites using different URLs. '
 						. 'By default, users can access their web sites using Pico CMS for Nextcloud\'s full '
 						. 'application URL. However, these URLs are pretty long and thus not very user-friendly. For '
 						. 'this reason, Pico CMS for Nextcloud also supports shortened URLs utilizing the virtual '
 						. '"sites/" folder. However, using this feature requires some additional web server '
 						. 'configuration. If you\'re using the Apache web server, try one of the first two examples '
 						. 'shown below. If you\'re rather using the nginx web server, try one of last two examples. If '
-						. 'you don\'t really understand what\'s going on, contact your server administrator and send '
+						. 'you do not really understand what\'s going on, contact your server administrator and send '
 						. 'him the information below. If your server administrator tells you this isn\'t possible, '
-						. 'don\'t despair - you can still use Pico CMS for Nextcloud\'s full application URLs, they '
+						. 'do not despair - you can still use Pico CMS for Nextcloud\'s full application URLs, they '
 						. 'always work out-of-the-box.'
 			)); ?></p>
 		</div>
