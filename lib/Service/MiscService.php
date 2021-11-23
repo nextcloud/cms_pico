@@ -275,8 +275,8 @@ class MiscService
 			}
 
 			throw new FilesystemNotWritableException($this->l10n->t(
-				'Failed to enable Pico CMS for Nextcloud: The webserver has no permission to create files and '
-						. 'folders below "%s". Make sure to give the webserver write access to this directory by '
+				'Failed to enable Pico CMS for Nextcloud: The web server has no permission to create files and '
+						. 'folders below "%s". Make sure to give the web server write access to this directory by '
 						. 'changing its permissions and ownership to the same as of your "%s" directory. Then try '
 						. 'again enabling Pico CMS for Nextcloud.',
 				[ $appDataPublicPath, $dataPath ]
