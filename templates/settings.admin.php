@@ -565,7 +565,7 @@ style(Application::APP_NAME, 'pico');
 </article>
 
 <article class="section">
-	<h2><?php p($l->t('Configure your webs erver')); ?></h2>
+	<h2><?php p($l->t('Configure your web server')); ?></h2>
 	<p class="settings-hint"><?php p($l->t(
 		'Enable Pico CMS for Nextcloud\'s full potential by configuring your web server appropriately.'
 	)); ?></p>
