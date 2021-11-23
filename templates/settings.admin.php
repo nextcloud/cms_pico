@@ -565,9 +565,9 @@ style(Application::APP_NAME, 'pico');
 </article>
 
 <article class="section">
-	<h2><?php p($l->t('Configure your webserver')); ?></h2>
+	<h2><?php p($l->t('Configure your webs erver')); ?></h2>
 	<p class="settings-hint"><?php p($l->t(
-		'Enable Pico CMS for Nextcloud\'s full potential by configuring your webserver appropriately.'
+		'Enable Pico CMS for Nextcloud\'s full potential by configuring your web server appropriately.'
 	)); ?></p>
 
 	<div class="message large">
@@ -575,12 +575,12 @@ style(Application::APP_NAME, 'pico');
 		<div>
 			<p><?php p($l->t(
 				'Depending on your webserver\'s configuration, users can access their websites using different URLs. '
-						. 'By default, users can access their websites using Pico CMS for Nextcloud\'s full '
+						. 'By default, users can access their web sites using Pico CMS for Nextcloud\'s full '
 						. 'application URL. However, these URLs are pretty long and thus not very user-friendly. For '
 						. 'this reason, Pico CMS for Nextcloud also supports shortened URLs utilizing the virtual '
-						. '"sites/" folder. However, using this feature requires some additional webserver '
-						. 'configuration. If you\'re using the Apache webserver, try one of the first two examples '
-						. 'shown below. If you\'re rather using the nginx webserver, try one of last two examples. If '
+						. '"sites/" folder. However, using this feature requires some additional web server '
+						. 'configuration. If you\'re using the Apache web server, try one of the first two examples '
+						. 'shown below. If you\'re rather using the nginx web server, try one of last two examples. If '
 						. 'you don\'t really understand what\'s going on, contact your server administrator and send '
 						. 'him the information below. If your server administrator tells you this isn\'t possible, '
 						. 'don\'t despair - you can still use Pico CMS for Nextcloud\'s full application URLs, they '
@@ -648,7 +648,7 @@ style(Application::APP_NAME, 'pico');
 			<p><?php p($l->t(
 				'Copy the config snippet above to Nextcloud\'s <VirtualHost …> section of your apache.conf. Before '
 						. 'doing so you must enable both Apache\'s mod_proxy and mod_proxy_http modules. Otherwise '
-						. 'your webserver will either refuse to (re)start or yield a 500 Internal Server Error.'
+						. 'your web server will either refuse to (re)start or yield a 500 Internal Server Error.'
 			)); ?></p>
 		</section>
 	</section>
@@ -670,7 +670,7 @@ style(Application::APP_NAME, 'pico');
 			</p>
 			<p><?php p($l->t(
 				'Before copying the config snippet above to Nextcloud\'s <VirtualHost …> section of your apache.conf, '
-						. 'make sure to enable Apache\'s mod_rewrite module. Otherwise your webserver will refuse to '
+						. 'make sure to enable Apache\'s mod_rewrite module. Otherwise your web server will refuse to '
 						. '(re)start or yield a 500 Internal Server Error. Please note that this config won\'t '
 						. 'actually let you use shortened URLs, it just redirects users from shortened URLs to the '
 						. 'site\'s full URL. Thus you should prefer the solution utilizing mod_proxy shown above.'
@@ -702,7 +702,7 @@ style(Application::APP_NAME, 'pico');
 			</p>
 			<p><?php p($l->t(
 				'Copy the config snippet above to Nextcloud\'s server { … } section of your nginx.conf. Before doing '
-						. 'doing so you must enable nginx\'s ngx_http_proxy_module module. Otherwise your webserver '
+						. 'doing so you must enable nginx\'s ngx_http_proxy_module module. Otherwise your web server '
 						. 'will either refuse to (re)start or yield a 500 Internal Server Error.'
 			)); ?></p>
 		</section>
