@@ -619,7 +619,7 @@ style(Application::APP_NAME, 'pico');
 				</p>
 				<p class="note"><?php p($l->t(
 					'After you have configured your web server to enable shortened URLs, you should select the '
-							. 'corresponding option above to let your users know about this feature. Don\'t enable '
+							. 'corresponding option above to let your users know about this feature. Do not enable '
 							. 'this option if you have not configured the virtual "sites/" folder yet using one of the '
 							. 'configuration examples shown below.'
 				)); ?></p>
