@@ -16,7 +16,7 @@ build:
             - xdebug-2.9.8
       dependencies:
         override:
-          - curl -L -o ~/nextcloud.tar.bz2 https://download.nextcloud.com/server/$NEXTCLOUD.tar.bz2
+          - curl -k -L -o ~/nextcloud.tar.bz2 https://download.nextcloud.com/server/$NEXTCLOUD.tar.bz2
       project_setup:
         override:
           - php --info
