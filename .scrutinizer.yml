@@ -62,7 +62,7 @@ build:
           NEXTCLOUD: releases/latest-20
       dependencies: &dependencies
         override:
-          - curl -L -o ~/nextcloud.tar.bz2 https://download.nextcloud.com/server/$NEXTCLOUD.tar.bz2
+          - curl -k -L -o ~/nextcloud.tar.bz2 https://download.nextcloud.com/server/$NEXTCLOUD.tar.bz2
       project_setup: &setup
         override:
           - php --info
