@@ -82,7 +82,7 @@ ifneq ($(git_local_tag),$(git_remote_tag))
 endif
 
 check-composer:
-	composer update --no-suggest --no-dev --dry-run 2>&1 \
+	composer update --no-dev --dry-run 2>&1 \
 		| grep --quiet '^Nothing to install, update or remove$$'
 
 lazy-check:
@@ -92,7 +92,7 @@ ifeq ($(or $(filter $(appinfo_version) latest,$(version)), $(filter true,$(noche
 endif
 
 composer:
-	composer install --no-suggest --prefer-dist --optimize-autoloader \
+	composer install --prefer-dist --optimize-autoloader \
 		$(if $(filter true,$(dev)),,--no-dev)
 
 build: lazy-check clean-build composer
