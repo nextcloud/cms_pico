@@ -6,6 +6,7 @@ build:
     variables:
       APP_NAME: cms_pico
       NEXTCLOUD: releases/latest
+      GPGKEY: 28806A878AE423A28372792ED75899B9A724937A
   nodes:
     analysis:
       environment:
@@ -20,7 +21,7 @@ build:
           - curl -L -o ~/nextcloud.tar.bz2.asc --insecure https://download.nextcloud.com/server/$NEXTCLOUD.tar.bz2.asc
 
           - export GNUPGHOME="$(mktemp -d)"
-          - gpg --batch --keyserver keyserver.ubuntu.com --recv-keys 28806A878AE423A28372792ED75899B9A724937A
+          - gpg --batch --keyserver keyserver.ubuntu.com --recv-keys $GPGKEY
           - gpg --batch --verify ~/nextcloud.tar.bz2.asc ~/nextcloud.tar.bz2
       project_setup:
         override:
@@ -71,7 +72,7 @@ build:
           - curl -L -o ~/nextcloud.tar.bz2.asc --insecure https://download.nextcloud.com/server/$NEXTCLOUD.tar.bz2.asc
 
           - export GNUPGHOME="$(mktemp -d)"
-          - gpg --batch --keyserver keyserver.ubuntu.com --recv-keys 28806A878AE423A28372792ED75899B9A724937A
+          - gpg --batch --keyserver keyserver.ubuntu.com --recv-keys $GPGKEY
           - gpg --batch --verify ~/nextcloud.tar.bz2.asc ~/nextcloud.tar.bz2
       project_setup: &setup
         override:
