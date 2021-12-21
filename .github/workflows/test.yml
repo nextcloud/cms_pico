@@ -6,23 +6,23 @@ on:
     tags: [ 'v*.*.*' ]
   pull_request: {}
 
-env:
-  RUN_ON: "NEXTCLOUD21 NEXTCLOUD22 NEXTCLOUD23 MASTER"
-  NEXTCLOUD21_BRANCH: "releases/latest-21"
-  NEXTCLOUD21_PHP_VERSIONS: "7.3 7.4 8.0"
-  NEXTCLOUD22_BRANCH: "releases/latest-22"
-  NEXTCLOUD22_PHP_VERSIONS: "7.3 7.4 8.0"
-  NEXTCLOUD23_BRANCH: "releases/latest-23"
-  NEXTCLOUD23_PHP_VERSIONS: "7.3 7.4 8.0"
-  MASTER_BRANCH: "daily/latest-master"
-  MASTER_PHP_VERSIONS: "7.3 7.4 8.0 8.1"
-
 jobs:
   generate-jobs:
     name: Generate jobs
 
     runs-on: ubuntu-latest
     permissions: {}
+
+    env:
+      RUN_ON: "NEXTCLOUD_STABLE21 NEXTCLOUD_STABLE22 NEXTCLOUD_STABLE23 NEXTCLOUD_MASTER"
+      NEXTCLOUD_STABLE21_BRANCH: "releases/latest-21"
+      NEXTCLOUD_STABLE21_PHP_VERSIONS: "7.3 7.4 8.0"
+      NEXTCLOUD_STABLE22_BRANCH: "releases/latest-22"
+      NEXTCLOUD_STABLE22_PHP_VERSIONS: "7.3 7.4 8.0"
+      NEXTCLOUD_STABLE23_BRANCH: "releases/latest-23"
+      NEXTCLOUD_STABLE23_PHP_VERSIONS: "7.3 7.4 8.0"
+      NEXTCLOUD_MASTER_BRANCH: "daily/latest-master"
+      NEXTCLOUD_MASTER_PHP_VERSIONS: "7.3 7.4 8.0 8.1"
 
     outputs:
       BUILD_MATRIX_NEXTCLOUD: ${{ steps.generate-jobs.outputs.BUILD_MATRIX_NEXTCLOUD }}
