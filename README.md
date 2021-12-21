@@ -2,7 +2,7 @@
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Latest Release](https://img.shields.io/github/v/release/nextcloud/cms_pico?sort=semver)](https://apps.nextcloud.com/apps/cms_pico)
-[![Build Status](https://scrutinizer-ci.com/g/nextcloud/cms_pico/badges/build.png?b=master)](https://scrutinizer-ci.com/g/nextcloud/cms_pico/build-status/master)
+[![Build Status](https://img.shields.io/github/checks-status/nextcloud/cms_pico/master?label=build)](https://github.com/nextcloud/cms_pico/actions/workflows/test.yml)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nextcloud/cms_pico/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/nextcloud/cms_pico/?branch=master)
 
 ## About
