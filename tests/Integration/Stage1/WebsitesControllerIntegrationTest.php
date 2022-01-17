@@ -26,7 +26,6 @@ namespace OCA\CMSPico\Tests\Integration\Stage1;
 
 use OCA\CMSPico\Controller\WebsitesController;
 use OCA\CMSPico\Model\Website;
-use OCA\CMSPico\Model\WebsiteCore;
 use OCA\CMSPico\Tests\TestCase;
 use OCA\CMSPico\Tests\Utils\Manager\TestUsersManager;
 use OCA\CMSPico\Tests\Utils\Manager\TestWebsitesManager;
@@ -144,11 +143,11 @@ class WebsitesControllerIntegrationTest extends TestCase
 		$website1 = $this->testWebsitesManager->getTestWebsite('test1');
 
 		$response = $this->controller->updatePersonalWebsite($website1->getId(), [
-			'type' => WebsiteCore::TYPE_PRIVATE
+			'type' => Website::TYPE_PRIVATE
 		]);
 
 		$this->assertWebsitesResponse($response, [
-			array_merge($website1->getData(), [ 'type' => WebsiteCore::TYPE_PRIVATE ]),
+			array_merge($website1->getData(), [ 'type' => Website::TYPE_PRIVATE ]),
 			$this->testWebsitesManager->getTestWebsite('test2')->getData(),
 		]);
 

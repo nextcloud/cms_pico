@@ -92,7 +92,7 @@ class WebsiteRequest
 	public function assertViewerAccess(string $path, array $meta = []): void
 	{
 		$exceptionClass = WebsiteNotPermittedException::class;
-		if ($this->website->getType() === WebsiteCore::TYPE_PUBLIC) {
+		if ($this->website->getType() === Website::TYPE_PUBLIC) {
 			if (empty($meta['access'])) {
 				return;
 			}
