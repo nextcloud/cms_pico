@@ -207,7 +207,6 @@
 
 			if ($newItem.val()) {
 				$newItemButton.on('click.CMSPicoAdminList', function (event) {
-					event.preventDefault();
 					that._api('POST', '', { item: $newItem.val() });
 				});
 			} else {
@@ -215,7 +214,6 @@
 			}
 
 			this.$element.find('.action-reload').on('click.CMSPicoAdminList', function (event) {
-				event.preventDefault();
 				that.reload();
 			});
 		},
@@ -259,7 +257,6 @@
 			});
 
 			$item.find('.action-sync').on('click.CMSPicoAdminList', function (event) {
-				event.preventDefault();
 				that._api('POST', itemData.name);
 			});
 
@@ -288,13 +285,11 @@
 				});
 
 				$this.on('click.CMSPicoAdminList', function (event) {
-					event.preventDefault();
 					dialog.open();
 				});
 			});
 
 			$item.find('.action-delete').on('click.CMSPicoAdminList', function (event) {
-				event.preventDefault();
 				that._api('DELETE', itemData.name);
 			});
 		}

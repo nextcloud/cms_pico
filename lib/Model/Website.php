@@ -34,7 +34,6 @@ use OCA\CMSPico\Exceptions\WebsiteInvalidFilesystemException;
 use OCA\CMSPico\Exceptions\WebsiteInvalidOwnerException;
 use OCA\CMSPico\Files\StorageFolder;
 use OCA\CMSPico\Service\MiscService;
-use OCA\CMSPico\Service\TemplatesService;
 use OCA\CMSPico\Service\ThemesService;
 use OCA\CMSPico\Service\WebsitesService;
 use OCP\Files\InvalidPathException;
@@ -79,9 +78,6 @@ class Website extends WebsiteCore
 	/** @var ThemesService */
 	private $themesService;
 
-	/** @var TemplatesService */
-	private $templatesService;
-
 	/** @var MiscService */
 	private $miscService;
 
@@ -101,7 +97,6 @@ class Website extends WebsiteCore
 		$this->urlGenerator = \OC::$server->getURLGenerator();
 		$this->websitesService = \OC::$server->query(WebsitesService::class);
 		$this->themesService = \OC::$server->query(ThemesService::class);
-		$this->templatesService = \OC::$server->query(TemplatesService::class);
 		$this->miscService = \OC::$server->query(MiscService::class);
 
 		parent::__construct($data);

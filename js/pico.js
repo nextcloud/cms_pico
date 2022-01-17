@@ -199,7 +199,6 @@
 			}
 
 			$error.find('.action-reload').on('click.CMSPicoList', function (event) {
-				event.preventDefault();
 				that.reload();
 			});
 		}
@@ -552,8 +551,8 @@
 	 * @class
 	 * @extends OCA.CMSPico.Events
 	 *
-	 * @param {jQuery}   $element
-	 * @param {jQuery}   $input
+	 * @param {jQuery} $element
+	 * @param {jQuery} $input
 	 */
 	OCA.CMSPico.Editable = function ($element, $input) {
 		this.initialize($element, $input);
@@ -581,8 +580,8 @@
 		/**
 		 * @constructs
 		 *
-		 * @param {jQuery}   $element
-		 * @param {jQuery}   $input
+		 * @param {jQuery} $element
+		 * @param {jQuery} $input
 		 */
 		initialize: function ($element, $input) {
 			this.$element = $element;

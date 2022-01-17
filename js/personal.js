@@ -238,7 +238,6 @@
 				});
 
 				$this.on('click.CMSPicoWebsiteList', function (event) {
-					event.preventDefault();
 					dialog.open();
 				});
 			});
@@ -256,7 +255,6 @@
 			});
 
 			$website.find('.action-rename').on('click.CMSPicoWebsiteList', function (event) {
-				event.preventDefault();
 				nameEditable.toggle();
 			});
 
@@ -273,8 +271,6 @@
 
 			// delete website
 			$website.find('.action-delete').on('click.CMSPicoWebsiteList', function (event) {
-				event.preventDefault();
-
 				var dialogTitle = t('cms_pico', 'Confirm website deletion'),
 					dialogText = t('cms_pico', 'This operation will delete the website "{name}". However, all of ' +
 							'its contents will still be available in your Nextcloud.', { name: websiteData.name });
@@ -301,7 +297,6 @@
 					$element.attr('href', url);
 				} else {
 					$element.on('click.CMSPicoWebsiteList', function (event) {
-						event.preventDefault();
 						OC.redirect(url);
 					});
 				}
@@ -383,8 +378,6 @@
 			});
 
 			$path.on('click.CMSPicoWebsiteForm', function (event) {
-				event.preventDefault();
-
 				OC.dialogs.filepicker(
 					t('cms_pico', 'Choose website directory'),
 					function (path, type) {

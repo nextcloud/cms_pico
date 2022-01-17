@@ -48,9 +48,6 @@ class PicoControllerIntegrationTest extends TestCase
 	/** @var TestWebsitesManager */
 	protected $testWebsitesManager;
 
-	/** @var Website */
-	protected $website;
-
 	protected function setUp(): void
 	{
 		parent::setUp();
