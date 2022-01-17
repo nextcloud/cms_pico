@@ -108,12 +108,12 @@ class Version010000 extends SimpleMigrationStep
 			$themeColumn->setLength(64);
 		}
 
-		if (!$table->hasIndex('user_id')) {
-			$table->addIndex([ 'user_id' ], 'user_id');
+		if (!$table->hasIndex(WebsitesRequestBuilder::TABLE_WEBSITES . '_user_id')) {
+			$table->addIndex([ 'user_id' ], WebsitesRequestBuilder::TABLE_WEBSITES . '_user_id');
 		}
 
-		if (!$table->hasIndex('site')) {
-			$table->addIndex([ 'site' ], 'site');
+		if (!$table->hasIndex(WebsitesRequestBuilder::TABLE_WEBSITES . '_site')) {
+			$table->addIndex([ 'site' ], WebsitesRequestBuilder::TABLE_WEBSITES . '_site');
 		}
 
 		return $schema;
