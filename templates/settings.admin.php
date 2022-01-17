@@ -575,7 +575,7 @@ style(Application::APP_NAME, 'pico');
 		<div>
 			<p><?php p($l->t(
 				'Depending on your web server\'s configuration, users can access their websites using different URLs. '
-						. 'By default, users can access their web sites using Pico CMS for Nextcloud\'s full '
+						. 'By default, users can access their websites using Pico CMS for Nextcloud\'s full '
 						. 'application URL. However, these URLs are pretty long and thus not very user-friendly. For '
 						. 'this reason, Pico CMS for Nextcloud also supports shortened URLs utilizing the virtual '
 						. '"sites/" folder. However, using this feature requires some additional web server '
