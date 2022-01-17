@@ -39,5 +39,10 @@
     "pico-plugin-dir": "appdata/plugins/"
   },
   "minimum-stability": "beta",
-  "prefer-stable": true
+  "prefer-stable": true,
+  "config": {
+    "allow-plugins": {
+      "picocms/*": true
+    }
+  }
 }
