@@ -6,6 +6,7 @@ build:
     variables:
       APP_NAME: cms_pico
       NEXTCLOUD: releases/latest
+      GPGKEY: 28806A878AE423A28372792ED75899B9A724937A
   nodes:
     analysis:
       environment:
@@ -16,7 +17,12 @@ build:
             - xdebug-2.9.8
       dependencies:
         override:
-          - curl -L -o ~/nextcloud.tar.bz2 https://download.nextcloud.com/server/$NEXTCLOUD.tar.bz2
+          - curl -L -o ~/nextcloud.tar.bz2 --insecure https://download.nextcloud.com/server/$NEXTCLOUD.tar.bz2
+          - curl -L -o ~/nextcloud.tar.bz2.asc --insecure https://download.nextcloud.com/server/$NEXTCLOUD.tar.bz2.asc
+
+          - export GNUPGHOME="$(mktemp -d)"
+          - gpg --batch --keyserver keyserver.ubuntu.com --recv-keys $GPGKEY
+          - gpg --batch --verify ~/nextcloud.tar.bz2.asc ~/nextcloud.tar.bz2
       project_setup:
         override:
           - php --info
@@ -53,149 +59,6 @@ build:
             coverage:
               file: tests/clover.xml
               format: clover
-
-    test-nc19-php72:
-      environment:
-        php:
-          version: 7.2
-        variables:
-          NEXTCLOUD: releases/latest-19
-      dependencies: &dependencies
-        override:
-          - curl -L -o ~/nextcloud.tar.bz2 https://download.nextcloud.com/server/$NEXTCLOUD.tar.bz2
-      project_setup: &setup
-        override:
-          - php --info
-          - composer --version
-          - echo Installing $APP_NAME on Nextcloud branch $NEXTCLOUD
-
-          - make build-dev version=latest
-          - cp build/$APP_NAME-latest.tar.gz ~/$APP_NAME.tar.gz
-
-          - tar xfjv ~/nextcloud.tar.bz2 -C ~
-          - tar xfzv ~/$APP_NAME.tar.gz -C ~/nextcloud/apps
-
-          - cd ~/nextcloud
-          - php ./occ --version
-          - php ./occ maintenance:install --database "sqlite" --admin-user "admin" --admin-pass "admin"
-          - php ./occ app:enable $APP_NAME
-      tests: &tests
-        override:
-          - cd ~/nextcloud
-          - php ./occ app:check-code $APP_NAME -c private
-          - php ./occ app:check-code $APP_NAME -c strong-comparison
-          - php ./occ app:check-code $APP_NAME -c deprecation
-
-          - cd ~/nextcloud/apps/$APP_NAME
-          - php ./vendor/bin/phpunit --configuration ./tests/phpunit.xml
-
-    test-nc19-php73:
-      environment:
-        php:
-          version: 7.3
-        variables:
-          NEXTCLOUD: releases/latest-19
-      dependencies: *dependencies
-      project_setup: *setup
-      tests: *tests
-
-    test-nc19-php74:
-      environment:
-        php: &php74
-          version: 7.4
-          compile_options: '--enable-gd --with-openssl --with-curl --with-pdo-mysql --with-mysqli --with-freetype --enable-mbstring --enable-mbregex --enable-exif --enable-bcmath --with-mhash --with-xmlrpc --with-xsl --enable-opcache --enable-intl --with-pear --with-gettext --enable-fpm --with-zlib-dir --with-zlib --disable-rpath --enable-inline-optimization --with-bz2 --with-zlib --enable-sockets --enable-sysvsem --enable-sysvshm --enable-pcntl'
-        variables:
-          NEXTCLOUD: releases/latest-19
-      dependencies: *dependencies
-      project_setup: *setup
-      tests: *tests
-
-    test-nc20-php72:
-      environment:
-        php:
-          version: 7.2
-        variables:
-          NEXTCLOUD: releases/latest-20
-      dependencies: *dependencies
-      project_setup: *setup
-      tests: *tests
-
-    test-nc20-php73:
-      environment:
-        php:
-          version: 7.3
-        variables:
-          NEXTCLOUD: releases/latest-20
-      dependencies: *dependencies
-      project_setup: *setup
-      tests: *tests
-
-    test-nc20-php74:
-      environment:
-        php: *php74
-        variables:
-          NEXTCLOUD: releases/latest-20
-      dependencies: *dependencies
-      project_setup: *setup
-      tests: *tests
-
-    test-nc21-php73:
-      environment:
-        php:
-          version: 7.3
-        variables:
-          NEXTCLOUD: releases/latest-21
-      dependencies: *dependencies
-      project_setup: *setup
-      tests: *tests
-
-    test-nc21-php74:
-      environment:
-        php: *php74
-        variables:
-          NEXTCLOUD: releases/latest-21
-      dependencies: *dependencies
-      project_setup: *setup
-      tests: *tests
-
-    test-nc21-php80:
-      environment:
-        php:
-          version: 8.0
-        variables:
-          NEXTCLOUD: releases/latest-21
-      dependencies: *dependencies
-      project_setup: *setup
-      tests: *tests
-
-    test-master-php73:
-      environment:
-        php:
-          version: 7.3
-        variables:
-          NEXTCLOUD: daily/latest-master
-      dependencies: *dependencies
-      project_setup: *setup
-      tests: *tests
-
-    test-master-php74:
-      environment:
-        php: *php74
-        variables:
-          NEXTCLOUD: daily/latest-master
-      dependencies: *dependencies
-      project_setup: *setup
-      tests: *tests
-
-    test-master-php80:
-      environment:
-        php:
-          version: 8.0
-        variables:
-          NEXTCLOUD: daily/latest-master
-      dependencies: *dependencies
-      project_setup: *setup
-      tests: *tests
 
 checks:
   php: true

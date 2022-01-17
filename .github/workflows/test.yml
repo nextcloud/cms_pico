@@ -1,0 +1,248 @@
+name: Test Pico CMS for Nextcloud
+
+on:
+  push:
+    branches: [ master ]
+    tags: [ 'v*.*.*' ]
+  pull_request: {}
+
+jobs:
+  generate-jobs:
+    name: Generate jobs
+
+    runs-on: ubuntu-latest
+    permissions: {}
+
+    env:
+      RUN_ON: "NEXTCLOUD_STABLE21 NEXTCLOUD_STABLE22 NEXTCLOUD_STABLE23 NEXTCLOUD_MASTER"
+      NEXTCLOUD_STABLE21_BRANCH: "releases/latest-21"
+      NEXTCLOUD_STABLE21_PHP_VERSIONS: "7.3 7.4 8.0"
+      NEXTCLOUD_STABLE22_BRANCH: "releases/latest-22"
+      NEXTCLOUD_STABLE22_PHP_VERSIONS: "7.3 7.4 8.0"
+      NEXTCLOUD_STABLE23_BRANCH: "releases/latest-23"
+      NEXTCLOUD_STABLE23_PHP_VERSIONS: "7.3 7.4 8.0"
+      NEXTCLOUD_MASTER_BRANCH: "daily/latest-master"
+      NEXTCLOUD_MASTER_PHP_VERSIONS: "7.3 7.4 8.0 8.1"
+
+    outputs:
+      BUILD_MATRIX_NEXTCLOUD: ${{ steps.generate-jobs.outputs.BUILD_MATRIX_NEXTCLOUD }}
+      BUILD_MATRIX_TEST: ${{ steps.generate-jobs.outputs.BUILD_MATRIX_TEST }}
+
+    steps:
+      - name: Generate jobs
+        id: generate-jobs
+        run: |
+          :
+
+          BUILD_CONFIGS_NEXTCLOUD=()
+          BUILD_CONFIGS_TEST=()
+          for RUN_ON_ID in $RUN_ON; do
+            NEXTCLOUD_CACHE="nextcloud-$(tr -dc A-Za-z0-9 </dev/urandom 2>/dev/null | head -c 16)"
+
+            NEXTCLOUD_BRANCH_VAR="${RUN_ON_ID}_BRANCH"
+            NEXTCLOUD_BRANCH="${!NEXTCLOUD_BRANCH_VAR}"
+            [ -n "$NEXTCLOUD_BRANCH" ] || exit 1
+
+            BUILD_CONFIGS_NEXTCLOUD+=( "$(jq -n -c \
+              --arg NEXTCLOUD_BRANCH "$NEXTCLOUD_BRANCH" \
+              --arg NEXTCLOUD_CACHE "$NEXTCLOUD_CACHE" \
+              '$ARGS.named')"
+            )
+
+            PHP_VERSIONS_VAR="${RUN_ON_ID}_PHP_VERSIONS"
+            PHP_VERSIONS="${!PHP_VERSIONS_VAR}"
+            [ -n "$PHP_VERSIONS" ] || exit 1
+
+            for PHP_VERSION in $PHP_VERSIONS; do
+              BUILD_CONFIGS_TEST+=( "$(jq -n -c \
+                --arg NEXTCLOUD_BRANCH "$NEXTCLOUD_BRANCH" \
+                --arg NEXTCLOUD_CACHE "$NEXTCLOUD_CACHE" \
+                --arg PHP_VERSION "$PHP_VERSION" \
+                '$ARGS.named')"
+              )
+            done
+          done
+
+          BUILD_MATRIX_NEXTCLOUD="$(jq -n -c '{include: $ARGS.positional}' --jsonargs "${BUILD_CONFIGS_NEXTCLOUD[@]}")"
+          BUILD_MATRIX_TEST="$(jq -n -c '{include: $ARGS.positional}' --jsonargs "${BUILD_CONFIGS_TEST[@]}")"
+
+          echo ::group::Nextcloud build matrix
+          echo "$BUILD_MATRIX_NEXTCLOUD" | jq
+          echo ::endgroup::
+
+          echo ::group::Test build matrix
+          echo "$BUILD_MATRIX_TEST" | jq
+          echo ::endgroup::
+
+          echo "::set-output name=BUILD_MATRIX_NEXTCLOUD::$BUILD_MATRIX_NEXTCLOUD"
+          echo "::set-output name=BUILD_MATRIX_TEST::$BUILD_MATRIX_TEST"
+
+  nextcloud:
+    name: Setup Nextcloud ${{ matrix.NEXTCLOUD_BRANCH }}
+
+    needs:
+      - generate-jobs
+
+    runs-on: ubuntu-latest
+    permissions: {}
+
+    env:
+      NEXTCLOUD_BRANCH: ${{ matrix.NEXTCLOUD_BRANCH }}
+      NEXTCLOUD_CACHE: ${{ matrix.NEXTCLOUD_CACHE }}
+      NEXTCLOUD_PGP_KEY: 28806A878AE423A28372792ED75899B9A724937A
+
+    strategy:
+      matrix: ${{ fromJSON(needs.generate-jobs.outputs.BUILD_MATRIX_NEXTCLOUD) }}
+      fail-fast: false
+
+    steps:
+      - name: Setup GnuPG
+        run: |
+          GNUPGHOME="$(mktemp -d)"
+          echo "GNUPGHOME=$GNUPGHOME" | tee -a "$GITHUB_ENV"
+
+      - name: Download Nextcloud's PGP key ('${{ env.NEXTCLOUD_PGP_KEY }}')
+        run: |
+          gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$NEXTCLOUD_PGP_KEY"
+
+      - name: Download Nextcloud (branch '${{ env.NEXTCLOUD_BRANCH }}')
+        run: |
+          curl -fL -o ~/nextcloud.tar.bz2 https://download.nextcloud.com/server/$NEXTCLOUD_BRANCH.tar.bz2
+
+      - name: Download PGP signature of Nextcloud's sources
+        run: |
+          curl -fL -o ~/nextcloud.tar.bz2.asc https://download.nextcloud.com/server/$NEXTCLOUD_BRANCH.tar.bz2.asc
+
+      - name: Verify Nextcloud's PGP signature
+        run: |
+          gpg --batch --verify ~/nextcloud.tar.bz2.asc ~/nextcloud.tar.bz2
+
+      - name: Extract Nextcloud sources
+        run: |
+          tar xfjv ~/nextcloud.tar.bz2 -C ~
+
+      - name: Read Nextcloud version
+        id: nextcloud-version
+        run: |
+          NEXTCLOUD_VERSION="$(php -r 'require($_SERVER["argv"][1]); echo $OC_VersionString;' -- ~/nextcloud/version.php)"
+          echo "NEXTCLOUD_VERSION=$NEXTCLOUD_VERSION" | tee -a "$GITHUB_ENV"
+
+      - name: Cache Nextcloud ${{ env.NEXTCLOUD_VERSION }}
+        uses: actions/cache@v2
+        with:
+          path: ~/nextcloud
+          key: ${{ matrix.NEXTCLOUD_CACHE }}
+
+  test:
+    name: Nextcloud ${{ matrix.NEXTCLOUD_BRANCH }} on PHP ${{ matrix.PHP_VERSION }}
+
+    needs:
+      - generate-jobs
+      - nextcloud
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    env:
+      APP_NAME: cms_pico
+
+    strategy:
+      matrix: ${{ fromJSON(needs.generate-jobs.outputs.BUILD_MATRIX_TEST) }}
+      fail-fast: false
+
+    continue-on-error: ${{ ! startsWith(matrix.NEXTCLOUD_BRANCH, 'releases/') }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup PHP ${{ matrix.PHP_VERSION }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.PHP_VERSION }}
+          tools: composer
+
+      - name: Restore cached Nextcloud
+        uses: actions/cache@v2
+        with:
+          path: ~/nextcloud
+          key: ${{ matrix.NEXTCLOUD_CACHE }}
+
+      - name: Read Nextcloud version
+        id: nextcloud-version
+        run: |
+          NEXTCLOUD_VERSION="$(php -r 'require($_SERVER["argv"][1]); echo $OC_VersionString;' -- ~/nextcloud/version.php)"
+          echo "NEXTCLOUD_VERSION=$NEXTCLOUD_VERSION" | tee -a "$GITHUB_ENV"
+
+      - name: Install Nextcloud ${{ env.NEXTCLOUD_VERSION }}
+        run: |
+          php ~/nextcloud/occ maintenance:install --database "sqlite" --admin-user "admin" --admin-pass "admin"
+
+      - name: Get Composer cache directory
+        id: composer-cache
+        run: |
+          COMPOSER_CACHE_DIR="$(composer config cache-dir)"
+          echo "COMPOSER_CACHE_DIR=$COMPOSER_CACHE_DIR" | tee -a "$GITHUB_ENV"
+
+      - name: Restore Composer cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.COMPOSER_CACHE_DIR }}
+          key: ${{ runner.os }}-composer-php${{ matrix.PHP_VERSION }}-${{ hashFiles('composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-php${{ matrix.PHP_VERSION }}-
+            ${{ runner.os }}-composer-
+
+      - name: Build Pico CMS for Nextcloud (${{ env.APP_NAME }})
+        run: |
+          make build-dev version=latest
+
+      - name: Extract ${{ env.APP_NAME }}'s sources
+        run: |
+          tar xfzv build/$APP_NAME-latest.tar.gz -C ~/nextcloud/apps
+
+      - name: Remove Nextcloud version constraint from ${{ env.APP_NAME }}'s appinfo/info.xml
+        if: ${{ ! startsWith(matrix.NEXTCLOUD_BRANCH, 'releases/') }}
+        run: |
+          sed -i -e '/<nextcloud/ s/max-version="[a-zA-Z0-9_.-]*"//g' ~/nextcloud/apps/cms_pico/appinfo/info.xml
+
+      - name: Install ${{ env.APP_NAME }}
+        run: |
+          php ~/nextcloud/occ app:enable $APP_NAME
+
+      - name: Run Nextcloud code checks on ${{ env.APP_NAME }}
+        run: |
+          echo + "php ~/nextcloud/occ app:check-code $APP_NAME -c private"
+          php ~/nextcloud/occ app:check-code $APP_NAME -c private
+
+          echo + "php ~/nextcloud/occ app:check-code $APP_NAME -c strong-comparison"
+          php ~/nextcloud/occ app:check-code $APP_NAME -c strong-comparison
+
+          echo + "php ~/nextcloud/occ app:check-code $APP_NAME -c deprecation"
+          php ~/nextcloud/occ app:check-code $APP_NAME -c deprecation
+
+      - name: Run PHPUnit tests of ${{ env.APP_NAME }}
+        run: |
+          php ~/nextcloud/apps/$APP_NAME/vendor/bin/phpunit --configuration ~/nextcloud/apps/$APP_NAME/tests/phpunit.xml
+
+  bouncer:
+    name: Test Pico CMS for Nextcloud
+
+    needs:
+      - nextcloud
+      - test
+    if: ${{ always() }}
+
+    runs-on: ubuntu-latest
+    permissions: {}
+
+    steps:
+      - name: Check build matrix status
+        if: ${{ needs.nextcloud.result != 'success' || needs.test.result != 'success' }}
+        run: |
+          :
+
+          echo "Some tests of Pico CMS for Nextcloud failed." >&2
+          echo "Please check the GitHub workflow logs for details." >&2
+          exit 1

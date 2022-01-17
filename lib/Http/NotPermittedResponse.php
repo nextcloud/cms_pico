@@ -39,7 +39,8 @@ class NotPermittedResponse extends TemplateResponse
 	{
 		$params = [
 			'message' => $message,
-			'buttonLink' => \OC_Util::getDefaultPageUrl(),
+			// TODO: Replace this by IUrlGenerator::linkToDefaultPageUrl() for Nextcloud 23+
+			'buttonLink' => \OC::$server->getURLGenerator()->linkToRoute('core.login.showLoginForm'),
 		];
 
 		parent::__construct(Application::APP_NAME, '403', $params, 'guest');

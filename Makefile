@@ -27,6 +27,9 @@ dev?=false
 nocheck?=false
 verify?=$(build_dir)/$(archive)
 
+php?=php
+composer?=composer
+
 app_name=cms_pico
 app_title=Pico CMS for Nextcloud
 build_dir=$(CURDIR)/build
@@ -38,7 +41,7 @@ signature=$(app_name)-$(version).tar.gz.sig
 git_remote=origin
 github_owner=nextcloud
 github_repo=cms_pico
-github_token:=$(shell cat "$(HOME)/.nextcloud/github-token")
+github_token:=$(shell [ -n "$$GITHUB_TOKEN" ] && echo "$$GITHUB_TOKEN" || cat "$(HOME)/.nextcloud/github-token")
 download_url=https://github.com/$(github_owner)/$(github_repo)/releases/download/$(version)/$(archive)
 publish_url=https://apps.nextcloud.com/api/v1/apps/releases
 appinfo=./appinfo/info.xml
@@ -82,8 +85,8 @@ ifneq ($(git_local_tag),$(git_remote_tag))
 endif
 
 check-composer:
-	composer update --no-suggest --no-dev --dry-run 2>&1 \
-		| grep --quiet '^Nothing to install or update$$'
+	$(composer) update --no-dev --dry-run 2>&1 \
+		| grep --quiet '^Nothing to install, update or remove$$'
 
 lazy-check:
 	@:
@@ -92,7 +95,7 @@ ifeq ($(or $(filter $(appinfo_version) latest,$(version)), $(filter true,$(noche
 endif
 
 composer:
-	composer install --no-suggest --prefer-dist --optimize-autoloader \
+	$(composer) install --prefer-dist --optimize-autoloader \
 		$(if $(filter true,$(dev)),,--no-dev)
 
 build: lazy-check clean-build composer
@@ -153,10 +156,10 @@ verify:
 				"$(verify)"
 
 test:
-	php -f ./vendor/bin/phpunit -- --configuration ./tests/phpunit.xml
+	$(php) -f ./vendor/bin/phpunit -- --configuration ./tests/phpunit.xml
 
 coverage: test
-	php -f ./vendor/bin/coverage -- ./tests/clover.xml 0
+	$(php) -f ./vendor/bin/coverage -- ./tests/clover.xml 0
 
 github-release: export GITHUB_TOKEN=$(github_token)
 github-release: check
@@ -179,7 +182,7 @@ github-upload: check check-composer build github-release
 
 publish: check check-composer sign github-upload
 	sleep 5
-	php -r 'echo json_encode([ "download" => $$_SERVER["argv"][1], "signature" => file_get_contents($$_SERVER["argv"][2]), "nightly" => !!$$_SERVER["argv"][3] ]);' \
+	$(php) -r 'echo json_encode([ "download" => $$_SERVER["argv"][1], "signature" => file_get_contents($$_SERVER["argv"][2]), "nightly" => !!$$_SERVER["argv"][3] ]);' \
 		"$(download_url)" "$(build_dir)/$(signature)" "$(if $(filter true,$(prerelease)),1,0)" \
 			| curl -K "$(curlrc)" \
 				-H "Content-Type: application/json" -d "@-" \
