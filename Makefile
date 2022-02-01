@@ -129,6 +129,8 @@ build: lazy-check clean-build composer
 		--exclude="/*.phar" \
 		--exclude=".git" \
 		./ "$(build_dir)/$(app_name)/"
+	cp "./vendor/picocms/pico/plugins/DummyPlugin.php" \
+		"$(build_dir)/$(app_name)/appdata/plugins/DummyPlugin.php"
 	tar cfz "$(build_dir)/$(archive)" \
 		-C "$(build_dir)" "$(app_name)"
 

@@ -29,7 +29,6 @@ use OCA\CMSPico\Http\NotPermittedResponse;
 use OCA\CMSPico\Http\PicoAssetResponse;
 use OCA\CMSPico\Http\PicoPageResponse;
 use OCA\CMSPico\Model\Website;
-use OCA\CMSPico\Model\WebsiteCore;
 use OCA\CMSPico\Tests\TestCase;
 use OCA\CMSPico\Tests\Utils\Manager\TestUsersManager;
 use OCA\CMSPico\Tests\Utils\Manager\TestWebsitesManager;
@@ -49,9 +48,6 @@ class PicoControllerIntegrationTest extends TestCase
 	/** @var TestWebsitesManager */
 	protected $testWebsitesManager;
 
-	/** @var Website */
-	protected $website;
-
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -70,7 +66,7 @@ class PicoControllerIntegrationTest extends TestCase
 
 		$this->testWebsitesManager->createTestWebsite('private', [
 			'user_id' => $ownerUserId,
-			'type' => WebsiteCore::TYPE_PRIVATE,
+			'type' => Website::TYPE_PRIVATE,
 		]);
 
 		// setup controller

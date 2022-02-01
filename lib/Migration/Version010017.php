@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Migration;
 
-use OCA\CMSPico\Db\WebsitesRequestBuilder;
+use OCA\CMSPico\Db\WebsitesRequest;
 use OCP\DB\ISchemaWrapper;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
@@ -43,22 +43,22 @@ class Version010017 extends SimpleMigrationStep
 		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
 
-		$table = $schema->getTable(WebsitesRequestBuilder::TABLE_WEBSITES);
+		$table = $schema->getTable(WebsitesRequest::TABLE_NAME);
 
 		if ($table->hasIndex('user_id')) {
 			$table->dropIndex('user_id');
 		}
 
-		if (!$table->hasIndex(WebsitesRequestBuilder::TABLE_WEBSITES . '_user_id')) {
-			$table->addIndex([ 'user_id' ], WebsitesRequestBuilder::TABLE_WEBSITES . '_user_id');
+		if (!$table->hasIndex(WebsitesRequest::TABLE_NAME . '_user_id')) {
+			$table->addIndex([ 'user_id' ], WebsitesRequest::TABLE_NAME . '_user_id');
 		}
 
 		if ($table->hasIndex('site')) {
 			$table->dropIndex('site');
 		}
 
-		if (!$table->hasIndex(WebsitesRequestBuilder::TABLE_WEBSITES . '_site')) {
-			$table->addIndex([ 'site' ], WebsitesRequestBuilder::TABLE_WEBSITES . '_site');
+		if (!$table->hasIndex(WebsitesRequest::TABLE_NAME . '_site')) {
+			$table->addIndex([ 'site' ], WebsitesRequest::TABLE_NAME . '_site');
 		}
 
 		return $schema;

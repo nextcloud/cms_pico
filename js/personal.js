@@ -42,6 +42,7 @@
 	 * @param {string}        [options.route]
 	 * @param {jQuery|string} [options.template]
 	 * @param {jQuery|string} [options.itemTemplate]
+	 * @param {jQuery|string} [options.privateSettingsTemplate]
 	 * @param {jQuery|string} [options.loadingTemplate]
 	 * @param {jQuery|string} [options.errorTemplate]
 	 * @param {string}        [options.websiteBaseUrl]
@@ -60,6 +61,9 @@
 		/** @member {jQuery} */
 		$itemTemplate: $(),
 
+		/** @member {jQuery} */
+		$privateSettingsTemplate: $(),
+
 		/** @member {string} */
 		websiteBaseUrl: '',
 
@@ -71,6 +75,7 @@
 		 * @param {string}        [options.route]
 		 * @param {jQuery|string} [options.template]
 		 * @param {jQuery|string} [options.itemTemplate]
+		 * @param {jQuery|string} [options.privateSettingsTemplate]
 		 * @param {jQuery|string} [options.loadingTemplate]
 		 * @param {jQuery|string} [options.errorTemplate]
 		 * @param {string}        [options.websiteBaseUrl]
@@ -80,15 +85,20 @@
 
 			options = $.extend({
 				itemTemplate: $element.data('itemTemplate'),
+				privateSettingsTemplate: $element.data('privateSettingsTemplate'),
 				websiteBaseUrl: $element.data('websiteBaseUrl')
 			}, options);
 
 			this.$itemTemplate = $(options.itemTemplate);
+			this.$privateSettingsTemplate = $(options.privateSettingsTemplate);
 			this.websiteBaseUrl = options.websiteBaseUrl + ((options.websiteBaseUrl.substr(-1) !== '/') ? '/' : '');
 
 			var signature = 'OCA.CMSPico.WebsiteList.initialize()';
 			if (!this.$itemTemplate.length) {
 				throw signature + ': No valid item template given';
+			}
+			if (!this.$privateSettingsTemplate.length) {
+				throw signature + ': No valid private settings template given';
 			}
 			if (this.websiteBaseUrl === '/') {
 				throw signature + ': No valid website base URL given';
@@ -134,6 +144,7 @@
 		 * @param {Object}   data.websites[].options
 		 * @param {string}   data.websites[].path
 		 * @param {int}      data.websites[].creation
+		 * @param {string}   data.websites[].timezone
 		 */
 		update: function (data) {
 			this.websites = data.websites;
@@ -168,17 +179,19 @@
 		/**
 		 * @protected
 		 *
-		 * @param {jQuery} $website
-		 * @param {Object} websiteData
-		 * @param {int}    websiteData.id
-		 * @param {string} websiteData.user_id
-		 * @param {string} websiteData.name
-		 * @param {string} websiteData.site
-		 * @param {string} websiteData.theme
-		 * @param {int}    websiteData.type
-		 * @param {Object} websiteData.options
-		 * @param {string} websiteData.path
-		 * @param {int}    websiteData.creation
+		 * @param {jQuery}   $website
+		 * @param {Object}   websiteData
+		 * @param {int}      websiteData.id
+		 * @param {string}   websiteData.user_id
+		 * @param {string}   websiteData.name
+		 * @param {string}   websiteData.site
+		 * @param {string}   websiteData.theme
+		 * @param {int}      websiteData.type
+		 * @param {Object}   websiteData.options
+		 * @param {string[]} [websiteData.options.group_access]
+		 * @param {string}   websiteData.path
+		 * @param {int}      websiteData.creation
+		 * @param {string}   websiteData.timezone
 		 */
 		_setupItem: function ($website, websiteData) {
 			var that = this;
@@ -191,24 +204,58 @@
 			var filesUrl = OC.generateUrl('/apps/files/') + '?dir=' + OC.encodePath(websiteData.path);
 			this._clickRedirect($website.find('.action-files'), filesUrl);
 
-			// toggle private website
+			// edit private websites settings
+			var websitePrivate = (websiteData.type === WEBSITE_TYPE_PRIVATE),
+				websiteGroupAccess = (websiteData.options || {}).group_access || [];
 			$website.find('.action-private').each(function () {
 				var $this = $(this),
-					$icon = $this.find('[class^="icon-"], [class*=" icon-"]'),
-					value = (websiteData.type === WEBSITE_TYPE_PRIVATE);
+					$icon = $this.find('[class^="icon-"], [class*=" icon-"]');
 
 				$icon
-					.addClass(value ? 'icon-lock' : 'icon-lock-open')
-					.removeClass(value ? 'icon-lock-open' : 'icon-lock');
+					.addClass(websitePrivate ? 'icon-lock' : 'icon-lock-open')
+					.removeClass(websitePrivate ? 'icon-lock-open' : 'icon-lock');
 
-				$this.data('value', value);
+				var dialog = new OCA.CMSPico.Dialog(that.$privateSettingsTemplate, {
+					title: $this.data('originalTitle') || $this.prop('title') || $this.text(),
+					buttons: [
+						{ type: OCA.CMSPico.Dialog.BUTTON_ABORT },
+						{ type: OCA.CMSPico.Dialog.BUTTON_SUBMIT }
+					]
+				});
+
+				dialog.on('open.CMSPicoWebsiteList', function () {
+					var $inputType = this.$element.find('.input-private-' + (!websitePrivate ? 'public' : 'private')),
+						$inputGroups = this.$element.find('.input-private-groups');
+
+					$inputType.prop('checked', true);
+					$inputGroups.val(websiteGroupAccess.join('|'));
+					OC.Settings.setupGroupsSelect($inputGroups);
+				});
+
+				dialog.on('submit.CMSPicoWebsiteList', function () {
+					var data = OCA.CMSPico.Util.serialize(this.$element);
+					that._updateItem(websiteData.id, data);
+				});
 
 				$this.on('click.CMSPicoWebsiteList', function (event) {
-					event.preventDefault();
-
-					var websiteType = $(this).data('value') ? WEBSITE_TYPE_PUBLIC : WEBSITE_TYPE_PRIVATE;
-					that._updateItem(websiteData.id, { type: websiteType });
+					dialog.open();
 				});
+			});
+
+			// change website name
+			var nameEditable = new OCA.CMSPico.Editable(
+				$website.find('.name > p'),
+				$website.find('.name-edit > input')
+			);
+
+			nameEditable.on('submit.CMSPicoWebsiteList', function (value, defaultValue) {
+				if (value !== defaultValue) {
+					that._updateItem(websiteData.id, { name: value });
+				}
+			});
+
+			$website.find('.action-rename').on('click.CMSPicoWebsiteList', function (event) {
+				nameEditable.toggle();
 			});
 
 			// change website theme
@@ -218,15 +265,12 @@
 				$this.val(websiteData.theme);
 
 				$this.on('change.CMSPicoWebsiteList', function (event) {
-					event.preventDefault();
 					that._updateItem(websiteData.id, { theme: $(this).val() });
 				});
 			});
 
 			// delete website
 			$website.find('.action-delete').on('click.CMSPicoWebsiteList', function (event) {
-				event.preventDefault();
-
 				var dialogTitle = t('cms_pico', 'Confirm website deletion'),
 					dialogText = t('cms_pico', 'This operation will delete the website "{name}". However, all of ' +
 							'its contents will still be available in your Nextcloud.', { name: websiteData.name });
@@ -253,7 +297,6 @@
 					$element.attr('href', url);
 				} else {
 					$element.on('click.CMSPicoWebsiteList', function (event) {
-						event.preventDefault();
 						OC.redirect(url);
 					});
 				}
@@ -335,8 +378,6 @@
 			});
 
 			$path.on('click.CMSPicoWebsiteForm', function (event) {
-				event.preventDefault();
-
 				OC.dialogs.filepicker(
 					t('cms_pico', 'Choose website directory'),
 					function (path, type) {

@@ -34,7 +34,6 @@ use OCA\CMSPico\Exceptions\WebsiteInvalidFilesystemException;
 use OCA\CMSPico\Exceptions\WebsiteInvalidOwnerException;
 use OCA\CMSPico\Files\StorageFolder;
 use OCA\CMSPico\Service\MiscService;
-use OCA\CMSPico\Service\TemplatesService;
 use OCA\CMSPico\Service\ThemesService;
 use OCA\CMSPico\Service\WebsitesService;
 use OCP\Files\InvalidPathException;
@@ -79,9 +78,6 @@ class Website extends WebsiteCore
 	/** @var ThemesService */
 	private $themesService;
 
-	/** @var TemplatesService */
-	private $templatesService;
-
 	/** @var MiscService */
 	private $miscService;
 
@@ -101,10 +97,17 @@ class Website extends WebsiteCore
 		$this->urlGenerator = \OC::$server->getURLGenerator();
 		$this->websitesService = \OC::$server->query(WebsitesService::class);
 		$this->themesService = \OC::$server->query(ThemesService::class);
-		$this->templatesService = \OC::$server->query(TemplatesService::class);
 		$this->miscService = \OC::$server->query(MiscService::class);
 
 		parent::__construct($data);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getOptionsJSON(): string
+	{
+		return json_encode($this->getOptions());
 	}
 
 	/**
@@ -114,6 +117,16 @@ class Website extends WebsiteCore
 	{
 		$serverTimeZone = date_default_timezone_get() ?: 'UTC';
 		return $this->config->getUserValue($this->getUserId(), 'core', 'timezone', $serverTimeZone);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getData(): array
+	{
+		$data = parent::getData();
+		$data['timezone'] = $this->getTimeZone();
+		return $data;
 	}
 
 	/**
@@ -280,6 +293,8 @@ class Website extends WebsiteCore
 	}
 
 	/**
+	 * @param bool $proxyRequest
+	 *
 	 * @return string
 	 */
 	public function getWebsiteUrl(bool $proxyRequest = false): string

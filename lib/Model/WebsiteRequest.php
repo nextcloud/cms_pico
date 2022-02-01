@@ -92,17 +92,17 @@ class WebsiteRequest
 	public function assertViewerAccess(string $path, array $meta = []): void
 	{
 		$exceptionClass = WebsiteNotPermittedException::class;
-		if ($this->website->getType() === WebsiteCore::TYPE_PUBLIC) {
+		if ($this->website->getType() === Website::TYPE_PUBLIC) {
 			if (empty($meta['access'])) {
 				return;
 			}
 
-			$groupAccess = $meta['access'];
-			if (!is_array($groupAccess)) {
-				$groupAccess = explode(',', $groupAccess);
+			$groupPageAccess = $meta['access'];
+			if (!is_array($groupPageAccess)) {
+				$groupPageAccess = explode(',', $groupPageAccess);
 			}
 
-			foreach ($groupAccess as $group) {
+			foreach ($groupPageAccess as $group) {
 				$group = trim($group);
 
 				if ($group === 'public') {
@@ -124,6 +124,15 @@ class WebsiteRequest
 		if ($this->getViewer()) {
 			if ($this->getViewer() === $this->website->getUserId()) {
 				return;
+			}
+
+			$groupAccess = $this->website->getOption('group_access') ?? [];
+			foreach ($groupAccess as $group) {
+				if ($this->groupManager->groupExists($group)) {
+					if ($this->groupManager->isInGroup($this->getViewer(), $group)) {
+						return;
+					}
+				}
 			}
 
 			/** @var OCFolder $viewerOCFolder */

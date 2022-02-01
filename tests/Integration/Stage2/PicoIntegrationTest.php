@@ -52,9 +52,6 @@ class PicoIntegrationTest extends TestCase
 	/** @var TestWebsitesManager */
 	protected $testWebsitesManager;
 
-	/** @var Website */
-	protected $website;
-
 	/** @var bool */
 	protected static $websiteSetUp = false;
 

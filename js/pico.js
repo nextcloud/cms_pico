@@ -199,7 +199,6 @@
 			}
 
 			$error.find('.action-reload').on('click.CMSPicoList', function (event) {
-				event.preventDefault();
 				that.reload();
 			});
 		}
@@ -278,6 +277,98 @@
 
 	/**
 	 * @class
+	 */
+	OCA.CMSPico.Events = function () {};
+
+	/**
+	 * @lends OCA.CMSPico.Events.prototype
+	 */
+	OCA.CMSPico.Events.prototype = {
+		/** @member {?object} */
+		events: null,
+
+		/**
+		 * @public
+		 *
+		 * @param {string}   eventName
+		 * @param {function} callback
+		 */
+		on: function (eventName, callback) {
+			var event = this._parseEventName(eventName);
+			if (event === false) {
+				$.error('Invalid event name: ' + eventName);
+				return;
+			}
+
+			if (this.events[event[0]] === undefined) {
+				this.events[event[0]] = {};
+			}
+
+			this.events[event[0]][event[1]] = callback;
+		},
+
+		/**
+		 * @public
+		 *
+		 * @param {string} eventName
+		 */
+		off: function (eventName) {
+			var event = this._parseEventName(eventName);
+			if (event === false) {
+				$.error('Invalid event name: ' + eventName);
+				return false;
+			}
+
+			if ((this.events[event[0]] !== undefined) && (this.events[event[0]][event[1]] !== undefined)) {
+				delete this.events[event[0]][event[1]];
+				return true;
+			}
+
+			return false;
+		},
+
+		/**
+		 * @protected
+		 *
+		 * @param {string} eventType
+		 * @param {...*}   eventArguments
+		 */
+		_trigger: function (eventType, ...eventArguments) {
+			if (!this.events[eventType]) {
+				return;
+			}
+
+			var that = this;
+			$.each(this.events[eventType], function (id, callback) {
+				callback.apply(that, eventArguments);
+			});
+		},
+
+		/**
+		 * @protected
+		 *
+		 * @param {string} eventName
+		 *
+		 * @returns {[string, string]|false}
+		 */
+		_parseEventName: function (eventName) {
+			var pos = eventName.indexOf('.');
+			pos = (pos !== -1) ? pos : eventName.length;
+
+			var type = eventName.substr(0, pos),
+				id = eventName.substr(pos + 1);
+
+			if (!type || !id) {
+				return false;
+			}
+
+			return [ type, id ];
+		}
+	};
+
+	/**
+	 * @class
+	 * @extends OCA.CMSPico.Events
 	 *
 	 * @param {jQuery}   $template
 	 * @param {object}   options
@@ -315,7 +406,7 @@
 	/**
 	 * @lends OCA.CMSPico.Dialog.prototype
 	 */
-	OCA.CMSPico.Dialog.prototype = {
+	OCA.CMSPico.Dialog.prototype = $.extend({}, OCA.CMSPico.Events.prototype, {
 		/** @member {jQuery} */
 		$element: $(),
 
@@ -333,9 +424,6 @@
 
 		/** @member {object[]} */
 		buttons: [],
-
-		/** @member {object} */
-		events: {},
 
 		/** @member {boolean} */
 		opened: false,
@@ -456,85 +544,135 @@
 			}
 
 			this._trigger('close');
-		},
+		}
+	});
+
+	/**
+	 * @class
+	 * @extends OCA.CMSPico.Events
+	 *
+	 * @param {jQuery} $element
+	 * @param {jQuery} $input
+	 */
+	OCA.CMSPico.Editable = function ($element, $input) {
+		this.initialize($element, $input);
+	};
+
+	/**
+	 * @lends OCA.CMSPico.Editable.prototype
+	 */
+	OCA.CMSPico.Editable.prototype = $.extend({}, OCA.CMSPico.Events.prototype, {
+		/** @member {jQuery} */
+		$element: $(),
+
+		/** @member {jQuery} */
+		$input: $(),
+
+		/** @member {?jQuery} */
+		$inputIcon: null,
+
+		/** @member {boolean} */
+		initialized: false,
+
+		/** @member {boolean} */
+		opened: false,
 
 		/**
-		 * @public
+		 * @constructs
 		 *
-		 * @param {string}   eventName
-		 * @param {function} callback
+		 * @param {jQuery} $element
+		 * @param {jQuery} $input
 		 */
-		on: function (eventName, callback) {
-			var event = this._parseEventName(eventName);
-			if (event === false) {
-				$.error('Invalid event name: ' + eventName);
-				return;
-			}
-
-			if (this.events[event[0]] === undefined) {
-				this.events[event[0]] = {};
-			}
-
-			this.events[event[0]][event[1]] = callback;
-		},
-
-		/**
-		 * @public
-		 *
-		 * @param {string} eventName
-		 */
-		off: function (eventName) {
-			var event = this._parseEventName(eventName);
-			if (event === false) {
-				$.error('Invalid event name: ' + eventName);
-				return false;
-			}
-
-			if ((this.events[event[0]] !== undefined) && (this.events[event[0]][event[1]] !== undefined)) {
-				delete this.events[event[0]][event[1]];
-				return true;
-			}
-
-			return false;
+		initialize: function ($element, $input) {
+			this.$element = $element;
+			this.$input = $input;
+			this.events = {};
 		},
 
 		/**
 		 * @protected
-		 *
-		 * @param {string} eventType
 		 */
-		_trigger: function (eventType) {
-			if (!this.events[eventType]) {
+		_setupElements: function () {
+			if (this.initialized) {
 				return;
 			}
 
 			var that = this;
-			$.each(this.events[eventType], function (id, callback) {
-				callback.apply(that);
+
+			this.$inputIcon = $('<span class="input-icon icon-checkmark"></span>')
+			this.$inputIcon.on('click.CMSPicoEditable', function (event) {
+				that.submit();
+				that.close();
 			});
+
+			this.$input.on('keyup.CMSPicoEditable', function (event) {
+				if (event.which === 13) {
+					that.submit();
+					that.close();
+				} else if (event.which === 27) {
+					that.close();
+				}
+			});
+
+			this.$input
+				.after(this.$inputIcon)
+				.addClass('has-input-icon');
+
+			this.initialized = true;
 		},
 
 		/**
-		 * @protected
-		 *
-		 * @param {string} eventName
-		 *
-		 * @returns {[string, string]|false}
+		 * @public
 		 */
-		_parseEventName: function (eventName) {
-			var pos = eventName.indexOf('.');
-			pos = (pos !== -1) ? pos : eventName.length;
+		open: function () {
+			this._setupElements();
 
-			var type = eventName.substr(0, pos),
-				id = eventName.substr(pos + 1);
+			this.$element.parent().hide();
+			this.$input.parent().show();
+			this.$input.focus();
 
-			if (!type || !id) {
-				return false;
+			this._trigger('open');
+			this.opened = true;
+		},
+
+		/**
+		 * @public
+		 */
+		submit: function () {
+			var defaultValue = this.$input.prop('defaultValue'),
+				value = this.$input.val() || defaultValue;
+
+			this.$element.text(value);
+			this.$input.val(value);
+
+			this._trigger('submit', value, defaultValue);
+		},
+
+		/**
+		 * @public
+		 */
+		close: function () {
+			if (this.opened) {
+				this.$input.parent().hide();
+				this.$element.parent().show();
+
+				this.opened = false;
 			}
 
-			return [ type, id ];
+			this._trigger('close');
+		},
+
+		/**
+		 * @public
+		 */
+		toggle: function () {
+			if (!this.opened) {
+				this.open();
+			} else {
+				this.close();
+			}
 		}
-	};
+	});
 
 	/** @namespace OCA.CMSPico.Util */
 	OCA.CMSPico.Util = {
