@@ -80,7 +80,6 @@ OC.L10N.register(
     "Delete custom template" : "Poista mukautettu mallipohja",
     "Base template" : "Pohjamalli",
     "Template name" : "Mallin nimi",
-    "Configure your webserver" : "Määritä web-palvelimen asetukset",
     "Enable short website URLs" : "Käytä lyhyitä verkkosivustojen URL:iä",
     "Full application URLs" : "Täydet sovelluksen URL:t",
     "Short website URLs" : "Lyhyet verkkosivuston URL:t",
