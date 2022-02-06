@@ -879,12 +879,12 @@
             },
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "DeepCopy\\": "src/DeepCopy/"
-                },
                 "files": [
                     "src/DeepCopy/deep_copy.php"
-                ]
+                ],
+                "psr-4": {
+                    "DeepCopy\\": "src/DeepCopy/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -1591,16 +1591,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "8.5.22",
+            "version": "8.5.23",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "ddd05b9d844260353895a3b950a9258126c11503"
+                "reference": "efb20ff3623b9d09bf190a68fdfe574538a8d496"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/ddd05b9d844260353895a3b950a9258126c11503",
-                "reference": "ddd05b9d844260353895a3b950a9258126c11503",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/efb20ff3623b9d09bf190a68fdfe574538a8d496",
+                "reference": "efb20ff3623b9d09bf190a68fdfe574538a8d496",
                 "shasum": ""
             },
             "require": {
@@ -1672,7 +1672,7 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/8.5.22"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/8.5.23"
             },
             "funding": [
                 {
@@ -1684,7 +1684,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-12-25T06:58:09+00:00"
+            "time": "2022-01-21T05:50:34+00:00"
         },
         {
             "name": "phrozenbyte/phpunit-array-asserts",
@@ -2683,16 +2683,16 @@
         },
         {
             "name": "symfony/debug",
-            "version": "v4.4.36",
+            "version": "v4.4.37",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/debug.git",
-                "reference": "346e1507eeb3f566dcc7a116fefaa407ee84691b"
+                "reference": "5de6c6e7f52b364840e53851c126be4d71e60470"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/debug/zipball/346e1507eeb3f566dcc7a116fefaa407ee84691b",
-                "reference": "346e1507eeb3f566dcc7a116fefaa407ee84691b",
+                "url": "https://api.github.com/repos/symfony/debug/zipball/5de6c6e7f52b364840e53851c126be4d71e60470",
+                "reference": "5de6c6e7f52b364840e53851c126be4d71e60470",
                 "shasum": ""
             },
             "require": {
@@ -2731,7 +2731,7 @@
             "description": "Provides tools to ease debugging PHP code",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/debug/tree/v4.4.36"
+                "source": "https://github.com/symfony/debug/tree/v4.4.37"
             },
             "funding": [
                 {
@@ -2747,7 +2747,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-11-29T08:40:48+00:00"
+            "time": "2022-01-02T09:41:36+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
