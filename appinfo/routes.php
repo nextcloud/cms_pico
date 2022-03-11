@@ -43,6 +43,14 @@ return [
 			'defaults' => [ 'page' => '' ],
 			'requirements' => [ 'page' => '.*' ]
 		],
+		[
+			'name' => 'Pico#getPage',
+			'postfix' => 'Post',
+			'url' => '/pico/{site}/{page}',
+			'verb' => 'POST',
+			'defaults' => [ 'page' => '' ],
+			'requirements' => [ 'page' => '.*' ]
+		],
 
 		[
 			'name' => 'Pico#getAsset',
@@ -63,6 +71,14 @@ return [
 			'postfix' => 'Proxy',
 			'url' => '/pico_proxy/{site}/{page}',
 			'verb' => 'GET',
+			'defaults' => [ 'page' => '', 'proxyRequest' => true ],
+			'requirements' => [ 'page' => '.*' ]
+		],
+		[
+			'name' => 'Pico#getPage',
+			'postfix' => 'PostProxy',
+			'url' => '/pico_proxy/{site}/{page}',
+			'verb' => 'POST',
 			'defaults' => [ 'page' => '', 'proxyRequest' => true ],
 			'requirements' => [ 'page' => '.*' ]
 		],
