@@ -200,6 +200,11 @@ class WebsitesService
 	}
 
 	/**
+	 * Deletes all websites of a user.
+	 *
+	 * Warning: This method does not check the ownership of the website!
+	 * Please use {@see Website::assertOwnedBy()} beforehand.
+	 *
 	 * @param string $userId
 	 */
 	public function deleteUserWebsites(string $userId): void
@@ -237,6 +242,14 @@ class WebsitesService
 	public function getWebsitesFromUser(string $userId): array
 	{
 		return $this->websitesRequest->getWebsitesFromUserId($userId);
+	}
+
+	/**
+	 * @return Website[]
+	 */
+	public function getWebsites(): array
+	{
+		return $this->websitesRequest->getWebsites();
 	}
 
 	/**

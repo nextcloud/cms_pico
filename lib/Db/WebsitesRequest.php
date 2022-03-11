@@ -120,6 +120,25 @@ class WebsitesRequest
 	}
 
 	/**
+	 * @return Website[]
+	 */
+	public function getWebsites(): array
+	{
+		$qb = $this->dbConnection->getQueryBuilder()
+			->select('*')
+			->from(WebsitesRequest::TABLE_NAME);
+
+		$websites = [];
+		$cursor = $qb->execute();
+		while ($data = $cursor->fetch()) {
+			$websites[] = $this->createInstance($data);
+		}
+		$cursor->closeCursor();
+
+		return $websites;
+	}
+
+	/**
 	 * @param string $userId
 	 *
 	 * @return Website[]
