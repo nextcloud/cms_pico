@@ -126,7 +126,7 @@ class WebsiteRequest
 				return;
 			}
 
-			$groupAccess = $this->website->getOption('group_access') ?? [];
+			$groupAccess = $this->website->getGroupAccess();
 			foreach ($groupAccess as $group) {
 				if ($this->groupManager->groupExists($group)) {
 					if ($this->groupManager->isInGroup($this->getViewer(), $group)) {

@@ -178,7 +178,7 @@ class WebsitesController extends Controller
 							switch ($optionKey) {
 								case 'group_access':
 									$groupAccess = $optionValue ? explode('|', $optionValue) : [];
-									$website->setOption($optionKey, $groupAccess ?: null);
+									$website->setGroupAccess($groupAccess);
 									break;
 
 								default:

@@ -39,6 +39,7 @@ use OCA\CMSPico\Service\WebsitesService;
 use OCP\Files\InvalidPathException;
 use OCP\Files\NotFoundException;
 use OCP\IConfig;
+use OCP\IGroupManager;
 use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\IUserManager;
@@ -69,6 +70,9 @@ class Website extends WebsiteCore
 	/** @var IUserManager */
 	private $userManager;
 
+	/** @var IGroupManager */
+	private $groupManager;
+
 	/** @var IURLGenerator */
 	private $urlGenerator;
 
@@ -94,6 +98,7 @@ class Website extends WebsiteCore
 		$this->config = \OC::$server->getConfig();
 		$this->l10n = \OC::$server->getL10N(Application::APP_NAME);
 		$this->userManager = \OC::$server->getUserManager();
+		$this->groupManager = \OC::$server->getGroupManager();
 		$this->urlGenerator = \OC::$server->getURLGenerator();
 		$this->websitesService = \OC::$server->query(WebsitesService::class);
 		$this->themesService = \OC::$server->query(ThemesService::class);
@@ -117,6 +122,31 @@ class Website extends WebsiteCore
 	{
 		$serverTimeZone = date_default_timezone_get() ?: 'UTC';
 		return $this->config->getUserValue($this->getUserId(), 'core', 'timezone', $serverTimeZone);
+	}
+
+	/**
+	 * @param string[] $groupAccess
+	 *
+	 * @return $this
+	 */
+	public function setGroupAccess(array $groupAccess): self
+	{
+		foreach ($groupAccess as $group) {
+			if (!$this->groupManager->groupExists($group)) {
+				throw new \UnexpectedValueException();
+			}
+		}
+
+		$this->setOption('group_access', $groupAccess ?: null);
+		return $this;
+	}
+
+	/**
+	 * @return string[]
+	 */
+	public function getGroupAccess(): array
+	{
+		return $this->getOption('group_access') ?? [];
 	}
 
 	/**
