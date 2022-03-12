@@ -53,8 +53,21 @@ class GroupDeletedEventListener implements IEventListener
 			return;
 		}
 
+		$groupId = $event->getGroup()->getGID();
+
 		$limitGroups = $this->websitesService->getLimitGroups();
-		$limitGroups = array_values(array_diff($limitGroups, [ $event->getGroup()->getGID() ]));
-		$this->websitesService->setLimitGroups($limitGroups);
+		$newLimitGroups = array_values(array_diff($limitGroups, [ $groupId ]));
+		if ($newLimitGroups !== $limitGroups) {
+			$this->websitesService->setLimitGroups($newLimitGroups);
+		}
+
+		foreach ($this->websitesService->getWebsites() as $website) {
+			$groupAccess = $website->getGroupAccess();
+			$newGroupAccess = array_values(array_diff($groupAccess, [ $groupId ]));
+			if ($newGroupAccess !== $groupAccess) {
+				$website->setGroupAccess($newGroupAccess);
+				$this->websitesService->updateWebsite($website);
+			}
+		}
 	}
 }
