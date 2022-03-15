@@ -102,11 +102,13 @@ class PicoAssetResponse extends DownloadResponse
 	 *
 	 * @return $this
 	 */
-	public function cacheFor(int $cacheSeconds, bool $public = false): self
+	public function cacheFor(int $cacheSeconds, bool $public = false, bool $immutable = false): self
 	{
 		if ($cacheSeconds > 0) {
 			$pragma = $public ? 'public' : 'private';
-			$this->addHeader('Cache-Control', 'max-age=' . $cacheSeconds . ', ' . $pragma);
+			$maxAge = 'max-age=' . $cacheSeconds;
+
+			$this->addHeader('Cache-Control', $pragma . ',' . $maxAge . ($immutable ? ', immutable' : ''));
 			$this->addHeader('Pragma', $pragma);
 
 			try {
