@@ -74,9 +74,9 @@ class PicoAssetResponse extends DownloadResponse
 		$this->setLastModified($asset->getLastModified());
 
 		if ($enableCache && isset($this->cacheFor[$mimeType])) {
-			$this->cacheFor($this->cacheFor[$mimeType], $asset->isPublicAsset());
+			$this->picoCacheFor($this->cacheFor[$mimeType], $asset->isPublicAsset());
 		} else {
-			$this->cacheFor(0);
+			$this->picoCacheFor(0);
 		}
 	}
 
@@ -102,7 +102,7 @@ class PicoAssetResponse extends DownloadResponse
 	 *
 	 * @return $this
 	 */
-	public function cacheFor(int $cacheSeconds, bool $public = false, bool $immutable = false): self
+	private function picoCacheFor(int $cacheSeconds, bool $public = false, bool $immutable = false): self
 	{
 		if ($cacheSeconds > 0) {
 			$pragma = $public ? 'public' : 'private';
