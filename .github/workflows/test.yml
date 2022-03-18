@@ -2,7 +2,9 @@ name: Test Pico CMS for Nextcloud
 
 on:
   push:
-    branches: [ master ]
+    branches:
+        - 'master'
+        - 'cms_pico-1.0'
     tags: [ 'v*.*.*' ]
   pull_request: {}
 
@@ -22,7 +24,7 @@ jobs:
       NEXTCLOUD_STABLE23_BRANCH: "releases/latest-23"
       NEXTCLOUD_STABLE23_PHP_VERSIONS: "7.3 7.4 8.0"
       NEXTCLOUD_MASTER_BRANCH: "daily/latest-master"
-      NEXTCLOUD_MASTER_PHP_VERSIONS: "7.3 7.4 8.0 8.1"
+      NEXTCLOUD_MASTER_PHP_VERSIONS: "7.4 8.0 8.1"
 
     outputs:
       BUILD_MATRIX_NEXTCLOUD: ${{ steps.generate-jobs.outputs.BUILD_MATRIX_NEXTCLOUD }}
