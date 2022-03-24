@@ -91,7 +91,7 @@
 
 			this.$itemTemplate = $(options.itemTemplate);
 			this.$privateSettingsTemplate = $(options.privateSettingsTemplate);
-			this.websiteBaseUrl = options.websiteBaseUrl + ((options.websiteBaseUrl.substr(-1) !== '/') ? '/' : '');
+			this.websiteBaseUrl = options.websiteBaseUrl + ((options.websiteBaseUrl.slice(-1) !== '/') ? '/' : '');
 
 			var signature = 'OCA.CMSPico.WebsiteList.initialize()';
 			if (!this.$itemTemplate.length) {

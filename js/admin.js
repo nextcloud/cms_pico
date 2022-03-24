@@ -141,8 +141,8 @@
 				}
 
 				$.each($itemTemplate.data(), function (key, value) {
-					if (key.substr(0, 4) === 'item') {
-						key = key[4].toLowerCase() + key.substr(5);
+					if (key.slice(0, 4) === 'item') {
+						key = key[4].toLowerCase() + key.slice(5);
 						itemData[key] = value;
 					}
 				});
