@@ -129,7 +129,7 @@
 		 */
 		_api: function (method, item, data, callback) {
 			var that = this,
-				url = this.route + (item ? ((this.route.substr(-1) !== '/') ? '/' : '') + item : '');
+				url = this.route + (item ? ((this.route.slice(-1) !== '/') ? '/' : '') + item : '');
 
 			this._content(this.$loadingTemplate);
 
@@ -355,8 +355,8 @@
 			var pos = eventName.indexOf('.');
 			pos = (pos !== -1) ? pos : eventName.length;
 
-			var type = eventName.substr(0, pos),
-				id = eventName.substr(pos + 1);
+			var type = eventName.slice(0, pos),
+				id = eventName.slice(pos + 1);
 
 			if (!type || !id) {
 				return false;
@@ -718,7 +718,7 @@
 					var result = dataObject[matches[1]],
 						subKey = matches[2];
 
-					key = key.substr(matches[0].length);
+					key = key.slice(matches[0].length);
 					matches = key.match(/^\[(\d*|[a-z0-9_]+)\]/i);
 
 					while (matches !== null) {
@@ -729,7 +729,7 @@
 						result = result[subKey];
 						subKey = matches[1];
 
-						key = key.substr(matches[0].length);
+						key = key.slice(matches[0].length);
 						matches = key.match(/^\[(\d*|[a-z0-9_]+)\]/i);
 					}
 
