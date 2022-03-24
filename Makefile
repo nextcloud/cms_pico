@@ -11,10 +11,8 @@
 # - Target 'verify'
 #       Requires OpenSSL and a RSA public key to verify the release archive at
 #       '~/.nextcloud/certificates/$(app_name).pub'
-# - Targets 'github-release' and 'github-upload'
-#       Requires https://github.com/aktau/github-release and a 'github-token'
-#       file at '~/.nextcloud/github-token' with an GitHub API token, e.g.
-#           deadbeefc001cafebaadf00dabad1deadeadcode
+# - Target 'github-release'
+#       Requires GitHub CLI (<https://cli.github.com/>) with working auth.
 # - Target 'publish'
 #       Requires a 'curlrc' file at '~/.nextcloud/curlrc' with an appropiate
 #       Authentication header for the Nextcloud App Store, e.g.
@@ -41,7 +39,6 @@ signature=$(app_name)-$(version).tar.gz.sig
 git_remote=origin
 github_owner=nextcloud
 github_repo=cms_pico
-github_token:=$(shell [ -n "$$GITHUB_TOKEN" ] && echo "$$GITHUB_TOKEN" || cat "$(HOME)/.nextcloud/github-token")
 download_url=https://github.com/$(github_owner)/$(github_repo)/releases/download/$(version)/$(archive)
 publish_url=https://apps.nextcloud.com/api/v1/apps/releases
 appinfo=./appinfo/info.xml
@@ -161,27 +158,15 @@ test:
 coverage: test
 	$(php) -f ./vendor/bin/coverage -- ./tests/clover.xml 0
 
-github-release: export GITHUB_TOKEN=$(github_token)
-github-release: check
-	github-release release \
-		--user "$(github_owner)" \
-		--repo "$(github_repo)" \
-		--tag "$(version)" \
-		--name "$(version)" \
-		--description "$(app_title) $(version)" \
-		$(if $(filter true,$(prerelease)),--pre-release,)
+github-release: check check-composer build
+	gh release create "$(version)" \
+		--repo "$(github_owner)/$(github_repo)" \
+		--title "$(version)" \
+		--notes "$(app_title) $(version)" \
+		$(if $(filter true,$(prerelease)),--prerelease,) \
+		"$(build_dir)/$(archive)"
 
-github-upload: export GITHUB_TOKEN=$(github_token)
-github-upload: check check-composer build github-release
-	github-release upload \
-		--user "$(github_owner)" \
-		--repo "$(github_repo)" \
-		--tag "$(version)" \
-		--name "$(archive)" \
-		--file "$(build_dir)/$(archive)"
-
-publish: check check-composer sign github-upload
-	sleep 5
+publish: check check-composer sign github-release
 	$(php) -r 'echo json_encode([ "download" => $$_SERVER["argv"][1], "signature" => file_get_contents($$_SERVER["argv"][2]), "nightly" => !!$$_SERVER["argv"][3] ]);' \
 		"$(download_url)" "$(build_dir)/$(signature)" "$(if $(filter true,$(prerelease)),1,0)" \
 			| curl -K "$(curlrc)" \
@@ -190,9 +175,6 @@ publish: check check-composer sign github-upload
 
 github-release-dev: prerelease=true
 github-release-dev: github-release
-
-github-upload-dev: prerelease=true
-github-upload-dev: github-upload
 
 publish-dev: prerelease=true
 publish-dev: publish
@@ -204,5 +186,4 @@ publish-dev: publish
 	sign verify \
 	test coverage \
 	github-release github-release-dev \
-	github-upload github-upload-dev \
 	publish publish-dev
