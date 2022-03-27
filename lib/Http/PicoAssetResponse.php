@@ -108,7 +108,7 @@ class PicoAssetResponse extends DownloadResponse
 			$pragma = $public ? 'public' : 'private';
 			$maxAge = 'max-age=' . $cacheSeconds;
 
-			$this->addHeader('Cache-Control', $pragma . ',' . $maxAge . ($immutable ? ', immutable' : ''));
+			$this->addHeader('Cache-Control', $pragma . ', ' . $maxAge . ($immutable ? ', immutable' : ''));
 			$this->addHeader('Pragma', $pragma);
 
 			try {
