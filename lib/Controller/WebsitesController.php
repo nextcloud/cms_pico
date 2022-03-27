@@ -30,7 +30,7 @@ use OCA\CMSPico\Exceptions\TemplateNotCompatibleException;
 use OCA\CMSPico\Exceptions\TemplateNotFoundException;
 use OCA\CMSPico\Exceptions\ThemeNotCompatibleException;
 use OCA\CMSPico\Exceptions\ThemeNotFoundException;
-use OCA\CMSPico\Exceptions\WebsiteExistsException;
+use OCA\CMSPico\Exceptions\WebsiteAlreadyExistsException;
 use OCA\CMSPico\Exceptions\WebsiteForeignOwnerException;
 use OCA\CMSPico\Exceptions\WebsiteInvalidDataException;
 use OCA\CMSPico\Exceptions\WebsiteInvalidOwnerException;
@@ -43,6 +43,7 @@ use OCP\IL10N;
 use OCP\ILogger;
 use OCP\IRequest;
 use OCP\IUserSession;
+use function OCA\CMSPico\t;
 
 class WebsitesController extends Controller
 {
@@ -123,12 +124,13 @@ class WebsitesController extends Controller
 			return $this->getPersonalWebsites();
 		} catch (\Throwable $e) {
 			$error = [];
-			if ($e instanceof WebsiteExistsException) {
+			if ($e instanceof WebsiteAlreadyExistsException) {
 				$error += [ 'errorField' => 'site', 'error' => $this->l10n->t('Website exists.') ];
 			} elseif ($e instanceof WebsiteInvalidOwnerException) {
 				$error += [ 'errorField' => 'user', 'error' => $this->l10n->t('No permission.') ];
 			} elseif (($e instanceof WebsiteInvalidDataException) && $e->getField()) {
-				$error += [ 'errorField' => $e->getField(), 'error' => $e->getMessage() ];
+				$errorMessage = $e->getError() ?? t('The value given is invalid.');
+				$error += [ 'errorField' => $e->getField(), 'error' => $this->l10n->t($errorMessage) ];
 			} elseif ($e instanceof ThemeNotFoundException) {
 				$error += [ 'errorField' => 'theme', 'error' => $this->l10n->t('Theme not found.') ];
 			} elseif ($e instanceof ThemeNotCompatibleException) {
@@ -182,13 +184,16 @@ class WebsitesController extends Controller
 									break;
 
 								default:
-									throw new WebsiteInvalidDataException();
+									throw new WebsiteInvalidDataException(
+										$website->getSite(),
+										'options.' . $optionKey
+									);
 							}
 						}
 						break;
 
 					default:
-						throw new WebsiteInvalidDataException();
+						throw new WebsiteInvalidDataException($website->getSite(), $key);
 				}
 			}
 
@@ -199,8 +204,9 @@ class WebsitesController extends Controller
 			$error = [];
 			if (($e instanceof WebsiteNotFoundException) || ($e instanceof WebsiteForeignOwnerException)) {
 				$error += [ 'errorField' => 'identifier', 'error' => $this->l10n->t('Website not found.') ];
-			} elseif ($e instanceof WebsiteInvalidDataException) {
-				$error += [ 'errorField' => $e->getField(), 'error' => $e->getMessage() ];
+			} elseif (($e instanceof WebsiteInvalidDataException) && $e->getField()) {
+				$errorMessage = $e->getError() ?? t('The value given is invalid.');
+				$error += [ 'errorField' => $e->getField(), 'error' => $this->l10n->t($errorMessage) ];
 			} elseif ($e instanceof ThemeNotFoundException) {
 				$error += [ 'errorField' => 'theme', 'error' => $this->l10n->t('Theme not found.') ];
 			} elseif ($e instanceof ThemeNotCompatibleException) {

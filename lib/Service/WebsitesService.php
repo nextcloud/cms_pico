@@ -38,7 +38,7 @@ use OCA\CMSPico\Exceptions\TemplateNotCompatibleException;
 use OCA\CMSPico\Exceptions\TemplateNotFoundException;
 use OCA\CMSPico\Exceptions\ThemeNotCompatibleException;
 use OCA\CMSPico\Exceptions\ThemeNotFoundException;
-use OCA\CMSPico\Exceptions\WebsiteExistsException;
+use OCA\CMSPico\Exceptions\WebsiteAlreadyExistsException;
 use OCA\CMSPico\Exceptions\WebsiteInvalidDataException;
 use OCA\CMSPico\Exceptions\WebsiteInvalidFilesystemException;
 use OCA\CMSPico\Exceptions\WebsiteInvalidOwnerException;
@@ -118,7 +118,7 @@ class WebsitesService
 	 * @param Website $website
 	 * @param string  $templateName
 	 *
-	 * @throws WebsiteExistsException
+	 * @throws WebsiteAlreadyExistsException
 	 * @throws WebsiteInvalidDataException
 	 * @throws WebsiteInvalidOwnerException
 	 * @throws ThemeNotFoundException
@@ -135,7 +135,7 @@ class WebsitesService
 
 		try {
 			$this->websitesRequest->getWebsiteFromSite($website->getSite());
-			throw new WebsiteExistsException();
+			throw new WebsiteAlreadyExistsException($website->getSite());
 		} catch (WebsiteNotFoundException $e) {
 			// in fact we want the website not to exist yet
 		}
@@ -276,7 +276,7 @@ class WebsitesService
 		try {
 			$page = $this->miscService->normalizePath($page);
 		} catch (InvalidPathException $e) {
-			throw new PageInvalidPathException($e);
+			throw new PageInvalidPathException($site, $page, $e);
 		}
 
 		$website = $this->getWebsiteFromSite($site);
@@ -313,7 +313,7 @@ class WebsitesService
 				throw new InvalidPathException();
 			}
 		} catch (InvalidPathException $e) {
-			throw new AssetInvalidPathException($e);
+			throw new AssetInvalidPathException($site, $asset, $e);
 		}
 
 		$website = $this->getWebsiteFromSite($site);

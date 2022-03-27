@@ -26,5 +26,38 @@ namespace OCA\CMSPico\Exceptions;
 
 class ThemeAlreadyExistsException extends \Exception
 {
+	/** @var string|null */
+	private $themeName;
 
+	/**
+	 * ThemeAlreadyExistsException constructor.
+	 *
+	 * @param string|null     $themeName
+	 * @param \Exception|null $previous
+	 */
+	public function __construct(string $themeName = null, \Exception $previous = null)
+	{
+		$this->themeName = $themeName;
+
+		$message = '';
+		if ($themeName) {
+			$message = sprintf("Unable to load theme '%s': Theme already exists", $themeName);
+		} elseif ($previous) {
+			$message = $previous->getMessage();
+		}
+
+		if ($previous) {
+			parent::__construct($message, $previous->getCode(), $previous);
+		} else {
+			parent::__construct($message);
+		}
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function getThemeName(): ?string
+	{
+		return $this->themeName;
+	}
 }

@@ -52,10 +52,10 @@ class AssetsService
 	 */
 	public function getAsset(WebsiteRequest $websiteRequest): PicoAsset
 	{
-		try {
-			$website = $websiteRequest->getWebsite();
-			$asset = $websiteRequest->getPage();
+		$website = $websiteRequest->getWebsite();
+		$asset = $websiteRequest->getPage();
 
+		try {
 			$assetsDir = PicoService::DIR_ASSETS . '/';
 			$assetsDirLength = strlen($assetsDir);
 			if (substr_compare($asset, $assetsDir, 0, $assetsDirLength) !== 0) {
@@ -73,11 +73,11 @@ class AssetsService
 			$assetFile = $this->getAssetsFolder($website)->getFile($asset);
 			$picoAsset = new PicoAsset($assetFile, $website->getType() === Website::TYPE_PUBLIC);
 		} catch (InvalidPathException $e) {
-			throw new AssetInvalidPathException($e);
+			throw new AssetInvalidPathException($website->getSite(), $asset, $e);
 		} catch (NotFoundException $e) {
-			throw new AssetNotFoundException($e);
+			throw new AssetNotFoundException($website->getSite(), $asset, $e);
 		} catch (NotPermittedException $e) {
-			throw new AssetNotPermittedException($e);
+			throw new AssetNotPermittedException($website->getSite(), $asset, $e);
 		}
 
 		return $picoAsset;
@@ -94,7 +94,7 @@ class AssetsService
 		try {
 			return $website->getWebsiteFolder()->getFolder(PicoService::DIR_ASSETS)->fakeRoot();
 		} catch (InvalidPathException | NotFoundException $e) {
-			throw new WebsiteInvalidFilesystemException($e);
+			throw new WebsiteInvalidFilesystemException($website->getSite(), $e);
 		}
 	}
 
@@ -109,7 +109,7 @@ class AssetsService
 		try {
 			return $this->getAssetsFolder($website)->getLocalPath() . '/';
 		} catch (InvalidPathException | NotFoundException $e) {
-			throw new WebsiteInvalidFilesystemException($e);
+			throw new WebsiteInvalidFilesystemException($website->getSite(), $e);
 		}
 	}
 

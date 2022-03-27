@@ -120,7 +120,7 @@ class PluginsService
 	public function publishSystemPlugin(string $pluginName): Plugin
 	{
 		if (!$pluginName) {
-			throw new PluginNotFoundException();
+			throw new PluginNotFoundException($pluginName);
 		}
 
 		$systemPluginsFolder = $this->fileService->getSystemFolder(PicoService::DIR_PLUGINS);
@@ -129,7 +129,7 @@ class PluginsService
 		try {
 			$systemPluginFolder = $systemPluginsFolder->getFolder($pluginName);
 		} catch (NotFoundException $e) {
-			throw new PluginNotFoundException();
+			throw new PluginNotFoundException($pluginName, $e);
 		}
 
 		$plugins = $this->getSystemPlugins();
@@ -149,12 +149,12 @@ class PluginsService
 	public function publishCustomPlugin(string $pluginName): Plugin
 	{
 		if (!$pluginName) {
-			throw new PluginNotFoundException();
+			throw new PluginNotFoundException($pluginName);
 		}
 
 		$systemPlugins = $this->getSystemPlugins();
 		if (isset($systemPlugins[$pluginName])) {
-			throw new PluginAlreadyExistsException();
+			throw new PluginAlreadyExistsException($pluginName);
 		}
 
 		$appDataPluginsFolder = $this->fileService->getAppDataFolder(PicoService::DIR_PLUGINS);
@@ -163,7 +163,7 @@ class PluginsService
 		try {
 			$appDataPluginFolder = $appDataPluginsFolder->getFolder($pluginName);
 		} catch (NotFoundException $e) {
-			throw new PluginNotFoundException();
+			throw new PluginNotFoundException($pluginName, $e);
 		}
 
 		$plugins = $this->getCustomPlugins();
@@ -189,7 +189,7 @@ class PluginsService
 
 		try {
 			$publicPluginsFolder->getFolder($pluginName);
-			throw new PluginAlreadyExistsException();
+			throw new PluginAlreadyExistsException($pluginName);
 		} catch (NotFoundException $e) {
 			// in fact we want the plugin not to exist yet
 		}
@@ -207,7 +207,7 @@ class PluginsService
 	public function depublishCustomPlugin(string $pluginName): void
 	{
 		if (!$pluginName) {
-			throw new PluginNotFoundException();
+			throw new PluginNotFoundException($pluginName);
 		}
 
 		$publicPluginsFolder = $this->getPluginsFolder();
@@ -215,7 +215,7 @@ class PluginsService
 		try {
 			$publicPluginsFolder->getFolder($pluginName)->delete();
 		} catch (NotFoundException $e) {
-			throw new PluginNotFoundException();
+			throw new PluginNotFoundException($pluginName, $e);
 		}
 
 		$customPlugins = $this->getCustomPlugins();
@@ -233,14 +233,14 @@ class PluginsService
 	public function copyDummyPlugin(string $pluginName): Plugin
 	{
 		if (!$pluginName) {
-			throw new PluginNotFoundException();
+			throw new PluginNotFoundException($pluginName);
 		}
 
 		$systemPlugins = $this->getSystemPlugins();
 		$customPlugins = $this->getCustomPlugins();
 
 		if (isset($systemPlugins[$pluginName]) || isset($customPlugins[$pluginName])) {
-			throw new PluginAlreadyExistsException();
+			throw new PluginAlreadyExistsException($pluginName);
 		}
 
 		$systemPluginsFolder = $this->fileService->getSystemFolder(PicoService::DIR_PLUGINS);
@@ -249,7 +249,7 @@ class PluginsService
 		try {
 			$basePluginFile = $systemPluginsFolder->getFile('DummyPlugin.php');
 		} catch (NotFoundException $e) {
-			throw new PluginNotFoundException();
+			throw new PluginNotFoundException('DummyPlugin', $e);
 		}
 
 		try {
@@ -257,9 +257,9 @@ class PluginsService
 			$pluginFolder = $appDataPluginsFolder->newFolder($pluginName);
 			$pluginFile->copy($pluginFolder);
 		} catch (InvalidPathException $e) {
-			throw new PluginNotFoundException();
+			throw new PluginNotFoundException($pluginName, $e);
 		} catch (AlreadyExistsException $e) {
-			throw new PluginAlreadyExistsException();
+			throw new PluginAlreadyExistsException($pluginName, $e);
 		}
 
 		return $this->publishCustomPlugin($pluginName);

@@ -3,6 +3,7 @@
  * CMS Pico - Create websites using Pico CMS for Nextcloud.
  *
  * @copyright Copyright (c) 2017, Maxence Lange (<maxence@artificial-owl.com>)
+ * @copyright Copyright (c) 2022, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -26,5 +27,38 @@ namespace OCA\CMSPico\Exceptions;
 
 class TemplateNotFoundException extends \Exception
 {
+	/** @var string|null */
+	private $templateName;
 
+	/**
+	 * TemplateNotFoundException constructor.
+	 *
+	 * @param string|null     $templateName
+	 * @param \Exception|null $previous
+	 */
+	public function __construct(string $templateName = null, \Exception $previous = null)
+	{
+		$this->templateName = $templateName;
+
+		$message = '';
+		if ($templateName) {
+			$message = sprintf("Unable to load template '%s': No such template", $templateName);
+		} elseif ($previous) {
+			$message = $previous->getMessage();
+		}
+
+		if ($previous) {
+			parent::__construct($message, $previous->getCode(), $previous);
+		} else {
+			parent::__construct($message);
+		}
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function getTemplateName(): ?string
+	{
+		return $this->templateName;
+	}
 }

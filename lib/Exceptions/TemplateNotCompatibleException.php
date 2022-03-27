@@ -48,7 +48,10 @@ class TemplateNotCompatibleException extends \Exception
 		$this->reason = $reason;
 		$this->reasonData = $reasonData;
 
-		parent::__construct($this->getReason());
+		$parsedReason = $this->getReason() ?: 'Incompatible template';
+		$message = sprintf("Unable to load template '%s': %s", $templateName, $parsedReason);
+
+		parent::__construct($message);
 	}
 
 	/**

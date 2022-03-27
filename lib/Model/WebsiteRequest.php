@@ -91,7 +91,6 @@ class WebsiteRequest
 	 */
 	public function assertViewerAccess(string $path, array $meta = []): void
 	{
-		$exceptionClass = WebsiteNotPermittedException::class;
 		if ($this->website->getType() === Website::TYPE_PUBLIC) {
 			if (empty($meta['access'])) {
 				return;
@@ -117,8 +116,6 @@ class WebsiteRequest
 					}
 				}
 			}
-
-			$exceptionClass = NotPermittedException::class;
 		}
 
 		if ($this->getViewer()) {
@@ -166,7 +163,11 @@ class WebsiteRequest
 						return;
 					}
 
-					throw new $exceptionClass();
+					if ($this->website->getType() === Website::TYPE_PRIVATE) {
+						throw new WebsiteNotPermittedException($this->getWebsite()->getSite());
+					}
+
+					throw new NotPermittedException();
 				}
 
 				$path = dirname($path);
@@ -177,7 +178,11 @@ class WebsiteRequest
 			}
 		}
 
-		throw new $exceptionClass();
+		if ($this->website->getType() === Website::TYPE_PRIVATE) {
+			throw new WebsiteNotPermittedException($this->getWebsite()->getSite());
+		}
+
+		throw new NotPermittedException();
 	}
 
 	/**

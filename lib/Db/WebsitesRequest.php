@@ -180,7 +180,7 @@ class WebsitesRequest
 		$cursor->closeCursor();
 
 		if ($data === false) {
-			throw new WebsiteNotFoundException();
+			throw new WebsiteNotFoundException('#' . $id);
 		}
 
 		return $this->createInstance($data);
@@ -205,7 +205,7 @@ class WebsitesRequest
 		$cursor->closeCursor();
 
 		if ($data === false) {
-			throw new WebsiteNotFoundException();
+			throw new WebsiteNotFoundException($site);
 		}
 
 		return $this->createInstance($data);

@@ -48,7 +48,10 @@ class PluginNotCompatibleException extends \Exception
 		$this->reason = $reason;
 		$this->reasonData = $reasonData;
 
-		parent::__construct($this->getReason());
+		$parsedReason = $this->getReason() ?: 'Incompatible plugin';
+		$message = sprintf("Unable to load plugin '%s': %s", $pluginName, $parsedReason);
+
+		parent::__construct($message);
 	}
 
 	/**

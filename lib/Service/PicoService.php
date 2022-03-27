@@ -126,10 +126,10 @@ class PicoService
 	 */
 	public function getPage(WebsiteRequest $websiteRequest): PicoPage
 	{
-		try {
-			$website = $websiteRequest->getWebsite();
+		$website = $websiteRequest->getWebsite();
+		$page = $websiteRequest->getPage();
 
-			$page = $websiteRequest->getPage();
+		try {
 			$websiteRequest->assertViewerAccess(self::DIR_CONTENT . '/' . ($page ?: 'index') . self::CONTENT_EXT);
 
 			$this->themesService->assertValidTheme($website->getTheme());
@@ -162,11 +162,11 @@ class PicoService
 			$picoPagePath = self::DIR_CONTENT . '/' . $picoPage->getRelativePath() . self::CONTENT_EXT;
 			$websiteRequest->assertViewerAccess($picoPagePath, $picoPage->getMeta());
 		} catch (InvalidPathException $e) {
-			throw new PageInvalidPathException($e);
+			throw new PageInvalidPathException($website->getSite(), $page, $e);
 		} catch (NotFoundException $e) {
-			throw new PageNotFoundException($e);
+			throw new PageNotFoundException($website->getSite(), $page, $e);
 		} catch (NotPermittedException $e) {
-			throw new PageNotPermittedException($e);
+			throw new PageNotPermittedException($website->getSite(), $page, $e);
 		}
 
 		return $picoPage;
@@ -282,7 +282,7 @@ class PicoService
 			$websiteFolder = $website->getWebsiteFolder()->getFolder(PicoService::DIR_CONTENT)->fakeRoot();
 			return $websiteFolder;
 		} catch (InvalidPathException | NotFoundException $e) {
-			throw new WebsiteInvalidFilesystemException($e);
+			throw new WebsiteInvalidFilesystemException($website->getSite(), $e);
 		}
 	}
 
@@ -297,7 +297,7 @@ class PicoService
 		try {
 			return $this->getContentFolder($website)->getLocalPath() . '/';
 		} catch (InvalidPathException | NotFoundException $e) {
-			throw new WebsiteInvalidFilesystemException($e);
+			throw new WebsiteInvalidFilesystemException($website->getSite(), $e);
 		}
 	}
 

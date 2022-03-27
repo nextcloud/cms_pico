@@ -74,7 +74,7 @@ class ThemesService
 		$themes = $this->getThemes();
 
 		if (!isset($themes[$themeName])) {
-			throw new ThemeNotFoundException();
+			throw new ThemeNotFoundException($themeName);
 		}
 
 		if (!$themes[$themeName]['compat']) {
@@ -143,7 +143,7 @@ class ThemesService
 	public function publishSystemTheme(string $themeName): Theme
 	{
 		if (!$themeName) {
-			throw new ThemeNotFoundException();
+			throw new ThemeNotFoundException($themeName);
 		}
 
 		$systemThemesFolder = $this->fileService->getSystemFolder(PicoService::DIR_THEMES);
@@ -152,7 +152,7 @@ class ThemesService
 		try {
 			$systemThemeFolder = $systemThemesFolder->getFolder($themeName);
 		} catch (NotFoundException $e) {
-			throw new ThemeNotFoundException();
+			throw new ThemeNotFoundException($themeName, $e);
 		}
 
 		$themes = $this->getSystemThemes();
@@ -172,12 +172,12 @@ class ThemesService
 	public function publishCustomTheme(string $themeName): Theme
 	{
 		if (!$themeName) {
-			throw new ThemeNotFoundException();
+			throw new ThemeNotFoundException($themeName);
 		}
 
 		$systemThemes = $this->getSystemThemes();
 		if (isset($systemThemes[$themeName])) {
-			throw new ThemeAlreadyExistsException();
+			throw new ThemeAlreadyExistsException($themeName);
 		}
 
 		$appDataThemesFolder = $this->fileService->getAppDataFolder(PicoService::DIR_THEMES);
@@ -186,7 +186,7 @@ class ThemesService
 		try {
 			$appDataThemeFolder = $appDataThemesFolder->getFolder($themeName);
 		} catch (NotFoundException $e) {
-			throw new ThemeNotFoundException();
+			throw new ThemeNotFoundException($themeName, $e);
 		}
 
 		$themes = $this->getCustomThemes();
@@ -212,7 +212,7 @@ class ThemesService
 
 		try {
 			$publicThemesFolder->getFolder($themeName);
-			throw new ThemeAlreadyExistsException();
+			throw new ThemeAlreadyExistsException($themeName);
 		} catch (NotFoundException $e) {
 			// in fact we want the theme not to exist yet
 		}
@@ -230,7 +230,7 @@ class ThemesService
 	public function depublishCustomTheme(string $themeName): void
 	{
 		if (!$themeName) {
-			throw new ThemeNotFoundException();
+			throw new ThemeNotFoundException($themeName);
 		}
 
 		$publicThemesFolder = $this->getThemesFolder();
@@ -238,7 +238,7 @@ class ThemesService
 		try {
 			$publicThemesFolder->getFolder($themeName)->delete();
 		} catch (NotFoundException $e) {
-			throw new ThemeNotFoundException();
+			throw new ThemeNotFoundException($themeName, $e);
 		}
 
 		$customThemes = $this->getCustomThemes();
@@ -256,28 +256,30 @@ class ThemesService
 	 */
 	public function copyTheme(string $baseThemeName, string $themeName): Theme
 	{
-		if (!$baseThemeName || !$themeName) {
-			throw new ThemeNotFoundException();
+		if (!$baseThemeName) {
+			throw new ThemeNotFoundException($baseThemeName);
+		} elseif (!$themeName) {
+			throw new ThemeNotFoundException($themeName);
 		}
 
 		$systemThemes = $this->getSystemThemes();
 		$customThemes = $this->getCustomThemes();
 
 		if (isset($systemThemes[$themeName]) || isset($customThemes[$themeName])) {
-			throw new ThemeAlreadyExistsException();
+			throw new ThemeAlreadyExistsException($themeName);
 		}
 
 		try {
 			$baseThemeFolder = $this->getThemesFolder()->getFolder($baseThemeName);
 		} catch (NotFoundException $e) {
-			throw new ThemeNotFoundException();
+			throw new ThemeNotFoundException($baseThemeName, $e);
 		}
 
 		try {
 			$appDataThemesFolder = $this->fileService->getAppDataFolder(PicoService::DIR_THEMES);
 			$baseThemeFolder->copy($appDataThemesFolder, $themeName);
 		} catch (AlreadyExistsException $e) {
-			throw new ThemeAlreadyExistsException();
+			throw new ThemeAlreadyExistsException($themeName, $e);
 		}
 
 		return $this->publishCustomTheme($themeName);

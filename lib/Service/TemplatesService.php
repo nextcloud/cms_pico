@@ -68,7 +68,7 @@ class TemplatesService
 		$templates = $this->getTemplates();
 
 		if (!isset($templates[$templateName])) {
-			throw new TemplateNotFoundException();
+			throw new TemplateNotFoundException($templateName);
 		}
 
 		if (!$templates[$templateName]['compat']) {
@@ -137,7 +137,7 @@ class TemplatesService
 	public function registerSystemTemplate(string $templateName): Template
 	{
 		if (!$templateName) {
-			throw new TemplateNotFoundException();
+			throw new TemplateNotFoundException($templateName);
 		}
 
 		$systemTemplatesFolder = $this->fileService->getSystemFolder(PicoService::DIR_TEMPLATES);
@@ -146,7 +146,7 @@ class TemplatesService
 		try {
 			$templateFolder = $systemTemplatesFolder->getFolder($templateName);
 		} catch (NotFoundException $e) {
-			throw new TemplateNotFoundException();
+			throw new TemplateNotFoundException($templateName, $e);
 		}
 
 		$templates = $this->getSystemTemplates();
@@ -166,12 +166,12 @@ class TemplatesService
 	public function registerCustomTemplate(string $templateName): Template
 	{
 		if (!$templateName) {
-			throw new TemplateNotFoundException();
+			throw new TemplateNotFoundException($templateName);
 		}
 
 		$systemTemplates = $this->getSystemTemplates();
 		if (isset($systemTemplates[$templateName])) {
-			throw new TemplateAlreadyExistsException();
+			throw new TemplateAlreadyExistsException($templateName);
 		}
 
 		$appDataTemplatesFolder = $this->fileService->getAppDataFolder(PicoService::DIR_TEMPLATES);
@@ -180,7 +180,7 @@ class TemplatesService
 		try {
 			$templateFolder = $appDataTemplatesFolder->getFolder($templateName);
 		} catch (NotFoundException $e) {
-			throw new TemplateNotFoundException();
+			throw new TemplateNotFoundException($templateName, $e);
 		}
 
 		$templates = $this->getCustomTemplates();
@@ -198,7 +198,7 @@ class TemplatesService
 	public function removeCustomTemplate(string $templateName): void
 	{
 		if (!$templateName) {
-			throw new TemplateNotFoundException();
+			throw new TemplateNotFoundException($templateName);
 		}
 
 		$customTemplates = $this->getCustomTemplates();
@@ -216,15 +216,17 @@ class TemplatesService
 	 */
 	public function copyTemplate(string $baseTemplateName, string $templateName): Template
 	{
-		if (!$baseTemplateName || !$templateName) {
-			throw new TemplateNotFoundException();
+		if (!$baseTemplateName) {
+			throw new TemplateNotFoundException($baseTemplateName);
+		} elseif (!$templateName) {
+			throw new TemplateNotFoundException($templateName);
 		}
 
 		$systemTemplates = $this->getSystemTemplates();
 		$customTemplates = $this->getCustomTemplates();
 
 		if (isset($systemTemplates[$templateName]) || isset($customTemplates[$templateName])) {
-			throw new TemplateAlreadyExistsException();
+			throw new TemplateAlreadyExistsException($templateName);
 		}
 
 		$baseTemplateFolder = $this->getTemplateFolder($baseTemplateName);
@@ -233,7 +235,7 @@ class TemplatesService
 		try {
 			$baseTemplateFolder->copy($appDataTemplatesFolder, $templateName);
 		} catch (AlreadyExistsException $e) {
-			throw new TemplateAlreadyExistsException();
+			throw new TemplateAlreadyExistsException($templateName, $e);
 		}
 
 		return $this->registerCustomTemplate($templateName);
@@ -305,7 +307,7 @@ class TemplatesService
 	public function getTemplateFolder(string $templateName): FolderInterface
 	{
 		if (!$templateName) {
-			throw new TemplateNotFoundException();
+			throw new TemplateNotFoundException($templateName);
 		}
 
 		$systemTemplatesFolder = $this->fileService->getSystemFolder(PicoService::DIR_TEMPLATES);
@@ -320,7 +322,7 @@ class TemplatesService
 			try {
 				$templateFolder = $customTemplatesFolder->getFolder($templateName);
 			} catch (NotFoundException $e) {
-				throw new TemplateNotFoundException();
+				throw new TemplateNotFoundException($templateName, $e);
 			}
 		}
 
