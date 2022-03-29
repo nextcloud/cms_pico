@@ -27,6 +27,7 @@ OC.L10N.register(
     "Theme exists already." : "Tema zaten var.",
     "Website exists." : "Web sitesi zaten var",
     "No permission." : "Erişim izni yok.",
+    "The value given is invalid." : "Belirtilen değer geçersiz.",
     "Website not found." : "Web sitesi bulunamadı.",
     "Local (unencrypted)" : "Yerel (şifrelenmemiş)",
     "Location" : "Konum",

@@ -27,6 +27,7 @@ OC.L10N.register(
     "Theme exists already." : "Motyw już istnieje.",
     "Website exists." : "Strona internetowa istnieje.",
     "No permission." : "Brak uprawnień.",
+    "The value given is invalid." : "Podana wartość jest nieprawidłowa.",
     "Website not found." : "Nie znaleziono strony internetowej.",
     "Local (unencrypted)" : "Lokalny (niezaszyfrowany)",
     "Location" : "Lokalizacja",

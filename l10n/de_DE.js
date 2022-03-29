@@ -27,6 +27,7 @@ OC.L10N.register(
     "Theme exists already." : "Das Design existiert bereits.",
     "Website exists." : "Die Webseite existiert bereits.",
     "No permission." : "Keine Berechtigung.",
+    "The value given is invalid." : "Der eingegebene Wert ist ungültig.",
     "Website not found." : "Webseite nicht gefunden.",
     "Local (unencrypted)" : "Lokal (unverschlüsselt)",
     "Location" : "Ort",

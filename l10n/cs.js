@@ -27,6 +27,7 @@ OC.L10N.register(
     "Theme exists already." : "Motiv vzhledu už existuje.",
     "Website exists." : "Web existuje.",
     "No permission." : "Žádné oprávnění.",
+    "The value given is invalid." : "Zadaná hodnota není platná.",
     "Website not found." : "Web nenalezen.",
     "Local (unencrypted)" : "Místní (nešifrované)",
     "Location" : "Umístění",
