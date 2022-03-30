@@ -25,6 +25,7 @@
     "Theme exists already." : "Das Design existiert bereits.",
     "Website exists." : "Die Webseite existiert bereits.",
     "No permission." : "Keine Berechtigung für diese Aktion.",
+    "The value given is invalid." : "Der eingegebene Wert ist ungültig",
     "Website not found." : "Die ausgewählte Webseite existiert nicht.",
     "Local (unencrypted)" : "Lokal (unverschlüsselt)",
     "Location" : "Ort",

@@ -27,6 +27,7 @@ OC.L10N.register(
     "Theme exists already." : "主題已存在。",
     "Website exists." : "網站已存在。",
     "No permission." : "沒有權限",
+    "The value given is invalid." : "給定的值無效。",
     "Website not found." : "網站未找到。",
     "Local (unencrypted)" : "本地（未加密）",
     "Location" : "位置",
