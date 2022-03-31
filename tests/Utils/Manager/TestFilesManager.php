@@ -24,16 +24,13 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Tests\Utils\Manager;
 
-use OC\Files\Utils\Scanner;
 use OCA\CMSPico\AppInfo\Application;
+use OCA\CMSPico\Files\StorageScanner;
 use OCA\CMSPico\Service\ConfigService;
 use OCA\CMSPico\Service\FileService;
 use OCA\CMSPico\Service\MiscService;
-use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\GenericFileException;
 use OCP\Files\InvalidPathException;
-use OCP\IDBConnection;
-use OCP\ILogger;
 use OCP\IUserManager;
 
 class TestFilesManager extends TestManager
@@ -41,14 +38,8 @@ class TestFilesManager extends TestManager
 	/** @var IUserManager */
 	protected $userManager;
 
-	/** @var IDBConnection */
-	protected $databaseConnection;
-
-	/** @var IEventDispatcher */
-	protected $eventDispatcher;
-
-	/** @var ILogger */
-	protected $logger;
+	/** @var StorageScanner */
+	protected $scanner;
 
 	/** @var MiscService */
 	protected $miscService;
@@ -71,9 +62,7 @@ class TestFilesManager extends TestManager
 	public function setUp(): void
 	{
 		$this->userManager = \OC::$server->getUserManager();
-		$this->databaseConnection = \OC::$server->getDatabaseConnection();
-		$this->eventDispatcher = \OC::$server->query(IEventDispatcher::class);
-		$this->logger = \OC::$server->getLogger();
+		$this->scanner = \OC::$server->query(StorageScanner::class);
 		$this->miscService = \OC::$server->query(MiscService::class);
 	}
 
@@ -135,8 +124,7 @@ class TestFilesManager extends TestManager
 		$this->setupTargetPath($pathId, dirname($targetPathBase), $targetPathMount);
 		$this->copyRecursive($pathId, $sourcePath, $targetPathFull);
 
-		$scanner = new Scanner(null , $this->databaseConnection, $this->eventDispatcher, $this->logger);
-		$scanner->scan($targetPathMount);
+		$this->scanner->scan($targetPathMount);
 
 		$this->paths[$pathId] = [ $sourcePathFull, $targetPathFull ];
 		return basename($targetPath);

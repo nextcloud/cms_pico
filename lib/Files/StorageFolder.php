@@ -24,16 +24,11 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Files;
 
-use OC\Files\Utils\Scanner;
-use OC\ForbiddenException;
-use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\AlreadyExistsException;
 use OCP\Files\Folder as OCFolder;
 use OCP\Files\InvalidPathException;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
-use OCP\IDBConnection;
-use OCP\ILogger;
 use OCP\ITempManager;
 
 class StorageFolder extends AbstractStorageNode implements FolderInterface
@@ -49,14 +44,8 @@ class StorageFolder extends AbstractStorageNode implements FolderInterface
 	/** @var ITempManager */
 	private $tempManager;
 
-	/** @var IDBConnection */
-	private $connection;
-
-	/** @var ILogger */
-	private $logger;
-
-	/** @var IEventDispatcher */
-	private $eventDispatcher;
+	/** @var StorageScanner */
+	private $scanner;
 
 	/** @var StorageFolder|null */
 	protected $rootFolder;
@@ -72,9 +61,7 @@ class StorageFolder extends AbstractStorageNode implements FolderInterface
 	public function __construct(OCFolder $folder, string $parentPath = null)
 	{
 		$this->tempManager = \OC::$server->getTempManager();
-		$this->connection = \OC::$server->query(IDBConnection::class);
-		$this->logger = \OC::$server->query(ILogger::class);
-		$this->eventDispatcher = \OC::$server->query(IEventDispatcher::class);
+		$this->scanner = \OC::$server->query(StorageScanner::class);
 
 		parent::__construct($folder, $parentPath);
 	}
@@ -201,13 +188,7 @@ class StorageFolder extends AbstractStorageNode implements FolderInterface
 	 */
 	public function sync(bool $recursive = FolderInterface::SYNC_RECURSIVE): void
 	{
-		$scanner = new Scanner(null, $this->connection, $this->eventDispatcher, $this->logger);
-
-		try {
-			$scanner->scan($this->node->getPath(), $recursive);
-		} catch (ForbiddenException $e) {
-			throw new NotPermittedException();
-		}
+		$this->scanner->scan($this->node->getPath(), $recursive);
 	}
 
 	/**
