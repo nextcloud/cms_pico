@@ -27,6 +27,7 @@ OC.L10N.register(
     "Theme exists already." : "A téma már létezik.",
     "Website exists." : "A weboldal már létezik.",
     "No permission." : "Nincs jogosultsága.",
+    "The value given is invalid." : "A megadott érték érvénytelen.",
     "Website not found." : "A webhely nem található.",
     "Local (unencrypted)" : "Helyi (titkosítatlan)",
     "Location" : "Hely",
