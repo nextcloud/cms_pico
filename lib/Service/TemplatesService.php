@@ -30,7 +30,7 @@ use OCA\CMSPico\Exceptions\TemplateNotCompatibleException;
 use OCA\CMSPico\Exceptions\TemplateNotFoundException;
 use OCA\CMSPico\Files\FileInterface;
 use OCA\CMSPico\Files\FolderInterface;
-use OCA\CMSPico\Files\StorageFolder;
+use OCA\CMSPico\Files\StorageUserFolder;
 use OCA\CMSPico\Model\Template;
 use OCA\CMSPico\Model\TemplateFile;
 use OCA\CMSPico\Model\Website;
@@ -247,7 +247,7 @@ class TemplatesService
 	 */
 	public function installTemplate(Website $website, string $templateName): void
 	{
-		$userFolder = new StorageFolder(\OC::$server->getUserFolder($website->getUserId()));
+		$userFolder = new StorageUserFolder($website->getUserId());
 
 		try {
 			$userFolder->get($website->getPath());

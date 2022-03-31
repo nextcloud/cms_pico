@@ -33,6 +33,7 @@ use OCA\CMSPico\Exceptions\WebsiteInvalidDataException;
 use OCA\CMSPico\Exceptions\WebsiteInvalidFilesystemException;
 use OCA\CMSPico\Exceptions\WebsiteInvalidOwnerException;
 use OCA\CMSPico\Files\StorageFolder;
+use OCA\CMSPico\Files\StorageUserFolder;
 use OCA\CMSPico\Service\MiscService;
 use OCA\CMSPico\Service\TemplatesService;
 use OCA\CMSPico\Service\ThemesService;
@@ -182,7 +183,7 @@ class Website extends WebsiteCore
 			);
 		}
 
-		$userFolder = new StorageFolder(\OC::$server->getUserFolder($this->getUserId()));
+		$userFolder = new StorageUserFolder($this->getUserId());
 
 		try {
 			$websiteBaseFolder = $userFolder->getFolder(dirname($path));
@@ -253,8 +254,7 @@ class Website extends WebsiteCore
 
 		if ($this->folder === null) {
 			try {
-				$ocUserFolder = \OC::$server->getUserFolder($this->getUserId());
-				$userFolder = new StorageFolder($ocUserFolder);
+				$userFolder = new StorageUserFolder($this->getUserId());
 
 				$websiteFolder = $userFolder->getFolder($this->getPath());
 				$this->folder = $websiteFolder->fakeRoot();
