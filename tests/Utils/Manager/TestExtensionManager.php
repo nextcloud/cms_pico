@@ -196,15 +196,21 @@ class TestExtensionManager extends TestManager
 
 		$systemItems = $data['systemItems'] ?? [];
 		Assert::assertCount(count($this->systemItems), $systemItems);
-		ArrayAssert::assertAssociativeArray($this->systemItems, $systemItems, false, false);
+		foreach ($this->systemItems as $systemItem) {
+			Assert::assertContains($systemItem, $systemItems);
+		}
 
 		$customItems = $data['customItems'] ?? [];
 		Assert::assertCount(count($this->customItems), $customItems);
-		ArrayAssert::assertAssociativeArray($this->customItems, $customItems, false, false);
+		foreach ($this->customItems as $customItem) {
+			Assert::assertContains($customItem, $customItems);
+		}
 
 		$newItems = $data['newItems'] ?? [];
 		Assert::assertCount(count($this->newItems), $newItems);
-		ArrayAssert::assertAssociativeArray($this->newItems, $newItems, false, false);
+		foreach ($this->newItems as $newItem) {
+			Assert::assertContains($newItem, $newItems);
+		}
 
 		return $this;
 	}
