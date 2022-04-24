@@ -1,5 +1,6 @@
 { "translations": {
     "Copy" : "ສຳເນົາ",
+    "Save" : "ບັນທຶກ",
     "Access forbidden" : "ຫ້າມການເຂົ້າເຖິງ",
     "Back to %s" : "ຫຼັງ%s",
     "Internal Server Error" : "ຄວາມຜິດພາດຂອງ Server ພາຍໃນ",
@@ -15,6 +16,9 @@
     "File: %s" : "ຟາຍ%s",
     "Line: %s" : "ສາຍ: %s",
     "Trace" : "ຕິດຕາມ",
-    "Name" : "ຊື່"
+    "Name" : "ຊື່",
+    "Theme" : "ຫົວຂໍ້",
+    "Address" : "ທີ່ຢູ່",
+    "Loading…" : "ກຳລັງໂຫຼດ"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

@@ -21,6 +21,7 @@ OC.L10N.register(
     "Pico CMS" : "Pico CMS",
     "Access forbidden" : "存取被拒",
     "Back to %s" : "回到 %s",
+    "Not found" : "找不到",
     "Internal Server Error" : "內部伺服器錯誤",
     "The server was unable to complete your request." : "伺服器無法完成你的請求。",
     "If this happens again, please send the technical details below to the server administrator." : "如果此問題重複發生，請寄送技術資訊給管理員。",

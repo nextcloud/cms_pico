@@ -23,6 +23,7 @@ OC.L10N.register(
     "Limit to groups" : "Limitează pentru grupuri",
     "Name" : "Nume",
     "Path" : "Cale",
+    "Theme" : "Temă",
     "Actions" : "Acțiuni",
     "Address" : "Adresă",
     "Loading…" : "Se încarcă…"

@@ -23,6 +23,7 @@ OC.L10N.register(
     "Limit to groups" : "Limigi al grupoj",
     "Name" : "Nomo",
     "Path" : "Vojo",
+    "Theme" : "Etoso",
     "Created" : "Kreita",
     "Actions" : "Agoj",
     "Address" : "Adreso",

@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Copy" : "Eilañ",
     "Save" : "Enrollañ",
+    "Location" : "Lec'hiadur",
     "Access forbidden" : "N'oc'h ket aotreet tremen",
     "Back to %s" : "Distro da %s",
     "Internal Server Error" : "Fazi servijour diabazh",
