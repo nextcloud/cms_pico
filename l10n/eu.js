@@ -156,6 +156,7 @@ OC.L10N.register(
     "Website type" : "Webgune mota",
     "Public website" : "Webgune publikoa",
     "Private website" : "Webgune pribatua",
+    "Group access" : "Talde sarbidea",
     "Reload websites list" : "Berriro kargatu webguneen zerrenda",
     "Create a new website" : "Sortu webgune berria",
     "Just fill the form below to create your own personal website." : "Bete beheko inprimakia zure webgune pertsonala sortzeko.",
