@@ -182,5 +182,5 @@
     "Templates act as a starting point when creating a new website. All templates consist of a \"content\" directory (for your pages) and a \"assets\" directory (for your website's assets), which will be copied to the above folder in your Nextcloud." : "Os modelos atuam como ponto de partida ao criar um novo site. Todos os modelos consistem em um diretório \"conteúdo\" (para suas páginas) e um diretório \"ativos\" (para os ativos do seu site), que serão copiados para a pasta acima no seu Nextcloud.",
     "Create new website" : "Criar novo site",
     "Loading…" : "Carregando..."
-},"pluralForm" :"nplurals=2; plural=(n > 1);"
+},"pluralForm" :"nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }
