@@ -27,6 +27,7 @@ OC.L10N.register(
     "Theme exists already." : "Оформление уже существует.",
     "Website exists." : "Веб-сайт уже существует.",
     "No permission." : "Нет прав доступа.",
+    "The value given is invalid." : "Указано недопустимое значание.",
     "Website not found." : "Вебсайт не найден.",
     "Local (unencrypted)" : "Локальный (без шифрования)",
     "Location" : "Местоположение",
