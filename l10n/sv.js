@@ -58,6 +58,7 @@ OC.L10N.register(
     "Limit to groups" : "Begränsa till grupper",
     "Custom themes" : "Anpassade teman",
     "Add custom theme" : "Lägg till anpassat tema",
+    "Copy custom theme" : "Kopiera anpassat tema",
     "Delete custom theme" : "Ta bort anpassat tema",
     "Custom templates" : "Anpassade mallar",
     "Add custom template" : "Lägg till anpassad mapp",
@@ -70,6 +71,7 @@ OC.L10N.register(
     "Actions" : "Åtgärder",
     "Create a new website" : "Skapa en ny webbplats",
     "Address" : "Adress",
+    "Create new website" : "Skapa en ny webbplats",
     "Loading…" : "Läser in…"
 },
 "nplurals=2; plural=(n != 1);");
