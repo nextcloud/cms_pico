@@ -18,6 +18,7 @@ OC.L10N.register(
     "Line: %s" : "Qator: %s",
     "Trace" : "Iz",
     "Name" : "Ism...",
+    "Address" : "manzil",
     "Loading…" : "Yuklanmoqda…"
 },
 "nplurals=1; plural=0;");
