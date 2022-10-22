@@ -261,6 +261,9 @@ class Pico extends \Pico
 		$allowedSchemes = array_merge($config->get('URI.AllowedSchemes'), [ 'data' => true ]);
 		$config->set('URI.AllowedSchemes', $allowedSchemes);
 
+		$config->set('HTML.Allowed', 'a[href|target]');
+		$config->set('Attr.AllowedFrameTargets', [ '_blank' ]);
+
 		$config->finalize();
 
 		return $config;
