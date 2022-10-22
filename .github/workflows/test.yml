@@ -213,17 +213,6 @@ jobs:
         run: |
           php ~/nextcloud/occ app:enable $APP_NAME
 
-      - name: Run Nextcloud code checks on ${{ env.APP_NAME }}
-        run: |
-          echo + "php ~/nextcloud/occ app:check-code $APP_NAME -c private"
-          php ~/nextcloud/occ app:check-code $APP_NAME -c private
-
-          echo + "php ~/nextcloud/occ app:check-code $APP_NAME -c strong-comparison"
-          php ~/nextcloud/occ app:check-code $APP_NAME -c strong-comparison
-
-          echo + "php ~/nextcloud/occ app:check-code $APP_NAME -c deprecation"
-          php ~/nextcloud/occ app:check-code $APP_NAME -c deprecation
-
       - name: Run PHPUnit tests of ${{ env.APP_NAME }}
         run: |
           php ~/nextcloud/apps/$APP_NAME/vendor/bin/phpunit --configuration ~/nextcloud/apps/$APP_NAME/tests/phpunit.xml
