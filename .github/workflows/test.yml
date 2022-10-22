@@ -76,8 +76,8 @@ jobs:
           echo "$BUILD_MATRIX_TEST" | jq
           echo ::endgroup::
 
-          echo "::set-output name=BUILD_MATRIX_NEXTCLOUD::$BUILD_MATRIX_NEXTCLOUD"
-          echo "::set-output name=BUILD_MATRIX_TEST::$BUILD_MATRIX_TEST"
+          echo "BUILD_MATRIX_NEXTCLOUD=$BUILD_MATRIX_NEXTCLOUD" >> "$GITHUB_OUTPUT"
+          echo "BUILD_MATRIX_TEST=$BUILD_MATRIX_TEST" >> "$GITHUB_OUTPUT"
 
   nextcloud:
     name: Setup Nextcloud ${{ matrix.NEXTCLOUD_BRANCH }}
