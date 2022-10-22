@@ -26,14 +26,14 @@ use OCA\CMSPico\AppInfo\Application;
 /** @var $_ array */
 /** @var $l \OCP\IL10N */
 script(Application::APP_NAME, [ 'pico', 'admin' ]);
-style(Application::APP_NAME, 'pico');
+style(Application::APP_NAME, [ 'fontello', 'pico' ]);
 
 ?>
 
 <?php if (!$_['parsedownCompatible']) { ?>
 	<article class="section">
 		<div class="message large error">
-			<div class="icon icon-error-color"></div>
+			<div class="icon icon-attention-circled"></div>
 			<div>
 				<p><strong><?php p($l->t(
 					'Your Nextcloud installation is incompatible with Pico CMS for Nextcloud!'
@@ -98,7 +98,7 @@ style(Application::APP_NAME, 'pico');
 	)); ?></p>
 
 	<div class="message large">
-		<div class="icon icon-info"></div>
+		<div class="icon icon-info-circled"></div>
 		<div>
 			<p><?php p($l->t(
 				'Pico CMS for Nextcloud allows you to add custom themes for some greater individuality and style. '
@@ -142,11 +142,11 @@ style(Application::APP_NAME, 'pico');
 				<div class="app-content-list-item-line-one">
 					<select class="action-new-item"></select>
 					<button class="action-new has-tooltip" title="<?php p($l->t('Add custom theme')); ?>">
-						<span class="icon icon-add"></span>
+						<span class="icon icon-plus"></span>
 						<span class="hidden-visually"><?php p($l->t('Add custom theme')); ?></span>
 					</button>
 				</div>
-				<div class="action-reload icon-redo-alt has-tooltip" data-placement="left"
+				<div class="action-reload icon-arrows-cw has-tooltip" data-placement="left"
 						title="<?php p($l->t('Reload themes list')); ?>">
 					<span class="hidden-visually"><?php p($l->t('Reload themes list')); ?></span>
 				</div>
@@ -160,13 +160,13 @@ style(Application::APP_NAME, 'pico');
 			<div class="app-content-list-item-line-one">
 				<p>{name}</p>
 				<div class="info-compat message">
-					<div class="icon-checkmark has-tooltip" title="<?php p($l->t('Compatible theme.')); ?>"></div>
+					<div class="icon-ok has-tooltip" title="<?php p($l->t('Compatible theme.')); ?>"></div>
 					<div>
 						<p class="note"><?php p($l->t('System theme')); ?></p>
 					</div>
 				</div>
 			</div>
-			<div class="action-copy icon-copy has-tooltip" data-placement="left"
+			<div class="action-copy icon-docs has-tooltip" data-placement="left"
 					title="<?php p($l->t('Copy system theme')); ?>">
 				<span class="hidden-visually"><?php p($l->t('Copy system theme')); ?></span>
 			</div>
@@ -179,21 +179,21 @@ style(Application::APP_NAME, 'pico');
 			<div class="app-content-list-item-line-one">
 				<p>{name}</p>
 				<div class="info-compat message">
-					<div class="icon-checkmark has-tooltip" title="<?php p($l->t('Compatible theme.')); ?>"></div>
+					<div class="icon-ok has-tooltip" title="<?php p($l->t('Compatible theme.')); ?>"></div>
 					<div>
 						<p class="note"><?php p($l->t('Custom theme')); ?></p>
 					</div>
 				</div>
 			</div>
-			<div class="action-sync icon-sync-alt has-tooltip" data-placement="left"
+			<div class="action-sync icon-arrows-cw has-tooltip" data-placement="left"
 					title="<?php p($l->t('Reload custom theme')); ?>">
 				<span class="hidden-visually"><?php p($l->t('Reload custom theme')); ?></span>
 			</div>
-			<div class="action-copy icon-copy has-tooltip" data-placement="left"
+			<div class="action-copy icon-docs has-tooltip" data-placement="left"
 					title="<?php p($l->t('Copy custom theme')); ?>">
 				<span class="hidden-visually"><?php p($l->t('Copy custom theme')); ?></span>
 			</div>
-			<div class="action-delete icon-delete has-tooltip" data-placement="left"
+			<div class="action-delete icon-trash has-tooltip" data-placement="left"
 					title="<?php p($l->t('Delete custom theme')); ?>">
 				<span class="hidden-visually"><?php p($l->t('Delete custom theme')); ?></span>
 			</div>
@@ -240,7 +240,7 @@ style(Application::APP_NAME, 'pico');
 	<script id="picocms-themes-template-error" type="text/template"
 			data-replaces="#picocms-themes">
 		<div class="app-content-error message large">
-			<div class="icon icon-error-color"></div>
+			<div class="icon icon-attention-circled"></div>
 			<div>
 				<p><?php p($l->t(
 					'An unexpected error occurred while performing this action. Please check Nextcloud\'s logs.'
@@ -252,7 +252,7 @@ style(Application::APP_NAME, 'pico');
 					<?php p($l->t('Encountered unexpected {exception}: {exceptionMessage}')); ?>
 				</p>
 			</div>
-			<div class="action action-reload icon-redo-alt has-tooltip" data-placement="left"
+			<div class="action action-reload icon-arrows-cw has-tooltip" data-placement="left"
 					title="<?php p($l->t('Reload themes list')); ?>">
 				<span class="hidden-visually"><?php p($l->t('Reload themes list')); ?></span>
 			</div>
@@ -312,11 +312,11 @@ style(Application::APP_NAME, 'pico');
 				<div class="app-content-list-item-line-one">
 					<select class="action-new-item"></select>
 					<button class="action-new has-tooltip" title="<?php p($l->t('Add custom plugin')); ?>">
-						<span class="icon icon-add"></span>
+						<span class="icon icon-plus"></span>
 						<span class="hidden-visually"><?php p($l->t('Add custom plugin')); ?></span>
 					</button>
 				</div>
-				<div class="action-reload icon-redo-alt has-tooltip" data-placement="left"
+				<div class="action-reload icon-arrows-cw has-tooltip" data-placement="left"
 						title="<?php p($l->t('Reload plugins list')); ?>">
 					<span class="hidden-visually"><?php p($l->t('Reload plugins list')); ?></span>
 				</div>
@@ -330,7 +330,7 @@ style(Application::APP_NAME, 'pico');
 			<div class="app-content-list-item-line-one">
 				<p>{name}</p>
 				<div class="info-compat message">
-					<div class="icon-checkmark has-tooltip" title="<?php p($l->t('Compatible plugin.')); ?>"></div>
+					<div class="icon-ok has-tooltip" title="<?php p($l->t('Compatible plugin.')); ?>"></div>
 					<div>
 						<p class="note"><?php p($l->t('System plugin')); ?></p>
 					</div>
@@ -345,17 +345,17 @@ style(Application::APP_NAME, 'pico');
 			<div class="app-content-list-item-line-one">
 				<p>{name}</p>
 				<div class="info-compat message">
-					<div class="icon-checkmark has-tooltip" title="<?php p($l->t('Compatible plugin.')); ?>"></div>
+					<div class="icon-ok has-tooltip" title="<?php p($l->t('Compatible plugin.')); ?>"></div>
 					<div>
 						<p class="note"><?php p($l->t('Custom plugin')); ?></p>
 					</div>
 				</div>
 			</div>
-			<div class="action-sync icon-sync-alt has-tooltip" data-placement="left"
+			<div class="action-sync icon-arrows-cw has-tooltip" data-placement="left"
 					title="<?php p($l->t('Reload custom plugin')); ?>">
 				<span class="hidden-visually"><?php p($l->t('Reload custom plugin')); ?></span>
 			</div>
-			<div class="action-delete icon-delete has-tooltip" data-placement="left"
+			<div class="action-delete icon-trash has-tooltip" data-placement="left"
 					title="<?php p($l->t('Delete custom plugin')); ?>">
 				<span class="hidden-visually"><?php p($l->t('Delete custom plugin')); ?></span>
 			</div>
@@ -380,7 +380,7 @@ style(Application::APP_NAME, 'pico');
 	<script id="picocms-plugins-template-error" type="text/template"
 			data-replaces="#picocms-plugins">
 		<div class="app-content-error message large">
-			<div class="icon icon-error-color"></div>
+			<div class="icon icon-attention-circled"></div>
 			<div>
 				<p><?php p($l->t(
 					'An unexpected error occurred while performing this action. Please check Nextcloud\'s logs.'
@@ -392,7 +392,7 @@ style(Application::APP_NAME, 'pico');
 					<?php p($l->t('Encountered unexpected {exception}: {exceptionMessage}')); ?>
 				</p>
 			</div>
-			<div class="action action-reload icon-redo-alt has-tooltip" data-placement="left"
+			<div class="action action-reload icon-arrows-cw has-tooltip" data-placement="left"
 					title="<?php p($l->t('Reload plugins list')); ?>">
 				<span class="hidden-visually"><?php p($l->t('Reload plugins list')); ?></span>
 			</div>
@@ -450,11 +450,11 @@ style(Application::APP_NAME, 'pico');
 				<div class="app-content-list-item-line-one">
 					<select class="action-new-item"></select>
 					<button class="action-new has-tooltip" title="<?php p($l->t('Add custom template')); ?>">
-						<span class="icon icon-add"></span>
+						<span class="icon icon-plus"></span>
 						<span class="hidden-visually"><?php p($l->t('Add custom template')); ?></span>
 					</button>
 				</div>
-				<div class="action-reload icon-redo-alt has-tooltip" data-placement="left"
+				<div class="action-reload icon-arrows-cw has-tooltip" data-placement="left"
 						title="<?php p($l->t('Reload templates list')); ?>">
 					<span class="hidden-visually"><?php p($l->t('Reload templates list')); ?></span>
 				</div>
@@ -468,13 +468,13 @@ style(Application::APP_NAME, 'pico');
 			<div class="app-content-list-item-line-one">
 				<p>{name}</p>
 				<div class="info-compat message">
-					<div class="icon-checkmark has-tooltip" title="<?php p($l->t('Compatible template.')); ?>"></div>
+					<div class="icon-ok has-tooltip" title="<?php p($l->t('Compatible template.')); ?>"></div>
 					<div>
 						<p class="note"><?php p($l->t('System template')); ?></p>
 					</div>
 				</div>
 			</div>
-			<div class="action-copy icon-copy has-tooltip" data-placement="left"
+			<div class="action-copy icon-docs has-tooltip" data-placement="left"
 					title="<?php p($l->t('Copy system template')); ?>">
 				<span class="hidden-visually"><?php p($l->t('Copy system template')); ?></span>
 			</div>
@@ -487,17 +487,17 @@ style(Application::APP_NAME, 'pico');
 			<div class="app-content-list-item-line-one">
 				<p>{name}</p>
 				<div class="info-compat message">
-					<div class="icon-checkmark has-tooltip" title="<?php p($l->t('Compatible template.')); ?>"></div>
+					<div class="icon-ok has-tooltip" title="<?php p($l->t('Compatible template.')); ?>"></div>
 					<div>
 						<p class="note"><?php p($l->t('Custom template')); ?></p>
 					</div>
 				</div>
 			</div>
-			<div class="action-copy icon-copy has-tooltip" data-placement="left"
+			<div class="action-copy icon-docs has-tooltip" data-placement="left"
 					title="<?php p($l->t('Copy custom template')); ?>">
 				<span class="hidden-visually"><?php p($l->t('Copy custom template')); ?></span>
 			</div>
-			<div class="action-delete icon-delete has-tooltip" data-placement="left"
+			<div class="action-delete icon-trash has-tooltip" data-placement="left"
 					title="<?php p($l->t('Delete custom template')); ?>">
 				<span class="hidden-visually"><?php p($l->t('Delete custom template')); ?></span>
 			</div>
@@ -544,7 +544,7 @@ style(Application::APP_NAME, 'pico');
 	<script id="picocms-templates-template-error" type="text/template"
 			data-replaces="#picocms-templates">
 		<div class="app-content-error message large">
-			<div class="icon icon-error-color"></div>
+			<div class="icon icon-attention-circled"></div>
 			<div>
 				<p><?php p($l->t(
 					'An unexpected error occurred while performing this action. Please check Nextcloud\'s logs.'
@@ -556,7 +556,7 @@ style(Application::APP_NAME, 'pico');
 					<?php p($l->t('Encountered unexpected {exception}: {exceptionMessage}')); ?>
 				</p>
 			</div>
-			<div class="action action-reload icon-redo-alt has-tooltip" data-placement="left"
+			<div class="action action-reload icon-arrows-cw has-tooltip" data-placement="left"
 					title="<?php p($l->t('Reload templates list')); ?>">
 				<span class="hidden-visually"><?php p($l->t('Reload templates list')); ?></span>
 			</div>

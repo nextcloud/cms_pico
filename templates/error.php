@@ -27,7 +27,7 @@
 ?>
 
 <div class="body-login-container update">
-	<div class="icon-big icon-error icon-white"></div>
+	<div class="icon-big icon-attention-circled icon-white"></div>
 	<h2><?php p($l->t('Internal Server Error')); ?></h2>
 	<p class="infogroup"><?php p($_['message'] ?? $l->t('The server was unable to complete your request.')); ?></p>
 	<p class="infogroup"><?php p($l->t(

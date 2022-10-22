@@ -11,7 +11,9 @@
 # - Target 'verify'
 #       Requires OpenSSL and a RSA public key to verify the release archive at
 #       '~/.nextcloud/certificates/$(app_name).pub'
-# - Targets 'publish-github'
+# - Target 'sass'
+#       Requires Dart Sass (see https://github.com/sass/dart-sass)
+# - Target 'publish-github'
 #       Requires GitHub CLI with working authentication (see https://cli.github.com/)
 # - Target 'publish-appstore'
 #       Requires a 'curlrc' file at '~/.nextcloud/curlrc' with an appropiate
@@ -27,6 +29,7 @@ verify?=$(build_dir)/$(archive)
 
 php?=php
 composer?=composer
+sass?=sass
 
 app_name=cms_pico
 app_title=Pico CMS for Nextcloud
@@ -154,6 +157,11 @@ test:
 coverage: test
 	$(php) -f ./vendor/bin/coverage -- ./tests/clover.xml 0
 
+sass:
+	for FILE in css/*.scss; do \
+		$(sass) --style compressed "$$FILE":"css/$$(basename "$$FILE" .scss).css"; \
+	done
+
 publish-github: check check-composer build
 	gh release create "$(version)" \
 		--title "$(version)" \
@@ -183,6 +191,7 @@ publish-dev: publish-appstore-dev
 	composer build build-dev export \
 	sign verify \
 	test coverage \
+	sass \
 	publish-github publish-github-dev \
 	publish-appstore publish-appstore-dev \
 	publish publish-dev
