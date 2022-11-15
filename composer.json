@@ -21,9 +21,9 @@
   "require": {
     "php": ">=7.3.0",
     "ext-json": "*",
-    "picocms/pico": "^2.1",
-    "picocms/pico-theme": "^2.1",
-    "picocms/pico-deprecated": "^2.1",
+    "picocms/pico": "3.0.0-alpha.2",
+    "picocms/pico-theme": "3.0.0-alpha.2",
+    "picocms/pico-deprecated": "3.0.0-alpha.2",
     "picocms/composer-installer": "^1.0",
     "xemlock/htmlpurifier-html5": "~0.1.11",
     "symfony/yaml" : "^2.8|^3.4|^4.4|^5.1"
