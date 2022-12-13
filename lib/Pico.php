@@ -71,6 +71,13 @@ class Pico extends \Pico
 	 */
 	public const API_VERSION_3 = 3;
 
+	/**
+	 * API version 4, used by Pico 3.0
+	 *
+	 * @var int
+	 */
+	public const API_VERSION_4 = 4;
+
 	/** @var PicoService */
 	private $picoService;
 
