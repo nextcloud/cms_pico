@@ -43,6 +43,7 @@ use OCP\Files\InvalidPathException;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 use OCP\ILogger;
+use OCP\IUserSession;
 
 class PicoService
 {
@@ -85,6 +86,9 @@ class PicoService
 	/** @var MiscService */
 	private $miscService;
 
+	/** @var IUserSession */
+	private $userSession;
+
 	/**
 	 * PicoService constructor.
 	 *
@@ -101,7 +105,8 @@ class PicoService
 		ThemesService $themesService,
 		PluginsService $pluginsService,
 		FileService $fileService,
-		MiscService $miscService
+		MiscService $miscService,
+		IUserSession $userSession
 	) {
 		$this->logger = $logger;
 		$this->assetsService = $assetsService;
@@ -109,6 +114,7 @@ class PicoService
 		$this->pluginsService = $pluginsService;
 		$this->fileService = $fileService;
 		$this->miscService = $miscService;
+		$this->userSession = $userSession;
 	}
 
 	/**
@@ -139,7 +145,8 @@ class PicoService
 				$this->getConfigPath(),
 				$this->pluginsService->getPluginsPath(),
 				$this->themesService->getThemesPath(),
-				false
+				false,
+				$this->userSession
 			);
 
 			try {

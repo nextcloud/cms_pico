@@ -40,6 +40,7 @@ use OCP\Files\InvalidPathException;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 use Symfony\Component\Yaml\Exception\ParseException;
+use OCP\IUserSession;
 
 class Pico extends \Pico
 {
@@ -83,14 +84,19 @@ class Pico extends \Pico
 	/** @var Website */
 	private $website;
 
+	/** @var IUserSession */
+	private $userSession;
+
 	/**
 	 * Pico constructor.
 	 *
 	 * {@inheritDoc}
 	 */
-	public function __construct($rootDir, $configDir, $pluginsDir, $themesDir, $enableLocalPlugins = true)
+	public function __construct($rootDir, $configDir, $pluginsDir, $themesDir, $enableLocalPlugins = true, IUserSession $userSession)
 	{
 		$this->picoService = \OC::$server->query(PicoService::class);
+
+		$this->userSession = $userSession;
 
 		parent::__construct($rootDir, $configDir, $pluginsDir, $themesDir, $enableLocalPlugins);
 	}
@@ -180,6 +186,7 @@ class Pico extends \Pico
 	public function parseFileMeta($rawContent, array $headers)
 	{
 		$meta = parent::parseFileMeta($rawContent, $headers);
+		$meta['user'] = $this->userSession->isLoggedIn() ? $this->userSession->getUser()->getUID() : \OC::$server->getConfig()->getSystemValue('pico_cms_public_user', '');
 		return $this->purifyFileMeta($meta);
 	}
 
