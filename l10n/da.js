@@ -37,6 +37,7 @@ OC.L10N.register(
     "Actions" : "Handlinger",
     "Create a new website" : "Opret en hjemmeside",
     "Address" : "Adresse",
+    "Template" : "Skabelon",
     "Loading…" : "Indlæser…"
 },
 "nplurals=2; plural=(n != 1);");
