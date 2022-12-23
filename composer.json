@@ -21,9 +21,9 @@
   "require": {
     "php": ">=7.3.0",
     "ext-json": "*",
-    "picocms/pico": "^2.1",
-    "picocms/pico-theme": "^2.1",
-    "picocms/pico-deprecated": "^2.1",
+    "picocms/pico": "dev-pico-3.0#a5fefa4",
+    "picocms/pico-theme": "dev-pico-3.0#f322a0b",
+    "picocms/pico-deprecated": "dev-pico-3.0#ccf1194",
     "picocms/composer-installer": "^1.0",
     "xemlock/htmlpurifier-html5": "~0.1.11",
     "symfony/yaml" : "^2.8|^3.4|^4.4|^5.1"
@@ -31,8 +31,7 @@
   "require-dev": {
     "phpunit/phpunit": "^8",
     "phrozenbyte/phpunit-throwable-asserts": "^1.1",
-    "phrozenbyte/phpunit-array-asserts": "^v1.1",
-    "incompass/coverage": "^1.0"
+    "phrozenbyte/phpunit-array-asserts": "^v1.1"
   },
   "extra": {
     "pico-theme-dir": "appdata/themes/",
