@@ -86,6 +86,13 @@ check-composer:
 	$(composer) update --no-dev --dry-run 2>&1 \
 		| grep --quiet '^Nothing to install, update or remove$$'
 
+check-sass: css_tmp:=$(shell mktemp -d)
+check-sass:
+	cp -R "css/" "$(css_tmp)/css/"
+	cd "$(css_tmp)"; $(sass) --style compressed $(foreach file,$(wildcard css/*.scss),"$(file)":"$(file:.scss=.css)")
+	diff -q -r "css/" "$(css_tmp)/css/"
+	rm -rf "$(css_tmp)"
+
 lazy-check:
 	@:
 ifeq ($(or $(filter $(appinfo_version) latest,$(version)), $(filter true,$(nocheck))),)
@@ -160,7 +167,7 @@ coverage: test
 sass:
 	$(sass) --style compressed --update $(foreach file,$(wildcard css/*.scss),"$(file)":"$(file:.scss=.css)")
 
-publish-github: check check-composer build
+publish-github: check check-composer check-sass build
 	gh release create "$(version)" \
 		--title "$(version)" \
 		--notes "$(app_title) $(version)" \
@@ -170,7 +177,7 @@ publish-github: check check-composer build
 publish-github-dev: prerelease=true
 publish-github-dev: publish-github
 
-publish-appstore: check check-composer sign publish-github
+publish-appstore: check check-composer check-sass build sign publish-github
 	$(php) -r 'echo json_encode([ "download" => $$_SERVER["argv"][1], "signature" => file_get_contents($$_SERVER["argv"][2]), "nightly" => !!$$_SERVER["argv"][3] ]);' \
 		"$(download_url)" "$(build_dir)/$(signature)" "$(if $(filter true,$(prerelease)),1,0)" \
 			| curl -K "$(curlrc)" \
@@ -185,7 +192,7 @@ publish-dev: publish-appstore-dev
 
 .PHONY: all \
 	clean clean-build clean-export \
-	check check-composer lazy-check \
+	check check-composer check-sass lazy-check \
 	composer build build-dev export \
 	sign verify \
 	test coverage \
