@@ -26,7 +26,7 @@ use OCA\CMSPico\AppInfo\Application;
 /** @var $_ array */
 /** @var $l \OCP\IL10N */
 script(Application::APP_NAME, [ 'pico', 'personal' ]);
-style(Application::APP_NAME, 'pico');
+style(Application::APP_NAME, [ 'fontello', 'pico' ]);
 
 ?>
 
@@ -37,7 +37,7 @@ style(Application::APP_NAME, 'pico');
 	)); ?></p>
 
 	<div class="message large">
-		<div class="icon icon-info"></div>
+		<div class="icon icon-info-circled"></div>
 		<div>
 			<p><?php print_unescaped($l->t(
 				'<a href="https://apps.nextcloud.com/apps/cms_pico">Pico CMS for Nextcloud</a> combines the power of '
@@ -84,7 +84,7 @@ style(Application::APP_NAME, 'pico');
 
 	<?php if ($_['limitedUser']) { ?>
 		<div class="message large error">
-			<div class="icon icon-error-color"></div>
+			<div class="icon icon-attention-circled"></div>
 			<div>
 				<p><?php p($l->t(
 					'The Nextcloud admin limited access of Pico CMS for Nextcloud to certain groups. Unfortunately you '
@@ -145,17 +145,17 @@ style(Application::APP_NAME, 'pico');
 					</div>
 					<div class="actions">
 						<a class="action action-open has-tooltip" title="<?php p($l->t('Go to website')); ?>">
-							<span class="icon-link"></span>
+							<span class="icon-globe"></span>
 							<span class="hidden-visually"><?php p($l->t('Go to website')); ?></span>
 						</a>
 						<a class="action action-files has-tooltip"
 								title="<?php p($l->t('Go to website directory')); ?>">
-							<span class="icon-files-dark"></span>
+							<span class="icon-folder"></span>
 							<span class="hidden-visually"><?php p($l->t('Go to website directory')); ?></span>
 						</a>
 						<a class="action action-rename has-tooltip"
 							title="<?php p($l->t('Edit website name')); ?>">
-							<span class="icon-edit"></span>
+							<span class="icon-pencil"></span>
 							<span class="hidden-visually"><?php p($l->t('Edit website name')); ?></span>
 						</a>
 						<a class="action action-private has-tooltip"
@@ -165,31 +165,31 @@ style(Application::APP_NAME, 'pico');
 						</a>
 						<a class="action action-delete has-tooltip"
 								title="<?php p($l->t('Delete website')); ?>">
-							<span class="icon-delete"></span>
+							<span class="icon-trash"></span>
 							<span class="hidden-visually"><?php p($l->t('Delete website')); ?></span>
 						</a>
 					</div>
 					<div class="more">
-						<div class="icon-more"></div>
+						<div class="icon-ellipsis"></div>
 						<span class="hidden-visually"><?php p($l->t('Actions')); ?></span>
 
 						<div class="popovermenu">
 							<ul>
 								<li>
 									<a class="action-open">
-										<span class="icon-link"></span>
+										<span class="icon-globe"></span>
 										<span><?php p($l->t('Go to website')); ?></span>
 									</a>
 								</li>
 								<li>
 									<a class="action-files">
-										<span class="icon-files-dark"></span>
+										<span class="icon-folder"></span>
 										<span><?php p($l->t('Go to website directory')); ?></span>
 									</a>
 								</li>
 								<li>
 									<a class="action-rename">
-										<span class="icon-edit"></span>
+										<span class="icon-pencil/span>
 										<span><?php p($l->t('Edit website name')); ?></span>
 									</a>
 								</li>
@@ -201,7 +201,7 @@ style(Application::APP_NAME, 'pico');
 								</li>
 								<li>
 									<span class="menuitem">
-										<span class="icon icon-paint-roller"></span>
+										<span class="icon icon-brush"></span>
 										<select class="action-theme">
 											<?php foreach ($_['themes'] as $themeData) { ?>
 												<?php if ($themeData['compat']) { ?>
@@ -215,7 +215,7 @@ style(Application::APP_NAME, 'pico');
 								</li>
 								<li>
 									<a class="action-delete">
-										<span class="icon-delete"></span>
+										<span class="icon-trash"></span>
 										<span><?php p($l->t('Delete website')); ?></span>
 									</a>
 								</li>
@@ -226,7 +226,7 @@ style(Application::APP_NAME, 'pico');
 			</td>
 			<td class="path-column">
 				<a class="action action-files has-tooltip" title="<?php p($l->t('Go to website directory')); ?>">
-					<span class="icon-files-dark"></span>
+					<span class="icon-folder"></span>
 					<span class="hidden-visually"><?php p($l->t('Go to website directory')); ?>:</span>
 					{path}
 				</a>
@@ -321,7 +321,7 @@ style(Application::APP_NAME, 'pico');
 	<script id="picocms-websites-template-error" type="text/template"
 			data-replaces="#picocms-websites">
 		<div class="app-content-error message large">
-			<div class="icon icon-error-color"></div>
+			<div class="icon icon-attention-circled"></div>
 			<div>
 				<p><?php p($l->t(
 					'An unexpected error occurred while performing this action. Please check Nextcloud\'s logs.'
@@ -333,7 +333,7 @@ style(Application::APP_NAME, 'pico');
 					<?php p($l->t('Encountered unexpected {exception}: {exceptionMessage}')); ?>
 				</p>
 			</div>
-			<div class="action action-reload icon-redo-alt has-tooltip" data-placement="left"
+			<div class="action action-reload icon-arrows-cw has-tooltip" data-placement="left"
 				title="<?php p($l->t('Reload websites list')); ?>">
 				<span class="hidden-visually"><?php p($l->t('Reload websites list')); ?></span>
 			</div>
@@ -368,7 +368,7 @@ style(Application::APP_NAME, 'pico');
 							)); ?>
 						</p>
 						<div class="message input-error">
-							<div class="icon icon-error-color"></div>
+							<div class="icon icon-attention-circled"></div>
 							<div class="input-name-error"></div>
 						</div>
 					</div>
@@ -393,7 +393,7 @@ style(Application::APP_NAME, 'pico');
 							)); ?>
 						</p>
 						<div class="message input-error">
-							<div class="icon icon-error-color"></div>
+							<div class="icon icon-attention-circled"></div>
 							<div class="input-site-error"></div>
 						</div>
 					</div>
@@ -428,7 +428,7 @@ style(Application::APP_NAME, 'pico');
 							)); ?>
 						</p>
 						<div class="message input-error">
-							<div class="icon icon-error-color"></div>
+							<div class="icon icon-attention-circled"></div>
 							<div class="input-path-error"></div>
 						</div>
 					</div>
@@ -454,7 +454,7 @@ style(Application::APP_NAME, 'pico');
 							)); ?>
 						</p>
 						<div class="message input-error">
-							<div class="icon icon-error-color"></div>
+							<div class="icon icon-attention-circled"></div>
 							<div class="input-theme-error"></div>
 						</div>
 					</div>
@@ -481,7 +481,7 @@ style(Application::APP_NAME, 'pico');
 							)); ?>
 						</p>
 						<div class="message input-error">
-							<div class="icon icon-error-color"></div>
+							<div class="icon icon-attention-circled"></div>
 							<div class="input-template-error"></div>
 						</div>
 					</div>
@@ -490,7 +490,7 @@ style(Application::APP_NAME, 'pico');
 				<fieldset>
 					<div class="content">
 						<div class="message input-error">
-							<div class="icon icon-error-color"></div>
+							<div class="icon icon-attention-circled"></div>
 							<div class="input-unknown-error"></div>
 						</div>
 

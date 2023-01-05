@@ -116,7 +116,7 @@
 				var $target = $(event.target),
 					$menu;
 
-				if ($target.is('.icon-more')) {
+				if ($target.is('.icon-ellipsis')) {
 					$menu = $target.nextAll('.popovermenu');
 					if ($menu.length) {
 						$menu.toggleClass('open');

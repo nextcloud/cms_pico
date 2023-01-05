@@ -30,7 +30,6 @@ use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 use OCP\IDBConnection;
-use OCP\ILogger;
 use Psr\Log\LoggerInterface;
 
 class StorageScanner
@@ -47,15 +46,8 @@ class StorageScanner
 		$this->connection = \OC::$server->query(IDBConnection::class);
 		$this->eventDispatcher = \OC::$server->query(IEventDispatcher::class);
 
-		// TODO >= NC 24: Remove version switch
-		[ $majorVersion ] = \OC_Util::getVersion();
-		if ($majorVersion >= 24) {
-			/** @var LoggerInterface $logger */
-			$logger = \OC::$server->query(LoggerInterface::class);
-		} else {
-			/** @var ILogger $logger */
-			$logger = \OC::$server->query(ILogger::class);
-		}
+		/** @var LoggerInterface $logger */
+		$logger = \OC::$server->query(LoggerInterface::class);
 
 		$this->scanner = new Scanner(null, $connection, $eventDispatcher, $logger);
 	}

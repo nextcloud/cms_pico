@@ -239,8 +239,8 @@
 				$this.data('value', compat);
 
 				$icon
-					.addClass(compat ? 'icon-checkmark' : 'icon-error-color')
-					.removeClass(compat ? 'icon-error-color' : 'icon-checkmark');
+					.addClass(compat ? 'icon-ok' : 'icon-attention-circled')
+					.removeClass(compat ? 'icon-attention-circled' : 'icon-ok');
 
 				if ($icon.hasClass('has-tooltip')) {
 					var compatReason = $icon.prop('title') || '';
