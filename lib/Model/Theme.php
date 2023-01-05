@@ -49,6 +49,7 @@ class Theme implements \JsonSerializable
 		Pico::API_VERSION_1,
 		Pico::API_VERSION_2,
 		Pico::API_VERSION_3,
+		Pico::API_VERSION_4,
 	];
 
 	/** @var MiscService */
