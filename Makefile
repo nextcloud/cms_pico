@@ -158,9 +158,7 @@ coverage: test
 	$(php) -f ./vendor/bin/coverage -- ./tests/clover.xml 0
 
 sass:
-	for FILE in css/*.scss; do \
-		$(sass) --style compressed "$$FILE":"css/$$(basename "$$FILE" .scss).css"; \
-	done
+	$(sass) --style compressed --update $(foreach file,$(wildcard css/*.scss),"$(file)":"$(file:.scss=.css)")
 
 publish-github: check check-composer build
 	gh release create "$(version)" \
