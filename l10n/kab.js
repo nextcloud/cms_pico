@@ -11,6 +11,7 @@ OC.L10N.register(
     "Trace" : "Adsil",
     "Name" : "Nom",
     "Theme" : "Asentel",
+    "Created" : "Yettwarna.",
     "Address" : "Adresse",
     "Loading…" : "Asali..."
 },
