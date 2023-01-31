@@ -3,7 +3,7 @@ OC.L10N.register(
     {
     "Copy" : "Kopyala",
     "Confirm website deletion" : "Web sitesini silmeyi onayla",
-    "This operation will delete the website \"{name}\". However, all of its contents will still be available in your Nextcloud." : "Bu işlem \"{name}\" web sitesini silecek ancak içerikleri Nextcloud kopyanızda durmaya devam edecek.",
+    "This operation will delete the website \"{name}\". However, all of its contents will still be available in your Nextcloud." : "Bu işlem \"{name}\" web sitesini silecek ancak içerikleri Nextcloud kopyanızda durmayı sürdürecek.",
     "Choose website directory" : "Web sitesi klasörünü seçin",
     "Abort" : "Vazgeç",
     "Save" : "Kaydet",
