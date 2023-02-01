@@ -32,6 +32,7 @@
     "Delete website" : "Borrar el sitio web",
     "Actions" : "Acciones",
     "Create a new website" : "Crear un nuevo sitio web",
+    "Identifier" : "Identificador",
     "Address" : "Dirección",
     "Loading…" : "Cargando..."
 },"pluralForm" :"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"

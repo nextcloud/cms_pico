@@ -34,6 +34,7 @@ OC.L10N.register(
     "Delete website" : "Borrar el sitio web",
     "Actions" : "Acciones",
     "Create a new website" : "Crear un nuevo sitio web",
+    "Identifier" : "Identificador",
     "Address" : "Dirección",
     "Loading…" : "Cargando..."
 },
