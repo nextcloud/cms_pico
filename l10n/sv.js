@@ -85,6 +85,7 @@ OC.L10N.register(
     "My example website" : "Min exempel hemsida",
     "Identifier" : "Identifierare",
     "Address" : "Adress",
+    "Template" : "Mall",
     "Create new website" : "Skapa en ny webbplats",
     "Loading…" : "Läser in…"
 },
