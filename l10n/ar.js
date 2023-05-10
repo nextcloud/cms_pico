@@ -22,6 +22,7 @@ OC.L10N.register(
     "Line: %s" : "السطر: %s",
     "Trace" : "متابعة",
     "Limit to groups" : "التقيد إلى مجموعات",
+    "Template name" : "اسم القالب",
     "Name" : "الاسم",
     "Path" : "المسار",
     "Theme" : "المظهر",
