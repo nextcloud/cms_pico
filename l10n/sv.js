@@ -73,6 +73,7 @@ OC.L10N.register(
     "Custom template" : "Anpassad mall",
     "Copy custom template" : "Kopiera anpassad mall",
     "Delete custom template" : "Ta bort anpassad mapp",
+    "Template name" : "Namn på mall",
     "Loading websites…" : "Laddar hemsida...",
     "Name" : "Namn",
     "Path" : "Sökväg",
