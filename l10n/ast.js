@@ -6,10 +6,12 @@ OC.L10N.register(
     "Technical details" : "Detalles téunicos",
     "Code: %s" : "Códigu: %s",
     "Message: %s" : "Mensaxe: %s",
+    "File: %s" : "Ficheru: %s",
     "Name" : "Nome",
     "Path" : "Camín",
     "Theme" : "Estilu",
     "Actions" : "Aiciones",
+    "Template" : "Plantía",
     "Loading…" : "Cargando…"
 },
 "nplurals=2; plural=(n != 1);");
