@@ -22,6 +22,7 @@ OC.L10N.register(
     "Line: %s" : "Рядок: %s",
     "Trace" : "Трасування",
     "Limit to groups" : "Обмежити групами",
+    "Template name" : "Ім'я шаблону",
     "Name" : "Ім'я",
     "Path" : "Шлях",
     "Theme" : "Тема",
