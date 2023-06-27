@@ -3,7 +3,7 @@ OC.L10N.register(
     {
     "Copy" : "복사",
     "Confirm website deletion" : "웹사이트 삭제 확인",
-    "This operation will delete the website \"{name}\". However, all of its contents will still be available in your Nextcloud." : "{name} 웹사이트는 삭제되지만 컨텐츠는 여전히 Nextcloud에서 보실 수 있습니다.",
+    "This operation will delete the website \"{name}\". However, all of its contents will still be available in your Nextcloud." : "{name} 웹사이트는 삭제되지만 콘텐츠는 여전히 Nextcloud에서 보실 수 있습니다.",
     "Choose website directory" : "웹사이트 목록을 선택하십시오.",
     "Abort" : "중단",
     "Save" : "저장",
