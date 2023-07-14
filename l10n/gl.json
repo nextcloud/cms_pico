@@ -16,7 +16,7 @@
     "The requested website page could not be built, so that the server was unable to complete your request." : "Non é posíbel construír a páxina do sitio web solicitada polo que o servidor non foi quen completar a solicitude.",
     "The file and directory structure of this website appears to be broken und thus could not be accessed." : "A estrutura de ficheiros e directorios deste sitio web polo que non se pode acceder a ela.",
     "The requested website asset could not be found on the server. Maybe the asset was deleted?" : "Non se atopou o servidor solicitado no sitio web. Quizais foi eliminado o activo.",
-    "You don't have access to this website asset. Maybe the share was deleted or has expired?" : "Non ten acceso a este activo do sitio web. Quizais o recurso compartido foi eliminado ou caducou. ",
+    "You don't have access to this website asset. Maybe the share was deleted or has expired?" : "Non ten acceso a este activo do sitio web. Quizais a compartición foi eliminada ou caducou. ",
     "Plugin not found." : "Non se atopou o complemento.",
     "Plugin exists already." : "O complemento xa existe.",
     "Template not found." : "Non se atopou o modelo.",
