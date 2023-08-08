@@ -44,6 +44,7 @@ OC.L10N.register(
     "Actions" : "動作",
     "Create a new website" : "建立新網站",
     "Address" : "地址",
+    "Template" : "範本",
     "Loading…" : "載入中…"
 },
 "nplurals=1; plural=0;");
