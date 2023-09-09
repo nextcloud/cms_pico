@@ -36,6 +36,7 @@ OC.L10N.register(
     "Delete website" : "Slett nettside",
     "Actions" : "Handlinger",
     "Create a new website" : "Opprett en ny nettside",
+    "Identifier" : "Identifikator",
     "Address" : "Adresse",
     "Loading…" : "Laster…"
 },
