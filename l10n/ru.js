@@ -101,6 +101,7 @@ OC.L10N.register(
     "Add custom plugin" : "Добавить пользовательский модуль",
     "Reload plugins list" : "Перезагрузить список модулей",
     "Compatible plugin." : "Совместимый модуль.",
+    "Copy example plugin" : "Скопировать пример плагина",
     "System plugin" : "Системный модуль",
     "Custom plugin" : "Пользовательский модуль",
     "Reload custom plugin" : "Перезагрузить пользовательский модуль",
