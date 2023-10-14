@@ -166,7 +166,7 @@ OC.L10N.register(
     "Public website" : "Verejná webová stránka",
     "The website is publicly accessible and requires no authentication whatsoever." : "Webová stránka je prístupná verejne a nevyžaduje žiadne overovanie.",
     "Private website" : "Súkromná webová stránka",
-    "The website requires authentication, access is limited to a subset of all users." : "Webová stránka vyžaduje overenie, prístup je obmedzený pre časť uživateľov.",
+    "The website requires authentication, access is limited to a subset of all users." : "Webová stránka vyžaduje overenie, prístup je obmedzený pre časť používateľov.",
     "Group access" : "Prístup pre skupinu",
     "Grant access to all members of the selected groups." : "Povoliť prístup pre všetkých členov vybraných skupín.",
     "Reload websites list" : "Obnoviť zoznam webstránok",
