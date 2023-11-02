@@ -41,6 +41,7 @@ class NotModifiedResponse extends Response
 	{
 		$this->originalResponse = $originalResponse;
 
+		parent::__construct();
 		$this->setStatus(Http::STATUS_NOT_MODIFIED);
 
 		if ($this->originalResponse) {
