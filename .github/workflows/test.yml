@@ -22,7 +22,7 @@ jobs:
       NEXTCLOUD_STABLE27_BRANCH: "releases/latest-27"
       NEXTCLOUD_STABLE27_PHP_VERSIONS: "8.0 8.1 8.2"
       NEXTCLOUD_MASTER_BRANCH: "daily/latest-master"
-      NEXTCLOUD_MASTER_PHP_VERSIONS: "8.0 8.1 8.2 8.3"
+      NEXTCLOUD_MASTER_PHP_VERSIONS: "8.0 8.1 8.2"
 
     outputs:
       BUILD_MATRIX_NEXTCLOUD: ${{ steps.generate-jobs.outputs.BUILD_MATRIX_NEXTCLOUD }}
