@@ -71,6 +71,13 @@ class Pico extends \Pico
 	 */
 	public const API_VERSION_3 = 3;
 
+	/**
+	 * API version 4, used by Pico 3.0
+	 *
+	 * @var int
+	 */
+	public const API_VERSION_4 = 4;
+
 	/** @var PicoService */
 	private $picoService;
 
@@ -104,7 +111,7 @@ class Pico extends \Pico
 	 * @throws NotFoundException
 	 * @throws NotPermittedException
 	 */
-	public function run()
+	public function run() : string
 	{
 		return parent::run();
 	}
@@ -141,7 +148,7 @@ class Pico extends \Pico
 	 *
 	 * @return void
 	 */
-	protected function evaluateRequestUrl()
+	protected function evaluateRequestUrl() : void
 	{
 		// do nothing
 	}
@@ -157,7 +164,7 @@ class Pico extends \Pico
 	 * @throws NotFoundException
 	 * @throws NotPermittedException
 	 */
-	public function loadFileContent($absolutePath)
+	public function loadFileContent($absolutePath) : string
 	{
 		/** @var FolderInterface $folder */
 		/** @var string $basePath */
@@ -177,7 +184,7 @@ class Pico extends \Pico
 	 * @return array
 	 * @throws ParseException
 	 */
-	public function parseFileMeta($rawContent, array $headers)
+	public function parseFileMeta($rawContent, array $headers) : array
 	{
 		$meta = parent::parseFileMeta($rawContent, $headers);
 		return $this->purifyFileMeta($meta);
@@ -212,7 +219,7 @@ class Pico extends \Pico
 	 *
 	 * @return string
 	 */
-	public function parseFileContent($markdown, $singleLine = false)
+	public function parseFileContent($markdown, $singleLine = false) : string
 	{
 		$content = parent::parseFileContent($markdown, $singleLine);
 		return $this->purifyFileContent($content);
@@ -278,7 +285,7 @@ class Pico extends \Pico
 	 * @throws WebsiteInvalidFilesystemException
 	 * @throws InvalidPathException
 	 */
-	public function getFiles($absolutePath, $fileExtension = '', $order = \Pico::SORT_ASC)
+	public function getFiles($absolutePath, $fileExtension = '', $order = \Pico::SORT_ASC) : array
 	{
 		/** @var FolderInterface $folder */
 		/** @var string $basePath */
@@ -330,7 +337,7 @@ class Pico extends \Pico
 	 * @throws WebsiteInvalidFilesystemException
 	 * @throws InvalidPathException
 	 */
-	public function getFilesGlob($absolutePathPattern, $order = \Pico::SORT_ASC)
+	public function getFilesGlob($absolutePathPattern, $order = \Pico::SORT_ASC) : array
 	{
 		/** @var FolderInterface $folder */
 		/** @var string $basePath */
