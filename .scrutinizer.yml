@@ -11,10 +11,7 @@ build:
     analysis:
       environment:
         php:
-          version: 7.4
-          compile_options: '--enable-gd --with-openssl --with-curl --with-pdo-mysql --with-mysqli --with-freetype --enable-mbstring --enable-mbregex --enable-exif --enable-bcmath --with-mhash --with-xmlrpc --with-xsl --enable-opcache --enable-intl --with-pear --with-gettext --enable-fpm --with-zlib-dir --with-zlib --disable-rpath --enable-inline-optimization --with-bz2 --with-zlib --enable-sockets --enable-sysvsem --enable-sysvshm --enable-pcntl'
-          pecl_extensions:
-            - xdebug-2.9.8
+          version: 8.1
       dependencies:
         override:
           - curl -L -o ~/nextcloud.tar.bz2 --insecure https://download.nextcloud.com/server/$NEXTCLOUD.tar.bz2
