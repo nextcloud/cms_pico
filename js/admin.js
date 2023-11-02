@@ -202,7 +202,7 @@
 					}
 
 					$icon
-						.tooltip('dispose')
+						.tooltip('destroy')
 						.attr('title', compatReason)
 						.tooltip();
 				}
