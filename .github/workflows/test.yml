@@ -128,7 +128,7 @@ jobs:
           echo "NEXTCLOUD_VERSION=$NEXTCLOUD_VERSION" | tee -a "$GITHUB_ENV"
 
       - name: Cache Nextcloud ${{ env.NEXTCLOUD_VERSION }}
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/nextcloud
           key: ${{ matrix.NEXTCLOUD_CACHE }}
@@ -155,7 +155,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Setup PHP ${{ matrix.PHP_VERSION }}
         uses: shivammathur/setup-php@v2
@@ -164,7 +164,7 @@ jobs:
           tools: composer
 
       - name: Restore cached Nextcloud
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/nextcloud
           key: ${{ matrix.NEXTCLOUD_CACHE }}
@@ -186,7 +186,7 @@ jobs:
           echo "COMPOSER_CACHE_DIR=$COMPOSER_CACHE_DIR" | tee -a "$GITHUB_ENV"
 
       - name: Restore Composer cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ env.COMPOSER_CACHE_DIR }}
           key: ${{ runner.os }}-composer-php${{ matrix.PHP_VERSION }}-${{ hashFiles('composer.lock') }}
