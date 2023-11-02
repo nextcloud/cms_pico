@@ -16,11 +16,13 @@ jobs:
     permissions: {}
 
     env:
-      RUN_ON: "NEXTCLOUD_STABLE25 NEXTCLOUD_MASTER"
-      NEXTCLOUD_STABLE25_BRANCH: "releases/latest-25"
-      NEXTCLOUD_STABLE25_PHP_VERSIONS: "7.4 8.0 8.1"
+      RUN_ON: "NEXTCLOUD_STABLE26 NEXTCLOUD_STABLE27 NEXTCLOUD_MASTER"
+      NEXTCLOUD_STABLE26_BRANCH: "releases/latest-26"
+      NEXTCLOUD_STABLE26_PHP_VERSIONS: "8.0 8.1 8.2"
+      NEXTCLOUD_STABLE27_BRANCH: "releases/latest-27"
+      NEXTCLOUD_STABLE27_PHP_VERSIONS: "8.0 8.1 8.2"
       NEXTCLOUD_MASTER_BRANCH: "daily/latest-master"
-      NEXTCLOUD_MASTER_PHP_VERSIONS: "7.4 8.0 8.1"
+      NEXTCLOUD_MASTER_PHP_VERSIONS: "8.0 8.1 8.2"
 
     outputs:
       BUILD_MATRIX_NEXTCLOUD: ${{ steps.generate-jobs.outputs.BUILD_MATRIX_NEXTCLOUD }}
@@ -126,7 +128,7 @@ jobs:
           echo "NEXTCLOUD_VERSION=$NEXTCLOUD_VERSION" | tee -a "$GITHUB_ENV"
 
       - name: Cache Nextcloud ${{ env.NEXTCLOUD_VERSION }}
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/nextcloud
           key: ${{ matrix.NEXTCLOUD_CACHE }}
@@ -153,16 +155,17 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Setup PHP ${{ matrix.PHP_VERSION }}
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.PHP_VERSION }}
+          extensions: gd, sqlite
           tools: composer
 
       - name: Restore cached Nextcloud
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/nextcloud
           key: ${{ matrix.NEXTCLOUD_CACHE }}
@@ -184,7 +187,7 @@ jobs:
           echo "COMPOSER_CACHE_DIR=$COMPOSER_CACHE_DIR" | tee -a "$GITHUB_ENV"
 
       - name: Restore Composer cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ env.COMPOSER_CACHE_DIR }}
           key: ${{ runner.os }}-composer-php${{ matrix.PHP_VERSION }}-${{ hashFiles('composer.lock') }}
