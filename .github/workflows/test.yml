@@ -161,6 +161,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.PHP_VERSION }}
+          extensions: gd
           tools: composer
 
       - name: Restore cached Nextcloud
