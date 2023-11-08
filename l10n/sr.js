@@ -118,7 +118,7 @@ OC.L10N.register(
     "Add custom template" : "Додај произвољни шаблон",
     "Reload templates list" : "Поново учитај листу шаблона",
     "Compatible template." : "Компатибилни шаблон.",
-    "System template" : "Системски шаблон.",
+    "System template" : "Системски шаблон",
     "Copy system template" : "Копирај системски шаблон",
     "Custom template" : "Произвољни шаблон",
     "Copy custom template" : "Копирај произвољни шаблон",
