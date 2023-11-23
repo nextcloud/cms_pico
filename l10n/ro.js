@@ -25,6 +25,7 @@ OC.L10N.register(
     "Name" : "Nume",
     "Path" : "Cale",
     "Theme" : "Temă",
+    "Created" : "A fost creat",
     "Actions" : "Acțiuni",
     "Address" : "Adresă",
     "Loading…" : "Se încarcă…"
