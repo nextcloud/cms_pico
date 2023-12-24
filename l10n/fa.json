@@ -28,7 +28,7 @@
     "The value given is invalid." : "The value given is invalid.",
     "Website not found." : "Website not found.",
     "Local (unencrypted)" : "Local (unencrypted)",
-    "Location" : "محل",
+    "Location" : "مکان",
     "Incompatible plugin: Plugin file \"{file}\" not found." : "Incompatible plugin: Plugin file \"{file}\" not found.",
     "Incompatible plugin: PHP parse error in file \"{file}\"." : "Incompatible plugin: PHP parse error in file \"{file}\".",
     "Incompatible plugin: Plugin class \"{class}\" not found." : "Incompatible plugin: Plugin class \"{class}\" not found.",
