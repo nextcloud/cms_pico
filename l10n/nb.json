@@ -36,6 +36,7 @@
     "Create a new website" : "Opprett en ny nettside",
     "Identifier" : "Identifikator",
     "Address" : "Adresse",
+    "Template" : "Mal",
     "Loading…" : "Laster…"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

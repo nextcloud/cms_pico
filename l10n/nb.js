@@ -38,6 +38,7 @@ OC.L10N.register(
     "Create a new website" : "Opprett en ny nettside",
     "Identifier" : "Identifikator",
     "Address" : "Adresse",
+    "Template" : "Mal",
     "Loading…" : "Laster…"
 },
 "nplurals=2; plural=(n != 1);");
