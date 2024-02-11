@@ -7,6 +7,7 @@ OC.L10N.register(
     "Location" : "Ubicación",
     "Pico CMS" : "Pico CMS",
     "Access forbidden" : "Acceso prohibido",
+    "Not found" : "No encontrado",
     "Internal Server Error" : "Error Interno del Servidor",
     "The server was unable to complete your request." : "El servidor no pudo completar tu solicitud.",
     "If this happens again, please send the technical details below to the server administrator." : "Si esto vuelve a suceder, por favor envia los detalles tecnicos siguientes al adminsitrador del sistema.",
