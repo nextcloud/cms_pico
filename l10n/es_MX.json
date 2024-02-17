@@ -5,6 +5,7 @@
     "Location" : "Ubicación",
     "Pico CMS" : "Pico CMS",
     "Access forbidden" : "Acceso prohibido",
+    "Back to %s" : "Volver a %s",
     "Not found" : "No encontrado",
     "Internal Server Error" : "Error Interno del Servidor",
     "The server was unable to complete your request." : "El servidor no pudo completar tu solicitud.",
