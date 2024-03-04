@@ -22,6 +22,7 @@
     "The identifier of the website can only contain lowercase alpha numeric chars." : "L'identificador del sitiu web namás pue contener caráuteres alfanumbéricos en minúscula.",
     "The path of the website is invalid." : "El camín del sitiu web ye inválidu.",
     "The website's path is stored on a non-local storage." : "El camín del sitiu web ta atroxáu nun almacenamientu que nun ye llocal.",
+    "Back to %s" : "Volver a «%s»",
     "Not found" : "Nun s'atopó",
     "Internal Server Error" : "Error internu del sirvidor",
     "The server was unable to complete your request." : "El sirividor nun foi a completar la solicitú.",
