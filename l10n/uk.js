@@ -22,6 +22,8 @@ OC.L10N.register(
     "Line: %s" : "Рядок: %s",
     "Trace" : "Трасування",
     "Limit to groups" : "Обмежити групами",
+    "Custom themes" : "Користувацькі теми",
+    "Add custom themes for greater individuality and style." : "Додайте власні теми для більшої індивідуальності та стилю.",
     "Template name" : "Ім'я шаблону",
     "Name" : "Ім'я",
     "Path" : "Шлях",
