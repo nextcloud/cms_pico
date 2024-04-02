@@ -173,7 +173,7 @@ OC.L10N.register(
     "Create a new website" : "Crear un nuevo sitio web",
     "Just fill the form below to create your own personal website." : "Complete el formulario debajo para crear su propio sitio web personal.",
     "My example website" : "Mi sitio web de ejemplo",
-    "Here you can specify the name of your personal website. Your website's name will be used as website title, often shown in your website's header." : "Aquí puede identificar el nombre del su sitio web personal. El nombre de su sitio web será empleado como título de su sitio web, mostrado a menudo como cabecera del sitio web.",
+    "Here you can specify the name of your personal website. Your website's name will be used as website title, often shown in your website's header." : "Aquí puede identificar el nombre del su sitio web personal. El nombre de su sitio web será empleado como título de su sitio web, mostrado a menudo como encabezado del sitio web.",
     "Identifier" : "Identificador",
     "The identifier of your website prescribes both your website's address (URL) and the name of the directory your website's files (both pages and assets) will be stored in. A website's identifier must consist of lowercase alphanumeric characters, dashes and underscores (a-z, 0-9, - and _) only." : "El identificador de su sitio web establece tanto la dirección (URL) del sitio como el nombre del directorio donde se almacenarán sus archivos  (tanto páginas como activos). Un identificador de sitio web debe consistir únicamente en caracteres alfanuméricos en minúsculas,  guiones y guiones bajos (a-z, 0-9, - y _).",
     "Address" : "Dirección",
