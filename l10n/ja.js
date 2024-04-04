@@ -76,6 +76,7 @@ OC.L10N.register(
     "Custom plugin" : "カスタムプラグイン",
     "Delete custom plugin" : "カスタムプラグインを削除",
     "Custom templates" : "カスタムテンプレート",
+    "Before adding a new custom template, upload all of the template's files to a new folder in the following directory:" : "新しいカスタム テンプレートを追加する前に、すべてのテンプレートのファイルを次のディレクトリ内の新しいフォルダーにアップロードします:",
     "Loading templates…" : "テンプレートを読み込み中…",
     "Add custom template" : "カスタムテンプレートを追加する",
     "System template" : "システムテンプレート",
