@@ -2,6 +2,7 @@ OC.L10N.register(
     "cms_pico",
     {
     "Copy" : "Copiar",
+    "Abort" : "Albortar",
     "Save" : "Guardar",
     "The requested website could not be found on the server. Maybe the website was deleted?" : "Nun se pudo atopar el sitiu web solicitáu nel sirvidor. ¿Quiciabes se desaniciare?",
     "This website is hosted on a non-local storage and thus could not be accessed." : "Esti sitiu web ta agospiáu nun almacenamientu que nun ye llocal y, polo tanto, podría nun ser accesible.",
