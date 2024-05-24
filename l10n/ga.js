@@ -4,6 +4,7 @@ OC.L10N.register(
     "Copy" : "Cóipeáil",
     "Abort" : "ginmhilleadh",
     "Save" : "Sábháil",
+    "Location" : "Suíomh",
     "Access forbidden" : "Rochtain toirmiscthe",
     "Back to %s" : "Ar ais go dtí %s",
     "Not found" : "Ní bhfuarthas",
