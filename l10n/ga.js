@@ -24,6 +24,7 @@ OC.L10N.register(
     "Limit to groups" : "Teorainn do ghrúpaí",
     "Template name" : "Ainm teimpléad",
     "Name" : "Ainm",
+    "Path" : "Cosán",
     "Theme" : "Téama",
     "Created" : "Cruthaithe",
     "Actions" : "Gníomhartha",
