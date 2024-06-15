@@ -35,15 +35,15 @@ use OCA\CMSPico\Exceptions\WebsiteInvalidOwnerException;
 use OCA\CMSPico\Files\StorageFolder;
 use OCA\CMSPico\Files\StorageUserFolder;
 use OCA\CMSPico\Service\MiscService;
-use OCA\CMSPico\Service\TemplatesService;
 use OCA\CMSPico\Service\ThemesService;
 use OCA\CMSPico\Service\WebsitesService;
 use OCP\Files\InvalidPathException;
 use OCP\Files\NotFoundException;
 use OCP\IConfig;
-use OCP\IL10N;
+use OCP\IGroupManager;
 use OCP\IURLGenerator;
 use OCP\IUserManager;
+use function OCA\CMSPico\t;
 
 class Website extends WebsiteCore
 {
@@ -65,11 +65,11 @@ class Website extends WebsiteCore
 	/** @var IConfig */
 	private $config;
 
-	/** @var IL10N */
-	private $l10n;
-
 	/** @var IUserManager */
 	private $userManager;
+
+	/** @var IGroupManager */
+	private $groupManager;
 
 	/** @var IURLGenerator */
 	private $urlGenerator;
@@ -79,9 +79,6 @@ class Website extends WebsiteCore
 
 	/** @var ThemesService */
 	private $themesService;
-
-	/** @var TemplatesService */
-	private $templatesService;
 
 	/** @var MiscService */
 	private $miscService;
@@ -97,15 +94,22 @@ class Website extends WebsiteCore
 	public function __construct($data = null)
 	{
 		$this->config = \OC::$server->getConfig();
-		$this->l10n = \OC::$server->getL10N(Application::APP_NAME);
 		$this->userManager = \OC::$server->getUserManager();
+		$this->groupManager = \OC::$server->getGroupManager();
 		$this->urlGenerator = \OC::$server->getURLGenerator();
 		$this->websitesService = \OC::$server->query(WebsitesService::class);
 		$this->themesService = \OC::$server->query(ThemesService::class);
-		$this->templatesService = \OC::$server->query(TemplatesService::class);
 		$this->miscService = \OC::$server->query(MiscService::class);
 
 		parent::__construct($data);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getOptionsJSON(): string
+	{
+		return json_encode($this->getOptions());
 	}
 
 	/**
@@ -118,19 +122,54 @@ class Website extends WebsiteCore
 	}
 
 	/**
+	 * @param string[] $groupAccess
+	 *
+	 * @return $this
+	 */
+	public function setGroupAccess(array $groupAccess): self
+	{
+		foreach ($groupAccess as $group) {
+			if (!$this->groupManager->groupExists($group)) {
+				throw new \UnexpectedValueException();
+			}
+		}
+
+		$this->setOption('group_access', $groupAccess ?: null);
+		return $this;
+	}
+
+	/**
+	 * @return string[]
+	 */
+	public function getGroupAccess(): array
+	{
+		return $this->getOption('group_access') ?? [];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getData(): array
+	{
+		$data = parent::getData();
+		$data['timezone'] = $this->getTimeZone();
+		return $data;
+	}
+
+	/**
 	 * @throws WebsiteInvalidOwnerException
 	 */
 	public function assertValidOwner(): void
 	{
 		$user = $this->userManager->get($this->getUserId());
 		if ($user === null) {
-			throw new WebsiteInvalidOwnerException();
+			throw new WebsiteInvalidOwnerException($this->getSite());
 		}
 		if (!$user->isEnabled()) {
-			throw new WebsiteInvalidOwnerException();
+			throw new WebsiteInvalidOwnerException($this->getSite());
 		}
 		if (!$this->websitesService->isUserAllowed($this->getUserId())) {
-			throw new WebsiteInvalidOwnerException();
+			throw new WebsiteInvalidOwnerException($this->getSite());
 		}
 	}
 
@@ -140,10 +179,12 @@ class Website extends WebsiteCore
 	public function assertValidName(): void
 	{
 		if (strlen($this->getName()) < self::NAME_LENGTH_MIN) {
-			throw new WebsiteInvalidDataException('name', $this->l10n->t('The name of the website must be longer.'));
+			$error = t('The name of the website must be longer.');
+			throw new WebsiteInvalidDataException($this->getSite(), 'name', $error);
 		}
 		if (strlen($this->getName()) > self::NAME_LENGTH_MAX) {
-			throw new WebsiteInvalidDataException('name', $this->l10n->t('The name of the website is too long.'));
+			$error = t('The name of the website is too long.');
+			throw new WebsiteInvalidDataException($this->getSite(), 'name', $error);
 		}
 	}
 
@@ -153,16 +194,16 @@ class Website extends WebsiteCore
 	public function assertValidSite(): void
 	{
 		if (strlen($this->getSite()) < self::SITE_LENGTH_MIN) {
-			$error = $this->l10n->t('The identifier of the website must be longer.');
-			throw new WebsiteInvalidDataException('site', $error);
+			$error = t('The identifier of the website must be longer.');
+			throw new WebsiteInvalidDataException($this->getSite(), 'site', $error);
 		}
 		if (strlen($this->getSite()) > self::SITE_LENGTH_MAX) {
-			$error = $this->l10n->t('The identifier of the website is too long.');
-			throw new WebsiteInvalidDataException('site', $error);
+			$error = t('The identifier of the website is too long.');
+			throw new WebsiteInvalidDataException($this->getSite(), 'site', $error);
 		}
 		if (preg_match('/' . self::SITE_REGEX . '/', $this->getSite()) !== 1) {
-			$error = $this->l10n->t('The identifier of the website can only contain lowercase alpha numeric chars.');
-			throw new WebsiteInvalidDataException('site', $error);
+			$error = t('The identifier of the website can only contain lowercase alpha numeric chars.');
+			throw new WebsiteInvalidDataException($this->getSite(), 'site', $error);
 		}
 	}
 
@@ -177,10 +218,8 @@ class Website extends WebsiteCore
 				throw new InvalidPathException();
 			}
 		} catch (InvalidPathException $e) {
-			throw new WebsiteInvalidDataException(
-				'path',
-				$this->l10n->t('The path of the website is invalid.')
-			);
+			$error = t('The path of the website is invalid.');
+			throw new WebsiteInvalidDataException($this->getSite(), 'path', $error);
 		}
 
 		$userFolder = new StorageUserFolder($this->getUserId());
@@ -192,24 +231,18 @@ class Website extends WebsiteCore
 				$websiteFolder = $websiteBaseFolder->getFolder(basename($path));
 
 				if (!$websiteFolder->isLocal()) {
-					throw new WebsiteInvalidDataException(
-						'path',
-						$this->l10n->t('The website\'s path is stored on a non-local storage.')
-					);
+					$error = t('The website\'s path is stored on a non-local storage.');
+					throw new WebsiteInvalidDataException($this->getSite(), 'path', $error);
 				}
 			} catch (NotFoundException $e) {
 				if (!$websiteBaseFolder->isLocal()) {
-					throw new WebsiteInvalidDataException(
-						'path',
-						$this->l10n->t('The website\'s path is stored on a non-local storage.')
-					);
+					$error = t('The website\'s path is stored on a non-local storage.');
+					throw new WebsiteInvalidDataException($this->getSite(), 'path', $error);
 				}
 			}
 		} catch (InvalidPathException | NotFoundException $e) {
-			throw new WebsiteInvalidDataException(
-				'path',
-				$this->l10n->t('Parent folder of the website\'s path not found.')
-			);
+			$error = t('Parent folder of the website\'s path not found.');
+			throw new WebsiteInvalidDataException($this->getSite(), 'path', $error);
 		}
 	}
 
@@ -230,7 +263,7 @@ class Website extends WebsiteCore
 	public function assertOwnedBy(string $userId): void
 	{
 		if ($this->getUserId() !== $userId) {
-			throw new WebsiteForeignOwnerException();
+			throw new WebsiteForeignOwnerException($this->getSite());
 		}
 	}
 
@@ -259,7 +292,7 @@ class Website extends WebsiteCore
 				$websiteFolder = $userFolder->getFolder($this->getPath());
 				$this->folder = $websiteFolder->fakeRoot();
 			} catch (InvalidPathException | NotFoundException $e) {
-				throw new WebsiteInvalidFilesystemException($e);
+				throw new WebsiteInvalidFilesystemException($this->getSite(), $e);
 			}
 		}
 
@@ -275,11 +308,13 @@ class Website extends WebsiteCore
 		try {
 			return $this->getWebsiteFolder()->getLocalPath() . '/';
 		} catch (InvalidPathException | NotFoundException $e) {
-			throw new WebsiteInvalidFilesystemException($e);
+			throw new WebsiteInvalidFilesystemException($this->getSite(), $e);
 		}
 	}
 
 	/**
+	 * @param bool $proxyRequest
+	 *
 	 * @return string
 	 */
 	public function getWebsiteUrl(bool $proxyRequest = false): string

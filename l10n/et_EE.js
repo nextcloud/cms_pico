@@ -25,6 +25,7 @@ OC.L10N.register(
     "Delete custom template" : "Kustuta kohandatud mall",
     "Name" : "Nimi",
     "Path" : "Asukoht",
+    "Theme" : "Teema",
     "Created" : "Loodud",
     "Delete website" : "Kustuta veebisait",
     "Actions" : "Tegevused",

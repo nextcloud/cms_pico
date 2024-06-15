@@ -27,15 +27,35 @@ namespace OCA\CMSPico\Db;
 
 use OCA\CMSPico\Exceptions\WebsiteNotFoundException;
 use OCA\CMSPico\Model\Website;
+use OCP\DB\QueryBuilder\IQueryBuilder;
+use OCP\IDBConnection;
 
-class WebsitesRequest extends WebsitesRequestBuilder
+class WebsitesRequest
 {
+	/** @var string */
+	public const TABLE_NAME = 'cms_pico_websites';
+
+	/** @var IDBConnection */
+	protected $dbConnection;
+
+	/**
+	 * CoreRequestBuilder constructor.
+	 *
+	 * @param IDBConnection $connection
+	 */
+	public function __construct(IDBConnection $connection)
+	{
+		$this->dbConnection = $connection;
+	}
+
 	/**
 	 * @param Website $website
 	 */
 	public function create(Website $website): void
 	{
-		$qb = $this->getWebsitesInsertSql();
+		$qb = $this->dbConnection->getQueryBuilder()
+			->insert(WebsitesRequest::TABLE_NAME);
+
 		$qb
 			->setValue('name', $qb->createNamedParameter($website->getName()))
 			->setValue('user_id', $qb->createNamedParameter($website->getUserId()))
@@ -43,7 +63,8 @@ class WebsitesRequest extends WebsitesRequestBuilder
 			->setValue('theme', $qb->createNamedParameter($website->getTheme()))
 			->setValue('type', $qb->createNamedParameter($website->getType()))
 			->setValue('options', $qb->createNamedParameter($website->getOptionsJSON()))
-			->setValue('path', $qb->createNamedParameter($website->getPath()));
+			->setValue('path', $qb->createNamedParameter($website->getPath()))
+			->setValue('creation', $qb->createFunction('NOW()'));
 
 		$qb->execute();
 
@@ -55,7 +76,9 @@ class WebsitesRequest extends WebsitesRequestBuilder
 	 */
 	public function update(Website $website): void
 	{
-		$qb = $this->getWebsitesUpdateSql();
+		$qb = $this->dbConnection->getQueryBuilder()
+			->update(WebsitesRequest::TABLE_NAME);
+
 		$qb
 			->set('name', $qb->createNamedParameter($website->getName()))
 			->set('user_id', $qb->createNamedParameter($website->getUserId()))
@@ -65,7 +88,7 @@ class WebsitesRequest extends WebsitesRequestBuilder
 			->set('options', $qb->createNamedParameter($website->getOptionsJSON()))
 			->set('path', $qb->createNamedParameter($website->getPath()));
 
-		$this->limitToId($qb, $website->getId());
+		$this->limitToField($qb, 'id', $website->getId());
 
 		$qb->execute();
 	}
@@ -75,8 +98,10 @@ class WebsitesRequest extends WebsitesRequestBuilder
 	 */
 	public function delete(Website $website): void
 	{
-		$qb = $this->getWebsitesDeleteSql();
-		$this->limitToId($qb, $website->getId());
+		$qb = $this->dbConnection->getQueryBuilder()
+			->delete(WebsitesRequest::TABLE_NAME);
+
+		$this->limitToField($qb, 'id', $website->getId());
 
 		$qb->execute();
 	}
@@ -86,10 +111,31 @@ class WebsitesRequest extends WebsitesRequestBuilder
 	 */
 	public function deleteAllFromUserId(string $userId): void
 	{
-		$qb = $this->getWebsitesDeleteSql();
-		$this->limitToUserId($qb, $userId);
+		$qb = $this->dbConnection->getQueryBuilder()
+			->delete(WebsitesRequest::TABLE_NAME);
+
+		$this->limitToField($qb, 'user_id', $userId);
 
 		$qb->execute();
+	}
+
+	/**
+	 * @return Website[]
+	 */
+	public function getWebsites(): array
+	{
+		$qb = $this->dbConnection->getQueryBuilder()
+			->select('*')
+			->from(WebsitesRequest::TABLE_NAME);
+
+		$websites = [];
+		$cursor = $qb->execute();
+		while ($data = $cursor->fetch()) {
+			$websites[] = $this->createInstance($data);
+		}
+		$cursor->closeCursor();
+
+		return $websites;
 	}
 
 	/**
@@ -99,13 +145,16 @@ class WebsitesRequest extends WebsitesRequestBuilder
 	 */
 	public function getWebsitesFromUserId(string $userId): array
 	{
-		$qb = $this->getWebsitesSelectSql();
-		$this->limitToUserId($qb, $userId);
+		$qb = $this->dbConnection->getQueryBuilder()
+			->select('*')
+			->from(WebsitesRequest::TABLE_NAME);
+
+		$this->limitToField($qb, 'user_id', $userId);
 
 		$websites = [];
 		$cursor = $qb->execute();
 		while ($data = $cursor->fetch()) {
-			$websites[] = new Website($data);
+			$websites[] = $this->createInstance($data);
 		}
 		$cursor->closeCursor();
 
@@ -118,20 +167,23 @@ class WebsitesRequest extends WebsitesRequestBuilder
 	 * @return Website
 	 * @throws WebsiteNotFoundException
 	 */
-	public function getWebsiteFromId(int $siteId): Website
+	public function getWebsiteFromId(int $id): Website
 	{
-		$qb = $this->getWebsitesSelectSql();
-		$this->limitToId($qb, $siteId);
+		$qb = $this->dbConnection->getQueryBuilder()
+			->select('*')
+			->from(WebsitesRequest::TABLE_NAME);
+
+		$this->limitToField($qb, 'id', $id);
 
 		$cursor = $qb->execute();
 		$data = $cursor->fetch();
 		$cursor->closeCursor();
 
 		if ($data === false) {
-			throw new WebsiteNotFoundException();
+			throw new WebsiteNotFoundException('#' . $id);
 		}
 
-		return new Website($data);
+		return $this->createInstance($data);
 	}
 
 	/**
@@ -142,17 +194,40 @@ class WebsitesRequest extends WebsitesRequestBuilder
 	 */
 	public function getWebsiteFromSite(string $site): Website
 	{
-		$qb = $this->getWebsitesSelectSql();
-		$this->limitToSite($qb, $site);
+		$qb = $this->dbConnection->getQueryBuilder()
+			->select('*')
+			->from(WebsitesRequest::TABLE_NAME);
+
+		$this->limitToField($qb, 'site', $site);
 
 		$cursor = $qb->execute();
 		$data = $cursor->fetch();
 		$cursor->closeCursor();
 
 		if ($data === false) {
-			throw new WebsiteNotFoundException();
+			throw new WebsiteNotFoundException($site);
 		}
 
+		return $this->createInstance($data);
+	}
+
+	/**
+	 * @param array $data
+	 *
+	 * @return Website
+	 */
+	private function createInstance(array $data): Website
+	{
 		return new Website($data);
+	}
+
+	/**
+	 * @param IQueryBuilder $qb
+	 * @param string        $field
+	 * @param mixed         $value
+	 */
+	private function limitToField(IQueryBuilder $qb, string $field, $value): void
+	{
+		$qb->andWhere($qb->expr()->eq($field, $qb->createNamedParameter($value)));
 	}
 }

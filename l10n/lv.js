@@ -11,7 +11,7 @@ OC.L10N.register(
     "Request ID: %s" : "Pieprasījuma ID: %s",
     "More details can be found in the server log." : "Sīkāka informācija atrodama servera žurnāla datnē.",
     "Technical details" : "Tehniskās detaļas",
-    "Type: %s" : "Tips: %s",
+    "Type: %s" : "Veids: %s",
     "Code: %s" : "Kods: %s",
     "Message: %s" : "Ziņojums: %s",
     "File: %s" : "Datne: %s",

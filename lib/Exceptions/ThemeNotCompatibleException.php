@@ -48,7 +48,10 @@ class ThemeNotCompatibleException extends \Exception
 		$this->reason = $reason;
 		$this->reasonData = $reasonData;
 
-		parent::__construct($this->getReason());
+		$parsedReason = $this->getReason() ?: 'Incompatible theme';
+		$message = sprintf("Unable to load theme '%s': %s", $themeName, $parsedReason);
+
+		parent::__construct($message);
 	}
 
 	/**

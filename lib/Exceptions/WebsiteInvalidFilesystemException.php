@@ -26,17 +26,38 @@ namespace OCA\CMSPico\Exceptions;
 
 class WebsiteInvalidFilesystemException extends \Exception
 {
+	/** @var string|null */
+	private $site;
+
 	/**
 	 * WebsiteInvalidFilesystemException constructor.
 	 *
+	 * @param string|null     $site
 	 * @param \Exception|null $previous
 	 */
-	public function __construct(\Exception $previous = null)
+	public function __construct(string $site = null, \Exception $previous = null)
 	{
-		if ($previous) {
-			parent::__construct($previous->getMessage(), $previous->getCode(), $previous);
-		} else {
-			parent::__construct();
+		$this->site = $site;
+
+		$message = '';
+		if ($site) {
+			$message = sprintf("Unable to load website '%s': Invalid directory structure", $site);
+		} elseif ($previous) {
+			$message = $previous->getMessage();
 		}
+
+		if ($previous) {
+			parent::__construct($message, $previous->getCode(), $previous);
+		} else {
+			parent::__construct($message);
+		}
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function getSite(): ?string
+	{
+		return $this->site;
 	}
 }

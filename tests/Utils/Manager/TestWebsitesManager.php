@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace OCA\CMSPico\Tests\Utils\Manager;
 
 use OCA\CMSPico\Model\Website;
-use OCA\CMSPico\Model\WebsiteCore;
 use OCA\CMSPico\Service\WebsitesService;
 
 class TestWebsitesManager extends TestManager
@@ -44,7 +43,7 @@ class TestWebsitesManager extends TestManager
 		'user_id'  => '{user_id}',
 		'site'     => '{site}',
 		'name'     => 'Pico Test Website "{id}" ({site})',
-		'type'     => WebsiteCore::TYPE_PUBLIC,
+		'type'     => Website::TYPE_PUBLIC,
 		'path'     => '/Pico Test Website {site}/',
 		'theme'    => 'default',
 		'options'  => [],

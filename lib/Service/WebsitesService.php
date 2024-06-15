@@ -38,7 +38,7 @@ use OCA\CMSPico\Exceptions\TemplateNotCompatibleException;
 use OCA\CMSPico\Exceptions\TemplateNotFoundException;
 use OCA\CMSPico\Exceptions\ThemeNotCompatibleException;
 use OCA\CMSPico\Exceptions\ThemeNotFoundException;
-use OCA\CMSPico\Exceptions\WebsiteExistsException;
+use OCA\CMSPico\Exceptions\WebsiteAlreadyExistsException;
 use OCA\CMSPico\Exceptions\WebsiteInvalidDataException;
 use OCA\CMSPico\Exceptions\WebsiteInvalidFilesystemException;
 use OCA\CMSPico\Exceptions\WebsiteInvalidOwnerException;
@@ -60,7 +60,7 @@ class WebsitesService
 	public const LINK_MODE_SHORT = 2;
 
 	/** @var WebsitesRequest */
-	private $websiteRequest;
+	private $websitesRequest;
 
 	/** @var IGroupManager */
 	private $groupManager;
@@ -100,7 +100,7 @@ class WebsitesService
 		AssetsService $assetsService,
 		MiscService $miscService
 	) {
-		$this->websiteRequest = $websiteRequest;
+		$this->websitesRequest = $websiteRequest;
 		$this->groupManager = $groupManager;
 		$this->configService = $configService;
 		$this->templatesService = $templatesService;
@@ -118,7 +118,7 @@ class WebsitesService
 	 * @param Website $website
 	 * @param string  $templateName
 	 *
-	 * @throws WebsiteExistsException
+	 * @throws WebsiteAlreadyExistsException
 	 * @throws WebsiteInvalidDataException
 	 * @throws WebsiteInvalidOwnerException
 	 * @throws ThemeNotFoundException
@@ -134,8 +134,8 @@ class WebsitesService
 		$website->assertValidTheme();
 
 		try {
-			$website = $this->websiteRequest->getWebsiteFromSite($website->getSite());
-			throw new WebsiteExistsException();
+			$this->websitesRequest->getWebsiteFromSite($website->getSite());
+			throw new WebsiteAlreadyExistsException($website->getSite());
 		} catch (WebsiteNotFoundException $e) {
 			// in fact we want the website not to exist yet
 		}
@@ -143,7 +143,7 @@ class WebsitesService
 		$this->templatesService->assertValidTemplate($templateName);
 		$this->templatesService->installTemplate($website, $templateName);
 
-		$this->websiteRequest->create($website);
+		$this->websitesRequest->create($website);
 	}
 
 	/**
@@ -163,7 +163,7 @@ class WebsitesService
 	 */
 	public function updateWebsite(Website $website): void
 	{
-		$originalWebsite = $this->websiteRequest->getWebsiteFromId($website->getId());
+		$originalWebsite = $this->websitesRequest->getWebsiteFromId($website->getId());
 
 		if ($website->getName() !== $originalWebsite->getName()) {
 			$website->assertValidName();
@@ -178,7 +178,7 @@ class WebsitesService
 			$website->assertValidTheme();
 		}
 
-		$this->websiteRequest->update($website);
+		$this->websitesRequest->update($website);
 	}
 
 	/**
@@ -194,17 +194,22 @@ class WebsitesService
 	public function deleteWebsite(Website $website): void
 	{
 		// check whether website actually exists
-		$this->websiteRequest->getWebsiteFromId($website->getId());
+		$this->websitesRequest->getWebsiteFromId($website->getId());
 
-		$this->websiteRequest->delete($website);
+		$this->websitesRequest->delete($website);
 	}
 
 	/**
+	 * Deletes all websites of a user.
+	 *
+	 * Warning: This method does not check the ownership of the website!
+	 * Please use {@see Website::assertOwnedBy()} beforehand.
+	 *
 	 * @param string $userId
 	 */
 	public function deleteUserWebsites(string $userId): void
 	{
-		$this->websiteRequest->deleteAllFromUserId($userId);
+		$this->websitesRequest->deleteAllFromUserId($userId);
 	}
 
 	/**
@@ -215,7 +220,7 @@ class WebsitesService
 	 */
 	public function getWebsiteFromId(int $siteId): Website
 	{
-		return $this->websiteRequest->getWebsiteFromId($siteId);
+		return $this->websitesRequest->getWebsiteFromId($siteId);
 	}
 
 	/**
@@ -226,7 +231,7 @@ class WebsitesService
 	 */
 	public function getWebsiteFromSite(string $site): Website
 	{
-		return $this->websiteRequest->getWebsiteFromSite($site);
+		return $this->websitesRequest->getWebsiteFromSite($site);
 	}
 
 	/**
@@ -236,7 +241,15 @@ class WebsitesService
 	 */
 	public function getWebsitesFromUser(string $userId): array
 	{
-		return $this->websiteRequest->getWebsitesFromUserId($userId);
+		return $this->websitesRequest->getWebsitesFromUserId($userId);
+	}
+
+	/**
+	 * @return Website[]
+	 */
+	public function getWebsites(): array
+	{
+		return $this->websitesRequest->getWebsites();
 	}
 
 	/**
@@ -263,7 +276,7 @@ class WebsitesService
 		try {
 			$page = $this->miscService->normalizePath($page);
 		} catch (InvalidPathException $e) {
-			throw new PageInvalidPathException($e);
+			throw new PageInvalidPathException($site, $page, $e);
 		}
 
 		$website = $this->getWebsiteFromSite($site);
@@ -300,7 +313,7 @@ class WebsitesService
 				throw new InvalidPathException();
 			}
 		} catch (InvalidPathException $e) {
-			throw new AssetInvalidPathException($e);
+			throw new AssetInvalidPathException($site, $asset, $e);
 		}
 
 		$website = $this->getWebsiteFromSite($site);

@@ -6,7 +6,7 @@ Icon fonts generator
 
     Author:     Vitaly Puzrin
     License:    The MIT License <https://github.com/fontello/fontello/blob/master/LICENSE>
-    Homepage:   http://fontello.com/font
+    Homepage:   http://fontello.com/
 
 
 
@@ -20,5 +20,6 @@ Font license info
     License:    SIL OFL 1.1 <http://scripts.sil.org/OFL>
     Homepage:   http://fortawesome.github.com/Font-Awesome/
 
-    Icons:      arrows-cw, attention-circled, brush, cw, docs, ellipsis, folder, globe, info-circled, lock, lock-open,
-                ok, plus, trash
+    Icons:      arrows-cw, attention-circled, brush, cw, docs, ellipsis,
+                folder, globe, info-circled, lock, lock-open, ok, pencil, plus,
+                trash

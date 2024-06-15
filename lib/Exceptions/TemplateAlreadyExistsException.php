@@ -26,5 +26,38 @@ namespace OCA\CMSPico\Exceptions;
 
 class TemplateAlreadyExistsException extends \Exception
 {
+	/** @var string|null */
+	private $templateName;
 
+	/**
+	 * TemplateAlreadyExistsException constructor.
+	 *
+	 * @param string|null     $templateName
+	 * @param \Exception|null $previous
+	 */
+	public function __construct(string $templateName = null, \Exception $previous = null)
+	{
+		$this->templateName = $templateName;
+
+		$message = '';
+		if ($templateName) {
+			$message = sprintf("Unable to load template '%s': Template already exists", $templateName);
+		} elseif ($previous) {
+			$message = $previous->getMessage();
+		}
+
+		if ($previous) {
+			parent::__construct($message, $previous->getCode(), $previous);
+		} else {
+			parent::__construct($message);
+		}
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function getTemplateName(): ?string
+	{
+		return $this->templateName;
+	}
 }

@@ -8,6 +8,7 @@ OC.L10N.register(
     "Pico CMS" : "Pico CMS",
     "Access forbidden" : "Acesso proibido",
     "Back to %s" : "Voltar a %s",
+    "Not found" : "Não foi encontrado",
     "Internal Server Error" : "Erro Interno de Servidor",
     "The server was unable to complete your request." : "O servidor não conseguiu completar o seu pedido.",
     "If this happens again, please send the technical details below to the server administrator." : "Se voltar a  acontecer, por favor envie os detalhes técnicos abaixo ao administrador do servidor.",
@@ -38,4 +39,4 @@ OC.L10N.register(
     "Address" : "Endereço",
     "Loading…" : "A carregar..."
 },
-"nplurals=2; plural=(n != 1);");
+"nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

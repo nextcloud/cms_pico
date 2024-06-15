@@ -2,11 +2,9 @@ name: Test Pico CMS for Nextcloud
 
 on:
   push:
-    branches:
-        - 'master'
-        - 'cms_pico-1.0'
+    branches: [ 'master' ]
     tags: [ 'v*.*.*' ]
-  pull_request: {}
+  pull_request:
 
 jobs:
   generate-jobs:

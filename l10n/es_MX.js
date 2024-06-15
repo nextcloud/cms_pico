@@ -7,6 +7,8 @@ OC.L10N.register(
     "Location" : "Ubicación",
     "Pico CMS" : "Pico CMS",
     "Access forbidden" : "Acceso prohibido",
+    "Back to %s" : "Volver a %s",
+    "Not found" : "No encontrado",
     "Internal Server Error" : "Error Interno del Servidor",
     "The server was unable to complete your request." : "El servidor no pudo completar tu solicitud.",
     "If this happens again, please send the technical details below to the server administrator." : "Si esto vuelve a suceder, por favor envia los detalles tecnicos siguientes al adminsitrador del sistema.",
@@ -24,6 +26,7 @@ OC.L10N.register(
     "Custom themes" : "Temas personalizados",
     "Add custom theme" : "Agregar tema personalizado",
     "Delete custom theme" : "Borra tema personalizado",
+    "Error: {error}" : "Error: {error}",
     "Custom templates" : "Plantillas personalizadas",
     "Add custom template" : "Agregar una plantilla personalizada",
     "Delete custom template" : "Borrar la plantilla personalizada",
@@ -34,7 +37,8 @@ OC.L10N.register(
     "Delete website" : "Borrar el sitio web",
     "Actions" : "Acciones",
     "Create a new website" : "Crear un nuevo sitio web",
+    "Identifier" : "Identificador",
     "Address" : "Dirección",
     "Loading…" : "Cargando..."
 },
-"nplurals=2; plural=(n != 1);");
+"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

@@ -3,6 +3,7 @@
  * CMS Pico - Create websites using Pico CMS for Nextcloud.
  *
  * @copyright Copyright (c) 2017, Maxence Lange (<maxence@artificial-owl.com>)
+ * @copyright Copyright (c) 2022, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -26,5 +27,38 @@ namespace OCA\CMSPico\Exceptions;
 
 class WebsiteForeignOwnerException extends \Exception
 {
+	/** @var string|null */
+	private $site;
 
+	/**
+	 * WebsiteForeignOwnerException constructor.
+	 *
+	 * @param string|null     $site
+	 * @param \Exception|null $previous
+	 */
+	public function __construct(string $site = null, \Exception $previous = null)
+	{
+		$this->site = $site;
+
+		$message = '';
+		if ($site) {
+			$message = sprintf("Unable to load website '%s': Website is owned by a different user", $site);
+		} elseif ($previous) {
+			$message = $previous->getMessage();
+		}
+
+		if ($previous) {
+			parent::__construct($message, $previous->getCode(), $previous);
+		} else {
+			parent::__construct($message);
+		}
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function getSite(): ?string
+	{
+		return $this->site;
+	}
 }

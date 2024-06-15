@@ -24,11 +24,11 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Migration;
 
-use OCA\CMSPico\Db\WebsitesRequestBuilder;
+use OCA\CMSPico\Db\WebsitesRequest;
 use OCA\CMSPico\Files\FolderInterface;
 use OCA\CMSPico\Model\Template;
 use OCA\CMSPico\Model\Theme;
-use OCA\CMSPico\Model\WebsiteCore;
+use OCA\CMSPico\Model\Website;
 use OCA\CMSPico\Service\ConfigService;
 use OCA\CMSPico\Service\FileService;
 use OCA\CMSPico\Service\PicoService;
@@ -221,7 +221,7 @@ class Version010000From000908 extends SimpleMigrationStep
 	{
 		$qbUpdate = $this->databaseConnection->getQueryBuilder();
 		$qbUpdate
-			->update(WebsitesRequestBuilder::TABLE_WEBSITES)
+			->update(WebsitesRequest::TABLE_NAME)
 			->set('theme', $qbUpdate->createParameter('theme'))
 			->set('type', $qbUpdate->createParameter('type'))
 			->set('options', $qbUpdate->createParameter('options'))
@@ -229,16 +229,16 @@ class Version010000From000908 extends SimpleMigrationStep
 
 		$selectCursor = $this->databaseConnection->getQueryBuilder()
 			->select('id', 'site', 'theme', 'type', 'options')
-			->from(WebsitesRequestBuilder::TABLE_WEBSITES)
+			->from(WebsitesRequest::TABLE_NAME)
 			->execute();
 
 		while ($data = $selectCursor->fetch()) {
 			$websiteTheme = $themesMigrationMap[$data['theme']] ?? $data['theme'];
 
-			$websiteType = $data['type'] ?: WebsiteCore::TYPE_PUBLIC;
+			$websiteType = $data['type'] ?: Website::TYPE_PUBLIC;
 			$websiteOptions = $data['options'] ? json_decode($data['options'], true) : [];
 			if (isset($websiteOptions['private'])) {
-				$websiteType = $websiteOptions['private'] ? WebsiteCore::TYPE_PRIVATE : WebsiteCore::TYPE_PUBLIC;
+				$websiteType = $websiteOptions['private'] ? Website::TYPE_PRIVATE : Website::TYPE_PUBLIC;
 				unset($websiteOptions['private']);
 			}
 
@@ -252,7 +252,7 @@ class Version010000From000908 extends SimpleMigrationStep
 			$this->logInfo(
 				'Migrating Pico CMS website "%s" (private: %s, theme: "%s")',
 				$data['site'],
-				($websiteType === WebsiteCore::TYPE_PRIVATE) ? 'yes' : 'no',
+				($websiteType === Website::TYPE_PRIVATE) ? 'yes' : 'no',
 				$websiteTheme
 			);
 

@@ -26,28 +26,72 @@ namespace OCA\CMSPico\Exceptions;
 
 class WebsiteInvalidDataException extends \Exception
 {
-	/** @var string */
+	/** @var string|null */
+	private $site;
+
+	/** @var string|null */
 	private $field;
+
+	/** @var string|null */
+	private $error;
 
 	/**
 	 * WebsiteInvalidDataException constructor.
 	 *
-	 * @param string          $field
-	 * @param string          $message
+	 * @param string|null     $site
+	 * @param string|null     $field
+	 * @param string|null     $error
 	 * @param \Throwable|null $previous
 	 */
-	public function __construct(string $field = '', string $message = '', \Throwable $previous = null)
-	{
+	public function __construct(
+		string $site = null,
+		string $field = null,
+		string $error = null,
+		\Throwable $previous = null
+	) {
+		$this->site = $site;
 		$this->field = $field;
+		$this->error = $error;
 
-		parent::__construct($message, 0, $previous);
+		$message = '';
+		if ($site && $field && $error) {
+			$message = sprintf("Unable to modify website '%s': Invalid data given for '%s': %s", $site, $field, $error);
+		} elseif ($site && $field) {
+			$message = sprintf("Unable to modify website '%s': Invalid data given for '%s'", $site, $field);
+		} elseif ($site) {
+			$message = sprintf("Unable to modify website '%s': Invalid data given", $site);
+		} elseif ($previous) {
+			$message = $previous->getMessage();
+		}
+
+		if ($previous) {
+			parent::__construct($message, $previous->getCode(), $previous);
+		} else {
+			parent::__construct($message);
+		}
 	}
 
 	/**
-	 * @return string
+	 * @return string|null
 	 */
-	public function getField(): string
+	public function getSite(): ?string
+	{
+		return $this->site;
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function getField(): ?string
 	{
 		return $this->field;
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function getError(): ?string
+	{
+		return $this->error;
 	}
 }

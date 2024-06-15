@@ -51,6 +51,9 @@
 	 */
 	OCA.CMSPico.AdminList.prototype = $.extend({}, OCA.CMSPico.List.prototype, {
 		/** @member {Object[]|string[]} */
+		staticItems: [],
+
+		/** @member {Object[]|string[]} */
 		systemItems: [],
 
 		/** @member {Object[]|string[]} */
@@ -58,6 +61,9 @@
 
 		/** @member {Object[]|string[]} */
 		newItems: [],
+
+		/** @member {jQuery} */
+		$staticTemplate: $(),
 
 		/** @member {jQuery} */
 		$systemTemplate: $(),
@@ -78,6 +84,7 @@
 		 * @param {Object}        [options]
 		 * @param {string}        [options.route]
 		 * @param {jQuery|string} [options.template]
+		 * @param {jQuery|string} [options.staticTemplate]
 		 * @param {jQuery|string} [options.systemTemplate]
 		 * @param {jQuery|string} [options.customTemplate]
 		 * @param {jQuery|string} [options.newTemplate]
@@ -89,12 +96,14 @@
 			OCA.CMSPico.List.prototype.initialize.apply(this, arguments);
 
 			options = $.extend({
+				staticTemplate: $element.data('staticTemplate'),
 				systemTemplate: $element.data('systemTemplate'),
 				customTemplate: $element.data('customTemplate'),
 				newTemplate: $element.data('newTemplate'),
 				copyTemplate: $element.data('copyTemplate')
 			}, options);
 
+			this.$staticTemplate = $(options.staticTemplate);
 			this.$systemTemplate = $(options.systemTemplate);
 			this.$customTemplate = $(options.customTemplate);
 			this.$newTemplate = $(options.newTemplate);
@@ -107,6 +116,42 @@
 			if (!this.$customTemplate.length) {
 				throw signature + ': No valid custom item template given';
 			}
+
+			this._initStaticItems();
+		},
+
+		/**
+		 * @protected
+		 */
+		_initStaticItems: function () {
+			var $content = this.$staticTemplate.octemplate() || $(),
+				filter = this.$staticTemplate.data('filter') || '*',
+				that = this;
+
+			this.staticItems = [];
+			$content.filter(filter).each(function () {
+				var $itemTemplate = $(this),
+					itemData = {};
+
+				if (that.$staticTemplate.data('replaces')) {
+					$itemTemplate.data('replaces', that.$staticTemplate.data('replaces'));
+				}
+				if (that.$staticTemplate.data('appendTo')) {
+					$itemTemplate.data('appendTo', that.$staticTemplate.data('appendTo'));
+				}
+
+				$.each($itemTemplate.data(), function (key, value) {
+					if (key.slice(0, 4) === 'item') {
+						key = key[4].toLowerCase() + key.slice(5);
+						itemData[key] = value;
+					}
+				});
+
+				that.staticItems.push({
+					'$itemTemplate': $itemTemplate,
+					'itemData': itemData
+				});
+			});
 		},
 
 		/**
@@ -126,19 +171,24 @@
 
 			this._content(this.$template);
 
-			$.each(data.systemItems, function (_, value) {
+			$.each(this.staticItems, function (_, data) {
+				var $item = that._content(data.$itemTemplate, data.itemData);
+				that._setupItem($item, data.itemData);
+			});
+
+			$.each(this.systemItems, function (_, value) {
 				var itemData = (typeof value === 'object') ? value : { name: value },
 					$item = that._content(that.$systemTemplate, itemData);
 				that._setupItem($item, itemData);
 			});
 
-			$.each(data.customItems, function (_, value) {
+			$.each(this.customItems, function (_, value) {
 				var itemData = (typeof value === 'object') ? value : { name: value },
 					$item = that._content(that.$customTemplate, itemData);
 				that._setupItem($item, itemData);
 			});
 
-			$.each(data.newItems, function (_, value) {
+			$.each(this.newItems, function (_, value) {
 				var itemData = (typeof value === 'object') ? value : { name: value },
 					$item = that._content(that.$newTemplate, itemData);
 				that._setupItem($item, itemData);
@@ -157,7 +207,6 @@
 
 			if ($newItem.val()) {
 				$newItemButton.on('click.CMSPicoAdminList', function (event) {
-					event.preventDefault();
 					that._api('POST', '', { item: $newItem.val() });
 				});
 			} else {
@@ -165,7 +214,6 @@
 			}
 
 			this.$element.find('.action-reload').on('click.CMSPicoAdminList', function (event) {
-				event.preventDefault();
 				that.reload();
 			});
 		},
@@ -209,7 +257,6 @@
 			});
 
 			$item.find('.action-sync').on('click.CMSPicoAdminList', function (event) {
-				event.preventDefault();
 				that._api('POST', itemData.name);
 			});
 
@@ -238,13 +285,11 @@
 				});
 
 				$this.on('click.CMSPicoAdminList', function (event) {
-					event.preventDefault();
 					dialog.open();
 				});
 			});
 
 			$item.find('.action-delete').on('click.CMSPicoAdminList', function (event) {
-				event.preventDefault();
 				that._api('DELETE', itemData.name);
 			});
 		}

@@ -245,14 +245,6 @@ class WebsiteCore implements \JsonSerializable
 	}
 
 	/**
-	 * @return string
-	 */
-	public function getOptionsJSON(): string
-	{
-		return json_encode($this->options);
-	}
-
-	/**
 	 * @param string $path
 	 *
 	 * @return $this

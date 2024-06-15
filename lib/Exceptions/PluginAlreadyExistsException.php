@@ -26,5 +26,38 @@ namespace OCA\CMSPico\Exceptions;
 
 class PluginAlreadyExistsException extends \Exception
 {
+	/** @var string|null */
+	private $pluginName;
 
+	/**
+	 * PluginAlreadyExistsException constructor.
+	 *
+	 * @param string|null     $pluginName
+	 * @param \Exception|null $previous
+	 */
+	public function __construct(string $pluginName = null, \Exception $previous = null)
+	{
+		$this->pluginName = $pluginName;
+
+		$message = '';
+		if ($pluginName) {
+			$message = sprintf("Unable to load plugin '%s': Plugin already exists", $pluginName);
+		} elseif ($previous) {
+			$message = $previous->getMessage();
+		}
+
+		if ($previous) {
+			parent::__construct($message, $previous->getCode(), $previous);
+		} else {
+			parent::__construct($message);
+		}
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function getPluginName(): ?string
+	{
+		return $this->pluginName;
+	}
 }

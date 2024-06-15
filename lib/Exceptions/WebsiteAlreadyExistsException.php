@@ -3,6 +3,7 @@
  * CMS Pico - Create websites using Pico CMS for Nextcloud.
  *
  * @copyright Copyright (c) 2017, Maxence Lange (<maxence@artificial-owl.com>)
+ * @copyright Copyright (c) 2022, Daniel Rudolf (<picocms.org@daniel-rudolf.de>)
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -24,7 +25,40 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico\Exceptions;
 
-class WebsiteExistsException extends \Exception
+class WebsiteAlreadyExistsException extends \Exception
 {
+	/** @var string|null */
+	private $site;
 
+	/**
+	 * WebsiteAlreadyExistsException constructor.
+	 *
+	 * @param string|null     $site
+	 * @param \Exception|null $previous
+	 */
+	public function __construct(string $site = null, \Exception $previous = null)
+	{
+		$this->site = $site;
+
+		$message = '';
+		if ($site) {
+			$message = sprintf("Unable to load website '%s': Website already exists", $site);
+		} elseif ($previous) {
+			$message = $previous->getMessage();
+		}
+
+		if ($previous) {
+			parent::__construct($message, $previous->getCode(), $previous);
+		} else {
+			parent::__construct($message);
+		}
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function getSite(): ?string
+	{
+		return $this->site;
+	}
 }

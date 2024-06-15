@@ -7,6 +7,7 @@ OC.L10N.register(
     "Location" : "Locație",
     "Access forbidden" : "Acces restricționat",
     "Back to %s" : "Înapoi la %s",
+    "Not found" : "Inexistent",
     "Internal Server Error" : "Eroare internă a serverului",
     "The server was unable to complete your request." : "Serverul nu a reușit să proceseze cererea ta.",
     "If this happens again, please send the technical details below to the server administrator." : "Dacă se repetă, te rugăm trimite detaliile tehnice către administratorul de server.",
@@ -23,6 +24,8 @@ OC.L10N.register(
     "Limit to groups" : "Limitează pentru grupuri",
     "Name" : "Nume",
     "Path" : "Cale",
+    "Theme" : "Temă",
+    "Created" : "A fost creat",
     "Actions" : "Acțiuni",
     "Address" : "Adresă",
     "Loading…" : "Se încarcă…"

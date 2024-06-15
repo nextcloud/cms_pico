@@ -23,6 +23,7 @@ OC.L10N.register(
     "Limit to groups" : "Batasi ke grup",
     "Name" : "Nama",
     "Path" : "Jalur",
+    "Theme" : "Tema",
     "Created" : "Dibuat",
     "Actions" : "Tindakan",
     "Address" : "Alamat",

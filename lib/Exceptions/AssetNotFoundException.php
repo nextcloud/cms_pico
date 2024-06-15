@@ -27,17 +27,51 @@ namespace OCA\CMSPico\Exceptions;
 
 class AssetNotFoundException extends \Exception
 {
+	/** @var string|null */
+	private $site;
+
+	/** @var string|null */
+	private $asset;
+
 	/**
 	 * AssetNotFoundException constructor.
 	 *
+	 * @param string|null     $site
+	 * @param string|null     $asset
 	 * @param \Exception|null $previous
 	 */
-	public function __construct(\Exception $previous = null)
+	public function __construct(string $site = null, string $asset = null, \Exception $previous = null)
 	{
-		if ($previous) {
-			parent::__construct($previous->getMessage(), $previous->getCode(), $previous);
-		} else {
-			parent::__construct();
+		$this->site = $site;
+		$this->asset = $asset;
+
+		$message = '';
+		if ($site && $asset) {
+			$message = sprintf("Unable to access asset '%s' of website '%s': No such asset", $asset, $site);
+		} elseif ($previous) {
+			$message = $previous->getMessage();
 		}
+
+		if ($previous) {
+			parent::__construct($message, $previous->getCode(), $previous);
+		} else {
+			parent::__construct($message);
+		}
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function getSite(): ?string
+	{
+		return $this->site;
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function getAsset(): ?string
+	{
+		return $this->asset;
 	}
 }

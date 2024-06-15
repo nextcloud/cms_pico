@@ -27,17 +27,51 @@ namespace OCA\CMSPico\Exceptions;
 
 class PageNotFoundException extends \Exception
 {
+	/** @var string|null */
+	private $site;
+
+	/** @var string|null */
+	private $page;
+
 	/**
 	 * PageNotFoundException constructor.
 	 *
+	 * @param string|null     $site
+	 * @param string|null     $page
 	 * @param \Exception|null $previous
 	 */
-	public function __construct(\Exception $previous = null)
+	public function __construct(string $site = null, string $page = null, \Exception $previous = null)
 	{
-		if ($previous) {
-			parent::__construct($previous->getMessage(), $previous->getCode(), $previous);
-		} else {
-			parent::__construct();
+		$this->site = $site;
+		$this->page = $page;
+
+		$message = '';
+		if ($site && $page) {
+			$message = sprintf("Unable to access page '%s' of website '%s': No such page", $page, $site);
+		} elseif ($previous) {
+			$message = $previous->getMessage();
 		}
+
+		if ($previous) {
+			parent::__construct($message, $previous->getCode(), $previous);
+		} else {
+			parent::__construct($message);
+		}
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function getSite(): ?string
+	{
+		return $this->site;
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function getPage(): ?string
+	{
+		return $this->page;
 	}
 }

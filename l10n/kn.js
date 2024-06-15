@@ -1,6 +1,7 @@
 OC.L10N.register(
     "cms_pico",
     {
+    "Copy" : "ನಕಲಿಸಿ",
     "Save" : "﻿ಉಳಿಸಿ",
     "Access forbidden" : "﻿ಪ್ರವೇಶ ನಿರ್ಬಂಧಿಸಲಾಗಿದೆ",
     "Internal Server Error" : "ಪರಿಚಾರಕ-ಗಣಕದ ಆಂತರಿಕ ದೋಷ",

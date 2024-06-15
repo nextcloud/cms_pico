@@ -95,7 +95,6 @@ OC.L10N.register(
     "Delete custom template" : "מחיקת תבנית בהתאמה אישית",
     "Base template" : "תבנית בסיס",
     "Template name" : "שם התבנית",
-    "Configure your webserver" : "הגדרת השרת שלך",
     "Enable short website URLs" : "הפעלת כתובות מקוצרות לאתר",
     "Full application URLs" : "כתובות מלאות ליישומונים",
     "Short website URLs" : "כתובות מקוצרות לאתר",
@@ -108,7 +107,6 @@ OC.L10N.register(
     "Created" : "מועד היצירה",
     "Go to website" : "מעבר לאתר",
     "Go to website directory" : "מעבר לתיקיית האתר",
-    "Toggle private website" : "החלפת מצב פרטיות על אתר",
     "Delete website" : "מחיקת אתר",
     "Actions" : "פעולולת",
     "Create a new website" : "יצירת אתר חדש",
@@ -120,4 +118,4 @@ OC.L10N.register(
     "Create new website" : "יצירת אתר חדש",
     "Loading…" : "בטעינה…"
 },
-"nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;");
+"nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;");

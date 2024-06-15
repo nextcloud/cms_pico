@@ -292,9 +292,11 @@ style(Application::APP_NAME, [ 'fontello', 'pico' ]);
 	<section id="picocms-plugins" class="picocms-admin-list"
 			data-route="/apps/cms_pico/admin/plugins"
 			data-template="#picocms-plugins-template"
+			data-static-template="#picocms-plugins-template-static-items"
 			data-system-template="#picocms-plugins-template-system-item"
 			data-custom-template="#picocms-plugins-template-custom-item"
 			data-new-template="#picocms-plugins-template-new-item"
+			data-copy-template="#picocms-plugins-template-copy-item"
 			data-loading-template="#picocms-plugins-template-loading"
 			data-error-template="#picocms-plugins-template-error">
 		<div class="app-content-loading message large">
@@ -320,6 +322,27 @@ style(Application::APP_NAME, [ 'fontello', 'pico' ]);
 						title="<?php p($l->t('Reload plugins list')); ?>">
 					<span class="hidden-visually"><?php p($l->t('Reload plugins list')); ?></span>
 				</div>
+			</div>
+		</div>
+	</script>
+
+	<script id="picocms-plugins-template-static-items" type="text/template"
+			data-append-to="#picocms-plugins > .app-content-list"
+			data-filter=".app-content-list-item-static">
+		<div class="app-content-list-item app-content-list-item-static"
+				data-item-name="DummyPlugin">
+			<div class="app-content-list-item-line-one">
+				<p>{name}</p>
+				<div class="info-compat message">
+					<div class="icon-checkmark has-tooltip" title="<?php p($l->t('Compatible plugin.')); ?>"></div>
+					<div>
+						<p class="note"><?php p($l->t('Example plugin')); ?></p>
+					</div>
+				</div>
+			</div>
+			<div class="action-copy icon-copy has-tooltip" data-placement="left"
+					title="<?php p($l->t('Copy example plugin')); ?>">
+				<span class="hidden-visually"><?php p($l->t('Copy example plugin')); ?></span>
 			</div>
 		</div>
 	</script>
@@ -365,6 +388,28 @@ style(Application::APP_NAME, [ 'fontello', 'pico' ]);
 	<script id="picocms-plugins-template-new-item" type="text/template"
 			data-append-to="#picocms-plugins > .app-content-list > .app-content-list-add select">
 		<option name="{name}">{name}</option>
+	</script>
+
+	<script id="picocms-plugins-template-copy-item" type="text/template">
+		<form id="{id}" title="{title}" class="form">
+			<fieldset>
+				<div class="label">
+					<label for="picocms-plugins-copy-base"><?php p($l->t('Base plugin')); ?></label>
+				</div>
+				<div class="content">
+					<span id="picocms-plugins-copy-base" class="input">{source}</span>
+				</div>
+			</fieldset>
+			<fieldset>
+				<div class="label">
+					<label for="picocms-plugins-copy-name"><?php p($l->t('Plugin name')); ?></label>
+				</div>
+				<div class="content">
+					<input id="picocms-plugins-copy-name" class="input input-name" type="text" name="name"
+							value="" placeholder="{source}" />
+				</div>
+			</fieldset>
+		</form>
 	</script>
 
 	<script id="picocms-plugins-template-loading" type="text/template"
@@ -565,25 +610,25 @@ style(Application::APP_NAME, [ 'fontello', 'pico' ]);
 </article>
 
 <article class="section">
-	<h2><?php p($l->t('Configure your webserver')); ?></h2>
+	<h2><?php p($l->t('Configure your web server')); ?></h2>
 	<p class="settings-hint"><?php p($l->t(
-		'Enable Pico CMS for Nextcloud\'s full potential by configuring your webserver appropriately.'
+		'Enable Pico CMS for Nextcloud\'s full potential by configuring your web server appropriately.'
 	)); ?></p>
 
 	<div class="message large">
 		<div class="icon icon-info"></div>
 		<div>
 			<p><?php p($l->t(
-				'Depending on your webserver\'s configuration, users can access their websites using different URLs. '
+				'Depending on your web server\'s configuration, users can access their websites using different URLs. '
 						. 'By default, users can access their websites using Pico CMS for Nextcloud\'s full '
 						. 'application URL. However, these URLs are pretty long and thus not very user-friendly. For '
 						. 'this reason, Pico CMS for Nextcloud also supports shortened URLs utilizing the virtual '
-						. '"sites/" folder. However, using this feature requires some additional webserver '
-						. 'configuration. If you\'re using the Apache webserver, try one of the first two examples '
-						. 'shown below. If you\'re rather using the nginx webserver, try one of last two examples. If '
-						. 'you don\'t really understand what\'s going on, contact your server administrator and send '
+						. '"sites/" folder. However, using this feature requires some additional web server '
+						. 'configuration. If you\'re using the Apache web server, try one of the first two examples '
+						. 'shown below. If you\'re rather using the nginx web server, try one of last two examples. If '
+						. 'you do not really understand what\'s going on, contact your server administrator and send '
 						. 'him the information below. If your server administrator tells you this isn\'t possible, '
-						. 'don\'t despair - you can still use Pico CMS for Nextcloud\'s full application URLs, they '
+						. 'do not despair - you can still use Pico CMS for Nextcloud\'s full application URLs, they '
 						. 'always work out-of-the-box.'
 			)); ?></p>
 		</div>
@@ -618,9 +663,9 @@ style(Application::APP_NAME, [ 'fontello', 'pico' ]);
 					</label>
 				</p>
 				<p class="note"><?php p($l->t(
-					'After you\'ve configured your webserver to enable shortened URLs, you should select the '
-							. 'corresponding option above to let your users know about this feature. Don\'t enable '
-							. 'this option if you haven\'t configured the virtual "sites/" folder yet using one of the '
+					'After you have configured your web server to enable shortened URLs, you should select the '
+							. 'corresponding option above to let your users know about this feature. Do not enable '
+							. 'this option if you have not configured the virtual "sites/" folder yet using one of the '
 							. 'configuration examples shown below.'
 				)); ?></p>
 			</form>
@@ -648,7 +693,7 @@ style(Application::APP_NAME, [ 'fontello', 'pico' ]);
 			<p><?php p($l->t(
 				'Copy the config snippet above to Nextcloud\'s <VirtualHost …> section of your apache.conf. Before '
 						. 'doing so you must enable both Apache\'s mod_proxy and mod_proxy_http modules. Otherwise '
-						. 'your webserver will either refuse to (re)start or yield a 500 Internal Server Error.'
+						. 'your web server will either refuse to (re)start or yield a 500 Internal Server Error.'
 			)); ?></p>
 		</section>
 	</section>
@@ -670,7 +715,7 @@ style(Application::APP_NAME, [ 'fontello', 'pico' ]);
 			</p>
 			<p><?php p($l->t(
 				'Before copying the config snippet above to Nextcloud\'s <VirtualHost …> section of your apache.conf, '
-						. 'make sure to enable Apache\'s mod_rewrite module. Otherwise your webserver will refuse to '
+						. 'make sure to enable Apache\'s mod_rewrite module. Otherwise your web server will refuse to '
 						. '(re)start or yield a 500 Internal Server Error. Please note that this config won\'t '
 						. 'actually let you use shortened URLs, it just redirects users from shortened URLs to the '
 						. 'site\'s full URL. Thus you should prefer the solution utilizing mod_proxy shown above.'
@@ -702,7 +747,7 @@ style(Application::APP_NAME, [ 'fontello', 'pico' ]);
 			</p>
 			<p><?php p($l->t(
 				'Copy the config snippet above to Nextcloud\'s server { … } section of your nginx.conf. Before doing '
-						. 'doing so you must enable nginx\'s ngx_http_proxy_module module. Otherwise your webserver '
+						. 'doing so you must enable nginx\'s ngx_http_proxy_module module. Otherwise your web server '
 						. 'will either refuse to (re)start or yield a 500 Internal Server Error.'
 			)); ?></p>
 		</section>

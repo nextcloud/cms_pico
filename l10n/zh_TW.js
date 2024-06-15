@@ -21,6 +21,7 @@ OC.L10N.register(
     "Pico CMS" : "Pico CMS",
     "Access forbidden" : "存取被拒",
     "Back to %s" : "回到 %s",
+    "Not found" : "找不到",
     "Internal Server Error" : "內部伺服器錯誤",
     "The server was unable to complete your request." : "伺服器無法完成你的請求。",
     "If this happens again, please send the technical details below to the server administrator." : "如果此問題重複發生，請寄送技術資訊給管理員。",
@@ -35,6 +36,8 @@ OC.L10N.register(
     "Line: %s" : "行數：%s",
     "Trace" : "追蹤",
     "Limit to groups" : "限制給特定群組",
+    "Error: {error}" : "錯誤：{error}",
+    "Template name" : "範本名稱",
     "Name" : "名稱",
     "Path" : "路徑",
     "Theme" : "佈景主題",
@@ -42,6 +45,7 @@ OC.L10N.register(
     "Actions" : "動作",
     "Create a new website" : "建立新網站",
     "Address" : "地址",
+    "Template" : "範本",
     "Loading…" : "載入中…"
 },
 "nplurals=1; plural=0;");
