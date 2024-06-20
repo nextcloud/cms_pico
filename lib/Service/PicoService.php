@@ -43,6 +43,7 @@ use OCP\Files\InvalidPathException;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 use OCP\ILogger;
+use Twig\Error\Error;
 
 class PicoService
 {
@@ -147,6 +148,16 @@ class PicoService
 				$this->loadPicoPlugins($pico);
 
 				$output = $pico->run();
+			} catch (Error $e) {
+				$this->logger->error(
+					'Twig Error',
+					[ 'error' => $e->getMessage(),
+						'file' => $e->getFile(),
+						'line_number' => $e->getTemplateLine()
+					]
+				);
+				$exception = new PicoRuntimeException($e);
+				throw $exception;
 			} catch (WebsiteInvalidFilesystemException $e) {
 				throw $e;
 			} catch (InvalidPathException | NotFoundException | NotPermittedException $e) {
