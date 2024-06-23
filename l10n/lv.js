@@ -5,6 +5,7 @@ OC.L10N.register(
     "Save" : "Saglabāt",
     "Location" : "Vieta",
     "Access forbidden" : "Pieeja ir liegta",
+    "Not found" : "Nav atrasts",
     "Internal Server Error" : "Iekšēja servera kļūda",
     "The server was unable to complete your request." : "Serveris nevarēja izpildīt tavu pieprasījumu.",
     "Remote Address: %s" : "Attālinātā adrese: %s",
