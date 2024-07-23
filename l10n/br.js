@@ -23,6 +23,7 @@ OC.L10N.register(
     "Name" : "Anv",
     "Path" : "Hent",
     "Theme" : "Tem",
+    "Created" : "Krouet",
     "Actions" : "Oberoù",
     "Address" : "Chom-lec'h",
     "Loading…" : "O Kargañ"
