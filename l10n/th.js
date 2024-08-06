@@ -7,6 +7,7 @@ OC.L10N.register(
     "Location" : "ตำแหน่ง",
     "Access forbidden" : "การเข้าถึงถูกหวงห้าม",
     "Back to %s" : "กลับสู่ %s",
+    "Not found" : "ไม่พบ",
     "Internal Server Error" : "ข้อผิดพลาดภายในเซิร์ฟเวอร์",
     "The server was unable to complete your request." : "เซิร์ฟเวอร์ไม่สามารถดำเนินการคำขอของคุณได้",
     "If this happens again, please send the technical details below to the server administrator." : "หากพบปัญหานี้อีก โปรดส่งข้อมูลทางเทคนิคด้านล่างไปให้ผู้ดูแลเซิร์ฟเวอร์",
