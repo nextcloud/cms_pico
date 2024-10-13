@@ -21,6 +21,7 @@ OC.L10N.register(
     "Limit to groups" : "Grupu ierobežojums",
     "Name" : "Vārds",
     "Path" : "Ceļš",
+    "Theme" : "Motīvs",
     "Created" : "Izveidots",
     "Actions" : "Darbības",
     "Address" : "Adrese",
