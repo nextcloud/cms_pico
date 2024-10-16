@@ -50,6 +50,7 @@ OC.L10N.register(
     "Copy custom theme" : "Kopijuoti tinkintą apipavidalinimą",
     "Delete custom theme" : "Ištrinti tinkintą apipavidalinimą",
     "Theme name" : "Apipavidalinimo pavadinimas",
+    "Error: {error}" : "Klaida: {error}",
     "Loading plugins…" : "Įkeliami įskiepiai…",
     "Reload plugins list" : "Įkelti įskiepių sąrašą iš naujo",
     "Compatible plugin." : "Suderinamas įskiepis.",

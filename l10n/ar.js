@@ -159,7 +159,7 @@ OC.L10N.register(
     "Go to website directory" : "إنتقِل إلى دليل الموقع",
     "Edit website name" : "تعديل اسم الموقع",
     "Edit private website settings" : "عدِّل إعدادات الموقع الخاص",
-    "Delete website" : "إحذِف الموقع",
+    "Delete website" : "حذف الموقع",
     "Actions" : "الإجراءات",
     "Pico CMS for Nextcloud supports both public and private websites. Everyone can access public websites, no matter whether they are logged in or not. If you want to limit access to a certain subset of users, create a private website. All visitors of a private website must be logged in, otherwise a \"Access forbidden\" error is shown. Additionally one of the following conditions must be met: (1) the user has access to the website's source files (i.e. the source folder is shared with the user), (2) the user is a member of one of the groups listed below, or (3) the user is a member of one of the groups specified in the YAML Front Matter of the requested page using the \"access\" meta value." : "يدعم Pico CMS for Nextcloud مواقع الويب العامة والخاصة. يمكن للجميع الوصول إلى مواقع الويب العامة، بغض النظر عما إذا كانوا قد قاموا بتسجيل الدخول أم لا. إذا كنت تريد تقييد الوصول إلى مجموعة فرعية معينة من المستخدمين، فقم بإنشاء موقع ويب خاص. يجب على جميع زوار موقع الويب الخاص تسجيل الدخول، و إلاّ فسيظهر خطأ \"الوصول محظور\". بالإضافة إلى ذلك ، يجب استيفاء أحد الشروط التالية: (1) أن المستخدم لديه حق الوصول إلى الملفات المصدر لموقع الويب (أي أن المجلد المصدر مشترك مع المستخدم) ، (2) المستخدم عضو في إحدى المجموعات المدرجة أدناه، (3) المستخدم عضو في إحدى المجموعات المحددة في YAML Front Matter للصفحة المطلوبة باستخدام القيمة الوصفية \"الوصول\" access.",
     "Website type" : "نوع موقع الوب",
