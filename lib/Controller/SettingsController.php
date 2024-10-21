@@ -29,8 +29,8 @@ use OCA\CMSPico\AppInfo\Application;
 use OCA\CMSPico\Service\WebsitesService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\DataResponse;
-use OCP\ILogger;
 use OCP\IRequest;
+use Psr\Log\LoggerInterface;
 
 class SettingsController extends Controller
 {
@@ -43,10 +43,10 @@ class SettingsController extends Controller
 	 * SettingsController constructor.
 	 *
 	 * @param IRequest         $request
-	 * @param ILogger          $logger
+	 * @param LoggerInterface  $logger
 	 * @param WebsitesService  $websitesService
 	 */
-	public function __construct(IRequest $request, ILogger $logger, WebsitesService $websitesService)
+	public function __construct(IRequest $request, LoggerInterface $logger, WebsitesService $websitesService)
 	{
 		parent::__construct(Application::APP_NAME, $request);
 

@@ -42,7 +42,7 @@ use OCA\CMSPico\Pico;
 use OCP\Files\InvalidPathException;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 
 class PicoService
 {
@@ -67,7 +67,7 @@ class PicoService
 	/** @var string */
 	public const CONTENT_EXT = '.md';
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	/** @var AssetsService */
@@ -88,15 +88,15 @@ class PicoService
 	/**
 	 * PicoService constructor.
 	 *
-	 * @param ILogger        $logger
-	 * @param AssetsService  $assetsService
-	 * @param ThemesService  $themesService
-	 * @param PluginsService $pluginsService
-	 * @param FileService    $fileService
-	 * @param MiscService    $miscService
+	 * @param LoggerInterface $logger
+	 * @param AssetsService   $assetsService
+	 * @param ThemesService   $themesService
+	 * @param PluginsService  $pluginsService
+	 * @param FileService     $fileService
+	 * @param MiscService     $miscService
 	 */
 	public function __construct(
-		ILogger $logger,
+		LoggerInterface $logger,
 		AssetsService $assetsService,
 		ThemesService $themesService,
 		PluginsService $pluginsService,
@@ -153,7 +153,7 @@ class PicoService
 				throw $e;
 			} catch (\Exception $e) {
 				$exception = new PicoRuntimeException($e);
-				$this->logger->logException($exception, [ 'app' => Application::APP_NAME ]);
+				$this->logger->error($exception, [ 'app' => Application::APP_NAME ]);
 				throw $exception;
 			}
 
