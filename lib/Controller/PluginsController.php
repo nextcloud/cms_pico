@@ -32,8 +32,8 @@ use OCA\CMSPico\Service\PluginsService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IL10N;
-use OCP\ILogger;
 use OCP\IRequest;
+use Psr\Log\LoggerInterface;
 
 class PluginsController extends Controller
 {
@@ -48,12 +48,12 @@ class PluginsController extends Controller
 	/**
 	 * PluginsController constructor.
 	 *
-	 * @param IRequest       $request
-	 * @param IL10N          $l10n
-	 * @param ILogger        $logger
-	 * @param PluginsService $pluginsService
+	 * @param IRequest        $request
+	 * @param IL10N           $l10n
+	 * @param LoggerInterface $logger
+	 * @param PluginsService  $pluginsService
 	 */
-	public function __construct(IRequest $request, IL10N $l10n, ILogger $logger, PluginsService $pluginsService)
+	public function __construct(IRequest $request, IL10N $l10n, LoggerInterface $logger, PluginsService $pluginsService)
 	{
 		parent::__construct(Application::APP_NAME, $request);
 

@@ -34,9 +34,9 @@ use OCA\CMSPico\Service\ThemesService;
 use OCA\CMSPico\Service\WebsitesService;
 use OCP\Files\NotFoundException;
 use OCP\IGroupManager;
-use OCP\ILogger;
 use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
+use Psr\Log\LoggerInterface;
 
 class AppDataRepairStep implements IRepairStep
 {
@@ -72,7 +72,7 @@ class AppDataRepairStep implements IRepairStep
 	/**
 	 * AppDataRepairStep constructor.
 	 *
-	 * @param ILogger          $logger
+	 * @param LoggerInterface  $logger
 	 * @param IGroupManager    $groupManager
 	 * @param WebsitesService  $websitesService
 	 * @param ConfigService    $configService
@@ -83,7 +83,7 @@ class AppDataRepairStep implements IRepairStep
 	 * @param MiscService      $miscService
 	 */
 	public function __construct(
-		ILogger $logger,
+		LoggerInterface $logger,
 		IGroupManager $groupManager,
 		WebsitesService $websitesService,
 		ConfigService $configService,

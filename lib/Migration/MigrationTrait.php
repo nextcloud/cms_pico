@@ -25,21 +25,21 @@ declare(strict_types=1);
 namespace OCA\CMSPico\Migration;
 
 use OCA\CMSPico\AppInfo\Application;
-use OCP\ILogger;
 use OCP\Migration\IOutput;
+use Psr\Log\LoggerInterface;
 
 trait MigrationTrait
 {
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	/** @var IOutput */
 	private $output;
 
 	/**
-	 * @param ILogger $logger
+	 * @param LoggerInterface $logger
 	 */
-	protected function setLogger(ILogger $logger): void
+	protected function setLogger(LoggerInterface $logger): void
 	{
 		$this->logger = $logger;
 	}
@@ -63,7 +63,7 @@ trait MigrationTrait
 		}
 
 		$message = sprintf($message, ...$arguments);
-		$this->logger->log(ILogger::INFO, $message, [ 'app' => Application::APP_NAME ]);
+		$this->logger->info($message, [ 'app' => Application::APP_NAME ]);
 		$this->output->info($message);
 	}
 
@@ -78,7 +78,7 @@ trait MigrationTrait
 		}
 
 		$message = sprintf($message, ...$arguments);
-		$this->logger->log(ILogger::WARN, $message, [ 'app' => Application::APP_NAME ]);
+		$this->logger->warning($message, [ 'app' => Application::APP_NAME ]);
 		$this->output->warning($message);
 	}
 

@@ -27,11 +27,11 @@ namespace OCA\CMSPico\Controller;
 use OCA\CMSPico\AppInfo\Application;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 
 trait ControllerTrait
 {
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	/**
@@ -42,7 +42,7 @@ trait ControllerTrait
 	 */
 	private function createErrorResponse(\Throwable $exception, array $data = []): DataResponse
 	{
-		$this->logger->logException($exception, [ 'app' => Application::APP_NAME, 'level' => 2 ]);
+		$this->logger->error($exception, [ 'app' => Application::APP_NAME, 'level' => 2 ]);
 
 		$data['status'] = 0;
 		if (\OC::$server->getSystemConfig()->getValue('debug', false)) {
