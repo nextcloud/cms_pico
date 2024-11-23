@@ -3,7 +3,7 @@ OC.L10N.register(
     {
     "Copy" : "Kopēt",
     "Save" : "Saglabāt",
-    "Location" : "Vieta",
+    "Location" : "Atrašanās vieta",
     "Access forbidden" : "Pieeja ir liegta",
     "Not found" : "Nav atrasts",
     "Internal Server Error" : "Iekšēja servera kļūda",
