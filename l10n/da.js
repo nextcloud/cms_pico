@@ -1,7 +1,7 @@
 OC.L10N.register(
     "cms_pico",
     {
-    "Copy" : "Kopiér",
+    "Copy" : "Kopier",
     "Abort" : "Afbryd",
     "Save" : "Gem",
     "Location" : "Sted",
