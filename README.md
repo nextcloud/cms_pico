@@ -1,3 +1,13 @@
+> :exclamation: :exclamation: **END OF LIFE NOTICE** :exclamation: :exclamation:
+>
+> Development of Pico CMS for Nextcloud has stopped a very long time ago alongside with [Pico](http://picocms.org/). **We strongly advise against using Pico CMS for Nextcloud.** This Nextcloud app isn't compatible with any still supported Nextcloud version, and Pico itself wasn't designed for modern PHP versions. However, please note that there are no known security issues.
+>
+> For a very limited number of trusted users, you might want to check out some of Pico's amazing alternatives, like [Grav CMS](https://getgrav.org/), [HTMLy](https://www.htmly.com/), [Automad](https://automad.org/), or [Typemill](https://typemill.net/). You could install these alongside with Nextcloud. If you're an experienced server administrator and/or developer, and know what you're doing, you could possibly even mount the CMS' content directory as [external storage](https://docs.nextcloud.com/server/latest/admin_manual/configuration_files/external_storage_configuration_gui.html) of your Nextcloud. However, be **very careful** not to introduce catastrophic security issues by allowing users to modify active contents and thus execute arbitrary code on your server. Unfortunately we're not aware of any alternative to Pico CMS for Nextcloud.
+>
+> If you're interested in taking over Pico's development (and in a possible second step also that of Pico CMS for Nextcloud), please don't hesitate to contact us by creating a [new Issue](https://github.com/picocms/Pico/issues/new) on Pico's GitHub repository. Please provide some *brief* information about the extent of your commitment, your motivation, and your experience with Pico, Nextcloud, PHP programming, and Open Source Software development in general. We're happy to help you take over the baton, but unfortunately are no longer able to maintain this project.
+>
+> :exclamation: :exclamation: **END OF LIFE NOTICE** :exclamation: :exclamation:
+
 # Pico CMS for Nextcloud
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
