@@ -8,7 +8,4 @@ Social:
     - title: Join us on Libera.Chat
       url: https://web.libera.chat/#picocms
       icon: chat
-    - title: Help us by creating/collecting bounties and pledging to fundraisers
-      url: https://www.bountysource.com/teams/picocms
-      icon: dollar
 ---
