@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Copy" : "Copy",
     "Save" : "Save",
+    "Location" : "Joylashuv",
     "Access forbidden" : "Access forbidden",
     "Internal Server Error" : "Internal Server Error",
     "The server was unable to complete your request." : "The server was unable to complete your request.",
