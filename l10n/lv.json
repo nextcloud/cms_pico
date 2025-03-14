@@ -16,6 +16,7 @@
     "File: %s" : "Datne: %s",
     "Line: %s" : "Līnija: %s",
     "Trace" : "Izsekot",
+    "If you see the error <code>\"Call to undefined method ParsedownExtra::textElements()\"</code> in Nextcloud's logs even though you've removed all conflicting apps, please don't hesitate to <a href=\"https://github.com/nextcloud/cms_pico/issues/new\">open a new Issue on GitHub</a> with a copy of the error including its stack trace and a complete list of all apps installed." : "Ja ir redzama kļūda <code>\"Call to undefined method ParsedownExtra::textElements()\"</code> Nextcloud žurnālos, kaut arī ir noņemtas visas nesaderīgās lietotnes, lūgums <a href=\"https://github.com/nextcloud/cms_pico/issues/new\">izveidot jaunu pieteikumu GitHub</a>, kurā ir iekļauta kļūda ar tās trasējumu un pilnīgs uzstādīto lietotņu saraksts.",
     "Limit to groups" : "Grupu ierobežojums",
     "Name" : "Vārds",
     "Path" : "Ceļš",
