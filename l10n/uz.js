@@ -5,6 +5,8 @@ OC.L10N.register(
     "Save" : "Save",
     "Location" : "Joylashuv",
     "Access forbidden" : "Access forbidden",
+    "Back to %s" : "%sga qaytish",
+    "Not found" : "Topilmadi",
     "Internal Server Error" : "Internal Server Error",
     "The server was unable to complete your request." : "The server was unable to complete your request.",
     "If this happens again, please send the technical details below to the server administrator." : "If this happens again, please send the technical details below to the server administrator.",
