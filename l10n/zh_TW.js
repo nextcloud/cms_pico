@@ -36,6 +36,7 @@ OC.L10N.register(
     "Line: %s" : "行數：%s",
     "Trace" : "追蹤",
     "Limit to groups" : "限制給特定群組",
+    "Loading groups…" : "正在載入群組……",
     "Error: {error}" : "錯誤：{error}",
     "Template name" : "範本名稱",
     "Name" : "名稱",
