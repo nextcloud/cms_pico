@@ -35,7 +35,7 @@ OC.L10N.register(
     "Incompatible plugin: PHP parse error in file \"{file}\"." : "Plug-in incompatível: erro de análise de PHP no arquivo \"{file}\".",
     "Incompatible plugin: Plugin class \"{class}\" not found." : "Plug-in incompatível: Classe de plug-in \"{class}\" não encontrada.",
     "Incompatible plugin: Plugins for Pico CMS for Nextcloud must use one of the API versions {compatApiVersions}, but this plugin uses API version {apiVersion}." : "Plug-in incompatível: Plug-ins para Pico CMS para Nextcloud devem usar uma das versões da API {compatApiVersions}, mas este plug-in usa a versão da API {apiVersion}.",
-    "Incompatible template: Required directory \"{file}\" not found." : "Modelo incompatível: Diretório necessário \"{file}\" não encontrado.",
+    "Incompatible template: Required directory \"{file}\" not found." : "Modelo incompatível: Diretório obrigatório \"{file}\" não encontrado.",
     "Incompatible theme: Twig template \"{file}\" not found." : "Tema incompatível: modelo Twig \"{file}\" não encontrado.",
     "Incompatible theme: Themes for Pico CMS for Nextcloud must use one of the API versions {compatApiVersions}, but this theme uses API version {apiVersion}." : "Tema incompatível: Os temas para Pico CMS para Nextcloud devem usar uma das versões da API {compatApiVersions}, mas este tema usa a versão da API {apiVersion}.",
     "The name of the website must be longer." : "O nome do site deve ser maior.",
