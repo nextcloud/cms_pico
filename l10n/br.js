@@ -13,7 +13,7 @@ OC.L10N.register(
     "Request ID: %s" : "ID goulennet : %s",
     "More details can be found in the server log." : "Munudoù all a zo posuple kavout e kazetenn ar servijour",
     "Technical details" : "Munidoù teknikel",
-    "Type: %s" : "Stumm : %s",
+    "Type: %s" : "Seurt: %s",
     "Code: %s" : "Kod : %s",
     "Message: %s" : "Kemenadenn : %s",
     "File: %s" : "Restr : %s",
