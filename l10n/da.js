@@ -25,6 +25,7 @@ OC.L10N.register(
     "Line: %s" : "Linje: %s",
     "Trace" : "Sporing",
     "Limit to groups" : "Begræns til grupper",
+    "Loading groups…" : "Indlæser grupper…",
     "If you wish not to enable all of your users to create personal websites, you can limit Pico CMS for Nextcloud to certain groups. Select the groups you want to limit access to. If you leave this field empty, usage isn't limited. Revoking access for certain groups won't delete any of a user's websites, however, they get inaccessible." : "Hvis du ikke ønsker at give alle dine brugere mulighed for at oprette personlige websteder, så kan du begrænse Pico CMS til Nextcloud, til bestemte grupper. Vælg de grupper, du vil begrænse adgangen til. Hvis du lader dette felt stå tomt, så er anvendelsen ikke begrænset. Tilbagekaldelse af adgang for visse grupper vil ikke slette nogen af ​​en brugers websteder, men de bliver utilgængelige.",
     "Custom themes" : "Brugerdefinerede temaer",
     "Add custom theme" : "Tilføj brugerdefineret tema",
