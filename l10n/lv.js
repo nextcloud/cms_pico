@@ -4,7 +4,7 @@ OC.L10N.register(
     "Copy" : "Kopēt",
     "Save" : "Saglabāt",
     "Location" : "Atrašanās vieta",
-    "Access forbidden" : "Pieeja ir liegta",
+    "Access forbidden" : "Piekļuve ir liegta",
     "Not found" : "Nav atrasts",
     "Internal Server Error" : "Iekšēja servera kļūda",
     "The server was unable to complete your request." : "Serveris nevarēja izpildīt tavu pieprasījumu.",
