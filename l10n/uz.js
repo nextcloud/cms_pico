@@ -22,6 +22,7 @@ OC.L10N.register(
     "Trace" : "Trace",
     "Name" : "Name",
     "Path" : "Path",
+    "Theme" : "Mavzu",
     "Actions" : "Actions",
     "Address" : "Address",
     "Loading…" : "Loading…"
