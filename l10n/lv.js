@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Copy" : "Kopēt",
     "Save" : "Saglabāt",
+    "The requested website page could not be built, so that the server was unable to complete your request." : "Pieprasīto tīmekļvietnes lapu nevarēja izveidot, tādēļ serveris nevarēja izpildīt pieprasījumu.",
     "Location" : "Atrašanās vieta",
     "Access forbidden" : "Piekļuve ir liegta",
     "Not found" : "Nav atrasts",
