@@ -183,6 +183,6 @@ OC.L10N.register(
     "Template" : "Vorlage",
     "Templates act as a starting point when creating a new website. All templates consist of a \"content\" directory (for your pages) and a \"assets\" directory (for your website's assets), which will be copied to the above folder in your Nextcloud." : "Vorlagen helfen Ihnen dabei eine neue Webseite zu erstellen. Alle Vorlagen bestehen aus einem \"content\"-Verzeichnis, in dem die Inhalte Ihrer Seiten und einem \"assets\"-Verzeichnis, in dem weitere Dateien (bspw. Bilder) abgelegt werden können. Die Dateien der Vorlage werden hierzu in den obigen Ordner Ihrer Nextcloud kopiert.",
     "Create new website" : "Neue Webseite erstellen",
-    "Loading…" : "Lade …"
+    "Loading…" : "Lade…"
 },
 "nplurals=2; plural=(n != 1);");
