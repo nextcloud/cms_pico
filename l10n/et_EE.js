@@ -34,6 +34,7 @@ OC.L10N.register(
     "Actions" : "Tegevused",
     "Create a new website" : "Loo uus veebisait",
     "Address" : "Aadress",
+    "Template" : "Mall",
     "Loading…" : "Laadimine…"
 },
 "nplurals=2; plural=(n != 1);");
