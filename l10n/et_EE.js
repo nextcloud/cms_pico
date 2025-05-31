@@ -23,6 +23,7 @@ OC.L10N.register(
     "Trace" : "Jälita",
     "Limit to groups" : "Luba gruppidele",
     "Loading groups…" : "Laadin gruppe…",
+    "Error: {error}" : "Viga: {error}",
     "Custom templates" : "Kohandatud mallid",
     "Add custom template" : "Lisa kohandatud mall",
     "Delete custom template" : "Kustuta kohandatud mall",
