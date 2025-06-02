@@ -12,7 +12,7 @@ OC.L10N.register(
     "You don't have access to this private website. Maybe the share was deleted or has expired?" : "Du hast keinen Zugriff auf diese private Webseite. Vielleicht wurde die Freigabe zwischenzeitlich aufgehoben oder ist abgelaufen?",
     "This website is hosted on a non-local storage and thus could not be accessed." : "Diese Webseite wurde auf einem nicht-lokalen Speicher abgelegt und ist daher unzugänglich.",
     "This website uses a theme that could not be found on the server and thus could not be built." : "Diese Webseite verwendet ein Design, das auf dem Server nicht mehr verfügbar ist. Deshalb kann sie nicht erstellt werden.",
-    "This website uses a incompatible theme and thus could not be built." : "Es ist ein Fehler bei der Darstellung dieser Webseite aufgetreten, da sie ein Design verwendet, das inkompatibel ist.",
+    "This website uses a incompatible theme and thus could not be built." : "Diese Webseite kann nicht dargestellt werden, da ein inkompatibles Design verwendet wird.",
     "The requested website page could not be found on the server. Maybe the page was deleted?" : "Die angeforderte Seite der Webseite konnte nicht gefunden werden. Vielleicht wurde sie zwischenzeitlich gelöscht?",
     "You don't have access to this website page. Maybe the share was deleted or has expired?" : "Du hast keinen Zugriff auf diese Seite der Webseite. Vielleicht wurde die Freigabe zwischenzeitlich aufgehoben oder ist abgelaufen?",
     "The requested website page could not be built, so that the server was unable to complete your request." : "Es ist ein Fehler bei der Darstellung dieser Webseite aufgetreten.",
