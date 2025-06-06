@@ -1,31 +1,10 @@
 OC.L10N.register(
     "cms_pico",
     {
-    "Copy" : "Copiar",
-    "Abort" : "Anullar",
-    "Save" : "Salvar",
-    "Location" : "Emplaçament",
-    "Access forbidden" : "Accès defendut",
-    "Back to %s" : "Tornar a %s",
-    "Internal Server Error" : "Error intèrna del servidor",
-    "The server was unable to complete your request." : "Lo servidor a pas pogut terminar vòstra requèsta.",
     "If this happens again, please send the technical details below to the server administrator." : "S’aquò tòrna arribar, enviatz lo detalhs tecnics çai-jos a l’administrator del servidor.",
-    "Remote Address: %s" : "Adreça distanta : %s",
-    "Request ID: %s" : "ID requèsta : %s",
-    "More details can be found in the server log." : "Mai de detalhs se tròban als jornals d’audit del servidor.",
     "Technical details" : "Detalhs tecnics",
     "Type: %s" : "Tipe : %s",
-    "Code: %s" : "Còdi : %s",
-    "Message: %s" : "Messatge : %s",
-    "File: %s" : "Fichièr : %s",
     "Line: %s" : "Linha : %s",
-    "Trace" : "Traça",
-    "Limit to groups" : "Limitar als grops",
-    "Name" : "Nom",
-    "Path" : "Camin",
-    "Theme" : "Tèma",
-    "Actions" : "Accions",
-    "Address" : "Adreça",
-    "Loading…" : "Cargament…"
+    "Path" : "Camin"
 },
 "nplurals=2; plural=(n > 1);");

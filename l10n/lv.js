@@ -1,32 +1,9 @@
 OC.L10N.register(
     "cms_pico",
     {
-    "Copy" : "Kopēt",
-    "Save" : "Saglabāt",
-    "The requested website page could not be built, so that the server was unable to complete your request." : "Pieprasīto tīmekļvietnes lapu nevarēja izveidot, tādēļ serveris nevarēja izpildīt pieprasījumu.",
-    "Location" : "Atrašanās vieta",
-    "Access forbidden" : "Piekļuve ir liegta",
-    "Not found" : "Nav atrasts",
-    "Internal Server Error" : "Iekšēja servera kļūda",
-    "The server was unable to complete your request." : "Serveris nevarēja izpildīt tavu pieprasījumu.",
-    "Remote Address: %s" : "Attālā adrese: %s",
-    "Request ID: %s" : "Pieprasījuma ID: %s",
-    "More details can be found in the server log." : "Sīkāka informācija atrodama servera žurnāla datnē.",
     "Technical details" : "Tehniskās detaļas",
     "Type: %s" : "Veids: %s",
-    "Code: %s" : "Kods: %s",
-    "Message: %s" : "Ziņojums: %s",
-    "File: %s" : "Datne: %s",
     "Line: %s" : "Līnija: %s",
-    "Trace" : "Izsekot",
-    "If you see the error <code>\"Call to undefined method ParsedownExtra::textElements()\"</code> in Nextcloud's logs even though you've removed all conflicting apps, please don't hesitate to <a href=\"https://github.com/nextcloud/cms_pico/issues/new\">open a new Issue on GitHub</a> with a copy of the error including its stack trace and a complete list of all apps installed." : "Ja ir redzama kļūda <code>\"Call to undefined method ParsedownExtra::textElements()\"</code> Nextcloud žurnālos, kaut arī ir noņemtas visas nesaderīgās lietotnes, lūgums <a href=\"https://github.com/nextcloud/cms_pico/issues/new\">izveidot jaunu pieteikumu GitHub</a>, kurā ir iekļauta kļūda ar tās trasējumu un pilnīgs uzstādīto lietotņu saraksts.",
-    "Limit to groups" : "Grupu ierobežojums",
-    "Name" : "Vārds",
-    "Path" : "Ceļš",
-    "Theme" : "Izskats",
-    "Created" : "Izveidots",
-    "Actions" : "Darbības",
-    "Address" : "Adrese",
-    "Loading…" : "Notiek ielāde..."
+    "Path" : "Ceļš"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);");

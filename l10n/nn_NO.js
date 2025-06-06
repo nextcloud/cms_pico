@@ -1,24 +1,6 @@
 OC.L10N.register(
     "cms_pico",
     {
-    "Copy" : "Kopier",
-    "Abort" : "Avbryt",
-    "Save" : "Lagre",
-    "Location" : "Stad",
-    "Access forbidden" : "Tilgang forbudt",
-    "Internal Server Error" : "Intern serverfeil",
-    "Remote Address: %s" : "Eksternadresses: %s",
-    "Request ID: %s" : "Førespurnad-ID: %s",
-    "More details can be found in the server log." : "Fleire detaljar i serverloggen.",
-    "Type: %s" : "Type: %s",
-    "Code: %s" : "Kode: %s",
-    "Message: %s" : "Melding: %s",
-    "File: %s" : "Fil: %s",
-    "Name" : "Namn",
-    "Path" : "Vei",
-    "Created" : "Lagd",
-    "Actions" : "Handlingar",
-    "Address" : "Adresse",
-    "Loading…" : "Laster..."
+    "Type: %s" : "Type: %s"
 },
 "nplurals=2; plural=(n != 1);");

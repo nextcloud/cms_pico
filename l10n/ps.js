@@ -1,6 +1,6 @@
 OC.L10N.register(
     "cms_pico",
     {
-    "Technical details" : "Техникийн мэдээлэл"
+    "Path" : "درک"
 },
 "nplurals=2; plural=(n != 1);");

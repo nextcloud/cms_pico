@@ -1,6 +1,6 @@
 OC.L10N.register(
     "cms_pico",
     {
-    "Technical details" : "Техникийн мэдээлэл"
+    "Loading…" : "Ýüklenýär…"
 },
 "nplurals=2; plural=(n != 1);");
