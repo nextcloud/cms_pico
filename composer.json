@@ -26,13 +26,13 @@
     "picocms/pico-deprecated": "^2.1",
     "picocms/composer-installer": "^1.0",
     "xemlock/htmlpurifier-html5": "~0.1.11",
-    "symfony/yaml" : "^2.8|^3.4|^4.4|^5.1"
+    "symfony/yaml" : "^2.8|^3.4|^4.4|^5.1",
+    "erusev/parsedown-extra": "^0.8.0@beta"
   },
   "require-dev": {
     "phpunit/phpunit": "^8",
     "phrozenbyte/phpunit-throwable-asserts": "^1.1",
-    "phrozenbyte/phpunit-array-asserts": "^v1.1",
-    "incompass/coverage": "^1.0"
+    "phrozenbyte/phpunit-array-asserts": "^v1.1"
   },
   "extra": {
     "pico-theme-dir": "appdata/themes/",

@@ -27,11 +27,11 @@ namespace OCA\CMSPico\Controller;
 use OCA\CMSPico\AppInfo\Application;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 
 trait ControllerTrait
 {
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	/**

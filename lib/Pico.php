@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace OCA\CMSPico;
 
+require_once __DIR__ . '/../vendor/autoload.php';
+
 use HTMLPurifier;
 use HTMLPurifier_Config;
 use HTMLPurifier_HTML5Config;
@@ -195,9 +197,11 @@ class Pico extends \Pico
 		$newMeta = [];
 		foreach ($meta as $key => $value) {
 			if (is_array($value)) {
-				$newMeta[$key] = $this->purifyFileMeta($value);
+/*				$newMeta[$key] = $this->purifyFileMeta($value);*/
+				$newMeta[$key] = $value;
 			} else {
-				$newMeta[$key] = $this->getHtmlPurifier()->purify($value);
+/*				$newMeta[$key] = $this->getHtmlPurifier()->purify($value);*/
+				$newMeta[$key] = $value;
 			}
 		}
 
@@ -227,7 +231,8 @@ class Pico extends \Pico
 	 */
 	protected function purifyFileContent(string $content): string
 	{
-		return $this->getHtmlPurifier()->purify($content);
+/*		return $this->getHtmlPurifier()->purify($content);*/
+		return $content;
 	}
 
 	/**
@@ -261,7 +266,40 @@ class Pico extends \Pico
 		$allowedSchemes = array_merge($config->get('URI.AllowedSchemes'), [ 'data' => true ]);
 		$config->set('URI.AllowedSchemes', $allowedSchemes);
 
-		$config->set('HTML.Allowed', 'a[href|target]');
+/*		$config->set('HTML.Allowed', 'a[href|target]');*/
+		$config->set(
+    'HTML.Allowed',
+    implode(',', [
+        'a[href|target|rel]',
+        'p',
+        'br',
+        'hr',
+        'strong',
+        'em',
+        'blockquote',
+        'code',
+        'pre',
+        'ul',
+        'ol',
+        'li',
+        'h1',
+        'h2',
+        'h3',
+        'h4',
+        'h5',
+        'h6',
+        'div',
+        'span',
+        'img[src|alt|title|width|height]',
+        'table',
+        'thead',
+        'tbody',
+        'tr',
+        'td',
+        'th',
+    ])
+);
+
 		$config->set('Attr.AllowedFrameTargets', [ '_blank' ]);
 
 		$config->finalize();

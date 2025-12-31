@@ -32,7 +32,7 @@ use OCA\CMSPico\Service\TemplatesService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IL10N;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 use OCP\IRequest;
 
 class TemplatesController extends Controller
@@ -50,10 +50,10 @@ class TemplatesController extends Controller
 	 *
 	 * @param IRequest         $request
 	 * @param IL10N            $l10n
-	 * @param ILogger          $logger
+	 * @param LoggerInterface          $logger
 	 * @param TemplatesService $templatesService
 	 */
-	public function __construct(IRequest $request, IL10N $l10n, ILogger $logger, TemplatesService $templatesService)
+	public function __construct(IRequest $request, IL10N $l10n, LoggerInterface $logger, TemplatesService $templatesService)
 	{
 		parent::__construct(Application::APP_NAME, $request);
 
