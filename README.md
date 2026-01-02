@@ -89,7 +89,7 @@ When the docs cannot answer your question, you can get help by either joining us
 **Before creating a new Issue,** please make sure the problem wasn’t reported yet using GitHubs search engine on both the [`nextcloud/cms_pico`](https://github.com/nextcloud/cms_pico/search?type=Issues) and [`picocms/Pico`](https://github.com/picocms/Pico/search?type=Issues) repos, as well as the [search of Nextcloud Help](https://help.nextcloud.com/search). Please describe your issue as clear as possible and always include the *exact error message* (if any) as well as all related messages in Nextcloud's logs. Also include the exact *Nextcloud version* and the *version of Pico CMS for Nextcloud* you’re using. Provided that you’re using custom *plugins* and/or *themes*, include a list of them too. We need information about the *actual and expected behavior* , the *steps to reproduce* the problem, and what steps you have taken to resolve the problem by yourself (i.e. *your own troubleshooting*).
 
 ## Nextcloud 26+ compatibility
-I've made this app compatible with Nextcloud 31, however, for now, the HTML purifier is bypassed which might be an issue depending of your user case.
+:exclamation: I've made this app compatible with Nextcloud 31, however, for now, the HTML purifier is bypassed which might be an issue depending of your user case.
 Also, as this project is using other unmaintained projects, it is very possible that things might break again in the future.
-I will to my best to keep it up and running until my users have agreed to move to another platform.
-Also, keep in mind that PHP knowledge and experience is limited, so, for now it works on my current Nexcloud instance, but it might not with your configuration.
+I will do my best to keep it up and running until my users have agreed to move to another platform.
+Also, keep in mind that my PHP knowledge and experience is limited, so, for now it works on my current Nextcloud instance, but it might not with your configuration.
