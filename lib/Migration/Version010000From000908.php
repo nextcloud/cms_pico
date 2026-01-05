@@ -37,6 +37,8 @@ use OCA\CMSPico\Service\ThemesService;
 use OCP\IDBConnection;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
+use OCP\Server;
+use Psr\Log\LoggerInterface;
 
 class Version010000From000908 extends SimpleMigrationStep
 {
@@ -62,7 +64,7 @@ class Version010000From000908 extends SimpleMigrationStep
 	 */
 	public function __construct()
 	{
-		$this->setLogger(\OC::$server->getLogger());
+		$this->setLogger(Server::get(LoggerInterface::class));
 
 		$this->databaseConnection = \OC::$server->getDatabaseConnection();
 		$this->configService = \OC::$server->query(ConfigService::class);

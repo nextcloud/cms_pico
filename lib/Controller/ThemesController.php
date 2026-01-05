@@ -32,8 +32,8 @@ use OCA\CMSPico\Service\ThemesService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IL10N;
-use OCP\ILogger;
 use OCP\IRequest;
+use Psr\Log\LoggerInterface;
 
 class ThemesController extends Controller
 {
@@ -48,12 +48,12 @@ class ThemesController extends Controller
 	/**
 	 * ThemesController constructor.
 	 *
-	 * @param IRequest      $request
-	 * @param IL10N         $l10n
-	 * @param ILogger       $logger
-	 * @param ThemesService $themesService
+	 * @param IRequest        $request
+	 * @param IL10N           $l10n
+	 * @param LoggerInterface $logger
+	 * @param ThemesService   $themesService
 	 */
-	public function __construct(IRequest $request, IL10N $l10n, ILogger $logger, ThemesService $themesService)
+	public function __construct(IRequest $request, IL10N $l10n, LoggerInterface $logger, ThemesService $themesService)
 	{
 		parent::__construct(Application::APP_NAME, $request);
 

@@ -43,6 +43,8 @@ class PicoPageResponse extends Response
 	{
 		$this->page = $page;
 
+		parent::__construct();
+
 		$this->addHeader('Content-Disposition', 'inline; filename=""');
 		$this->setContentSecurityPolicy(new PicoContentSecurityPolicy());
 

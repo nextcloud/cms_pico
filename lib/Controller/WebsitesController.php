@@ -40,9 +40,9 @@ use OCA\CMSPico\Service\WebsitesService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IL10N;
-use OCP\ILogger;
 use OCP\IRequest;
 use OCP\IUserSession;
+use Psr\Log\LoggerInterface;
 use function OCA\CMSPico\t;
 
 class WebsitesController extends Controller
@@ -64,14 +64,14 @@ class WebsitesController extends Controller
 	 * @param IRequest        $request
 	 * @param IUserSession    $userSession
 	 * @param IL10N           $l10n
-	 * @param ILogger         $logger
+	 * @param LoggerInterface $logger
 	 * @param WebsitesService $websitesService
 	 */
 	public function __construct(
 		IRequest $request,
 		IUserSession $userSession,
 		IL10N $l10n,
-		ILogger $logger,
+		LoggerInterface $logger,
 		WebsitesService $websitesService
 	) {
 		parent::__construct(Application::APP_NAME, $request);
