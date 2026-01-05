@@ -33,6 +33,7 @@ use OCP\AppFramework\App;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Group\Events\GroupDeletedEvent;
 use OCP\User\Events\UserDeletedEvent;
+use Psr\Log\LoggerInterface;
 
 class Application extends App
 {
@@ -50,10 +51,10 @@ class Application extends App
 	/**
 	 * Registers event listeners.
 	 */
-	public function registerEventListener(): void
+/**	public function registerEventListener(): void
 	{
 		/** @var IEventDispatcher $eventDispatcher */
-		$eventDispatcher = \OC::$server->query(IEventDispatcher::class);
+/**		$eventDispatcher = \OC::$server->query(IEventDispatcher::class);
 		$eventDispatcher->addServiceListener(UserDeletedEvent::class, UserDeletedEventListener::class);
 		$eventDispatcher->addServiceListener(GroupDeletedEvent::class, GroupDeletedEventListener::class);
 
@@ -62,7 +63,7 @@ class Application extends App
 			ExternalStorageBackendEventListener::class
 		);
 	}
-
+**/
 	/**
 	 * Returns the absolute path to this app.
 	 *
